@@ -10,29 +10,39 @@ Open source under license BSD 2-Clause - see LICENSE and DISCLAIMER
 
 import subprocess
 
+from config_reader import ReadConfig
+
+
 class CERF:
-
     def __init__(self, p):
+        s = ['cmd.exe /K',
+             '"{}"'.format(p.exe_path),
+             'siting_model 0',
+             '-BUFFER {}'.format(p.buffer),
+             '-YEAR {}'.format(p.yr),
+             '-NORM {}'.format(p.distance_method),
+             '-DIRECTION {}'.format(p.direction_method),
+             '-SECONDARYGRID "{}"'.format(p.utility_zones),
+             '-SUITABILITYMASK "{}"'.format(p.common_exclusion),
+             '-TRANSMISSIONINPUT230 "{}"'.format(p.transmission_230kv),
+             '-TRANSMISSIONINPUT345 "{}"'.format(p.transmission_345kv),
+             '-TRANSMISSIONINPUT500 "{}"'.format(p.transmission_500kv),
+             '-TRANSMISSIONINPUT765 "{}"'.format(p.transmission_765kv),
+             '-GASINPUT16 "{}"'.format(p.gasline_16in),
+             '-SHAPES "{}"'.format(p.primary_zone),
+             '-OUTPUTDIRECTORY "{}"'.format(p.out_path),
+             '-IOXMLDIRECTORY "{}"'.format(p.xml_path)]
 
-        call = ['cmd.exe',
-                p.exe_path,
-                'siting_model',
-                0,
-                p.buffer,
-                1,
-                p.utility_zones,
-                p.common_exclusion,
-                p.transmission_230kv,
-                p.transmission_345kv,
-                p.transmission_500kv,
-                p.transmission_765kv,
-                p.gasline_16in,
-                '-WINDCAPINPUT "//olympus/projects/iresm/a_cms/prima/RCP8.5/cerf/actual_inputs/erdasimg_windenergy/platts_ewits_2005_potential_onshore_wind_sites_gwh_conus.img"'
-                p.primary_zones,
-                p.out_path,
-                p.xml_path,
-                p.distance_method,
-                p.direction_method,
-                ]
+        call_string = ' '.join(s)
 
-        subprocess.call(['cmd.exe', p.exe_path, p.buffer, p.yr, p.utility_zones, p.])
+        print('processing...')
+        subprocess.call(call_string)
+
+
+if __name__ == "__main__":
+
+    ini = 'C:/Users/d3y010/Desktop/vernon/repos/github/cerf/example/config.ini'
+
+    params = ReadConfig(ini)
+
+    CERF(params)

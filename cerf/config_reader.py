@@ -74,7 +74,7 @@ class ReadConfig:
         p = self.c['PARAMS']
 
         # path to the CERF executable
-        # self.exe_path = self.check_exist(p['exe_path'], 'file', self.log)
+        self.exe_path = self.check_exist(p['exe_path'], 'file', self.log)
 
         # path to the directory containing the input XML files
         self.xml_path = self.validate_xml(p['xml_path'])
@@ -647,10 +647,3 @@ class ReadConfig:
             msg_5 = 'Techid {0} in technologies.xml but not in {1} and techid {2} in {1} but not in technologies.xml'.format(techs_not_pth, f, pth_not_techs)
             log.error(msg_5)
             raise RuntimeError(msg_5)
-
-
-if __name__ == "__main__":
-
-    ini = '/Users/d3y010/repos/github/cerf/example/config.ini'
-
-    c = ReadConfig(ini)
