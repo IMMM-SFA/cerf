@@ -177,7 +177,9 @@ class ReadConfig:
         missing = list(set(ReadConfig.XML) - set(files))
 
         if len(missing) > 0:
-            raise IOError('The following files are missing from the input XML directory:  {}'.format(missing))
+            msg_0 = 'The following files are missing from the input XML directory:  {}'.format(missing)
+            self.log.error(msg_0)
+            raise IOError(msg_0)
 
         # validate constants.xml
         self.eval_constants(os.path.join(path, ReadConfig.XML[0]), self.log)
@@ -647,17 +649,8 @@ class ReadConfig:
             raise RuntimeError(msg_5)
 
 
-
-
-
-
-
-
-
-
-
-
 if __name__ == "__main__":
+
     ini = '/Users/d3y010/repos/github/cerf/example/config.ini'
 
     c = ReadConfig(ini)
