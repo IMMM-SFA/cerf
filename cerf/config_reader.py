@@ -74,7 +74,7 @@ class ReadConfig:
         p = self.c['PARAMS']
 
         # path to the CERF executable
-        self.exe_path = self.check_exist(p['exe_path'], 'file', self.log)
+        # self.exe_path = self.check_exist(p['exe_path'], 'file', self.log)
 
         # path to the directory containing the input XML files
         self.xml_path = self.validate_xml(p['xml_path'])
@@ -180,19 +180,25 @@ class ReadConfig:
             raise IOError('The following files are missing from the input XML directory:  {}'.format(missing))
 
         # validate constants.xml
-        self.eval_constants(os.path.join(path, ReadConfig.XML[0]))
+        self.eval_constants(os.path.join(path, ReadConfig.XML[0]), self.log)
 
         # validate technologies.xml
-        self.eval_techs(os.path.join(path, ReadConfig.XML[4]))
+        techs = self.eval_techs(os.path.join(path, ReadConfig.XML[4]), self.log)
 
         # validate powerzones.xml
-        self.eval_zones(os.path.join(path, ReadConfig.XML[2]))
+        zones = self.eval_zones(os.path.join(path, ReadConfig.XML[2]), self.log)
 
         # validate expansionplan.xml
-        self.eval_expansion(os.path.join(path, ReadConfig.XML[1]))
+        self.eval_expansion(os.path.join(path, ReadConfig.XML[1]), zones, techs, self.log)
+
+        # validate states.xml
+        self.eval_states(os.path.join(path, ReadConfig.XML[3]), self.log)
+
+        # validate technology_suitability_paths.xml
+        self.eval_tech_paths(os.path.join(path, ReadConfig.XML[5]), techs, self.log)
 
     @staticmethod
-    def eval_constants(f):
+    def eval_constants(f, log):
         """
         Validate constants.xml input data.
 
@@ -204,18 +210,24 @@ class ReadConfig:
         try:
             root = obj.constants
         except AttributeError:
-            raise AttributeError('Root node: <constants> is missing or misspelled in file {}. Exiting...'.format(f))
+            msg_0 = 'Root node: <constants> is missing or misspelled in file {}. Exiting...'.format(f)
+            log.error(msg_0)
+            raise AttributeError(msg_0)
 
         # look for child
         try:
             child = root.constant
         except AttributeError:
-            raise AttributeError('Child node: <constant> is missing or misspelled in file {}. Exiting...'.format(f))
+            msg_1 = 'Child node: <constant> is missing or misspelled in file {}. Exiting...'.format(f)
+            log.error(msg_1)
+            raise AttributeError(msg_1)
 
         # check to make sure all attributes are in the file
         match = list(set([a['name'] for a in child]) - set(ReadConfig.CNST.keys()))
         if len(match) > 0:
-            raise KeyError('The following constants are missing from file {0}: {1}. Exiting...'.format(f, match))
+            msg_2 = 'The following constants are missing from file {0}: {1}. Exiting...'.format(f, match)
+            log.error(msg_2)
+            raise KeyError(msg_2)
 
         # validate values
         for v in child:
@@ -224,34 +236,32 @@ class ReadConfig:
             try:
                 e = ReadConfig.CNST[v['name']]
             except KeyError:
-                raise KeyError(
-                    'Named constant "{0}" not expected in file {1}. Required constants are: {2}. Exiting...'.format(
-                        v['name'], f, [i for i in ReadConfig.CNST.keys()]))
+                msg_3 = 'Named constant "{0}" not expected in file {1}. Required constants are: {2}. Exiting...'.format(v['name'], f, [i for i in ReadConfig.CNST.keys()])
+                log.error(msg_3)
+                raise KeyError(msg_3)
 
             # check for valid type
             try:
                 xp = e[2](v.cdata)
             except ValueError:
-                raise ValueError(
-                    'Incorrect type for constant "{0}" in file {1}.  Required type is {2}. Exiting...'.format(v['name'],
-                                                                                                              f, e[2]))
+                msg_4 = 'Incorrect type for constant "{0}" in file {1}.  Required type is {2}. Exiting...'.format(v['name'], f, e[2])
+                log.error(msg_4)
+                raise ValueError(msg_4)
 
             # check lower bound
             if (e[0] is not None) and (xp < e[0]):
-                raise ValueError(
-                    'Value {0} for constant "{1}" is lower than the expected bound of {2} in file {3}. Exiting...'.format(
-                        xp, v['name'], e[0], f))
+                msg_5 = 'Value {0} for constant "{1}" is lower than the expected bound of {2} in file {3}. Exiting...'.format(xp, v['name'], e[0], f)
+                log.error(msg_5)
+                raise ValueError(msg_5)
 
             # check upper bound
             if (e[1] is not None) and (xp > e[1]):
-                raise ValueError(
-                    'Value {0} for constant "{1}" is greater than the expected bound of {2} in file {3}. Exiting...'.format(
-                        xp, v['name'], e[1], f))
-
-        return f
+                msg_6 = 'Value {0} for constant "{1}" is greater than the expected bound of {2} in file {3}. Exiting...'.format(xp, v['name'], e[1], f)
+                log.error(msg_6)
+                raise ValueError(msg_6)
 
     @staticmethod
-    def eval_techs(f):
+    def eval_techs(f, log):
         """
         Validate technologies.xml input data.
 
@@ -263,15 +273,20 @@ class ReadConfig:
         try:
             root = obj.technologies
         except AttributeError:
-            raise AttributeError('Root node: <technologies> is missing or misspelled in file {}. Exiting...'.format(f))
+            msg_0 = 'Root node: <technologies> is missing or misspelled in file {}. Exiting...'.format(f)
+            log.error(msg_0)
+            raise AttributeError(msg_0)
 
         # look for child
         try:
             child = root.technology
         except AttributeError:
-            raise AttributeError('Child node: <technology> is missing or misspelled in file {}. Exiting...'.format(f))
+            msg_1 = 'Child node: <technology> is missing or misspelled in file {}. Exiting...'.format(f)
+            log.error(msg_1)
+            raise AttributeError(msg_1)
 
         # check each technology
+        techs = []
         for idx in range(len(child)):
 
             for k in ReadConfig.TECH.keys():
@@ -282,32 +297,37 @@ class ReadConfig:
                 try:
                     v = eval('child[{0}].{1}'.format(idx, k))
                 except AttributeError:
-                    raise AttributeError('Attribute "{0}" does not exist in the file {1}. Exiting...'.format(k, f))
+                    msg_2 = 'Attribute "{0}" does not exist in the file {1}. Exiting...'.format(k, f)
+                    log.error(msg_2)
+                    raise AttributeError(msg_2)
 
                 # check for valid type
                 try:
                     xp = e[2](v.cdata)
                 except ValueError:
-                    raise ValueError(
-                        'Incorrect type for attribute "{0}" value of {1} in file {2}.  Required type is {3}. Exiting...'.format(
-                            k, v.cdata, f, e[2]))
+                    msg_3 = 'Incorrect type for attribute "{0}" value of {1} in file {2}.  Required type is {3}. Exiting...'.format(k, v.cdata, f, e[2])
+                    log.error(msg_3)
+                    raise ValueError(msg_3)
 
                 # check lower bound
                 if (e[0] is not None) and (xp < e[0]):
-                    raise ValueError(
-                        'Value {0} for "{1}" is lower than the expected bound of {2} in file {3}. Exiting...'.format(
-                            xp, v.cdata, e[0], f))
+                    msg_4 = 'Value {0} for "{1}" is lower than the expected bound of {2} in file {3}. Exiting...'.format(xp, v.cdata, e[0], f)
+                    log.error(msg_4)
+                    raise ValueError(msg_4)
 
                 # check upper bound
                 if (e[1] is not None) and (xp > e[1]):
-                    raise ValueError(
-                        'Value {0} for "{1}" is greater than the expected bound of {2} in file {3}. Exiting...'.format(
-                            xp, v.cdata, e[1], f))
+                    msg_5 = 'Value {0} for "{1}" is greater than the expected bound of {2} in file {3}. Exiting...'.format(xp, v.cdata, e[1], f)
+                    log.error(msg_5)
+                    raise ValueError(msg_5)
 
-        return f
+                if k == 'id':
+                    techs.append(xp)
+
+        return [str(x) for x in techs]
 
     @staticmethod
-    def eval_zones(f):
+    def eval_zones(f, log):
 
         obj = untangle.parse(f)
 
@@ -315,89 +335,117 @@ class ReadConfig:
         try:
             root = obj.powerzones
         except AttributeError:
-            raise AttributeError('Root node: <powerzones> is missing or misspelled in file {}. Exiting...'.format(f))
+            msg_0 = 'Root node: <powerzones> is missing or misspelled in file {}. Exiting...'.format(f)
+            log.error(msg_0)
+            raise AttributeError(msg_0)
 
         # look for zone child
         try:
             zones = root.zone
         except AttributeError:
-            raise AttributeError('Child node: <zone> is missing or misspelled in file {}. Exiting...'.format(f))
+            msg_1 = 'Child node: <zone> is missing or misspelled in file {}. Exiting...'.format(f)
+            log.error(msg_1)
+            raise AttributeError(msg_1)
 
+        z_list = []
         for v in zones:
 
             vid = v['id']
 
             if vid is None:
-                raise AttributeError('Attribute "id" missing from <zone> node in file {}. Exiting...'.format(f))
+                msg_2 = 'Attribute "id" missing from <zone> node in file {}. Exiting...'.format(f)
+                log.error(msg_2)
+                raise AttributeError(msg_2)
 
             try:
                 zoneid = v.shapeid.cdata
             except AttributeError:
-                raise AttributeError('Child node: <shapeid> missing from zone "{}" in file {}'.format(vid, f))
+                msg_3 = 'Child node: <shapeid> missing from zone "{}" in file {}'.format(vid, f)
+                log.error(msg_3)
+                raise AttributeError(msg_3)
 
             if len(zoneid) < 1:
-                raise ValueError('<shapeid> data missing for zone {} in file {}'.format(vid, f))
+                msg_4 = '<shapeid> data missing for zone {} in file {}'.format(vid, f)
+                log.error(msg_4)
+                raise ValueError(msg_4)
+
+            # add zone to zones list
+            z_list.append(zoneid)
 
             try:
                 nm = v.name.cdata
             except AttributeError:
-                raise AttributeError('Child node: <name> missing from zone "{}" in file {}'.format(vid, f))
+                msg_5 = 'Child node: <name> missing from zone "{}" in file {}'.format(vid, f)
+                log.error(msg_5)
+                raise AttributeError(msg_5)
 
             if len(nm) < 1:
-                raise ValueError('<name> data missing for zone {} in file {}'.format(vid, f))
+                msg_6 = '<name> data missing for zone {} in file {}'.format(vid, f)
+                log.error(msg_6)
+                raise ValueError(msg_6)
 
             try:
                 lmp = v.lmp.cdata
             except AttributeError:
-                raise AttributeError('Child node: <lmp> missing from zone "{}" in file {}'.format(vid, f))
+                msg_7 = 'Child node: <lmp> missing from zone "{}" in file {}'.format(vid, f)
+                log.error(msg_7)
+                raise AttributeError(msg_7)
 
             if len(lmp) < 1:
-                raise ValueError('<lmp> data missing for zone {} in file {}'.format(vid, f))
+                msg_8 = '<lmp> data missing for zone {} in file {}'.format(vid, f)
+                log.error(msg_8)
+                raise ValueError(msg_8)
 
             try:
                 float(lmp)
             except ValueError:
-                raise ValueError(
-                    '<lmp> data must be a float or int value for zone {} in file {}. Data "{}" cannot be converted to float'.format(
-                        vid, f, lmp))
+                msg_9 = '<lmp> data must be a float or int value for zone {} in file {}. Data "{}" cannot be converted to float'.format(vid, f, lmp)
+                log.error(msg_9)
+                raise ValueError(msg_9)
 
             try:
                 desc = v.description.cdata
             except AttributeError:
-                raise AttributeError('Child node: <description> missing from zone "{}" in file {}'.format(vid, f))
+                msg_10 = 'Child node: <description> missing from zone "{}" in file {}'.format(vid, f)
+                log.error(msg_10)
+                raise AttributeError(msg_10)
 
             try:
                 lmps = v.lmps
             except AttributeError:
-                raise AttributeError('Child node: <lmps> missing from zone "{}" in file {}'.format(vid, f))
+                msg_11 = 'Child node: <lmps> missing from zone "{}" in file {}'.format(vid, f)
+                log.error(msg_11)
+                raise AttributeError(msg_11)
 
             try:
                 cfs = lmps.cf
             except AttributeError:
-                raise AttributeError('Child node <cf> missing from zone "{}" in file {}.'.format(vid, f))
+                msg_12 = 'Child node <cf> missing from zone "{}" in file {}.'.format(vid, f)
+                log.error(msg_12)
+                raise AttributeError(msg_12)
 
             for item in cfs:
 
                 cfv = item['value']
 
                 if cfv not in ReadConfig.CF_VALS:
-                    raise ValueError(
-                        'Capacity factor fraction attribute value "{}" not in acceptable values of {} for zone {} in file {}.'.format(
-                            cfv, ReadConfig.CF_VALS, vid, f))
+                    msg_13 = 'Capacity factor fraction attribute value "{}" not in acceptable values of {} for zone {} in file {}.'.format(cfv, ReadConfig.CF_VALS, vid, f)
+                    log.error(msg_13)
+                    raise ValueError(msg_13)
 
                 cfd = item.cdata
 
                 try:
                     float(cfd)
                 except ValueError:
-                    raise ValueError(
-                        'Capactiy factor "{}" for fraction "{}" in zone {} in file {} is not able to be converted to float.'.format(
-                            cfd, cfv, vid, f))
+                    msg_14 = 'Capactiy factor "{}" for fraction "{}" in zone {} in file {} is not able to be converted to float.'.format(cfd, cfv, vid, f)
+                    log.error(msg_14)
+                    raise ValueError(msg_14)
 
-        return f
+        return z_list
 
     @staticmethod
-    def eval_expansion(f):
+    def eval_expansion(f, zones, techs, log):
         """
         TODO: Validate expansionplan.xml input data.
 
@@ -409,38 +457,207 @@ class ReadConfig:
         try:
             root = obj.expansionplan
         except AttributeError:
-            raise AttributeError('Root node: <expansionplan> is missing or misspelled in file {}. Exiting...'.format(f))
+            msg_0 = 'Root node: <expansionplan> is missing or misspelled in file {}. Exiting...'.format(f)
+            log.error(msg_0)
+            raise AttributeError(msg_0)
 
         # look for child
         try:
             child = root.expansion
         except AttributeError:
-            raise AttributeError('Child node: <expansion> is missing or misspelled in file {}. Exiting...'.format(f))
+            msg_1 = 'Child node: <expansion> is missing or misspelled in file {}. Exiting...'.format(f)
+            log.error(msg_1)
+            raise AttributeError(msg_1)
 
         # validate values
+        zids = []
+        tids = []
         for v in child:
+
             zoneid = v['zoneid']
             techid = v['techid']
             exp = v.cdata
 
-            break
+            if zoneid is None:
+                msg_2 = 'Attribute "zoneid" is missing from <expansion> node in file {}'.format(f)
+                log.error(msg_2)
+                raise ValueError(msg_2)
 
-            # TODO: check to make sure all zones/techs in the expansion plan are in the technology.xml and the powerzones.mxl
+            if techid is None:
+                msg_3 = 'Attribute "techid" is missing from <expansion> node in file {}'.format(f)
+                log.error(msg_3)
+                raise ValueError(msg_3)
 
-        return f
+            if len(exp) < 1:
+                msg_4 = 'Expansion value is missing for zoneid "{}", techid "{}" in file {}'.format(zoneid, techid, f)
+                log.error(msg_4)
+                raise ValueError(msg_4)
+
+            zids.append(zoneid)
+            tids.append(techid)
+
+        # check to see if zones in expansion plan match those that are in the powerzones.xml file
+        exp_not_zones = [str(a) for a in set(zids) - set(zones)]
+        zones_not_exp = [str(b) for b in set(zones) - set(zids)]
+
+        if (len(exp_not_zones) > 0) and (len(zones_not_exp) == 0):
+            msg_5 = 'zoneid(s) {} in expansion plan file {} but not in the shapeid for powerzones.xml file.'.format(exp_not_zones, f)
+            log.error(msg_5)
+            raise RuntimeError(msg_5)
+
+        elif (len(zones_not_exp) > 0) and (len(exp_not_zones) == 0):
+            msg_6 = 'shapeid(s) {} in the powerzones.xml file but not in the zoneid in the expansion plan file {}'.format(zones_not_exp, f)
+            log.error(msg_6)
+            raise RuntimeError(msg_6)
+
+        elif (len(zones_not_exp) > 0) and (len(exp_not_zones) > 0):
+            msg_7 = 'zoneid(s) {} in the expansion plan file but not in the shapeid for the powerzones.xml file and the shapeid(s) {} in the powerzones.xml file and bot tin the zoneid in the expansion plan file {}'.format(exp_not_zones, zones_not_exp, f)
+            log.error(msg_7)
+            raise RuntimeError(msg_7)
+
+        # check to see if techs in expansion plan match those that are in the technologies.xml file
+        exp_not_techs = [str(a) for a in set(tids) - set(techs)]
+        techs_not_exp = [str(b) for b in set(techs) - set(tids)]
+
+        if (len(exp_not_techs) > 0) and (len(techs_not_exp) == 0):
+            msg_8 = 'techid(s) {} in expansion plan file {} but not in the id for technologies.xml file.'.format(exp_not_techs, f)
+            log.error(msg_8)
+            raise RuntimeError(msg_8)
+
+        elif (len(techs_not_exp) > 0) and (len(exp_not_techs) == 0):
+            msg_9 = 'id(s) {} in the technologies.xml file but not in the techid in the expansion plan file {}'.format(techs_not_exp, f)
+            log.error(msg_9)
+            raise RuntimeError(msg_9)
+
+        elif (len(techs_not_exp) > 0) and (len(exp_not_techs) > 0):
+            msg_10 = 'techid(s) {} in the expansion plan file but not in the id for the technologies.xml file and the id(s) {} in the technologies.xml file and bot tin the techid in the expansion plan file {}'.format(exp_not_techs, techs_not_exp, f)
+            log.error(msg_10)
+            raise RuntimeError(msg_10)
 
     @staticmethod
-    def eval_states(f):
+    def eval_states(f, log):
 
-        pass
+        obj = untangle.parse(f)
+
+        # look for root node
+        try:
+            root = obj.states
+        except AttributeError:
+            msg_0 = 'Root node: <states> is missing or misspelled in file {}. Exiting...'.format(f)
+            log.error(msg_0)
+            raise AttributeError(msg_0)
+
+        # look for child
+        try:
+            child = root.state
+        except AttributeError:
+            msg_1 = 'Child node: <state> is missing or misspelled in file {}. Exiting...'.format(f)
+            log.error(msg_1)
+            raise AttributeError(msg_1)
+
+        for item in child:
+
+            sid = item['id']
+            shp = item['shapeid']
+            st = item.cdata
+
+            if sid is None:
+                msg_2 = 'Attribute "id" is missing from <state> node in file {}'.format(f)
+                log.error(msg_2)
+                raise ValueError(msg_2)
+
+            if shp is None:
+                msg_3 = 'Attribute "shapeid" is missing from <state> node in file {}'.format(f)
+                log.error(msg_3)
+                raise ValueError(msg_3)
+
+            if len(st) < 1:
+                msg_4 = 'State name value is missing for id "{}", shapeid "{}" in file {}'.format(sid, shp, f)
+                log.error(msg_4)
+                raise ValueError(msg_4)
+
+            try:
+                int(sid)
+            except ValueError:
+                msg_5 = 'Value "{}" for id in <state> node for shapeid "{}" in file {} should be a number greater than 0 as a string (e.g., "1")'.format(sid, shp, f)
+                log.error(msg_5)
+                raise ValueError(msg_5)
+
+            try:
+                int(shp)
+            except ValueError:
+                msg_6 = 'Value "{}" for shapeid in <state> node for id "{}" in file {} should be a number greater than 0 as a string (e.g., "1")'.format(shp, sid, f)
+                log.error(msg_6)
+                raise ValueError(msg_6)
 
     @staticmethod
-    def eval_rasters(f):
+    def eval_tech_paths(f, techs, log):
 
-        pass
+        obj = untangle.parse(f)
+
+        # look for root node
+        try:
+            root = obj.suitabilitymasks
+        except AttributeError:
+            msg_0 = 'Root node: <suitabilitymasks> is missing or misspelled in file {}. Exiting...'.format(f)
+            log.error(msg_0)
+            raise AttributeError(msg_0)
+
+        # look for child
+        try:
+            child = root.mask
+        except AttributeError:
+            msg_1 = 'Child node: <mask> is missing or misspelled in file {}. Exiting...'.format(f)
+            log.error(msg_1)
+            raise AttributeError(msg_1)
+
+        t_list = []
+        for item in child:
+
+            tech = item['techid']
+            pth = item.cdata
+
+            if tech is None:
+                msg_2 = 'Attribute "techid" is missing from <mask> node in file {}'.format(f)
+                log.error(msg_2)
+                raise ValueError(msg_2)
+
+            t_list.append(tech)
+
+            # validate path to suitability file
+            ReadConfig.check_exist(pth, 'file', log)
+
+        # check to see if techs in file are in technologies.xml
+        pth_not_techs = [str(a) for a in set(t_list) - set(techs)]
+        techs_not_pth = [str(b) for b in set(techs) - set(t_list)]
+
+        if (len(pth_not_techs) > 0) and (len(techs_not_pth) == 0):
+            msg_3 = 'Techid {} in {} but not in technologies.xml'.format(pth_not_techs, f)
+            log.error(msg_3)
+            raise RuntimeError(msg_3)
+
+        elif (len(techs_not_pth) > 0) and (len(pth_not_techs) == 0):
+            msg_4 = 'Techid {} in technologies.xml but not in {}'.format(techs_not_pth, f)
+            log.error(msg_4)
+            raise RuntimeError(msg_4)
+
+        elif (len(techs_not_pth) > 0) and (len(pth_not_techs) > 0):
+            msg_5 = 'Techid {0} in technologies.xml but not in {1} and techid {2} in {1} but not in technologies.xml'.format(techs_not_pth, f, pth_not_techs)
+            log.error(msg_5)
+            raise RuntimeError(msg_5)
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":
-    ini = '/Users/ladmin/repos/github/cerf/config.ini'
+    ini = '/Users/d3y010/repos/github/cerf/example/config.ini'
 
     c = ReadConfig(ini)
