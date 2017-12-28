@@ -1,0 +1,12 @@
+<expansionplan> 
+	<expansion zoneid="1" techid="3">480</expansion>
+	<expansion zoneid="3" techid="5">400</expansion>
+	<expansion zoneid="3" techid="17">118</expansion>
+	<expansion zoneid="6" techid="3">160</expansion>
+	<expansion zoneid="6" techid="5">1200</expansion>
+	<expansion zoneid="6" techid="6">320</expansion>
+	<expansion zoneid="6" techid="17">11082</expansion>
+	<expansion zoneid="7" techid="3">160</expansion>
+	<expansion zoneid="7" techid="6">160</expansion>
+	<expansion zoneid="7" techid="17">331</expansion>
+</expansionplan>
