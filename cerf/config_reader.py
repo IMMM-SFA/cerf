@@ -9,9 +9,7 @@ Open source under license BSD 2-Clause - see LICENSE and DISCLAIMER
 """
 
 import datetime
-import logging
 import os
-import sys
 import untangle
 
 from configobj import ConfigObj
@@ -19,6 +17,7 @@ import logger
 
 
 class ReadConfig:
+
     # required XML files
     XML = ['constants.xml', 'expansionplan.xml', 'powerzones.xml', 'states.xml', 'technologies.xml',
            'technology_suitabilitymask_paths.xml']
@@ -58,6 +57,12 @@ class ReadConfig:
     # acceptable values for the capacity factor fractions in the powerzones.xml file
     CF_VALS = ('0.9', '0.8', '0.5', '0.3', '0.1')
 
+    # list of acceptable distance method values [0: Chessboard; 1: Manhattan;  2: Euclidean Distance]
+    DIST_VALS = [0, 1, 2]
+
+    # list of acceptable direction method values [ 0: Left, Right, Top, Bottom (default); 1: RLBT; 2: LRBT; 3: RLTB ]
+    DIR_VALS = [0, 1, 2, 3]
+
     def __init__(self, config_file):
 
         # get current time
@@ -85,40 +90,95 @@ class ReadConfig:
         self.xml_path = self.validate_xml(p['xml_path'])
 
         # year to run
-        self.yr = int(p['yr'])
+        self.yr = self.check_year(self.check_type(p['yr'], int, self.log), self.log)
 
         # state zone boundary raster
-        self.primary_zone = p['primary_zone']
+        self.primary_zone = self.check_exist(p['primary_zone'], 'file', self.log)
 
         # utility zone boundary raster
-        self.utility_zones = p['utility_zones']
+        self.utility_zones = self.check_exist(p['utility_zones'], 'file', self.log)
 
         # suitability exclusion area raster common to all technologies
-        self.common_exclusion = p['common_exclusion']
+        self.common_exclusion = self.check_exist(p['common_exclusion'], 'file', self.log)
 
         # transmission lines >= 230 KV input raster
-        self.transmission_230kv = p['transmission_230kv']
+        self.transmission_230kv = self.check_exist(p['transmission_230kv'], 'file', self.log)
 
         # transmission lines >= 345 KV input raster
-        self.transmission_345kv = p['transmission_345kv']
+        self.transmission_345kv = self.check_exist(p['transmission_345kv'], 'file', self.log)
 
         # transmission lines >= 500 KV input raster
-        self.transmission_500kv = p['transmission_500kv']
+        self.transmission_500kv = self.check_exist(p['transmission_500kv'], 'file', self.log)
 
         # transmission lines >= 765 KV input raster
-        self.transmission_765kv = p['transmission_765kv']
+        self.transmission_765kv = self.check_exist(p['transmission_765kv'], 'file', self.log)
 
         # gas pipeline >= 16 inch input raster
-        self.gasline_16in = p['gasline_16in']
+        self.gasline_16in = self.check_exist(['gasline_16in'], 'file', self.log)
 
         # buffer in grid cells to place around each site
-        self.buffer = int(p['buffer'])
+        self.buffer = self.check_type(p['buffer'], int, self.log)
 
         # method to calculate interconnection distance [ 2 is Euclidean Distance ]
-        self.distance_method = int(p['distance_method'])
+        self.distance_method = self.check_val(self.check_type(p['distance_method'], int, self.log), ReadConfig.DIST_VALS, self.log)
 
         # order method used to site [ 0 = Left, Right, Top, Bottom ]
-        self.direction_method = int(p['direction_method'])
+        self.direction_method = self.check_val(self.check_type(p['direction_method'], int, self.log), ReadConfig.DIR_VALS, self.log)
+
+    @staticmethod
+    def check_val(v, vals, log):
+        """
+        Check to see if value is in the acceptable list of values.
+
+        :param v:           value
+        :param vals:        list of acceptable values
+        :param log:         log instance
+        :return:            value
+        """
+        if v not in vals:
+            msg = 'Value "{}" not in acceptable list of values {}'.format(v, vals)
+            log.error(msg)
+            raise RuntimeError(msg)
+        else:
+            return v
+
+    @staticmethod
+    def check_year(y, log):
+        """
+        Check to make sure year is in correct format of YYYY.
+
+        :param y:           year value
+        :param log:         log instance
+        :return:            year
+        """
+        # get number of thousands
+        ck = y / 1000
+
+        # if less than year 1000 or greater than year 9999
+        if (ck < 1) or (ck > 9):
+            msg = 'Year value "{}" is not in the correct YYYY format (e.g., 2005)'.format(y)
+            log.error(msg)
+            raise RuntimeError(msg)
+        else:
+            return y
+
+    @staticmethod
+    def check_type(v, typ, log):
+        """
+        Check type conversion.
+
+        :param v:           value
+        :param typ:         python type
+        :param log:         log instance
+        :return:            value
+        """
+        try:
+            typ(v)
+            return v
+        except ValueError:
+            msg = 'Value "{}" not able to be converted to type "{}"'.format(v, typ)
+            log.error(msg)
+            raise ValueError(msg)
 
     @staticmethod
     def check_exist(f, kind, log=None):
@@ -337,6 +397,9 @@ class ReadConfig:
 
     @staticmethod
     def eval_zones(f, log):
+        """
+        Validate powerzones.xml.
+        """
 
         obj = untangle.parse(f)
 
@@ -459,9 +522,7 @@ class ReadConfig:
     @staticmethod
     def eval_expansion(f, zones, techs, log):
         """
-        TODO: Validate expansionplan.xml input data.
-
-        :return:
+        Validate expansionplan.xml input data.
         """
         obj = untangle.parse(f)
 
@@ -554,6 +615,9 @@ class ReadConfig:
 
     @staticmethod
     def eval_states(f, log):
+        """
+        Validate states.xml.
+        """
 
         obj = untangle.parse(f)
 
@@ -612,6 +676,9 @@ class ReadConfig:
 
     @staticmethod
     def eval_tech_paths(f, techs, log):
+        """
+        Validate technologies.xml.
+        """
 
         obj = untangle.parse(f)
 
