@@ -15,6 +15,7 @@ import sys
 import untangle
 
 from configobj import ConfigObj
+import logger
 
 
 class ReadConfig:
@@ -59,13 +60,11 @@ class ReadConfig:
 
     def __init__(self, config_file):
 
-        self.log = self.console_logger()
-
         # get current time
         self.dt = datetime.datetime.now().strftime('%Y-%m-%d_%Hh%Mm%Ss')
 
         # check and validate ini file exists
-        self.check_exist(config_file, 'file', self.log)
+        self.check_exist(config_file, 'file')
 
         # instantiate config object
         self.c = ConfigObj(config_file)
@@ -73,14 +72,17 @@ class ReadConfig:
         # get params
         p = self.c['PARAMS']
 
+        # output directory
+        self.out_path = self.create_dir(p['out_path'])
+
+        # build logger
+        self.log = logger.make_log(self.out_path)
+
         # path to the CERF executable
         self.exe_path = self.check_exist(p['exe_path'], 'file', self.log)
 
         # path to the directory containing the input XML files
         self.xml_path = self.validate_xml(p['xml_path'])
-
-        # output directory
-        self.out_path = p['out_path']
 
         # year to run
         self.yr = int(p['yr'])
@@ -119,7 +121,7 @@ class ReadConfig:
         self.direction_method = int(p['direction_method'])
 
     @staticmethod
-    def check_exist(f, kind, log):
+    def check_exist(f, kind, log=None):
         """
         Check file or directory existence.
 
@@ -128,37 +130,33 @@ class ReadConfig:
         :return         either path or error
         """
         if kind == 'file' and os.path.isfile(f) is False:
-            log.error("File not found:  {0}".format(f))
-            log.error("Confirm path and retry.")
+            if log is not None:
+                log.error("File not found:  {0}".format(f))
+                log.error("Confirm path and retry.")
             raise IOError('File not found: {0}. Confirm path and retry.'.format(f))
 
         elif kind == 'dir' and os.path.isdir(f) is False:
-            log.error("Directory not found:  {0}".format(f))
-            log.error("Confirm path and retry.")
+            if log is not None:
+                log.error("Directory not found:  {0}".format(f))
+                log.error("Confirm path and retry.")
             raise IOError('Directory not found: {0}. Confirm path and retry.'.format(f))
 
         else:
             return f
 
-    def console_logger(self):
+    @staticmethod
+    def create_dir(pth):
         """
-        Instantiate console logger to log any errors in config.ini file that the user
-        must repair before model initialization.
+        Create directory if it does not exist.
 
-        :return:  logger object
+        :param pth:     full path to the directory
+        :return:        full path to directory
         """
-        # set up logger
-        log = logging.getLogger('cerf_initialization_logger')
-        log.setLevel(logging.INFO)
-
-        # set up console handler
-        fmt = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        cns = logging.StreamHandler(sys.stdout)
-        cns.setLevel(logging.INFO)
-        cns.setFormatter(fmt)
-        log.addHandler(cns)
-
-        return log
+        if os.path.isdir(pth):
+            return pth
+        else:
+            os.mkdir(pth)
+            return pth
 
     def validate_xml(self, path):
         """
@@ -199,6 +197,8 @@ class ReadConfig:
         # validate technology_suitability_paths.xml
         self.eval_tech_paths(os.path.join(path, ReadConfig.XML[5]), techs, self.log)
 
+        return path
+
     @staticmethod
     def eval_constants(f, log):
         """
@@ -238,7 +238,8 @@ class ReadConfig:
             try:
                 e = ReadConfig.CNST[v['name']]
             except KeyError:
-                msg_3 = 'Named constant "{0}" not expected in file {1}. Required constants are: {2}. Exiting...'.format(v['name'], f, [i for i in ReadConfig.CNST.keys()])
+                msg_3 = 'Named constant "{0}" not expected in file {1}. Required constants are: {2}. Exiting...'.format(
+                    v['name'], f, [i for i in ReadConfig.CNST.keys()])
                 log.error(msg_3)
                 raise KeyError(msg_3)
 
@@ -246,19 +247,22 @@ class ReadConfig:
             try:
                 xp = e[2](v.cdata)
             except ValueError:
-                msg_4 = 'Incorrect type for constant "{0}" in file {1}.  Required type is {2}. Exiting...'.format(v['name'], f, e[2])
+                msg_4 = 'Incorrect type for constant "{0}" in file {1}.  Required type is {2}. Exiting...'.format(
+                    v['name'], f, e[2])
                 log.error(msg_4)
                 raise ValueError(msg_4)
 
             # check lower bound
             if (e[0] is not None) and (xp < e[0]):
-                msg_5 = 'Value {0} for constant "{1}" is lower than the expected bound of {2} in file {3}. Exiting...'.format(xp, v['name'], e[0], f)
+                msg_5 = 'Value {0} for constant "{1}" is lower than the expected bound of {2} in file {3}. Exiting...'.format(
+                    xp, v['name'], e[0], f)
                 log.error(msg_5)
                 raise ValueError(msg_5)
 
             # check upper bound
             if (e[1] is not None) and (xp > e[1]):
-                msg_6 = 'Value {0} for constant "{1}" is greater than the expected bound of {2} in file {3}. Exiting...'.format(xp, v['name'], e[1], f)
+                msg_6 = 'Value {0} for constant "{1}" is greater than the expected bound of {2} in file {3}. Exiting...'.format(
+                    xp, v['name'], e[1], f)
                 log.error(msg_6)
                 raise ValueError(msg_6)
 
@@ -307,19 +311,22 @@ class ReadConfig:
                 try:
                     xp = e[2](v.cdata)
                 except ValueError:
-                    msg_3 = 'Incorrect type for attribute "{0}" value of {1} in file {2}.  Required type is {3}. Exiting...'.format(k, v.cdata, f, e[2])
+                    msg_3 = 'Incorrect type for attribute "{0}" value of {1} in file {2}.  Required type is {3}. Exiting...'.format(
+                        k, v.cdata, f, e[2])
                     log.error(msg_3)
                     raise ValueError(msg_3)
 
                 # check lower bound
                 if (e[0] is not None) and (xp < e[0]):
-                    msg_4 = 'Value {0} for "{1}" is lower than the expected bound of {2} in file {3}. Exiting...'.format(xp, v.cdata, e[0], f)
+                    msg_4 = 'Value {0} for "{1}" is lower than the expected bound of {2} in file {3}. Exiting...'.format(
+                        xp, v.cdata, e[0], f)
                     log.error(msg_4)
                     raise ValueError(msg_4)
 
                 # check upper bound
                 if (e[1] is not None) and (xp > e[1]):
-                    msg_5 = 'Value {0} for "{1}" is greater than the expected bound of {2} in file {3}. Exiting...'.format(xp, v.cdata, e[1], f)
+                    msg_5 = 'Value {0} for "{1}" is greater than the expected bound of {2} in file {3}. Exiting...'.format(
+                        xp, v.cdata, e[1], f)
                     log.error(msg_5)
                     raise ValueError(msg_5)
 
@@ -401,7 +408,8 @@ class ReadConfig:
             try:
                 float(lmp)
             except ValueError:
-                msg_9 = '<lmp> data must be a float or int value for zone {} in file {}. Data "{}" cannot be converted to float'.format(vid, f, lmp)
+                msg_9 = '<lmp> data must be a float or int value for zone {} in file {}. Data "{}" cannot be converted to float'.format(
+                    vid, f, lmp)
                 log.error(msg_9)
                 raise ValueError(msg_9)
 
@@ -431,7 +439,8 @@ class ReadConfig:
                 cfv = item['value']
 
                 if cfv not in ReadConfig.CF_VALS:
-                    msg_13 = 'Capacity factor fraction attribute value "{}" not in acceptable values of {} for zone {} in file {}.'.format(cfv, ReadConfig.CF_VALS, vid, f)
+                    msg_13 = 'Capacity factor fraction attribute value "{}" not in acceptable values of {} for zone {} in file {}.'.format(
+                        cfv, ReadConfig.CF_VALS, vid, f)
                     log.error(msg_13)
                     raise ValueError(msg_13)
 
@@ -440,7 +449,8 @@ class ReadConfig:
                 try:
                     float(cfd)
                 except ValueError:
-                    msg_14 = 'Capactiy factor "{}" for fraction "{}" in zone {} in file {} is not able to be converted to float.'.format(cfd, cfv, vid, f)
+                    msg_14 = 'Capactiy factor "{}" for fraction "{}" in zone {} in file {} is not able to be converted to float.'.format(
+                        cfd, cfv, vid, f)
                     log.error(msg_14)
                     raise ValueError(msg_14)
 
@@ -503,17 +513,20 @@ class ReadConfig:
         zones_not_exp = [str(b) for b in set(zones) - set(zids)]
 
         if (len(exp_not_zones) > 0) and (len(zones_not_exp) == 0):
-            msg_5 = 'zoneid(s) {} in expansion plan file {} but not in the shapeid for powerzones.xml file.'.format(exp_not_zones, f)
+            msg_5 = 'zoneid(s) {} in expansion plan file {} but not in the shapeid for powerzones.xml file.'.format(
+                exp_not_zones, f)
             log.error(msg_5)
             raise RuntimeError(msg_5)
 
         elif (len(zones_not_exp) > 0) and (len(exp_not_zones) == 0):
-            msg_6 = 'shapeid(s) {} in the powerzones.xml file but not in the zoneid in the expansion plan file {}'.format(zones_not_exp, f)
+            msg_6 = 'shapeid(s) {} in the powerzones.xml file but not in the zoneid in the expansion plan file {}'.format(
+                zones_not_exp, f)
             log.error(msg_6)
             raise RuntimeError(msg_6)
 
         elif (len(zones_not_exp) > 0) and (len(exp_not_zones) > 0):
-            msg_7 = 'zoneid(s) {} in the expansion plan file but not in the shapeid for the powerzones.xml file and the shapeid(s) {} in the powerzones.xml file and bot tin the zoneid in the expansion plan file {}'.format(exp_not_zones, zones_not_exp, f)
+            msg_7 = 'zoneid(s) {} in the expansion plan file but not in the shapeid for the powerzones.xml file and the shapeid(s) {} in the powerzones.xml file and bot tin the zoneid in the expansion plan file {}'.format(
+                exp_not_zones, zones_not_exp, f)
             log.error(msg_7)
             raise RuntimeError(msg_7)
 
@@ -522,17 +535,20 @@ class ReadConfig:
         techs_not_exp = [str(b) for b in set(techs) - set(tids)]
 
         if (len(exp_not_techs) > 0) and (len(techs_not_exp) == 0):
-            msg_8 = 'techid(s) {} in expansion plan file {} but not in the id for technologies.xml file.'.format(exp_not_techs, f)
+            msg_8 = 'techid(s) {} in expansion plan file {} but not in the id for technologies.xml file.'.format(
+                exp_not_techs, f)
             log.error(msg_8)
             raise RuntimeError(msg_8)
 
         elif (len(techs_not_exp) > 0) and (len(exp_not_techs) == 0):
-            msg_9 = 'id(s) {} in the technologies.xml file but not in the techid in the expansion plan file {}'.format(techs_not_exp, f)
+            msg_9 = 'id(s) {} in the technologies.xml file but not in the techid in the expansion plan file {}'.format(
+                techs_not_exp, f)
             log.error(msg_9)
             raise RuntimeError(msg_9)
 
         elif (len(techs_not_exp) > 0) and (len(exp_not_techs) > 0):
-            msg_10 = 'techid(s) {} in the expansion plan file but not in the id for the technologies.xml file and the id(s) {} in the technologies.xml file and bot tin the techid in the expansion plan file {}'.format(exp_not_techs, techs_not_exp, f)
+            msg_10 = 'techid(s) {} in the expansion plan file but not in the id for the technologies.xml file and the id(s) {} in the technologies.xml file and bot tin the techid in the expansion plan file {}'.format(
+                exp_not_techs, techs_not_exp, f)
             log.error(msg_10)
             raise RuntimeError(msg_10)
 
@@ -581,14 +597,16 @@ class ReadConfig:
             try:
                 int(sid)
             except ValueError:
-                msg_5 = 'Value "{}" for id in <state> node for shapeid "{}" in file {} should be a number greater than 0 as a string (e.g., "1")'.format(sid, shp, f)
+                msg_5 = 'Value "{}" for id in <state> node for shapeid "{}" in file {} should be a number greater than 0 as a string (e.g., "1")'.format(
+                    sid, shp, f)
                 log.error(msg_5)
                 raise ValueError(msg_5)
 
             try:
                 int(shp)
             except ValueError:
-                msg_6 = 'Value "{}" for shapeid in <state> node for id "{}" in file {} should be a number greater than 0 as a string (e.g., "1")'.format(shp, sid, f)
+                msg_6 = 'Value "{}" for shapeid in <state> node for id "{}" in file {} should be a number greater than 0 as a string (e.g., "1")'.format(
+                    shp, sid, f)
                 log.error(msg_6)
                 raise ValueError(msg_6)
 
@@ -644,6 +662,7 @@ class ReadConfig:
             raise RuntimeError(msg_4)
 
         elif (len(techs_not_pth) > 0) and (len(pth_not_techs) > 0):
-            msg_5 = 'Techid {0} in technologies.xml but not in {1} and techid {2} in {1} but not in technologies.xml'.format(techs_not_pth, f, pth_not_techs)
+            msg_5 = 'Techid {0} in technologies.xml but not in {1} and techid {2} in {1} but not in technologies.xml'.format(
+                techs_not_pth, f, pth_not_techs)
             log.error(msg_5)
             raise RuntimeError(msg_5)
