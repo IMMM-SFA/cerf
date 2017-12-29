@@ -6,6 +6,8 @@ Copyright (c) 2017, Battelle Memorial Institute
 Open source under license BSD 2-Clause - see LICENSE and DISCLAIMER
 
 @author:  Chris R. Vernon (chris.vernon@pnnl.gov)
+
+SAGA-CERF C++ core module developed by Nino Zuljevic (nino.zuljevic@pnnl.gov)
 """
 
 import os
@@ -17,6 +19,7 @@ import logger
 
 
 class Cerf:
+
     # a list of the first five characters for relevant strings to log
     CAPTURE = ['libr', 'modu', 'auth', 'load', 'para', 'grid', 'set ', 'save',
                'buff', '4-di', 'suit', 'seco', 'tran', 'gas ', 'shap', 'outp',
