@@ -1,1 +1,3 @@
 setuptools>=18.5
+configobj>=5.0.6
+untangle>=1.1.0
