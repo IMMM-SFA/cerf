@@ -2,3 +2,5 @@ example/inputs/spatial/*.* filter=lfs diff=lfs merge=lfs -text
 site/core/*.* filter=lfs diff=lfs merge=lfs -text
 site/saga_cerf/*.* filter=lfs diff=lfs merge=lfs -text
 site/saga_cerf/modules/*.* filter=lfs diff=lfs merge=lfs -text
+
+*.zip filter=lfs diff=lfs merge=lfs -text

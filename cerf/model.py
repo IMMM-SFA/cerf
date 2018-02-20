@@ -1,7 +1,7 @@
 """
 Model wrapper for CERF C++ executable.
 
-Copyright (c) 2017, Battelle Memorial Institute
+Copyright (c) 2018, Battelle Memorial Institute
 
 Open source under license BSD 2-Clause - see LICENSE and DISCLAIMER
 
@@ -87,10 +87,3 @@ class Cerf:
 
         rc = process.poll()
         return rc
-
-
-if __name__ == "__main__":
-
-    ini = 'C:/Users/d3y010/Desktop/vernon/repos/github/cerf/example/config.ini'
-
-    Cerf(ini)

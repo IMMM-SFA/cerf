@@ -1,7 +1,7 @@
 """
 Reads config.ini and validates parameters.
 
-Copyright (c) 2017, Battelle Memorial Institute
+Copyright (c) 2018, Battelle Memorial Institute
 
 Open source under license BSD 2-Clause - see LICENSE and DISCLAIMER
 
@@ -114,7 +114,7 @@ class ReadConfig:
         self.transmission_765kv = self.check_exist(p['transmission_765kv'], 'file', self.log)
 
         # gas pipeline >= 16 inch input raster
-        self.gasline_16in = self.check_exist(['gasline_16in'], 'file', self.log)
+        self.gasline_16in = self.check_exist(p['gasline_16in'], 'file', self.log)
 
         # buffer in grid cells to place around each site
         self.buffer = self.check_type(p['buffer'], int, self.log)
@@ -173,8 +173,7 @@ class ReadConfig:
         :return:            value
         """
         try:
-            typ(v)
-            return v
+            return typ(v)
         except ValueError:
             msg = 'Value "{}" not able to be converted to type "{}"'.format(v, typ)
             log.error(msg)

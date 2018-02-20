@@ -25,7 +25,7 @@ setup(
     license='BSD 2-Clause',
     author='Chris R. Vernon; Nino Zuljevic',
     author_email='chris.vernon@pnnl.gov; nino.zuljevic@pnnl.gov',
-    description='A Geospatial Model for Assessing Future Technology Expansion Feasibility',
+    description='A Geospatial Model for Assessing Future Energy Technology Expansion Feasibility',
     long_description=readme(),
     install_requires=get_requirements()
 )
