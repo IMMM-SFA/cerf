@@ -2,7 +2,7 @@
 
 ## A geospatial model for assessing and analyzing future energy technology expansion feasibility
 
-# Notice
+## Notice
 This repository uses the Git Large File Storage (LFS) extension (see https://git-lfs.github.com/ for details).  Please run the following command before cloning if you do not already have Git LFS installed:
 `git lfs install`
 
