@@ -1,5 +1,4 @@
-# cerf
-The Capacity Expansion Regional Feasibility (CERF) model
+# cerf - The Capacity Expansion Regional Feasibility (CERF) model
 
 ## A geospatial model for assessing and analyzing future energy technology expansion feasibility
 
@@ -9,6 +8,7 @@ This repository uses the Git Large File Storage (LFS) extension (see https://git
 
 ## Contact
 For questions, technical supporting and user contribution, please contact:
+
 Vernon, Chris R <Chris.Vernon@pnnl.gov>
 
 ## Overview
