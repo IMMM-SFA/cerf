@@ -1,6 +1,7 @@
 # cerf
 example/outputs/
 example/inputs/spatial/
+*.pyc
 
 # pycharm
 .idea
