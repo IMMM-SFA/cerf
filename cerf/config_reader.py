@@ -11,9 +11,14 @@ Open source under license BSD 2-Clause - see LICENSE and DISCLAIMER
 import datetime
 import os
 import untangle
+import logger
 
 from configobj import ConfigObj
-import logger
+
+
+class ValidationException(Exception):
+    def __init__(self,*args,**kwargs):
+        Exception.__init__(self,*args,**kwargs)
 
 
 class ReadConfig:
@@ -43,7 +48,7 @@ class ReadConfig:
             'full_name': [None, None, unicode],
             'lifetime': [0, None, int],
             'category': [None, None, unicode],
-            'fuel_index': [None, None, unicode],
+#            'fuel_index': [None, None, unicode],
             'fixed_om_2005': [0.0, None, float],
             'variable_om_2005': [None, None, float],
             'minimum_capacity': [0, None, int],
@@ -138,7 +143,7 @@ class ReadConfig:
         if v not in vals:
             msg = 'Value "{}" not in acceptable list of values {}'.format(v, vals)
             log.error(msg)
-            raise RuntimeError(msg)
+            raise ValidationException(msg)
         else:
             return v
 
@@ -158,7 +163,7 @@ class ReadConfig:
         if (ck < 1) or (ck > 9):
             msg = 'Year value "{}" is not in the correct YYYY format (e.g., 2005)'.format(y)
             log.error(msg)
-            raise RuntimeError(msg)
+            raise ValidationException(msg)
         else:
             return y
 
@@ -568,28 +573,6 @@ class ReadConfig:
             zids.append(zoneid)
             tids.append(techid)
 
-        # check to see if zones in expansion plan match those that are in the powerzones.xml file
-        exp_not_zones = [str(a) for a in set(zids) - set(zones)]
-        zones_not_exp = [str(b) for b in set(zones) - set(zids)]
-
-        if (len(exp_not_zones) > 0) and (len(zones_not_exp) == 0):
-            msg_5 = 'zoneid(s) {} in expansion plan file {} but not in the shapeid for powerzones.xml file.'.format(
-                exp_not_zones, f)
-            log.error(msg_5)
-            raise RuntimeError(msg_5)
-
-        elif (len(zones_not_exp) > 0) and (len(exp_not_zones) == 0):
-            msg_6 = 'shapeid(s) {} in the powerzones.xml file but not in the zoneid in the expansion plan file {}'.format(
-                zones_not_exp, f)
-            log.error(msg_6)
-            raise RuntimeError(msg_6)
-
-        elif (len(zones_not_exp) > 0) and (len(exp_not_zones) > 0):
-            msg_7 = 'zoneid(s) {} in the expansion plan file but not in the shapeid for the powerzones.xml file and the shapeid(s) {} in the powerzones.xml file and bot tin the zoneid in the expansion plan file {}'.format(
-                exp_not_zones, zones_not_exp, f)
-            log.error(msg_7)
-            raise RuntimeError(msg_7)
-
         # check to see if techs in expansion plan match those that are in the technologies.xml file
         exp_not_techs = [str(a) for a in set(tids) - set(techs)]
         techs_not_exp = [str(b) for b in set(techs) - set(tids)]
@@ -598,19 +581,7 @@ class ReadConfig:
             msg_8 = 'techid(s) {} in expansion plan file {} but not in the id for technologies.xml file.'.format(
                 exp_not_techs, f)
             log.error(msg_8)
-            raise RuntimeError(msg_8)
-
-        elif (len(techs_not_exp) > 0) and (len(exp_not_techs) == 0):
-            msg_9 = 'id(s) {} in the technologies.xml file but not in the techid in the expansion plan file {}'.format(
-                techs_not_exp, f)
-            log.error(msg_9)
-            raise RuntimeError(msg_9)
-
-        elif (len(techs_not_exp) > 0) and (len(exp_not_techs) > 0):
-            msg_10 = 'techid(s) {} in the expansion plan file but not in the id for the technologies.xml file and the id(s) {} in the technologies.xml file and bot tin the techid in the expansion plan file {}'.format(
-                exp_not_techs, techs_not_exp, f)
-            log.error(msg_10)
-            raise RuntimeError(msg_10)
+            raise ValidationException(msg_8)
 
     @staticmethod
     def eval_states(f, log):
@@ -720,15 +691,15 @@ class ReadConfig:
         if (len(pth_not_techs) > 0) and (len(techs_not_pth) == 0):
             msg_3 = 'Techid {} in {} but not in technologies.xml'.format(pth_not_techs, f)
             log.error(msg_3)
-            raise RuntimeError(msg_3)
+            raise ValidationException(msg_3)
 
         elif (len(techs_not_pth) > 0) and (len(pth_not_techs) == 0):
             msg_4 = 'Techid {} in technologies.xml but not in {}'.format(techs_not_pth, f)
             log.error(msg_4)
-            raise RuntimeError(msg_4)
+            raise ValidationException(msg_4)
 
         elif (len(techs_not_pth) > 0) and (len(pth_not_techs) > 0):
             msg_5 = 'Techid {0} in technologies.xml but not in {1} and techid {2} in {1} but not in technologies.xml'.format(
                 techs_not_pth, f, pth_not_techs)
             log.error(msg_5)
-            raise RuntimeError(msg_5)
+            raise ValidationException(msg_5)
