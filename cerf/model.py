@@ -21,10 +21,10 @@ import logger
 class Cerf:
 
     # a list of the first five characters for relevant strings to log
-    CAPTURE = ['libr', 'modu', 'auth', 'load', 'para', 'grid', 'set ', 'save',
-               'buff', '4-di', 'suit', 'seco', 'tran', 'gas ', 'shap', 'outp',
+    CAPTURE = ['libr', 'modu', 'auth', 'set ', 'save',
+               'buff', '4-di', 'suit', 'seco', 'shap', 'outp',
                'inpu', 'type', 'dire', 'disc', 'carb', 'tx_l', 'inte', 'file',
-               'driv', 'cell', 'band', 'star', 'expa', 'curr', 'end_']
+               'cell', 'expa', 'curr']
 
     def __init__(self, ini):
 
@@ -87,3 +87,10 @@ class Cerf:
 
         rc = process.poll()
         return rc
+                            
+
+if __name__ == '__main__':
+    
+
+    ini = 'C:/Users/d3y010/Desktop/vernon/repos/cerf/example/config.ini'
+    Cerf(ini)
