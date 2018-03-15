@@ -3,7 +3,7 @@ import sys
 try:
     from setuptools import setup, find_packages
 except ImportError:
-	msg = 'Missing Package: setuptools not found. CERF requires this to install. Please install setuptools and retry.'
+    msg = 'Missing Package: setuptools not found. CERF requires this to install. Please install setuptools and retry.'
     sys.stdout.write(msg)
     raise ImportError(msg)
 
