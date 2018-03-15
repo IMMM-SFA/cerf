@@ -3,8 +3,9 @@ import sys
 try:
     from setuptools import setup, find_packages
 except ImportError:
-    sys.stdout.write('Missing Package:  setuptools not found.  Demeter requires this to install.  Please install setuptools and retry.')
-    sys.exit(1)
+	msg = 'Missing Package: setuptools not found. CERF requires this to install. Please install setuptools and retry.'
+    sys.stdout.write(msg)
+    raise ImportError(msg)
 
 
 def readme():
