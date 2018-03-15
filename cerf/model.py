@@ -13,9 +13,9 @@ SAGA-CERF C++ core module developed by Nino Zuljevic (nino.zuljevic@pnnl.gov)
 import os
 import subprocess
 import shlex
+import logger
 
 from config_reader import ReadConfig
-import logger
 
 
 class Cerf:
@@ -31,8 +31,6 @@ class Cerf:
         self.p = ReadConfig(ini)
         self.cwd = os.path.dirname(self.p.exe_path)
         self.log = self.p.log
-
-        self.log.info('Start siting model...')
 
         # build arguments for SAGA module
         s = ['{}'.format(self.p.exe_path),
@@ -54,14 +52,6 @@ class Cerf:
 
         # join arguments by space
         self.command = ' '.join(s)
-
-        # run command as subprocess
-        self.run_saga()
-
-        self.log.info('Siting model completed.')
-
-        # remove any handlers that may exist
-        logger.kill_log(self.log)
 
     def run_saga(self):
         """
@@ -87,10 +77,17 @@ class Cerf:
 
         rc = process.poll()
         return rc
-                            
+        
+    def execute(self):
+        """
+        Run CERF based on config file params.
+        """
+        self.log.info('Start siting model...')
+        
+        # run command as subprocess
+        self.run_saga()
 
-if __name__ == '__main__':
-    
+        self.log.info('Siting model completed.')
 
-    ini = 'C:/Users/d3y010/Desktop/vernon/repos/cerf/example/config.ini'
-    Cerf(ini)
+        # remove any handlers that may exist
+        logger.kill_log(self.log)
