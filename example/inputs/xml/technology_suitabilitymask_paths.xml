@@ -1,6 +1,19 @@
 <suitabilitymasks>
-	<mask techid="3">\\olympus\projects\iresm\a_cms\prima\RCP8.5\cerf\actual_inputs\sagagrid_suitability\suitability_gas_peak.sgrd</mask>
-	<mask techid="5">\\olympus\projects\iresm\a_cms\prima\RCP8.5\cerf\actual_inputs\sagagrid_suitability\suitability_gas_cc.sgrd</mask>
-	<mask techid="6">\\olympus\projects\iresm\a_cms\prima\RCP8.5\cerf\actual_inputs\sagagrid_suitability\suitability_oil_peak.sgrd</mask>
-	<mask techid="17">\\olympus\projects\iresm\a_cms\prima\RCP8.5\cerf\actual_inputs\sagagrid_suitability\suitability_wind.sgrd</mask>
+	<mask techid="1">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_coal.sgrd</mask>
+	<mask techid="2">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_coal_igcc.sgrd</mask>
+	<mask techid="3">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_gas_peak.sgrd</mask>
+	<mask techid="4">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_gas_baseload.sgrd</mask>
+	<mask techid="5">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_gas_cc.sgrd</mask>
+	<mask techid="6">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_oil_peak.sgrd</mask>
+	<mask techid="7">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_oil_baseload.sgrd</mask>
+	<mask techid="8">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_oil_igcc.sgrd</mask>
+	<mask techid="9">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_biomass.sgrd</mask>
+	<mask techid="10">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_biomass_igcc.sgrd</mask>
+	<mask techid="11">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_nuclear.sgrd</mask>
+	<mask techid="12">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_coal_igcc_ccs.sgrd</mask>
+	<mask techid="13">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_gas_cc_ccs.sgrd</mask>
+	<mask techid="14">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_oil_igcc_ccs.sgrd</mask>
+	<mask techid="15">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_biomass_igcc_ccs.sgrd</mask>
+	<mask techid="16">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_solar.sgrd</mask>
+	<mask techid="17">C:\Users\d3y010\Desktop\vernon\repos\cerf\example\inputs\spatial\suitability_wind.sgrd</mask>
 </suitabilitymasks>
