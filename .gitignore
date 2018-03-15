@@ -2,6 +2,10 @@
 example/outputs/
 example/inputs/spatial/
 *.pyc
+build/
+cerf.egg-info/
+dist/
+
 
 # pycharm
 .idea
