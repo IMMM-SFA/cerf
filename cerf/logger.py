@@ -16,6 +16,7 @@ import sys
 loggers = {}
 
 
+
 def make_log(out_dir):
     """
     Create a log file and console log handler.
@@ -62,8 +63,9 @@ def kill_log(log):
     Remove any existing handlers.
 
     :param:         log object
-    """
+    """        
     handlers = log.handlers[:]
     for h in handlers:
-        h.close()
         log.removeHandler(h)
+        h.flush()
+        h.close()
