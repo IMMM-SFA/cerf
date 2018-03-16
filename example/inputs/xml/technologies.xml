@@ -10,7 +10,7 @@
 		<fuel_price_escalation>0.00519305497126399</fuel_price_escalation>
 		<fuel_co2_content>95</fuel_co2_content>
 		<interconnection_cost_per_km>655</interconnection_cost_per_km>
-		<full_name>Coal Conv Pul</full_name>
+		<full_name>COAL (CONV)</full_name>
 		<lifetime>40</lifetime>
 		<category>COAL</category>
 		<fuel_index>Coal-PRB .FGB</fuel_index>
@@ -35,7 +35,7 @@
 		<fuel_price_escalation>0.00519305497126399</fuel_price_escalation>
 		<fuel_co2_content>76</fuel_co2_content>
 		<interconnection_cost_per_km>655</interconnection_cost_per_km>
-		<full_name>Coal IGCC</full_name>
+		<full_name>COAL (IGCC no CCS)</full_name>
 		<lifetime>40</lifetime>
 		<category>COAL</category>
 		<fuel_index>Coal-PRB .FGB</fuel_index>
@@ -60,7 +60,7 @@
 		<fuel_price_escalation>0.00942502235766773</fuel_price_escalation>
 		<fuel_co2_content>53</fuel_co2_content>
 		<interconnection_cost_per_km>350</interconnection_cost_per_km>
-		<full_name>Gas Peak Load Conv</full_name>
+		<full_name>GAS (CONV-PEAK)</full_name>
 		<lifetime>40</lifetime>
 		<category>GAS</category>
 		<fuel_index>Henry Hub NG .FGB</fuel_index>
@@ -85,7 +85,7 @@
 		<fuel_price_escalation>0.00942502235766773</fuel_price_escalation>
 		<fuel_co2_content>53</fuel_co2_content>
 		<interconnection_cost_per_km>655</interconnection_cost_per_km>
-		<full_name>Gas Base Load Conv</full_name>
+		<full_name>GAS (CONV-BASE)</full_name>
 		<lifetime>40</lifetime>
 		<category>GAS</category>
 		<fuel_index>Henry Hub NG .FGB</fuel_index>
@@ -110,7 +110,7 @@
 		<fuel_price_escalation>0.00942502235766773</fuel_price_escalation>
 		<fuel_co2_content>42.2</fuel_co2_content>
 		<interconnection_cost_per_km>655</interconnection_cost_per_km>
-		<full_name>Gas CC</full_name>
+		<full_name>GAS (CC)</full_name>
 		<lifetime>40</lifetime>
 		<category>GAS</category>
 		<fuel_index>Henry Hub NG .FGB</fuel_index>
@@ -135,7 +135,7 @@
 		<fuel_price_escalation>0.00499185327773843</fuel_price_escalation>
 		<fuel_co2_content>73</fuel_co2_content>
 		<interconnection_cost_per_km>350</interconnection_cost_per_km>
-		<full_name>Oil Peak Load Conv</full_name>
+		<full_name>OIL (CONV-PEAK)</full_name>
 		<lifetime>40</lifetime>
 		<category>OIL-L</category>
 		<fuel_index>Distillate FO#2 .FGB</fuel_index>
@@ -160,7 +160,7 @@
 		<fuel_price_escalation>0.00499185327773843</fuel_price_escalation>
 		<fuel_co2_content>73</fuel_co2_content>
 		<interconnection_cost_per_km>655</interconnection_cost_per_km>
-		<full_name>Oil Base Load Conv</full_name>
+		<full_name>OIL (CONV-BASE)</full_name>
 		<lifetime>40</lifetime>
 		<category>OIL-L</category>
 		<fuel_index>Distillate FO#2 .FGB</fuel_index>
@@ -185,7 +185,7 @@
 		<fuel_price_escalation>0.00499185327773843</fuel_price_escalation>
 		<fuel_co2_content>58.4</fuel_co2_content>
 		<interconnection_cost_per_km>655</interconnection_cost_per_km>
-		<full_name>Oil IGCC</full_name>
+		<full_name>OIL (IGCC no CCS)</full_name>
 		<lifetime>40</lifetime>
 		<category>OIL-L</category>
 		<fuel_index>Distillate FO#2 .FGB</fuel_index>
@@ -210,7 +210,7 @@
 		<fuel_price_escalation>0.00308552439933485</fuel_price_escalation>
 		<fuel_co2_content>0</fuel_co2_content>
 		<interconnection_cost_per_km>350</interconnection_cost_per_km>
-		<full_name>Biomass Conv</full_name>
+		<full_name>BIOMASS (CONV)</full_name>
 		<lifetime>40</lifetime>
 		<category>OTHER</category>
 		<fuel_index>Biomass</fuel_index>
@@ -235,7 +235,7 @@
 		<fuel_price_escalation>0.00308552439933485</fuel_price_escalation>
 		<fuel_co2_content>0</fuel_co2_content>
 		<interconnection_cost_per_km>655</interconnection_cost_per_km>
-		<full_name>Biomass IGCC</full_name>
+		<full_name>BIOMASS (IGCC no CCS)</full_name>
 		<lifetime>40</lifetime>
 		<category>OTHER</category>
 		<fuel_index>Biomass</fuel_index>
@@ -260,7 +260,7 @@
 		<fuel_price_escalation>0.0110370082424158</fuel_price_escalation>
 		<fuel_co2_content>0</fuel_co2_content>
 		<interconnection_cost_per_km>874</interconnection_cost_per_km>
-		<full_name>Advanced Nuclear</full_name>
+		<full_name>NUCLEAR</full_name>
 		<lifetime>40</lifetime>
 		<category>URAN</category>
 		<fixed_om_2005>68.57</fixed_om_2005>
@@ -284,7 +284,7 @@
 		<fuel_price_escalation>0.00519305497126399</fuel_price_escalation>
 		<fuel_co2_content>0</fuel_co2_content>
 		<interconnection_cost_per_km>655</interconnection_cost_per_km>
-		<full_name>Coal IGCC CCS</full_name>
+		<full_name>COAL (IGCC with CCS)</full_name>
 		<lifetime>40</lifetime>
 		<category>COAL</category>
 		<fuel_index>Coal-PRB .FGB</fuel_index>
@@ -309,7 +309,7 @@
 		<fuel_price_escalation>0.00942502235766773</fuel_price_escalation>
 		<fuel_co2_content>0</fuel_co2_content>
 		<interconnection_cost_per_km>655</interconnection_cost_per_km>
-		<full_name>Gas IGCC CCS</full_name>
+		<full_name>GAS (IGCC with CCS)</full_name>
 		<lifetime>40</lifetime>
 		<category>GAS</category>
 		<fuel_index>Henry Hub NG .FGB</fuel_index>
@@ -334,7 +334,7 @@
 		<fuel_price_escalation>0.00499185327773843</fuel_price_escalation>
 		<fuel_co2_content>0</fuel_co2_content>
 		<interconnection_cost_per_km>655</interconnection_cost_per_km>
-		<full_name>Oil IGCC CCS</full_name>
+		<full_name>OIL (IGCC with CCS)</full_name>
 		<lifetime>40</lifetime>
 		<category>OIL-L</category>
 		<fuel_index>Distillate FO#2 .FGB</fuel_index>
@@ -359,7 +359,7 @@
 		<fuel_price_escalation>0.00308552439933485</fuel_price_escalation>
 		<fuel_co2_content>0</fuel_co2_content>
 		<interconnection_cost_per_km>655</interconnection_cost_per_km>
-		<full_name>Bio IGCC CCS</full_name>
+		<full_name>BIOMASS (IGCC with CCS)</full_name>
 		<lifetime>40</lifetime>
 		<category>OTHER</category>
 		<fuel_index>Biomass</fuel_index>
@@ -384,7 +384,7 @@
 		<fuel_price_escalation>0</fuel_price_escalation>
 		<fuel_co2_content>0</fuel_co2_content>
 		<interconnection_cost_per_km>350</interconnection_cost_per_km>
-		<full_name>CSP - Solar Thermal</full_name>
+		<full_name>SOLAR (CSP)</full_name>
 		<lifetime>40</lifetime>
 		<category>OTHER</category>
 		<fixed_om_2005>51.76</fixed_om_2005>
@@ -408,7 +408,7 @@
 		<fuel_price_escalation>0</fuel_price_escalation>
 		<fuel_co2_content>0</fuel_co2_content>
 		<interconnection_cost_per_km>655</interconnection_cost_per_km>
-		<full_name>Wind</full_name>
+		<full_name>WIND (ONSHORE)</full_name>
 		<lifetime>40</lifetime>
 		<category>OTHER</category>
 		<fixed_om_2005>11.67</fixed_om_2005>
