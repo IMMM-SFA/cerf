@@ -113,7 +113,7 @@ file.
 | carbon\_capture\_rate            | Float for the rate from 0 to 1 of carbon capture |
 
 
-***Suitability Data ***
+***Suitability data***
 
 This file contains the full path reference to each technologies
 suitability raster. **Table 10** describes the required parameters for
