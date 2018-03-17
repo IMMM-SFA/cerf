@@ -110,7 +110,8 @@ file.
 | fuel\_index                      | String reference for fuel index type                                                                                                                      |
 | variable\_om\_2005               | Float value for variable operation and maintenance costs of 2005 capacity use in $/MWh                                                                    |
 | siting\_buffer                   | Buffer to place around a plant once sited                                                                                                                 |
-| carbon\_capture\_rate            | Float for the rate from 0 to 1 of carbon capture                                                                                                          |
+| carbon\_capture\_rate            | Float for the rate from 0 to 1 of carbon capture |
+
 
 ***Suitability Data ***
 
@@ -161,38 +162,10 @@ any GIS.
 | Attribute                         | Description                                            |
 |-----------------------------------|--------------------------------------------------------|
 | Number of columns, Number of rows | 4693, 2999                                             |
-| Coordinate system                 | PROJCS\["USA\_Contiguous\_Albers\_Equal\_Area\_Conic", 
-                                                                                             
-                                     GEOGCS\["GCS\_North\_American\_1983",                   
-                                                                                             
-                                     DATUM\["North\_American\_Datum\_1983",                  
-                                                                                             
-                                     SPHEROID\["GRS\_1980",6378137.0,298.257222101\]\],      
-                                                                                             
-                                     PRIMEM\["Greenwich",0.0\],                              
-                                                                                             
-                                     UNIT\["Degree",0.0174532925199433\]\],                  
-                                                                                             
-                                     PROJECTION\["Albers\_Conic\_Equal\_Area"\],             
-                                                                                             
-                                     PARAMETER\["false\_easting",0.0\],                      
-                                                                                             
-                                     PARAMETER\["false\_northing",0.0\],                     
-                                                                                             
-                                     PARAMETER\["longitude\_of\_center",-96.0\],             
-                                                                                             
-                                     PARAMETER\["standard\_parallel\_1",29.5\],              
-                                                                                             
-                                     PARAMETER\["standard\_parallel\_2",45.5\],              
-                                                                                             
-                                     PARAMETER\["latitude\_of\_center",37.5\],               
-                                                                                             
-                                     UNIT\["Meters",1.0\]\]                                  |
+| Coordinate system                 | PROJCS\["USA\_Contiguous\_Albers\_Equal\_Area\_Conic", GEOGCS\["GCS\_North\_American\_1983", DATUM\["North\_American\_Datum\_1983", SPHEROID\["GRS\_1980",6378137.0,298.257222101\]\], PRIMEM\["Greenwich",0.0\], UNIT\["Degree",0.0174532925199433\]\], PROJECTION\["Albers\_Conic\_Equal\_Area"\], PARAMETER\["false\_easting",0.0\], PARAMETER\["false\_northing",0.0\], PARAMETER\["longitude\_of\_center",-96.0\], PARAMETER\["standard\_parallel\_1",29.5\], PARAMETER\["standard\_parallel\_2",45.5\], PARAMETER\["latitude\_of\_center",37.5\], UNIT\["Meters",1.0\]\]                                  |
 | Origin                            | (-2405552.835500000044703, 1609934.799499999964610)    |
 | Pixel Size                        | (1000, -1000)                                          |
-| Upper Left                        |                                                        
-                                                                                             
-                                     (-2405552.836, 1609934.799)                             |
+| Upper Left                        | (-2405552.836, 1609934.799)                             |
 | Lower Left                        | (-2405552.836, -1389065.201)                           |
 | Upper Right                       | (2287447.164, 1609934.799)                             |
 | Lower Right                       | (2287447.164, -1389065.201)                            |
