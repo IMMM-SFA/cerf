@@ -4,7 +4,7 @@
 
 ## Notice
 This repository uses the Git Large File Storage (LFS) extension (see https://git-lfs.github.com/ for details).  Please run the following command before cloning if you do not already have Git LFS installed:
-`git lfs install`
+`git lfs install`.  Windows users have had better luck cloning LFS enabled repositories using the following command `git lfs clone https://github.com/IMMM-SFA/cerf.git`
 
 ## Contact
 For questions please contact:
@@ -171,4 +171,3 @@ any GIS.
 | Lower Right                       | (2287447.164, -1389065.201)                            |
 | Center                            | (-59052.836, 110434.799)                               |
 | Type                              | Byte                                                   |
-
