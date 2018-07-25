@@ -1,4 +1,6 @@
-﻿# cerf
+[![DOI](https://zenodo.org/badge/115649750.svg)](https://zenodo.org/badge/latestdoi/115649750)
+
+# cerf
 
 ## A geospatial model for assessing and analyzing future energy technology expansion feasibility
 
