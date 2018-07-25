@@ -5,6 +5,7 @@
 ## Notice
 This repository uses the Git Large File Storage (LFS) extension (see https://git-lfs.github.com/ for details).  Please run the following command before cloning if you do not already have Git LFS installed:
 `git lfs install`.  Windows users have had better luck cloning LFS enabled repositories using the following command `git lfs clone https://github.com/IMMM-SFA/cerf.git`.  
+
 Currently, CERF is only available for Windows 7 users.
 
 ## Contact
