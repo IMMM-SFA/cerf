@@ -4,20 +4,24 @@
 
 ## A geospatial model for assessing and analyzing future energy technology expansion feasibility
 
-## Notice
-This repository uses the Git Large File Storage (LFS) extension (see https://git-lfs.github.com/ for details).  Please run the following command before cloning if you do not already have Git LFS installed:
-`git lfs install`.  Windows users have had better luck cloning LFS enabled repositories using the following command `git lfs clone https://github.com/IMMM-SFA/cerf.git`.  
-
-Currently, CERF is only available for Windows 7 users.
-
-## Contact
-For questions please contact:
-
-Chris Vernon:  <chris.vernon@pnnl.gov>
-
 ## Overview
 The Capacity Expansion Regional Feasibility (CERF) model is an open-source geospatial model, written in Python and C++, that is designed to determine the on-the-ground feasibility of achieving a projected energy technology expansion plan.  Integrated assessment models and grid expansion models typically do not have sufficient spatial, temporal, or process-level resolution to account for technology-specific siting considerations—for example, the value or costs of connecting a new power plant to the electric grid at a particular location or whether there is sufficient cooling water to support the installation of thermal power plants in a certain region. CERF was developed to specifically examine where power plant locations can be feasibly sited when considering high spatial resolution siting suitability data as well as the net locational costs (i.e., considering both net operating value and interconnection costs), at a spatial resolution of 1 km2. The outputs from CERF can provide insight into factors that influence energy system resilience under a variety of future scenarios, can be used to refine model based projections, and can also be directly useful for capacity expansion planning exercises. CERF is open-source and publicly available via GitHub.
 
+
+## Get Started with CERF
+
+***Install CERF***
+
+Clone CERF into your desired location: `git clone https://github.com/IMMM-SFA/cerf.git`
+
+From the directory you cloned CERF into and your `setup.py` file exists run `python setup.py install` which will install CERF as a Python package on your machine and install of the required Python dependencies.
+
+To install the data supplement necessary to run CERF enter a Python prompt and run:
+```python
+from cerf import InstallSupplement
+
+InstallSupplement('<enter the path where you want to save the data>')
+```
 
 ## CERF Setup
 
@@ -175,3 +179,8 @@ any GIS.
 | Lower Right                       | (2287447.164, -1389065.201)                            |
 | Center                            | (-59052.836, 110434.799)                               |
 | Type                              | Byte                                                   |
+
+## Contact
+For questions please contact:
+
+Chris Vernon:  <chris.vernon@pnnl.gov>
