@@ -4,7 +4,7 @@ import gdal
 import numpy as np
 
 
-def relcassify_to_binary(arr):
+def reclassify_to_binary(arr):
     """Reclassify a numpy array to binary where 0 is suitable and 1 is not suitable.
 
     :param arr:         Numpy array
