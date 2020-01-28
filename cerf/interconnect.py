@@ -3,12 +3,25 @@ import numpy as np
 
 
 class Interconnection:
-    """Calculate interconnection costs"""
+    """Calculate interconnection costs per grid cell in $ / yr using:
+
+    ```Interconnection Cost ($ / yr) = Distance to nearest suitable transmission line (km) *
+                                        Electric grid interconnection captial cost ($ / km) *
+                                        Annuity factor
+                                        + (if gas-fired technology) Distance to nearest suitable gas pipeline (km) *
+                                        Gas interconnection captial cost ($ / km) *
+                                        Annuity factor
+
+            where, Annuity factor is (d(1 + d)**n) / ((1 + d)**n - 1)
+            where, d = real annual discount rate (%), n = asset lifetime (years)```
+
+
+    """
 
     # value in zones raster representing no value
     NODATA_ZONE = 255
 
-    def __init__(self, zones_raster_file, transmission_raster_file):
+    def __init__(self, zones_raster_file, transmission_raster_file, discount_rate, tech_lifetime_yrs, captial_costs):
 
         zones_raster = gdal.Open(zones_raster_file)
         self.zones_array = zones_raster.GetRasterBand(1).ReadAsArray()
@@ -26,6 +39,20 @@ class Interconnection:
 
         # close file
         kv_lines = None
+
+        self.discount_rate = discount_rate
+        self.tech_lifetime_yrs = tech_lifetime_yrs
+        self.capital_costs = captial_costs
+
+    def calc_annuity_factor(self):
+        """Calculate annuity factor as (d(1 + d)**n) / ((1 + d)**n - 1)
+            where, d = real annual discount rate (%), n = asset lifetime (years)
+
+        """
+        numer = self.discount_rate * (1 + self.discount_rate)**self.tech_lifetime_yrs
+        denom = (1 + self.discount_rate)**self.tech_lifetime_yrs - 1
+
+        return numer / denom
 
     def get_bounding_box(self, target_val):
         """Get the bounding box that contains all target values in the given raster
@@ -118,7 +145,14 @@ class Interconnection:
 
     def calculate_interconnect(self):
         """Calculate the interconnection cost associated with each the distance to transmission
-        infrastructure and each technology costs."""
+        infrastructure and each technology costs.
 
-        # TODO
-        pass
+        :return:                2D array of interconnection cost in $ / yr
+
+        """
+
+        annuity_factor = self.calc_annuity_factor()
+
+        distance_raster = self.stitch_zones()
+
+        return distance_raster * self.capital_costs * annuity_factor
