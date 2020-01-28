@@ -1,5 +1,18 @@
-import gdal
 import os
+
+import gdal
+import numpy as np
+
+
+def relcassify_to_binary(arr):
+    """Reclassify a numpy array to binary where 0 is suitable and 1 is not suitable.
+
+    :param arr:         Numpy array
+
+    :return:            Reclassified array
+
+    """
+    return np.where(arr > 0, 1, 0)
 
 
 def raster_to_array(f):
