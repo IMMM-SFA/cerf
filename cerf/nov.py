@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class Nov:
     """Calculate Net Operating Value (NOV) in ($ / yr) as the following:
 
@@ -36,21 +39,28 @@ class Nov:
 
         self.arr = np.zeros_like(self.lmp_arr)  # techid, col, row
 
-    def calc_levelization_factor(self):
-        """Calculate levelization factor"""
+        self.annuity_factor_arr, self.lifetime_arr = self.calc_annuity_factor()
 
-        annuity_factor, lifetime_arr = self.calc_annuity_factor()
+    def calc_levelization_factor(self, l):
+        """Calculate levelization factor
 
-        # TODO:  the value for l, real annual growth rate is missing (%)
-        l = 0.1
+        :param l:            Real annual growth rate (%)
 
+        :return:             3D array of levelization factor [techid, col, row]
+
+        """
+
+        # TODO:  check on the actual value for l
         k = (1 + l) / (1 + self.discount_rate)
 
-        return k * (1 - k ** lifetime_arr) * (annuity_factor / (1 - k))
+        return k * (1 - k ** self.lifetime_arr) * (self.annuity_factor_arr / (1 - k))
 
     def calc_annuity_factor(self):
         """Calculate annuity factor as (d(1 + d)**n) / ((1 + d)**n - 1)
             where, d = real annual discount rate (%), n = asset lifetime (years)
+
+        :returns:           [0] annuity factor as a 3D array (techid, col, row)
+                            [1] technology lifetime in years as a 3D array (techid, col, row)
 
         """
         lifetime_arr = self.arr.copy()
@@ -58,40 +68,81 @@ class Nov:
         for i in range(0, len(d)):
             lifetime_arr[i] = lifetime_arr[i] + self.tech_dict[i + 1]["lifetime"]
 
-        numer = self.discount_rate * (1 + self.discount_rate) ** lifetime_arr
-        denom = (1 + self.discount_rate) ** lifetime_arr - 1
+        fx = (1 + self.discount_rate) ** lifetime_arr
 
-        return numer / denom, lifetime_arr
+        annuity_factor = (self.discount_rate * fx) / (fx - 1)
+
+        return annuity_factor, lifetime_arr
 
     def calc_operating_costs(self):
         """Calculate operating costs"""
 
-        # TODO: carbon price ($ / ton) not accounted for
-        carbon_price = 0
+        variable_om_arr = self.arr.copy()
+        fuel_arr = self.arr.copy()
+        carbon_arr = self.arr.copy()
+        capture_arr = self.arr.copy()
+        lev_tech_arr = self.arr.copy()
+        lev_fuel_arr = self.arr.copy()
+        lev_carbon_arr = self.arr.copy()
 
-        # TODO: carbon fuel content (tons / Btu) not accounted for
-        carbon_fuel_content = 0
+        for index, tech in enumerate(self.tech_dict.keys()):
+            techid = index + 1
 
-        # TODO:  why does heat_rate apprear twice?
-        operating_costs = [d[i]["heat_rate"] * d[i]["fuel_price"] + d[i]["variable_om"] + carbon_price *
-                           carbon_fuel_content * d[i]["heat_rate"] * (1 - d[i]["carbon_capture_rate"])
-                           for i in range(1, len(d) + 1)]
+            tech_data = self.tech_dict[techid]
 
-        arr = self.arr.copy()
+            # from constants
+            carbon_tax = 0.0
+            carbon_tax_escalation = 0.0
 
-        for index, i in enumerate(operating_costs):
-            arr[index] += i
+            # TODO:  find what the escalation variable is for technology lev factor
+            # TODO: change these from 3D to 2D arrays in the actual method
+            lev_tech_arr[index] = self.calc_levelization_factor(tech_data["fuel_price_escalation"])[index]
+            lev_fuel_arr[index] = self.calc_levelization_factor(tech_data["fuel_price_escalation"])[index]
+            lev_carbon_arr[index] = self.calc_levelization_factor(carbon_tax_escalation)[index]
 
-        return arr
+            #             # TODO:  why does heat_rate apprear twice?
+            #             operating_costs = [d[i]["heat_rate"] * d[i]["fuel_price"] + d[i]["variable_om"] + carbon_price *
+            #              carbon_fuel_content * d[i]["heat_rate"] * (1 - d[i]["carbon_capture_rate"])
+            #              for i in range(1, len(d) + 1)]
+
+            variable_om_arr[index] = tech_data["variable_om"]
+            fuel_arr[index] = tech_data["heat_rate"] * (tech_data["fuel_price"] / 1000)
+            carbon_arr[index] = carbon_tax * tech_data["fuel_co2_content"] * tech_data["heat_rate"]
+            capture_arr[index] = 1 - tech_data["carbon_capture_rate"]
+
+        opp_arr = (variable_om_arr * lev_tech_arr) + (fuel_arr * lev_fuel_arr) + (
+                    carbon_arr * carbon_tax_escalation / 1000000) * capture_arr
+
+        return opp_arr
+
+    def calc_generation(self):
+        """Calcuate generation in (MWh / yr)
+
+            Note:  8760 is the number of hours in a year
+
+        """
+
+        gen_arr = self.arr.copy()
+
+        for index, tech in enumerate(self.tech_dict.keys()):
+            techid = index + 1
+
+            unit_size = self.tech_dict[techid]["unit_size"]
+            cap_fact = self.tech_dict[techid]["capacity_factor"]
+
+            gen_arr[index] = unit_size * cap_fact * 8760
+
+        return gen_arr
 
     def calc_nov(self):
         """Calculate NOV"""
 
-        #         Generation (MWh / yr) *
-        #                         [ Locational Marginal Price ($ / MWh) - Operating Costs ($ / MWh) ] *
-        #                         Levelization Factor
+        generation = self.calc_generation()
 
-        lev_factor = self.calc_levelization_factor()
-        op_costs = self.calc_operating_costs()
+        # levelize LMPs
+        lmps = self.lmp_arr * self.calc_levelization_factor(self.lmp_arr)
 
-        # TODO: start here
+        # operating costs
+        operating_costs = self.calc_operating_costs()
+
+        return generation * (lmps - operating_costs)
