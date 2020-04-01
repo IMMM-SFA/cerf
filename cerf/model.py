@@ -1,93 +1,138 @@
+"""Model interface for CERF
+
+@author Chris R. vernon
+@email chris.vernon@pnnl.gov
+
+License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
+
 """
-Model wrapper for CERF C++ executable.
-
-Copyright (c) 2018, Battelle Memorial Institute
-
-Open source under license BSD 2-Clause - see LICENSE and DISCLAIMER
-
-@author:  Chris R. Vernon (chris.vernon@pnnl.gov)
-
-SAGA-CERF C++ core module developed by Nino Zuljevic (nino.zuljevic@pnnl.gov)
-"""
-
+import logging
 import os
-import subprocess
-import shlex
-import logger
+import datetime
+import time
+import sys
 
-from config_reader import ReadConfig
+from cerf.read_config import ReadConfig
+from cerf.process_step import ProcessStep
 
 
-class Cerf:
+class Model:
+    """Run CERF
 
-    # a list of the first five characters for relevant strings to log
-    CAPTURE = ['libr', 'modu', 'auth', 'set ', 'save',
-               'buff', '4-di', 'suit', 'seco', 'shap', 'outp',
-               'inpu', 'type', 'dire', 'disc', 'carb', 'tx_l', 'inte', 'file',
-               'cell', 'expa', 'curr']
+    :param config_file:                         string. Full path to configuration YAML file with file name and
+                                                extension. If not provided by the user, the code will default to the
+                                                expectation of alternate arguments.
 
-    def __init__(self, ini):
+    """
+    def __init__(self, config_file=None):
 
-        self.p = ReadConfig(ini)
-        self.cwd = os.path.dirname(self.p.exe_path)
-        self.log = self.p.log
+        # get current time
+        self.date_time_string = datetime.datetime.now().strftime('%Y-%m-%d_%Hh%Mm%Ss')
 
-        # build arguments for SAGA module
-        s = ['{}'.format(self.p.exe_path),
-             'siting_model 0',
-             '-BUFFER {}'.format(self.p.buffer),
-             '-YEAR {}'.format(self.p.yr),
-             '-NORM {}'.format(self.p.distance_method),
-             '-DIRECTION {}'.format(self.p.direction_method),
-             '-SECONDARYGRID "{}"'.format(self.p.utility_zones),
-             '-SUITABILITYMASK "{}"'.format(self.p.common_exclusion),
-             '-TRANSMISSIONINPUT230 "{}"'.format(self.p.transmission_230kv),
-             '-TRANSMISSIONINPUT345 "{}"'.format(self.p.transmission_345kv),
-             '-TRANSMISSIONINPUT500 "{}"'.format(self.p.transmission_500kv),
-             '-TRANSMISSIONINPUT765 "{}"'.format(self.p.transmission_765kv),
-             '-GASINPUT16 "{}"'.format(self.p.gasline_16in),
-             '-SHAPES "{}"'.format(self.p.primary_zone),
-             '-OUTPUTDIRECTORY "{}"'.format(self.p.out_path),
-             '-IOXMLDIRECTORY "{}"'.format(self.p.xml_path)]
+        # read the YAML configuration file
+        self.cfg = ReadConfig(config_file=config_file)
 
-        # join arguments by space
-        self.command = ' '.join(s)
+        # expose key variables that we want the user to have non-nested access to
+        self.discount_rate = 0.12
+        self.carbon_tax = 0.0
+        self.carbon_tax_escalation = 0.0
 
-    def run_saga(self):
+        # logfile path
+        self.logfile = os.path.join(self.cfg.output_directory, 'logfile_{}_{}.log'.format(self.cfg.scenario,
+                                                                                             self.date_time_string))
+
+        # set up time step generator
+        self.timestep = self.build_step_generator()
+
+    @staticmethod
+    def make_dir(pth):
+        """Create dir if not exists."""
+
+        if not os.path.exists(pth):
+            os.makedirs(pth)
+
+    def init_log(self):
+        """Initialize project-wide logger. The logger outputs to both stdout and a file."""
+
+        log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        log_level = logging.INFO
+
+        logger = logging.getLogger()
+        logger.setLevel(log_level)
+
+        # logger console handler
+        c_handler = logging.StreamHandler(sys.stdout)
+        c_handler.setLevel(log_level)
+        c_handler.setFormatter(log_format)
+        logger.addHandler(c_handler)
+
+        # logger file handler
+        f_handler = logging.FileHandler(self.logfile)
+        c_handler.setLevel(log_level)
+        c_handler.setFormatter(log_format)
+        logger.addHandler(f_handler)
+
+    def initialize(self):
+        """Setup model."""
+
+        # build output directory first to store logfile and other outputs
+        self.make_dir(self.cfg.output_directory)
+
+        # initialize logger
+        self.init_log()
+
+        logging.info("Start time:  {}".format(time.strftime("%Y-%m-%d %H:%M:%S")))
+
+        # log run parameters
+        logging.info("Input parameters:")
+        logging.info("\tdiscount_rate = {}".format(self.cfg.discount_rate))
+        logging.info("\tcarbon_tax = {}".format(self.cfg.carbon_tax))
+        logging.info("\tcarbon_tax_escalation = {}".format(self.cfg.carbon_tax_escalation))
+
+    def build_step_generator(self):
+        """Build step generator."""
+
+        for step in self.cfg.steps:
+
+            yield ProcessStep(step, self.cfg)
+
+    def advance_step(self):
+        """Advance to next time step.
+        Python 3 requires the use of `next()` to wrap the generator.
         """
-        Run subprocess call to the C++ SAGA custom executable from the executables
-        root directory. Log the output as it becomes available instead of
-        waiting until completion.
-        """
-        # start process
-        process = subprocess.Popen(shlex.split(self.command), stdout=subprocess.PIPE, cwd=self.cwd)
 
-        x = 0
-        while True and x < 10:
-            output = process.stdout.readline()
-            if output == '' and process.poll() is not None:
-                x += 1
-                break
-            if output:
-                out_string = output.strip()
+        next(self.timestep)
 
-                # only log relevant info
-                if (len(out_string) > 0) and (out_string[:4].lower() in Cerf.CAPTURE):
-                    self.log.info(out_string)
+    def run_model(self):
+        """Downscale rural and urban projection for all input years"""
 
-        rc = process.poll()
-        return rc
-        
-    def execute(self):
-        """
-        Run CERF based on config file params.
-        """
-        self.log.info('Start siting model...')
-        
-        # run command as subprocess
-        self.run_saga()
+        # initialize model
+        self.initialize()
 
-        self.log.info('Siting model completed.')
+        # start time
+        td = time.time()
 
-        # remove any handlers that may exist
-        logger.kill_log(self.log)
+        logging.info("Starting downscaling.")
+
+        # process all years
+        for _ in self.cfg.steps:
+            self.advance_step()
+
+        logging.info("Downscaling completed in {} minutes.".format((time.time() - td) / 60))
+
+        # clean logger
+        self.close()
+
+    def close(self):
+        """End model run and close log files"""
+
+        logging.info("End time:  {}".format(time.strftime("%Y-%m-%d %H:%M:%S")))
+
+        # Remove logging handlers
+        logger = logging.getLogger()
+
+        for handler in logger.handlers[:]:
+            handler.close()
+            logger.removeHandler(handler)
+
+        logging.shutdown()

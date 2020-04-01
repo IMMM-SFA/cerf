@@ -1,0 +1,7 @@
+# configuration file for CERF
+
+suitability:
+
+  biomass_directory: '/Users/d3y010/repos/github/cerf/cerf/tests/data/inputs/spatial/biomass'
+  nuclear_directory: '/Users/d3y010/repos/github/cerf/cerf/tests/data/inputs/spatial/nuclear'
+
