@@ -2,6 +2,7 @@ import os
 
 import gdal
 import numpy as np
+import rasterio
 
 
 def reclassify_to_binary(arr):
