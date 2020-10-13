@@ -24,7 +24,7 @@ def raster_to_array(f):
     :return:            NumPy Array
 
     """
-    r = gdal.Open(f)
+    r = rasterio.open(f)
     return r.GetRasterBand(1).ReadAsArray()
 
 
@@ -54,7 +54,7 @@ def sum_rasters(in_dir, fprefix, fext):
 
             file_path = os.path.join(in_dir, f)
 
-            source = gdal.Open(file_path)
+            source = rasterio.open(file_path)
             raster = source.GetRasterBand(1).ReadAsArray()
 
             if raster_sum is None:
