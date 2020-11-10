@@ -37,8 +37,8 @@ class NetOperationalValue:
                                             Range from 0.0 to 1.0
     :type cap_fact:                         float
 
-    :param variable_cost_esc:               Escalation factor of variable cost.  Range from -1.0 to 1.0.
-    :type variable_cost_esc:                float
+    :param variable_om_esc:               Escalation factor of variable cost.  Range from -1.0 to 1.0.
+    :type variable_om_esc:                float
 
     :param fuel_esc:                        Fuel price escalation factor.  Range from -1.0 to 1.0.
     :type fuel_esc:                         float
@@ -71,7 +71,7 @@ class NetOperationalValue:
 
     """
 
-    def __init__(self, discount_rate, lifetime, unit_size, capacity_factor, variable_cost_esc_rate,
+    def __init__(self, discount_rate, lifetime, unit_size, capacity_factor, variable_om_esc_rate,
                  fuel_esc_rate, carbon_esc_rate, variable_om, heat_rate, fuel_price, carbon_tax,
                  carbon_capture_rate, fuel_co2_content, lmp_arr):
 
@@ -79,7 +79,7 @@ class NetOperationalValue:
         self.lifetime = lifetime
         self.unit_size = unit_size
         self.cap_fact = capacity_factor
-        self.variable_cost_esc = variable_cost_esc_rate
+        self.variable_om_esc = variable_om_esc_rate
         self.fuel_esc = fuel_esc_rate
         self.carbon_esc = carbon_esc_rate
         self.variable_om = variable_om
@@ -100,9 +100,9 @@ class NetOperationalValue:
         k = (1.0 + self.lmp_arr) / (1.0 + self.discount_rate)
         return k * (1.0 - np.power(k, self.lifetime)) * self.calc_annuity_factor() / (1.0 - k)
 
-    def calc_lf_tech(self):
-        """Calculate the levelizing factor for technology."""
-        k = (1.0 + self.variable_cost_esc) / (1.0 + self.discount_rate)
+    def calc_lf_vom(self):
+        """Calculate the levelizing factor for variable OM."""
+        k = (1.0 + self.variable_om_esc) / (1.0 + self.discount_rate)
         return k * (1.0 - np.power(k, self.lifetime)) * self.calc_annuity_factor() / (1.0 - k)
 
     def calc_lf_fuel(self):
@@ -118,8 +118,8 @@ class NetOperationalValue:
     def calc_nov(self):
         """Calculate NOV array for the target technology."""
         term1 = self.unit_size * self.cap_fact * 8760
-        term2 = self.lmp_arr * self.calc_lf_lmp()
-        term3 = self.variable_om * self.calc_lf_tech()
+        term2 = self.lmp_arr * self.calc_lf_fuel()
+        term3 = self.variable_om * self.calc_lf_vom()
         term4 = self.heat_rate * (self.fuel_price / 1000) * self.calc_lf_fuel()
         term5 = (self.carbon_tax * self.fuel_co2 * self.heat_rate * self.calc_lf_carbon() / 1000000) * \
                 (1 - self.carbon_capture)
