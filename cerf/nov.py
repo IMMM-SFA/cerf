@@ -46,7 +46,7 @@ class NetOperationalValue:
     :param carbon_esc:                      The annual escalation rate for carbon tax.  Range from 0.0 to 1.0.
     :type carbon_esc:                       float
 
-    :param variable_om:                     Variable operation and maintenence costs of yearly capacity use in $/MWh
+    :param variable_om:                     Variable operation and maintenance costs of yearly capacity use in $/MWh
     :type variable_om:                      float
 
     :param heat_rate:                       Amount of energy used by a power plant to generate one kilowatt-hour of
@@ -90,66 +90,38 @@ class NetOperationalValue:
         self.fuel_co2 = fuel_co2_content
         self.lmp_arr = lmp_arr
 
-        # calculate the annuity factor
-        self.annuity_factor = self.get_af()
-
-        # calculate levelizing factor for LMP
-        self.lf_lmp = self.lf_lmp = self.get_lf_lmp()
-
-        # calculate levelizing factor for technology
-        self.lf_tech = self.get_lf_tech()
-
-        # calculate levelizing factor for fuel
-        self.lf_fuel = self.get_lf_fuel()
-
-        # calculate levelizing factor for carbon
-        self.lf_carbon = self.get_lf_carbon()
-
-        # calculate NOV
-        self.nov = self.get_nov()
-
-    def get_af(self):
+    def calc_annuity_factor(self):
         """Calculate annuity factor."""
-        fx = np.pow(1.0 + self.discount_rate, self.lifetime)
-        return self.discount_rate * fx / (fx - 1)
+        fx = np.power(1.0 + self.discount_rate, self.lifetime)
+        return self.discount_rate * fx / (fx - 1.0)
 
-    def get_lf_lmp(self):
-        """
-        Calculate the levelizing factor for LMP.
-        """
-        k = (1 + self.lmp_arr) / (1 + self.discount_rate)
-        return k * (1 - pow(k, self.lifetime)) * self.annuity_factor / (1 - k)
+    def calc_lf_lmp(self):
+        """Calculate the levelizing factor for LMP."""
+        k = (1.0 + self.lmp_arr) / (1.0 + self.discount_rate)
+        return k * (1.0 - np.power(k, self.lifetime)) * self.calc_annuity_factor() / (1.0 - k)
 
-    def get_lf_tech(self):
-        """
-        Calculate the levelizing factor for technology.
-        """
-        k = (1 + self.variable_cost_esc) / (1 + self.discount_rate)
-        return k * (1 - pow(k, self.lifetime)) * self.annuity_factor / (1 - k)
+    def calc_lf_tech(self):
+        """Calculate the levelizing factor for technology."""
+        k = (1.0 + self.variable_cost_esc) / (1.0 + self.discount_rate)
+        return k * (1.0 - np.power(k, self.lifetime)) * self.calc_annuity_factor() / (1.0 - k)
 
-    def get_lf_fuel(self):
-        """
-        Calculate the levelizing factor for fuel.
-        """
-        k = (1 + self.fuel_esc) / (1 + self.discount_rate)
-        return k * (1 - pow(k, self.lifetime)) * self.annuity_factor / (1 - k)
+    def calc_lf_fuel(self):
+        """Calculate the levelizing factor for fuel."""
+        k = (1.0 + self.fuel_esc) / (1.0 + self.discount_rate)
+        return k * (1.0 - np.power(k, self.lifetime)) * self.calc_annuity_factor() / (1.0 - k)
 
-    def get_lf_carbon(self):
-        """
-        Calculate the levelizing factor for carbon.
-        """
-        k = (1 + self.carbon_esc) / (1 + self.discount_rate)
-        return k * (1 - pow(k, self.lifetime)) * self.annuity_factor / (1 - k)
+    def calc_lf_carbon(self):
+        """Calculate the levelizing factor for carbon."""
+        k = (1.0 + self.carbon_esc) / (1.0 + self.discount_rate)
+        return k * (1.0 - np.power(k, self.lifetime)) * self.calc_annuity_factor() / (1.0 - k)
 
-    def get_nov(self):
-        """
-        Calculate NOV array for the target technology.
-        """
+    def calc_nov(self):
+        """Calculate NOV array for the target technology."""
         term1 = self.unit_size * self.cap_fact * 8760
-        term2 = self.lmp_arr * self.lf_lmp
-        term3 = self.variable_om * self.lf_tech
-        term4 = self.heat_rate * (self.fuel_price / 1000) * self.lf_fuel
-        term5 = (self.carbon_tax * self.fuel_co2 * self.heat_rate * self.lf_carbon / 1000000) * (
-                    1 - self.carbon_capture)
+        term2 = self.lmp_arr * self.calc_lf_lmp()
+        term3 = self.variable_om * self.calc_lf_tech()
+        term4 = self.heat_rate * (self.fuel_price / 1000) * self.calc_lf_fuel()
+        term5 = (self.carbon_tax * self.fuel_co2 * self.heat_rate * self.calc_lf_carbon() / 1000000) * \
+                (1 - self.carbon_capture)
 
         return term1 * (term2 - (term3 + term4 + term5))
