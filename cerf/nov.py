@@ -8,11 +8,11 @@ class NetOperationalValue:
                         [ Locational Marginal Price ($ / MWh) - Operating Costs ($ / MWh) ] *
                         Levelization Factor
             where, Operating Costs ($ / MWh) = Heat Rate (Btu / kWh) *
-                                                Fuel Price ($ / MBtu) (MBtu / 10**6 Btu) (10**3 kWh / MWh) +
+                                                Fuel Price ($ / MBtu) +
                                                 Variable O&M ($ / MWh) +
                                                 Carbon Price ($ / ton) *
                                                 Carbon Fuel Content (tons / Btu) *
-                                                Heat Rate (Btu / kWh) (10**3 kWh / MWh) *
+                                                Heat Rate (Btu / kWh) *
                                                 (1 - Carbon Capture Rate (%))
             and, Levelization Factor = k * (1 - k**n) * (Annuity Factor / (1 - k))
                 where, k = (1 + l) / (1 + d)
@@ -23,10 +23,10 @@ class NetOperationalValue:
                             n = asset lifetime (years)
 
 
-    :param discount_rate:                   The time value of money in real terms.  Range from 0.0 to 1.0.
+    :param discount_rate:                   The time value of money in real terms. Fraction.
     :type discount_rate:                    float
 
-    :param lifetime:                        Years of the expected technology plant lifetime
+    :param lifetime:                        Years of the expected technology plant lifetime.  Years.
     :type lifetime:                         int
 
     :param unit_size:                       The size of the expected power plant in MW
@@ -34,16 +34,15 @@ class NetOperationalValue:
 
     :param cap_fact:                        Capacity factor defined as average annual power generated divided by the
                                             potential output if the plant operated at its rated capacity for a year.
-                                            Range from 0.0 to 1.0
     :type cap_fact:                         float
 
-    :param variable_om_esc:               Escalation factor of variable cost.  Range from -1.0 to 1.0.
-    :type variable_om_esc:                float
+    :param variable_om_esc:                 Escalation factor of variable cost.  Fraction.
+    :type variable_om_esc:                  float
 
-    :param fuel_esc:                        Fuel price escalation factor.  Range from -1.0 to 1.0.
+    :param fuel_esc:                        Fuel price escalation factor. Fraction.
     :type fuel_esc:                         float
 
-    :param carbon_esc:                      The annual escalation rate for carbon tax.  Range from 0.0 to 1.0.
+    :param carbon_esc:                      The annual escalation rate for carbon tax.
     :type carbon_esc:                       float
 
     :param variable_om:                     Variable operation and maintenance costs of yearly capacity use in $/MWh
@@ -53,13 +52,13 @@ class NetOperationalValue:
                                             electricity in Btu/kWh
     :type heat_rate:                        float
 
-    :param fuel_price:                      Cost of fuel per unit in ($/MBtu)(10^6 Btu/MBtu)(10^3 kWh/MWh).
+    :param fuel_price:                      Cost of fuel per unit in $/MBtu.
     :type fuel_price:                       float
 
     :param carbon_tax:                      The fee imposed on the burning of carbon-based fuels in $/ton
     :type carbon_tax:                       float
 
-    :param carbon_capture:                  Rate of carbon capture.  Range from 0.0 to 1.0.
+    :param carbon_capture:                  Rate of carbon capture.
     :type carbon_capture:                   float
 
     :param fuel_co2:                        CO2 content of the fuel and the heat rate of the technology in Tons/MWh
