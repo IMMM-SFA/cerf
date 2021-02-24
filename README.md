@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/115649750.svg)](https://zenodo.org/badge/latestdoi/115649750)
+[![codecov](https://codecov.io/gh/IMMM-SFA/cerf/branch/actions/graph/badge.svg?token=9jbGJv8XCJ)](https://codecov.io/gh/IMMM-SFA/cerf) [![DOI](https://zenodo.org/badge/115649750.svg)](https://zenodo.org/badge/latestdoi/115649750)
 
 # cerf
 
