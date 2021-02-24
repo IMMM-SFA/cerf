@@ -26,7 +26,7 @@ def buffer_flat_array(target_index, arr, nrows, ncols, ncells, set_value):
     :type set_value:                    int; float
 
     :return:                            [0] Modified 1D array
-                                        [0] list of buffered indices
+                                        [1] list of buffered indices
 
     """
     # list to hold buffer indices for the target grid cell
