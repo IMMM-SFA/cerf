@@ -24,11 +24,15 @@ class LocationalMarginalPricing:
 
     USAGE:
 
-    # instantiate the LMP class
-    lmp = Lmp(zones_raster_file, zones_xml_file, technology_dict)
+    # instantiate the LMP class and create a 3D numpy array with the shape (techid, x, y)
+    #   containing LMP values per 1km grid cell
+    pricing = Lmp(zones_raster_file, zones_xml_file, technology_dict)
 
-    # create a 3D numpy array with the shape (techid, x, y) containing LMP values per 1km grid cell
-    lmp_arr = lmp.get_lmp_arr()
+    # access the LMP array by
+    pricing.lmp_arr
+
+    # or the tech order list
+    pricing.tech_order
 
     """
 
