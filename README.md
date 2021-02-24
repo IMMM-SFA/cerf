@@ -1,4 +1,8 @@
-[![codecov](https://codecov.io/gh/IMMM-SFA/cerf/branch/actions/graph/badge.svg?token=9jbGJv8XCJ)](https://codecov.io/gh/IMMM-SFA/cerf) [![DOI](https://zenodo.org/badge/115649750.svg)](https://zenodo.org/badge/latestdoi/115649750)
+[![linux](https://github.com/IMMM-SFA/cerf/actions/workflows/linux.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/linux.yml) 
+[![osx](https://github.com/IMMM-SFA/cerf/actions/workflows/osx.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/osx.yml) 
+[![windows](https://github.com/IMMM-SFA/cerf/actions/workflows/windows.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/windows.yml) 
+[![codecov](https://codecov.io/gh/IMMM-SFA/cerf/branch/actions/graph/badge.svg?token=9jbGJv8XCJ)](https://codecov.io/gh/IMMM-SFA/cerf) 
+[![DOI](https://zenodo.org/badge/115649750.svg)](https://zenodo.org/badge/latestdoi/115649750)
 
 # cerf
 
