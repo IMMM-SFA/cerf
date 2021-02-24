@@ -1,11 +1,4 @@
-import sys
-
-try:
-    from setuptools import setup, find_packages
-except ImportError:
-    msg = 'Missing Package: setuptools not found. CERF requires this to install. Please install setuptools and retry.'
-    sys.stdout.write(msg)
-    raise ImportError(msg)
+from setuptools import setup, find_packages
 
 
 def readme():
@@ -20,7 +13,7 @@ def get_requirements():
 
 setup(
     name='cerf',
-    version='1.0.0',
+    version='2.0.0',
     packages=find_packages(),
     url='https://github.com/IMMM-SFA/cerf',
     license='BSD 2-Clause',
@@ -28,5 +21,6 @@ setup(
     author_email='chris.vernon@pnnl.gov; nino.zuljevic@pnnl.gov',
     description='A Geospatial Model for Assessing Future Energy Technology Expansion Feasibility',
     long_description=readme(),
-    install_requires=get_requirements()
+    install_requires=get_requirements(),
+    python_requires='>=3.6'
 )
