@@ -2,26 +2,7 @@ import calendar
 
 
 class NetOperationalValue:
-    """Calculate Net Operational Value (NOV) in ($ / yr) per grid cell as the following:
-
-        NOV ($ / yr) = Generation (MWh / yr) *
-                            [ Locational Marginal Price ($ / MWh) - Operating Costs ($ / MWh) ] *
-                            Levelization Factor
-                where, Operating Costs ($ / MWh) = Heat Rate (Btu / kWh) *
-                                                    Fuel Price ($ / MBtu) +
-                                                    Variable O&M ($ / MWh) +
-                                                    Carbon Price ($ / ton) *
-                                                    Carbon Fuel Content (tons / Btu) *
-                                                    Heat Rate (Btu / kWh) *
-                                                    (1 - Carbon Capture Rate (%))
-                and, Levelization Factor = k * (1 - k**n) * (Annuity Factor / (1 - k))
-                    where, k = (1 + l) / (1 + d)
-                            l = real annual growth rate (%)
-                            d = real annual discount rate (%)
-                    and, Annuity factor is (d(1 + d)**n) / ((1 + d)**n - 1)
-                        where, d = real annual discount rate (%)
-                                n = asset lifetime (years)
-
+    """Calculate Net Operational Value (NOV) in ($ / yr) per grid cell for all technologies.
 
     :param discount_rate:                   The time value of money in real terms.
                                             Units:  fraction
@@ -62,7 +43,7 @@ class NetOperationalValue:
     :type heat_rate:                        float
 
     :param fuel_price:                      Cost of fuel per unit.
-                                            Units:  from GCAM ($2010/GJ) gets converted to ($/MBtu)
+                                            Units:  from GCAM ($/GJ) gets converted to ($/MBtu)
     :type fuel_price:                       float
 
     :param carbon_tax:                      The fee imposed on the burning of carbon-based fuels.
@@ -80,7 +61,7 @@ class NetOperationalValue:
     :param lmp_arr:                         Locational Marginal Price (LMP) per grid cell for each technology in a
                                             multi-dimensional array where the shape is [tech_id, xcoord, ycoord].
                                             Units:  $/MWh
-    :type lmp_arr:                          numpy.ndarray
+    :type lmp_arr:                          ndarray
 
     """
 
@@ -105,6 +86,7 @@ class NetOperationalValue:
         self.variable_om = variable_om
         self.heat_rate = heat_rate
         self.carbon_tax = carbon_tax
+        self.carbon_capture_rate = carbon_capture_rate
         self.lmp_arr = lmp_arr
 
         # create conversions
@@ -129,7 +111,7 @@ class NetOperationalValue:
 
     @staticmethod
     def convert_fuel_price(fuel_price):
-        """Convert fuel price from units $2010/GJ to $/MBtu"""
+        """Convert fuel price from units $/GJ to $/MBtu"""
 
         return fuel_price * NetOperationalValue.FUEL_PRICE_CONVERSION_FACTOR
 
