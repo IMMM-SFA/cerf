@@ -1,0 +1,457 @@
+<powerzones>
+	<zone id="1">
+		<shapeid>1</shapeid>
+		<name>AEP</name>
+		<lmp>61.02067955</lmp>
+		<description>AEP - Dayton. OH, IN, WV, VA</description>
+	<lmps>
+		<cf value="0.9">64.85033866</cf>
+		<cf value="0.8">66.95609874</cf>
+		<cf value="0.5">74.97611644</cf>
+		<cf value="0.3">85.55596651</cf>
+		<cf value="0.1">126.0829338</cf>
+	</lmps>
+	</zone>
+	<zone id="2">
+		<shapeid>2</shapeid>
+		<name>APS</name>
+		<lmp>97.87339324</lmp>
+		<description>Allegheny Power &amp; PENELEC. WV, PA, MD</description>
+		<lmps>
+			<cf value="0.9">106.0766438</cf>
+			<cf value="0.8">113.0423701</cf>
+			<cf value="0.5">146.6902534</cf>
+			<cf value="0.3">201.9630936</cf>
+			<cf value="0.1">451.9178196</cf>
+		</lmps>
+	</zone>
+	<zone id="3">
+		<shapeid>3</shapeid>
+		<name>TVACA</name>
+		<lmp>70.70185106</lmp>
+		<description>Central Subregion. KY, TN, MS, AL, GA</description>
+		<lmps>
+			<cf value="0.9">76.00820142</cf>
+			<cf value="0.8">79.2520391</cf>
+			<cf value="0.5">90.61433562</cf>
+			<cf value="0.3">104.473535</cf>
+			<cf value="0.1">156.2373973</cf>
+		</lmps>
+	</zone>
+	<zone id="4">
+		<shapeid>4</shapeid>
+		<name>ENTRGY</name>
+		<lmp>51.51584747</lmp>
+		<description>Delta Subregion. MO, OK, AR, LA</description>
+		<lmps>
+			<cf value="0.9">54.78204338</cf>
+			<cf value="0.8">56.03695205</cf>
+			<cf value="0.5">59.95614384</cf>
+			<cf value="0.3">64.44408295</cf>
+			<cf value="0.1">75.70684932</cf>
+		</lmps>
+	</zone>
+	<zone id="5">
+		<shapeid>5</shapeid>
+		<name>VIEP</name>
+		<lmp>105.7815051</lmp>
+		<description>Dominion Virginia. VA, NC, MD, DE</description>
+		<lmps>
+			<cf value="0.9">114.8886136</cf>
+			<cf value="0.8">122.7692095</cf>
+			<cf value="0.5">160.3662146</cf>
+			<cf value="0.3">221.5180137</cf>
+			<cf value="0.1">492.1487785</cf>
+		</lmps>
+	</zone>
+	<zone id="6">
+		<shapeid>6</shapeid>
+		<name>FEMISO</name>
+		<lmp>62.22115242</lmp>
+		<description>FirstEnergy. OH</description>
+		<lmps>
+			<cf value="0.9">66.12253551</cf>
+			<cf value="0.8">68.26805793</cf>
+			<cf value="0.5">76.50415753</cf>
+			<cf value="0.3">87.25893836</cf>
+			<cf value="0.1">128.504121</cf>
+		</lmps>
+	</zone>
+	<zone id="7">
+		<shapeid>7</shapeid>
+		<name>FRCC</name>
+		<lmp>425.1780411</lmp>
+		<description>Florida Reliability Coordinating Council. FL</description>
+		<lmps>
+			<cf value="0.9">475.9532166</cf>
+			<cf value="0.8">529.0380651</cf>
+			<cf value="0.5">789.3871393</cf>
+			<cf value="0.3">1000</cf>
+			<cf value="0.1">1000</cf>
+		</lmps>
+	</zone>
+	<zone id="8">
+		<shapeid>8</shapeid>
+		<name>GATEWAY</name>
+		<lmp>60.1349736</lmp>
+		<description>Gateway - MISO. IL, IN, MO</description>
+		<lmps>
+			<cf value="0.9">64.05246829</cf>
+			<cf value="0.8">66.05867723</cf>
+			<cf value="0.5">73.3163105</cf>
+			<cf value="0.3">82.4861796</cf>
+			<cf value="0.1">119.2117922</cf>
+		</lmps>
+	</zone>
+	<zone id="9">
+		<shapeid>11</shapeid>
+		<name>CINERGY</name>
+		<lmp>61.9787566</lmp>
+		<description>Indiana - MISO. IN, IL, OH</description>
+		<lmps>
+			<cf value="0.9">65.94051877</cf>
+			<cf value="0.8">68.12416096</cf>
+			<cf value="0.5">76.32092009</cf>
+			<cf value="0.3">86.85998858</cf>
+			<cf value="0.1">128.0691895</cf>
+		</lmps>
+	</zone>
+	<zone id="10">
+		<shapeid>12</shapeid>
+		<name>ALWSTTA</name>
+		<lmp>58.6616208</lmp>
+		<description>Iowa - MISO. IA, MN, WI, IL</description>
+		<lmps>
+			<cf value="0.9">61.95444191</cf>
+			<cf value="0.8">63.71121861</cf>
+			<cf value="0.5">69.85864155</cf>
+			<cf value="0.3">78.08180365</cf>
+			<cf value="0.1">110.5257192</cf>
+		</lmps>
+	</zone>
+	<zone id="11">
+		<shapeid>14</shapeid>
+		<name>MARITIME</name>
+		<lmp>7.272448613</lmp>
+		<description>Maritimes Area. ME</description>
+		<lmps>
+			<cf value="0.9">8.212406139</cf>
+			<cf value="0.8">9.238956906</cf>
+			<cf value="0.5">12.44</cf>
+			<cf value="0.3">12.44</cf>
+			<cf value="0.1">12.44</cf>
+		</lmps>
+	</zone>
+	<zone id="12">
+		<shapeid>15</shapeid>
+		<name>MECS</name>
+		<lmp>60.53225093</lmp>
+		<description>Michigan Electric Coordinated Systems. MI</description>
+		<lmps>
+			<cf value="0.9">64.28555682</cf>
+			<cf value="0.8">66.31837329</cf>
+			<cf value="0.5">74.31706849</cf>
+			<cf value="0.3">84.81741248</cf>
+			<cf value="0.1">125.3081735</cf>
+		</lmps>
+	</zone>
+	<zone id="13">
+		<shapeid>16</shapeid>
+		<name>MINNESTA</name>
+		<lmp>61.18592048</lmp>
+		<description>Minnesota - MISO. MN, ND, SD, IA, MO, AR, WI, IL, MT</description>
+		<lmps>
+			<cf value="0.9">64.69285769</cf>
+			<cf value="0.8">66.59349315</cf>
+			<cf value="0.5">72.30562785</cf>
+			<cf value="0.3">79.93899163</cf>
+			<cf value="0.1">110.6638014</cf>
+		</lmps>
+	</zone>
+	<zone id="14">
+		<shapeid>17</shapeid>
+		<name>ISONEBOS</name>
+		<lmp>80.81809502</lmp>
+		<description>New England - Boston. MA, VT</description>
+		<lmps>
+			<cf value="0.9">86.43765348</cf>
+			<cf value="0.8">90.83527255</cf>
+			<cf value="0.5">112.1138881</cf>
+			<cf value="0.3">146.5379947</cf>
+			<cf value="0.1">301.4093379</cf>
+		</lmps>
+	</zone>
+	<zone id="15">
+		<shapeid>18</shapeid>
+		<name>ISONECTS</name>
+		<lmp>80.51653263</lmp>
+		<description>New England - Connecticut Southwest. CT</description>
+		<lmps>
+			<cf value="0.9">86.1273313</cf>
+			<cf value="0.8">90.50137985</cf>
+			<cf value="0.5">111.2918333</cf>
+			<cf value="0.3">144.6951941</cf>
+			<cf value="0.1">293.8653881</cf>
+		</lmps>
+	</zone>
+	<zone id="16">
+		<shapeid>19</shapeid>
+		<name>ISONEEST</name>
+		<lmp>80.18474896</lmp>
+		<description>New England - East. NH, RI</description>
+		<lmps>
+			<cf value="0.9">85.79249239</cf>
+			<cf value="0.8">90.19019834</cf>
+			<cf value="0.5">111.2227991</cf>
+			<cf value="0.3">145.138535</cf>
+			<cf value="0.1">297.4205594</cf>
+		</lmps>
+	</zone>
+	<zone id="17">
+		<shapeid>20</shapeid>
+		<name>ISONEMNE</name>
+		<lmp>73.43539256</lmp>
+		<description>New England - Maine. ME</description>
+		<lmps>
+			<cf value="0.9">78.54571284</cf>
+			<cf value="0.8">82.57088613</cf>
+			<cf value="0.5">101.8188128</cf>
+			<cf value="0.3">132.8490601</cf>
+			<cf value="0.1">272.1309018</cf>
+		</lmps>
+	</zone>
+	<zone id="18">
+		<shapeid>21</shapeid>
+		<name>ISONEWST</name>
+		<lmp>82.0670392</lmp>
+		<description>New England - West. CT, MA</description>
+		<lmps>
+			<cf value="0.9">87.82126712</cf>
+			<cf value="0.8">92.3052383</cf>
+			<cf value="0.5">113.5355662</cf>
+			<cf value="0.3">147.6186454</cf>
+			<cf value="0.1">299.8027626</cf>
+		</lmps>
+	</zone>
+	<zone id="19">
+		<shapeid>22</shapeid>
+		<name>NEBRASKA</name>
+		<lmp>57.86460631</lmp>
+		<description>Nebraska. NE</description>
+		<lmps>
+			<cf value="0.9">61.05550609</cf>
+			<cf value="0.8">62.79169378</cf>
+			<cf value="0.5">68.54028767</cf>
+			<cf value="0.3">76.45621385</cf>
+			<cf value="0.1">107.4033105</cf>
+		</lmps>
+	</zone>
+	<zone id="20">
+		<shapeid>23</shapeid>
+		<name>NY CDE</name>
+		<lmp>81.1617612</lmp>
+		<description>New York Central - North. NY</description>
+		<lmps>
+			<cf value="0.9">87.1725761</cf>
+			<cf value="0.8">91.95486872</cf>
+			<cf value="0.5">114.5144224</cf>
+			<cf value="0.3">150.8918912</cf>
+			<cf value="0.1">313.256347</cf>
+		</lmps>
+	</zone>
+	<zone id="21">
+		<shapeid>24</shapeid>
+		<name>NY GHI</name>
+		<lmp>104.8335617</lmp>
+		<description>New York Southeast. NY</description>
+		<lmps>
+			<cf value="0.9">113.5053513</cf>
+			<cf value="0.8">121.0075157</cf>
+			<cf value="0.5">157.5825068</cf>
+			<cf value="0.3">217.2046918</cf>
+			<cf value="0.1">483.3201826</cf>
+		</lmps>
+	</zone>
+	<zone id="22">
+		<shapeid>25</shapeid>
+		<name>NYWESTAB</name>
+		<lmp>77.19501179</lmp>
+		<description>New York West. NY</description>
+		<lmps>
+			<cf value="0.9">82.9156621</cf>
+			<cf value="0.8">87.42927226</cf>
+			<cf value="0.5">108.6978151</cf>
+			<cf value="0.3">142.9713356</cf>
+			<cf value="0.1">297.72621</cf>
+		</lmps>
+	</zone>
+	<zone id="23">
+		<shapeid>26</shapeid>
+		<name>NYZ-F</name>
+		<lmp>85.91896102</lmp>
+		<description>New York Capital. NY</description>
+		<lmps>
+			<cf value="0.9">92.32158168</cf>
+			<cf value="0.8">97.44544521</cf>
+			<cf value="0.5">121.7655228</cf>
+			<cf value="0.3">161.1119901</cf>
+			<cf value="0.1">337.1774772</cf>
+		</lmps>
+	</zone>
+	<zone id="24">
+		<shapeid>27</shapeid>
+		<name>NYZ-J</name>
+		<lmp>113.019699</lmp>
+		<description>New York - NYC. NY</description>
+		<lmps>
+			<cf value="0.9">122.6186657</cf>
+			<cf value="0.8">131.0771775</cf>
+			<cf value="0.5">172.7080114</cf>
+			<cf value="0.3">241.1696195</cf>
+			<cf value="0.1">550.4805251</cf>
+		</lmps>
+	</zone>
+	<zone id="25">
+		<shapeid>28</shapeid>
+		<name>NYZ-K</name>
+		<lmp>107.4348602</lmp>
+		<description>New York - Long Island. NY</description>
+		<lmps>
+			<cf value="0.9">116.3211086</cf>
+			<cf value="0.8">124.0061615</cf>
+			<cf value="0.5">161.4615731</cf>
+			<cf value="0.3">222.4681659</cf>
+			<cf value="0.1">494.6968836</cf>
+		</lmps>
+	</zone>
+	<zone id="26">
+		<shapeid>29</shapeid>
+		<name>PJMCENTR</name>
+		<lmp>102.0070246</lmp>
+		<description>PJM Central - West of East Interface. PA, MD</description>
+		<lmps>
+			<cf value="0.9">110.667429</cf>
+			<cf value="0.8">118.1401142</cf>
+			<cf value="0.5">154.4140662</cf>
+			<cf value="0.3">213.4538965</cf>
+			<cf value="0.1">477.8327968</cf>
+		</lmps>
+	</zone>
+	<zone id="27">
+		<shapeid>30</shapeid>
+		<name>PJMEAST</name>
+		<lmp>103.6809536</lmp>
+		<description>PJM East of East Interface. NJ, PA, MD, DE</description>
+		<lmps>
+			<cf value="0.9">112.5041032</cf>
+			<cf value="0.8">120.1228824</cf>
+			<cf value="0.5">157.1207055</cf>
+			<cf value="0.3">217.3771994</cf>
+			<cf value="0.1">487.285411</cf>
+		</lmps>
+	</zone>
+	<zone id="28">
+		<shapeid>31</shapeid>
+		<name>PJMNICA</name>
+		<lmp>58.63875997</lmp>
+		<description>PJM Northern Illinois. IL</description>
+		<lmps>
+			<cf value="0.9">62.44308346</cf>
+			<cf value="0.8">64.36403253</cf>
+			<cf value="0.5">71.16456849</cf>
+			<cf value="0.3">79.49716134</cf>
+			<cf value="0.1">112.783242</cf>
+		</lmps>
+	</zone>
+	<zone id="29">
+		<shapeid>32</shapeid>
+		<name>SPPCENCA</name>
+		<lmp>56.49099405</lmp>
+		<description>SPP Central. OK, TX, AR, LA, NM</description>
+		<lmps>
+			<cf value="0.9">59.14517377</cf>
+			<cf value="0.8">60.62644549</cf>
+			<cf value="0.5">65.79933105</cf>
+			<cf value="0.3">72.4740449</cf>
+			<cf value="0.1">98.85196347</cf>
+		</lmps>
+	</zone>
+	<zone id="30">
+		<shapeid>33</shapeid>
+		<name>SPPLOUIS</name>
+		<lmp>49.14086488</lmp>
+		<description>SPP Louisiana. LA</description>
+		<lmps>
+			<cf value="0.9">51.17312532</cf>
+			<cf value="0.8">52.10569064</cf>
+			<cf value="0.5">54.60726027</cf>
+			<cf value="0.3">56.97318874</cf>
+			<cf value="0.1">65.31256849</cf>
+		</lmps>
+	</zone>
+	<zone id="31">
+		<shapeid>34</shapeid>
+		<name>SPPN</name>
+		<lmp>58.55870942</lmp>
+		<description>SPP North. KS, MO</description>
+		<lmps>
+			<cf value="0.9">61.48992643</cf>
+			<cf value="0.8">63.22905822</cf>
+			<cf value="0.5">69.37425114</cf>
+			<cf value="0.3">77.50596271</cf>
+			<cf value="0.1">110.4865297</cf>
+		</lmps>
+	</zone>
+	<zone id="32">
+		<shapeid>36</shapeid>
+		<name>SOCO</name>
+		<lmp>79.56745479</lmp>
+		<description>Southeastern Subregion. MS, AL, GA, SC</description>
+		<lmps>
+			<cf value="0.9">86.25610096</cf>
+			<cf value="0.8">90.9952911</cf>
+			<cf value="0.5">109.28621</cf>
+			<cf value="0.3">135.472793</cf>
+			<cf value="0.1">247.5259018</cf>
+		</lmps>
+	</zone>
+	<zone id="33">
+		<shapeid>37</shapeid>
+		<name>VACAR</name>
+		<lmp>105.6997877</lmp>
+		<description>VACAR. NC, SC</description>
+		<lmps>
+			<cf value="0.9">115.7296969</cf>
+			<cf value="0.8">123.7418793</cf>
+			<cf value="0.5">159.9249338</cf>
+			<cf value="0.3">216.5922184</cf>
+			<cf value="0.1">471.7561644</cf>
+		</lmps>
+	</zone>
+	<zone id="34">
+		<shapeid>38</shapeid>
+		<name>WAPA</name>
+		<lmp>58.68887004</lmp>
+		<description>WAPA - MAPP. MT, ND, SD, NE, MN, IA</description>
+		<lmps>
+			<cf value="0.9">62.03537925</cf>
+			<cf value="0.8">63.85926798</cf>
+			<cf value="0.5">69.35705479</cf>
+			<cf value="0.3">76.70370624</cf>
+			<cf value="0.1">106.2678653</cf>
+		</lmps>
+	</zone>
+	<zone id="35">
+		<shapeid>39</shapeid>
+		<name>WUMS</name>
+		<lmp>63.09395035</lmp>
+		<description>Wisconsin &amp; Upper Michigan. WI, MI</description>
+		<lmps>
+			<cf value="0.9">66.73639269</cf>
+			<cf value="0.8">68.82724315</cf>
+			<cf value="0.5">75.19669406</cf>
+			<cf value="0.3">82.93329909</cf>
+			<cf value="0.1">115.9277055</cf>
+		</lmps>
+	</zone>
+</powerzones>
