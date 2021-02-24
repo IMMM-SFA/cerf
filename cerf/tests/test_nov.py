@@ -139,3 +139,7 @@ class TestNov(unittest.TestCase):
 
         # test NOV
         np.testing.assert_array_equal(TestNov.EXPECTED_NOV_WITHCARBON_NOLEAP, econ.nov)
+
+
+if __name__ == '__main__':
+    unittest.main()
