@@ -97,6 +97,7 @@ class Competition:
                     sited_list = []
                     while still_siting:
 
+                        # TODO:  use the winners with the cheapest NLC first
                         # select a random index that has a winning cell for the check
                         target_ix = np.random.choice(tech)
 
