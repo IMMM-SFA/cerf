@@ -21,5 +21,6 @@ setup(
     author_email='chris.vernon@pnnl.gov; nino.zuljevic@pnnl.gov',
     description='A Geospatial Model for Assessing Future Energy Technology Expansion Feasibility',
     long_description=readme(),
-    install_requires=get_requirements()
+    install_requires=get_requirements(),
+    python_requires='>=3.6'
 )
