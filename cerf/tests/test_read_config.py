@@ -15,7 +15,7 @@ import unittest
 class TestReadConfig(unittest.TestCase):
     """Test configuration reader."""
 
-    CONFIG_FILE = pkg_resources.resource_filename('cerf', 'tests/data/config.yml')
+    # CONFIG_FILE = pkg_resources.resource_filename('cerf', 'tests/data/config.yml')
 
     def test_config_reader(self):
         """Tests for configuration reader."""

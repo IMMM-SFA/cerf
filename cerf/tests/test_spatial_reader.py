@@ -15,8 +15,8 @@ import unittest
 class TestSpatialReader(unittest.TestCase):
     """Tests for `spatial_reader.py`"""
 
-    BIOMASS_DIR = pkg_resources.resource_dir('cerf', 'tests/data/inputs/spatial/biomass')
-    NUCLEAR_DIR = pkg_resources.resource_dir('cerf', 'tests/data/inputs/spatial/nuclear')
+    # BIOMASS_DIR = pkg_resources.resource_dir('cerf', 'tests/data/inputs/spatial/biomass')
+    # NUCLEAR_DIR = pkg_resources.resource_dir('cerf', 'tests/data/inputs/spatial/nuclear')
 
     def test_sum_rasters(self):
         """Tests for `sum_rasters` function."""
