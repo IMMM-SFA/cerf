@@ -13,7 +13,7 @@ import time
 import sys
 
 from cerf.read_config import ReadConfig
-from cerf.process_step import ProcessStep
+from cerf.process_state import ProcessState
 
 
 class Model:

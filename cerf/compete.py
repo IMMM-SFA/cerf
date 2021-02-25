@@ -70,7 +70,6 @@ class Competition:
         # set initial value to for available grid cells
         self.avail_grids = 1
 
-        # TODO:  check on harmonized technology order throughout
         # create dictionary of {tech_id: flat_nlc_array, ...}
         self.nlc_flat_dict = {i: self.nlc_mask[i, :, :].flatten() for i in range(1, self.nlc_mask_shape[0])}
 
@@ -113,6 +112,7 @@ class Competition:
                         # add selected index to list
                         sited_list.append(target_ix)
 
+                        # TODO:  make buffer inheritance to next suitability year optional
                         # apply buffer
                         result = buffer_flat_array(target_index=target_ix,
                                                    arr=self.cheapest_arr_1d,
