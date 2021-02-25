@@ -11,17 +11,30 @@ class TestCompete(unittest.TestCase):
     TECH_DICT = {1: 1, 2: 1, 3: 1}  # buffer per tech
 
     # proxy NLC array
-    NLC_ARR = np.array([[[1.2, 3.2, 3], [2.4, 5, 2.4], [7, 2.4, 9]],
-                        [[2, 1, 1.4], [5, 5, 7], [1, 9, 3]],
-                        [[0, 1, 0], [5, 4, 7], [1, 9, 9]]])
+    NLC_ARR = np.array([[[1.2, 3.2, 3, 3.2, 3, 3.2, 3],
+                         [2.4, 5, 2.4, 3.2, 3, 3.2, 3],
+                         [7, 2.4, 9, 3.2, 3, 3.2, 3],
+                         [2.4, 5, 2.4, 3.2, 3, 3.2, 3]],
+                        [[2, 1, 1.4, 3.2, 3, 3.2, 3],
+                         [5, 5, 7, 3.2, 3, 3.2, 3],
+                         [1, 9, 3, 3.2, 3, 3.2, 3],
+                         [2.4, 5, 2.4, 3.2, 3, 3.2, 3]],
+                        [[0, 1, 0, 3.2, 3, 3.2, 3],
+                         [5, 4, 7, 3.2, 3, 3.2, 3],
+                         [1, 9, 9, 3.2, 3, 3.2, 3],
+                         [2.4, 5, 2.4, 3.2, 3, 3.2, 3]]])
 
     # excluded by suitability 1=not suitable, 0=suitable
-    SUIT_ARR = np.array([[[0, 0, 1], [1, 0, 1], [0, 0, 1]],
-                        [[1, 0, 1], [1, 0, 1], [1, 0, 0]],
-                        [[0, 0, 0], [0, 0, 0], [1, 1, 1]]])
+    SUIT_ARR = np.array([[[0, 0, 1, 0, 1, 0, 1], [1, 0, 1, 0, 1, 0, 1], [0, 0, 1, 0, 1, 0, 1], [1, 0, 1, 0, 1, 0, 1]],
+                        [[1, 0, 1, 0, 1, 0, 1], [1, 0, 1, 0, 1, 0, 1], [1, 0, 0, 0, 1, 0, 1], [1, 0, 1, 0, 1, 0, 1]],
+                        [[0, 0, 0, 0, 1, 0, 1], [0, 0, 0, 0, 1, 0, 1], [1, 1, 1, 0, 1, 0, 1], [1, 0, 1, 0, 1, 0, 1]]])
 
     # expected outcome
-    COMP_SITED = np.array([[0, 3, 0], [0, 0, 0], [1, 0, 2]])
+    COMP_SITED = np.array([[0, 2, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0],
+                           [0, 1, 0, 3, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0]])
+
     COMP_EXP_PLAN = {1: 0, 2: 0, 3: 0}
 
     @classmethod
@@ -46,6 +59,8 @@ class TestCompete(unittest.TestCase):
                            nlc_mask=nlc_arr,
                            technology_dict=TestCompete.TECH_DICT,
                            randomize=False)
+
+        print(comp.sited_array)
 
         # test output equality
         np.testing.assert_array_equal(TestCompete.COMP_SITED, comp.sited_array)
