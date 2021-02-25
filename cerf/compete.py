@@ -1,109 +1,185 @@
 import numpy as np
 
+from cerf.utils import buffer_flat_array
+
 
 class Competition:
+    """Technology competition algorithm for CERF.
+
+    Grid cell level net locational cost (NLC) per technology and an electricity technology capacity expansion plan
+    are used to compete technologies against each other to see which will win the grid cell. The technology
+    that wins the grid cell is then sited until no further winning cells exist. Once sited, the location of the
+    winning technology's grid cell, along with its buffer, are no longer available for siting. The competition
+    array is recalculated after all technologies have passed through an iteration. This process is completed until
+    there are either no cells left to site in or there are no more sites left to site for any technology. For
+    technologies that have the same NLC value in multiple grid cells, random selection is available by default.  If the
+    user wishes to have the outcomes be repeatable, the randomizer can be set to False.
+
+    :param expansion_plan:                          Dictionary of {tech_id: number_of_sites, ...}
+    :type expansion_plan:                           dict
+
+    :param nlc_mask:                                3D masked array of [tech_id, x, y] for Net Locational Costs. Each
+                                                    technology has been masked with its suitability data, so only
+                                                    grid cells that are suitable have an NLC per tech. The 0 index
+                                                    position is a default dimension which is chosen if no technologies
+                                                    are able to compete.
+    :type nlc_mask:                                 ndarray
+
+    :param technology_dict:                         A technology dictionary containing at a minimum
+                                                    {tech_id:  buffer_in_km, ...}
+    :type technology_dict:                          dict
+
+    :param randomize:                               Choose to make randomization of site selection where NLC is the same
+                                                    in multiple grid cells for a single technology random. If False,
+                                                    the seed_value will be used as a way to reproduce the exact siting.
+                                                    Default:  True
+    :type randomize:                                bool
+
+    :param seed_value:                              Value for the see if randomize is False.
+    :type seed_value:                               int
+
+    :param verbose:                                 Log out siting information. Default False.
+    :type verbose:                                  bool
+
     """
-    Technology competition algorithm for CERF.
 
-    Grid cell level net locational cost (NLC) per technology and an
-    energy technology capacity expansion plan is used to compete
-    technologies against each other to see which will win the grid
-    cell. The technology that wins the grid cell is then sited until
-    no further winning cells exist. Once sited, the location of the
-    winning technology's grid cell is no longer available for siting.
-    The competition array is recalculated after all technologies have
-    passed through an iteration. This process is completed until there
-    are either no cells left to site in or there are no more sites left
-    to site for any technology.
+    def __init__(self, expansion_plan, nlc_mask, technology_dict, randomize=True, seed_value=0, verbose=False):
 
-    :param expansion_plan:      Dictionary of {tech_id: number_of_sites, ...}
-    :param nlc_array:
-    """
+        self.verbose = verbose
+        self.expansion_plan = expansion_plan
+        self.nlc_mask = nlc_mask
+        self.nlc_mask_shape = self.nlc_mask.shape
+        self.technology_dict = technology_dict
 
-    def __init__(self, expansion_plan, nlc_array):
+        # use random seed to create reproducible outcomes
+        if randomize is False:
+            np.random.seed(seed_value)
 
-        self.exp = expansion_plan
-        self.arx = self.mask_nlc(nlc_array)
-        self.arx_shp = self.arx.shape
+        # number of technologies
+        self.n_techs = len(expansion_plan)
 
         # show cheapest option, add 1 to the index to represent the technology number
-        self.ste = np.argmin(self.arx, axis=0)
+        self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
 
         # flatten cheapest array to be able to use random
-        self.flat_ste = self.ste.flatten()
+        self.cheapest_arr_1d = self.cheapest_arr.flatten()
 
         # prep array to hold outputs
-        self.out_ste = np.zeros_like(self.flat_ste)
+        self.sited_arr_1d = np.zeros_like(self.cheapest_arr_1d)
 
-        self.avail_grids = True
+        # set initial value to for available grid cells
+        self.avail_grids = 1
 
-        self.main()
+        # TODO:  check on harmonized technology order throughout
+        # create dictionary of {tech_id: flat_nlc_array, ...}
+        self.nlc_flat_dict = {i: self.nlc_mask[i, :, :].flatten() for i in range(1, self.nlc_mask_shape[0])}
 
-    @staticmethod
-    def mask_nlc(nlc_array):
-        """
-        Insert zero array and mask it as index [0, :, :] so the tech_id 0 will always
-        be the minimum if nothing is left to site.
+        self.sited_array = self.compete()
 
-        :return:
-        """
-        arx = np.insert(nlc_array, 0, np.zeros_like(nlc_array[0, :, :]), axis=0)
-        arx[0, :, :] = np.ma.masked_array(arx[0, :, :], np.ones_like(arx[0, :, :]))
+    def compete(self):
 
-        return arx
-
-    def main(self):
-
-        while self.avail_grids:
+        while self.avail_grids > 0:
 
             # evaluate by technology
-            for tech_id in self.exp.keys():
+            for tech_id in self.expansion_plan.keys():
 
-                if self.exp[tech_id] > 0 and self.avail_grids:
+                # get the indices of the target tech ids where the target tech is the cheapest option
+                tech = np.where(self.cheapest_arr_1d == tech_id)[0]
 
-                    # get the index of target tech_id
-                    tech = np.where(self.flat_ste == tech_id)[0]
+                # if there are more power plants to site and there are grids available to site them...
+                if self.avail_grids > 0 and tech.shape[0] > 0:
 
-                    # create a random array from 0 to n for the length of the input array
-                    arg = np.random.rand(tech.shape[0]).argsort(axis=0)
+                    if self.verbose:
+                        print('\nNumber of sites desired for tech_id {}:  {}'.format(tech_id,
+                                                                                     self.expansion_plan[tech_id]))
 
-                    # keep only a required number of values for sites; mask the rest
-                    rdx = tech[arg < self.exp[tech_id]]
+                    # the number of sites for the target tech
+                    required_sites = self.expansion_plan[tech_id]
 
-                    # apply new sites as 0
-                    self.flat_ste[rdx] = 0
+                    # site with buffer and exclude buffered area from further siting
+                    still_siting = True
+                    sited_list = []
+                    while still_siting:
+
+                        # get the NLC values associated with each winner
+                        tech_nlc = self.nlc_flat_dict[tech_id][tech]
+
+                        # get the least expensive NLC indices from the winners
+                        tech_nlc_cheap = tech[np.where(tech_nlc == np.min(tech_nlc))]
+
+                        # select a random index that has a winning cell for the check where multiple low NLC may exists
+                        target_ix = np.random.choice(tech_nlc_cheap)
+
+                        # add selected index to list
+                        sited_list.append(target_ix)
+
+                        # apply buffer
+                        result = buffer_flat_array(target_index=target_ix,
+                                                   arr=self.cheapest_arr_1d,
+                                                   nrows=self.cheapest_arr.shape[0],
+                                                   ncols=self.cheapest_arr.shape[1],
+                                                   ncells=self.technology_dict[tech_id],
+                                                   set_value=0)
+
+                        # unpack values
+                        self.cheapest_arr_1d, buffer_indices_list = result
+
+                        # update the number of sites left to site
+                        required_sites -= 1
+
+                        # remove any buffered elements as an option to site
+                        tech_indices_to_delete = [np.where(tech == i)[0][0] for i in buffer_indices_list if i in tech]
+                        tech = np.delete(tech, tech_indices_to_delete)
+
+                        # exit siting for the target technology if all sites have been sited or if there are no more
+                        #   winning cells
+                        if required_sites == 0 or tech.shape[0] == 0:
+                            still_siting = False
+
+                    # array of the site indices
+                    rdx = np.array(sited_list)
 
                     # add sited techs to output array
-                    self.out_ste[rdx] = tech_id
+                    self.sited_arr_1d[rdx] = tech_id
 
                     # update dictionary with how many plants are left to site
-                    self.exp[tech_id] = self.exp[tech_id] - rdx.shape[0]
+                    self.expansion_plan[tech_id] = self.expansion_plan[tech_id] - rdx.shape[0]
+
+                    if self.verbose:
+                        print('\nUpdate expansion plan to represent siting requirements:')
+                        print(self.expansion_plan)
 
                     # update original array with excluded area where siting occurred
-                    if self.exp[tech_id] == 0:
-                        self.arx[tech_id, :, :] = np.ma.masked_array(self.arx[0, :, :], np.ones_like(self.arx[0, :, :]))
-                        self.arx[1:, :, :] = np.ma.masked_array(self.arx[1:, :, :],
-                                                                np.tile(np.where(self.flat_ste == 0, 1, 0),
-                                                                        self.arx_shp[0] - 1).reshape(
-                                                                    self.arx_shp[0] - 1, self.arx_shp[1],
-                                                                    self.arx_shp[2]))
 
-                    # mask techs that have been sited in main array
-                    else:
-                        self.arx[1:, :, :] = np.ma.masked_array(self.arx[1:, :, :],
-                                                                np.tile(np.where(self.flat_ste == 0, 1, 0),
-                                                                        self.arx.shape[0] - 1).reshape(
-                                                                    self.arx_shp[0] - 1, self.arx_shp[1],
-                                                                    self.arx_shp[2]))
+                    # if target technology has no more sites to be sited
+                    if self.expansion_plan[tech_id] == 0:
+
+                        # make all elements for the target tech in the NLC mask unsuitable so we can progress
+                        self.nlc_mask[tech_id, :, :] = np.ma.masked_array(self.nlc_mask[0, :, :],
+                                                                          np.ones_like(self.nlc_mask[0, :, :]))
+
+                    # apply the new exclusion from the current technology to all techs...
+                    #   invert sited elements to have a value of 1 so they can be used as a mask
+                    #   repeat the new sited array to create a mask for all techs and reshape to 2D
+                    #   update all technologies with the new mask
+                    self.nlc_mask[1:, :, :] = np.ma.masked_array(self.nlc_mask[1:, :, :],
+                                                                 np.tile(np.where(self.cheapest_arr_1d == 0, 1, 0),
+                                                                         self.nlc_mask_shape[0] - 1).reshape(
+                                                                     (self.nlc_mask_shape[0] - 1,
+                                                                      self.nlc_mask_shape[1],
+                                                                      self.nlc_mask_shape[2])))
 
                     # show cheapest option, add 1 to the index to represent the technology number
-                    self.ste = np.argmin(self.arx, axis=0)
+                    self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
 
                     # flatten cheapest array to be able to use random
-                    self.flat_ste = self.ste.flatten()
+                    self.cheapest_arr_1d = self.cheapest_arr.flatten()
 
                     # check for any available grids to site in
-                    self.avail_grids = np.where(self.flat_ste > 0)[0].shape[0]
+                    self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
+
+                    if self.verbose:
+                        print(f'\nAvailable grid cells:  {self.avail_grids}')
 
         # reshape output array to 2D
-        self.out_ste = self.out_ste.reshape(self.ste.shape)
+        return self.sited_arr_1d.reshape(self.cheapest_arr.shape)
