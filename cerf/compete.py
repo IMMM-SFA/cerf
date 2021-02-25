@@ -70,6 +70,10 @@ class Competition:
         # set initial value to for available grid cells
         self.avail_grids = 1
 
+        # TODO:  check on harmonized technology order throughout
+        # create dictionary of {tech_id: flat_nlc_array, ...}
+        self.nlc_flat_dict = {i: self.nlc_mask[i, :, :].flatten() for i in range(1, self.nlc_mask_shape[0])}
+
         self.sited_array = self.compete()
 
     def compete(self):
@@ -97,9 +101,14 @@ class Competition:
                     sited_list = []
                     while still_siting:
 
-                        # TODO:  use the winners with the cheapest NLC first
-                        # select a random index that has a winning cell for the check
-                        target_ix = np.random.choice(tech)
+                        # get the NLC values associated with each winner
+                        tech_nlc = self.nlc_flat_dict[tech_id][tech]
+
+                        # get the least expensive NLC indices from the winners
+                        tech_nlc_cheap = tech[np.where(tech_nlc == np.min(tech_nlc))]
+
+                        # select a random index that has a winning cell for the check where multiple low NLC may exists
+                        target_ix = np.random.choice(tech_nlc_cheap)
 
                         # add selected index to list
                         sited_list.append(target_ix)
