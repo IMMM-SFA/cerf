@@ -1,3 +1,6 @@
+
+import rasterio
+
 import numpy as np
 
 
@@ -96,3 +99,14 @@ def buffer_flat_array(target_index, arr, nrows, ncols, ncells, set_value):
         raise IndexError(f"Index: '{target_index}' is not in the range of the grid space from 0 to {ngrids - 1}.")
 
     return arr, buffer_indices
+
+
+def array_to_raster(arr, template_raster_file, output_raster_file):
+    """Write a raster file from a 2D array."""
+
+    with rasterio.open(template_raster_file) as src:
+
+        metadata = src.meta.copy()
+
+        with rasterio.open(output_raster_file, 'w', **metadata) as dest:
+            dest.write(arr, 1)

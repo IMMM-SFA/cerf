@@ -1,7 +1,8 @@
 
 import logger
-import numpy as np
-import rasterio
+
+import cerf.utils as util
+
 
 from cerf.read_config import ReadConfig
 from cerf.stage import Stage
@@ -16,11 +17,14 @@ class Model(ReadConfig):
 
         self.technology_dict = self.config.get('technology')
 
+        print('staging')
         self.data = Stage(self.config, self.technology_dict, self.technology_order)
 
-        state_arr = ProcessState(self.config, self.data, self.technology_dict, self.technology_order, target_state_id=45)
+        print('processing state')
+        self.sited_arr = ProcessState(self.config, self.data, self.technology_dict, self.technology_order, target_state_id=45)
 
-
+        out_raster = '/Users/d3y010/Desktop/nlc/out_2010_va.tif'
+        util.array_to_raster(self.sited_arr, self.config['settings']['states_raster_file'], out_raster)
 
 
 

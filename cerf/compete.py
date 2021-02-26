@@ -118,7 +118,7 @@ class Competition:
                                                    arr=self.cheapest_arr_1d,
                                                    nrows=self.cheapest_arr.shape[0],
                                                    ncols=self.cheapest_arr.shape[1],
-                                                   ncells=self.technology_dict[tech_id],
+                                                   ncells=self.technology_dict[tech_id]['buffer_in_km'],
                                                    set_value=0)
 
                         # unpack values

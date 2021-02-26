@@ -29,9 +29,14 @@ class ProcessState:
         self.randomize = randomize
         self.verbose = verbose
 
+        print('creating suitability')
         self.suitability_array_state, self.ymin, self.ymax, self.xmin, self.xmax = self.extract_state_suitability()
 
+        print('creating nlc suitability for state')
         self.suitable_nlc_state = self.mask_nlc()
+
+        print('competetion')
+        self.sited_arr = self.compete()
 
     def extract_state_suitability(self):
         """Extract a single state from the suitability."""
@@ -54,7 +59,7 @@ class ProcessState:
         state_mask = np.where(state_mask == self.target_state_id, 0, 1)
 
         # extract state footprint from suitability data
-        suitability_array_state = self.data.suitability_array[:, ymin:ymax, xmin:xmax].copy()
+        suitability_array_state = self.data.suitability_arr[:, ymin:ymax, xmin:xmax].copy()
 
         # add in suitability where unsuitable is the highest value of NLC
         suitability_array_state += state_mask
@@ -83,6 +88,8 @@ class ProcessState:
     def compete(self):
         """Compete technologies."""
 
+        print(self.expansion_plan)
+
         comp = Competition(self.expansion_plan,
                            self.suitable_nlc_state,
                            self.technology_dict,
@@ -96,9 +103,7 @@ class ProcessState:
         final_array = np.where(final_array == 0, np.nan, final_array)
 
         # place final array back in grid space
-        output_arr = np.zeros_like(states_arr) * np.nan
-        output_arr[ymin:ymax, xmin:xmax] = final_array
+        sited_arr = np.zeros_like(self.data.suitability_arr[0, :, :]) * np.nan
+        sited_arr[self.ymin:self.ymax, self.xmin:self.xmax] = final_array
 
-
-
-
+        return sited_arr
