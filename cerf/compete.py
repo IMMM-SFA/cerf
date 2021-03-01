@@ -43,20 +43,34 @@ class Competition:
 
     """
 
-    def __init__(self, expansion_plan, nlc_mask, technology_dict, randomize=True, seed_value=0, verbose=False):
+    def __init__(self,
+                 technology_dict,
+                 technology_order,
+                 expansion_dict,
+                 nlc_mask,
+                 randomize=True,
+                 seed_value=0,
+                 verbose=False):
 
-        self.verbose = verbose
-        self.expansion_plan = expansion_plan
+        # dictionary containing technology specific information
+        self.technology_dict = technology_dict
+
+        # order of technologies to process
+        self.technology_order = technology_order
+
+        # dictionary containing the expansion plan
+        self.expansion_dict = expansion_dict
+
         self.nlc_mask = nlc_mask
         self.nlc_mask_shape = self.nlc_mask.shape
-        self.technology_dict = technology_dict
+        self.verbose = verbose
 
         # use random seed to create reproducible outcomes
         if randomize is False:
             np.random.seed(seed_value)
 
         # number of technologies
-        self.n_techs = len(expansion_plan)
+        self.n_techs = len(self.technology_order)
 
         # show cheapest option, add 1 to the index to represent the technology number
         self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
@@ -70,9 +84,8 @@ class Competition:
         # set initial value to for available grid cells
         self.avail_grids = 1
 
-        # TODO:  check on harmonized technology order throughout
         # create dictionary of {tech_id: flat_nlc_array, ...}
-        self.nlc_flat_dict = {i: self.nlc_mask[i, :, :].flatten() for i in range(1, self.nlc_mask_shape[0])}
+        self.nlc_flat_dict = {i: self.nlc_mask[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
 
         self.sited_array = self.compete()
 
@@ -81,20 +94,20 @@ class Competition:
         while self.avail_grids > 0:
 
             # evaluate by technology
-            for tech_id in self.expansion_plan.keys():
+            for index, tech_id in enumerate(self.technology_order):
+
+                # assign an index as it appears in the n-dim array to the order in which it is being processed
+                #  index of 0 is the default array and does not represent a technology
+                tech_index = index + 1
 
                 # get the indices of the target tech ids where the target tech is the cheapest option
-                tech = np.where(self.cheapest_arr_1d == tech_id)[0]
+                tech = np.where(self.cheapest_arr_1d == tech_index)[0]
 
                 # if there are more power plants to site and there are grids available to site them...
                 if self.avail_grids > 0 and tech.shape[0] > 0:
 
-                    if self.verbose:
-                        print('\nNumber of sites desired for tech_id {}:  {}'.format(tech_id,
-                                                                                     self.expansion_plan[tech_id]))
-
                     # the number of sites for the target tech
-                    required_sites = self.expansion_plan[tech_id]
+                    required_sites = self.expansion_dict[tech_id]
 
                     # site with buffer and exclude buffered area from further siting
                     still_siting = True
@@ -113,12 +126,13 @@ class Competition:
                         # add selected index to list
                         sited_list.append(target_ix)
 
+                        # TODO:  make buffer inheritance to next suitability year optional
                         # apply buffer
                         result = buffer_flat_array(target_index=target_ix,
                                                    arr=self.cheapest_arr_1d,
                                                    nrows=self.cheapest_arr.shape[0],
                                                    ncols=self.cheapest_arr.shape[1],
-                                                   ncells=self.technology_dict[tech_id],
+                                                   ncells=self.technology_dict[tech_id]['buffer_in_km'],
                                                    set_value=0)
 
                         # unpack values
@@ -143,20 +157,19 @@ class Competition:
                     self.sited_arr_1d[rdx] = tech_id
 
                     # update dictionary with how many plants are left to site
-                    self.expansion_plan[tech_id] = self.expansion_plan[tech_id] - rdx.shape[0]
+                    self.expansion_dict[tech_id] = self.expansion_dict[tech_id] - rdx.shape[0]
 
                     if self.verbose:
                         print('\nUpdate expansion plan to represent siting requirements:')
-                        print(self.expansion_plan)
+                        print(self.expansion_dict)
 
                     # update original array with excluded area where siting occurred
-
                     # if target technology has no more sites to be sited
-                    if self.expansion_plan[tech_id] == 0:
+                    if self.expansion_dict[tech_id] == 0:
 
                         # make all elements for the target tech in the NLC mask unsuitable so we can progress
-                        self.nlc_mask[tech_id, :, :] = np.ma.masked_array(self.nlc_mask[0, :, :],
-                                                                          np.ones_like(self.nlc_mask[0, :, :]))
+                        self.nlc_mask[tech_index, :, :] = np.ma.masked_array(self.nlc_mask[0, :, :],
+                                                                             np.ones_like(self.nlc_mask[0, :, :]))
 
                     # apply the new exclusion from the current technology to all techs...
                     #   invert sited elements to have a value of 1 so they can be used as a mask

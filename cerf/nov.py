@@ -1,5 +1,7 @@
 import calendar
 
+import numpy as np
+
 
 class NetOperationalValue:
     """Calculate Net Operational Value (NOV) in ($ / yr) per grid cell for all technologies.
@@ -63,7 +65,27 @@ class NetOperationalValue:
                                             Units:  $/MWh
     :type lmp_arr:                          ndarray
 
+    :param target_year:                     Target year of the simulation as a four digit integer (e.g., 2010)
+    :type target_year:                      int
+
     """
+
+    # type hints
+    discount_rate: float
+    lifetime: int
+    unit_size: int
+    capacity_factor: float
+    variable_cost_esc_rate: float
+    fuel_esc_rate: float
+    carbon_esc_rate: float
+    variable_om: float
+    heat_rate: float
+    fuel_price: float
+    carbon_tax: float
+    carbon_capture_rate: float
+    fuel_co2_content: float
+    lmp_arr: np.ndarray
+    target_year: int
 
     # constants for conversion
     FUEL_CO2_CONTENT_CONVERSION_FACTOR = 0.000000293071
@@ -105,9 +127,6 @@ class NetOperationalValue:
 
         # calculate levelizing factor for carbon
         self.lf_carbon = self.calc_levelization_factor_carbon()
-
-        # calculate NOV
-        self.nov = self.calc_nov()
 
     @staticmethod
     def convert_fuel_price(fuel_price):
@@ -157,11 +176,11 @@ class NetOperationalValue:
     def calc_nov(self):
         """Calculate NOV array for all technologies."""
 
+        # TODO:  Remove leap year consideration
         term1 = self.unit_size * self.capacity_factor * self.hours_per_year
         term2 = self.lmp_arr * self.lf_fuel
         term3 = self.variable_om * self.lf_vom
         term4 = self.heat_rate * (self.fuel_price / 1000) * self.lf_fuel
-        term5 = (self.carbon_tax * self.fuel_co2_content * self.heat_rate * self.lf_carbon / 1000000) * (
-                    1 - self.carbon_capture_rate)
+        term5 = (self.carbon_tax * self.fuel_co2_content * self.heat_rate * self.lf_carbon / 1000000) * (1 - self.carbon_capture_rate)
 
         return term1 * (term2 - (term3 + term4 + term5))

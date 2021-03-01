@@ -8,7 +8,8 @@ from cerf.compete import Competition
 class TestCompete(unittest.TestCase):
 
     EXPANSION_PLAN = {1: 1, 2: 1, 3: 1}  # n sites per tech
-    TECH_DICT = {1: 1, 2: 1, 3: 1}  # buffer per tech
+    TECH_DICT = {1: {'buffer_in_km': 1}, 2: {'buffer_in_km': 1}, 3: {'buffer_in_km': 1}}  # buffer per tech
+    TECH_ORDER = [1, 2, 3]
 
     # proxy NLC array
     NLC_ARR = np.array([[[1.2, 3.2, 3, 3.2, 3, 3.2, 3],
@@ -31,8 +32,8 @@ class TestCompete(unittest.TestCase):
 
     # expected outcome
     COMP_SITED = np.array([[0, 2, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0],
-                           [0, 1, 0, 3, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 3, 0],
+                           [0, 1, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0]])
 
     COMP_EXP_PLAN = {1: 0, 2: 0, 3: 0}
@@ -50,23 +51,25 @@ class TestCompete(unittest.TestCase):
         # apply exclusion
         return np.ma.masked_array(arr, exc)
 
-    def test_something(self):
+    def test_competition(self):
+        """Ensure that the competition algorithm performs as expected."""
 
         # create a fake NLC masked array to use for testing
         nlc_arr = self.create_masked_nlc_array()
 
-        comp = Competition(expansion_plan=TestCompete.EXPANSION_PLAN,
+        comp = Competition(technology_dict=TestCompete.TECH_DICT,
+                           technology_order=TestCompete.TECH_ORDER,
+                           expansion_dict=TestCompete.EXPANSION_PLAN,
                            nlc_mask=nlc_arr,
-                           technology_dict=TestCompete.TECH_DICT,
-                           randomize=False)
-
-        print(comp.sited_array)
+                           randomize=False,
+                           seed_value=0,
+                           verbose=False)
 
         # test output equality
         np.testing.assert_array_equal(TestCompete.COMP_SITED, comp.sited_array)
 
         # ensure the expansion plan was updated
-        self.assertEqual(TestCompete.COMP_EXP_PLAN, comp.expansion_plan)
+        self.assertEqual(TestCompete.COMP_EXP_PLAN, comp.expansion_dict)
 
 
 if __name__ == '__main__':

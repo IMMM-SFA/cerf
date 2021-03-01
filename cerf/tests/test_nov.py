@@ -74,6 +74,7 @@ class TestNov(unittest.TestCase):
                                     fuel_co2_content=0.0,  # tons/MWh gets converted to tons/Btu
                                     carbon_capture_rate=0.0  # fraction
                                     )
+        nov_tech_arr = econ.calc_nov()
 
         # test the calculation of annuity factor
         self.assertEqual(TestNov.EXPECTED_ANNUITY_FACTOR, econ.annuity_factor)
@@ -88,7 +89,7 @@ class TestNov(unittest.TestCase):
         self.assertEqual(TestNov.EXPECTED_LF_CARBON, econ.lf_carbon)
 
         # test NOV
-        np.testing.assert_array_equal(TestNov.EXPECTED_NOV_NOCARBON_NOLEAP, econ.nov)
+        np.testing.assert_array_equal(TestNov.EXPECTED_NOV_NOCARBON_NOLEAP, nov_tech_arr)
 
     def test_nocarbon_leap_nov(self):
         """Test NOV outcome with no carbon and on a leap year."""
@@ -99,6 +100,7 @@ class TestNov(unittest.TestCase):
                                     fuel_co2_content=0.0,  # tons/MWh gets converted to tons/Btu
                                     carbon_capture_rate=0.0  # fraction
                                     )
+        nov_tech_arr = econ.calc_nov()
 
         # test the calculation of annuity factor
         self.assertEqual(TestNov.EXPECTED_ANNUITY_FACTOR, econ.annuity_factor)
@@ -113,7 +115,7 @@ class TestNov(unittest.TestCase):
         self.assertEqual(TestNov.EXPECTED_LF_CARBON, econ.lf_carbon)
 
         # test NOV
-        np.testing.assert_array_equal(TestNov.EXPECTED_NOV_NOCARBON_LEAP, econ.nov)
+        np.testing.assert_array_equal(TestNov.EXPECTED_NOV_NOCARBON_LEAP, nov_tech_arr)
 
     def test_with_carbon_noleap_nov(self):
         """Test NOV outcome with carbon and not on a leap year."""
@@ -124,6 +126,7 @@ class TestNov(unittest.TestCase):
                                     fuel_co2_content=1.2,  # tons/MWh gets converted to tons/Btu
                                     carbon_capture_rate=0.05  # fraction
                                     )
+        nov_tech_arr = econ.calc_nov()
 
         # test the calculation of annuity factor
         self.assertEqual(TestNov.EXPECTED_ANNUITY_FACTOR, econ.annuity_factor)
@@ -138,7 +141,7 @@ class TestNov(unittest.TestCase):
         self.assertEqual(TestNov.EXPECTED_LF_CARBON, econ.lf_carbon)
 
         # test NOV
-        np.testing.assert_array_equal(TestNov.EXPECTED_NOV_WITHCARBON_NOLEAP, econ.nov)
+        np.testing.assert_array_equal(TestNov.EXPECTED_NOV_WITHCARBON_NOLEAP, nov_tech_arr)
 
 
 if __name__ == '__main__':
