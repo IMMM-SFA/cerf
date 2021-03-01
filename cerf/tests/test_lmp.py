@@ -36,6 +36,9 @@ class TestLmp(unittest.TestCase):
         # read in configuration file
         cfg = ReadConfig(TestLmp.CONFIG_FILE)
 
+        # update configuration to use package data for testing
+        cfg.utility_dict.update(utility_zone_raster_file=TestLmp.UTILITY_ZONES_RASTER_FILE)
+
         # create technology specific locational marginal price based on capacity factor
         pricing = LocationalMarginalPricing(cfg.utility_dict, cfg.technology_dict, cfg.technology_order)
 
