@@ -1,5 +1,6 @@
 import os
 import logging
+import pkg_resources
 
 import yaml
 
@@ -41,6 +42,16 @@ class ReadConfig(Logger):
         # get the utility zone data
         self.utility_dict = self.config.get('utility_zones')
 
+        # get the states dictionary
+        self.states_dict = self.get_states_dict()
+
+    @staticmethod
+    def read_yaml(yaml_file):
+        """Read a YAML file."""
+
+        with open(yaml_file, 'r') as yml:
+            return yaml.load(yml, Loader=yaml.FullLoader)
+
     def get_yaml(self):
         """Read the YAML config file.
 
@@ -57,10 +68,17 @@ class ReadConfig(Logger):
         # check for path exists
         if os.path.isfile(self.config_file):
 
-            with open(self.config_file, 'r') as yml:
-                return yaml.load(yml, Loader=yaml.FullLoader)
+            return self.read_yaml(self.config_file)
 
         else:
             msg = f"Config file not found for path:  {self.config_file}"
             logging.info(msg)
             raise FileNotFoundError(msg)
+
+    def get_states_dict(self):
+        """Get a dictionary of state name to state ID from the YAML file in package data."""
+
+        # in package data {state_name: state_id}
+        states_lookup_file = pkg_resources.resource_filename('cerf', 'data/state-name_to_state-id.yml')
+
+        return self.read_yaml(states_lookup_file)

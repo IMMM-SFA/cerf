@@ -127,6 +127,7 @@ class Competition:
                         sited_list.append(target_ix)
 
                         # TODO:  make buffer inheritance to next suitability year optional
+                        # TODO:  write out exclusion data after buffer applied
                         # apply buffer
                         result = buffer_flat_array(target_index=target_ix,
                                                    arr=self.cheapest_arr_1d,

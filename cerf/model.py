@@ -11,6 +11,8 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 import logging
 import time
 
+from joblib import Parallel, delayed
+
 from cerf.read_config import ReadConfig
 from cerf.stage import Stage
 
@@ -46,30 +48,6 @@ class Model(ReadConfig):
 
         return data
 
-    def run_all_states(self, write_output=True):
-        """Execute model."""
-
-        # prepare all data for state level run
-        data = self.stage()
-
-        # run all states
-        state_list = ['virginia', 'florida']
-
-        for target_state_name in state_list:
-
-            sited_arr = process_state(target_state_name=target_state_name,
-                                      settings_dict=self.settings_dict,
-                                      technology_dict=self.technology_dict,
-                                      technology_order=self.technology_order,
-                                      expansion_dict=self.expansion_dict,
-                                      data=data,
-                                      randomize=self.settings_dict.get('randomize', True),
-                                      seed_value=self.settings_dict.get('seed_value', 0),
-                                      verbose=self.settings_dict.get('verbose', False),
-                                      write_output=write_output)
-
-        self.close_logger()
-
     def run_single_state(self, target_state_name, write_output=True):
         """Execute a single state."""
 
@@ -81,7 +59,9 @@ class Model(ReadConfig):
                                   technology_dict=self.technology_dict,
                                   technology_order=self.technology_order,
                                   expansion_dict=self.expansion_dict,
-                                  data=data,
+                                  states_dict=self.states_dict,
+                                  suitability_arr=data.suitability_arr,
+                                  nlc_arr=data.nlc_arr,
                                   randomize=self.settings_dict.get('randomize', True),
                                   seed_value=self.settings_dict.get('seed_value', 0),
                                   verbose=self.settings_dict.get('verbose', False),
@@ -90,4 +70,30 @@ class Model(ReadConfig):
         self.close_logger()
 
         return sited_arr
+
+
+def run_state_parallel(config_file, target_state_name):
+    """Initialize the parallel runs."""
+
+    sited_arr = Model(config_file).run_single_state(target_state_name)
+
+
+def run_all_states(config_file):
+    """Run all states in parallel"""
+
+    state_dict = ReadConfig.read_yaml(pkg_resources.resource_filename('cerf', 'data/state-name_to_state-id.yml'))
+
+    results = Parallel(n_jobs=-1, backend='loky')(delayed(run_state_parallel)(config_file, i) for i in ['virginia', 'west_virginia', 'new_jersey', 'kentucky', 'florida', 'new_york', 'georgia', 'oregon', 'rhode_island'])
+
+
+if __name__ == '__main__':
+
+    import pkg_resources
+
+    c = pkg_resources.resource_filename('cerf', 'tests/data/config.yml')
+    # m = Model(c).run_single_state(target_state_name='oregon')
+    # m = Model(c).run_all_states()
+
+    run_all_states(c)
+
 

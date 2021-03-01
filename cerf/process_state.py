@@ -14,7 +14,6 @@ import time
 
 import numpy as np
 import rasterio
-import yaml
 
 import cerf.utils as util
 from cerf.compete import Competition
@@ -27,7 +26,9 @@ class ProcessState:
                  technology_dict,
                  technology_order,
                  expansion_dict,
-                 data,
+                 states_dict,
+                 suitability_arr,
+                 nlc_arr,
                  target_state_name='virginia',
                  randomize=True,
                  seed_value=0,
@@ -46,14 +47,20 @@ class ProcessState:
         # dictionary containing the expansion plan
         self.expansion_dict = expansion_dict
 
+        # states dictionary with state name to state ID mapping
+        self.states_dict = states_dict
+
         # target state name
         self.target_state_name = target_state_name
 
         # the id of the target state as it is represented in the state raster
         self.target_state_id = self.get_state_id()
 
-        # staged data
-        self.data = data
+        # suitability data for the CONUS
+        self.suitability_arr = suitability_arr
+
+        # NLC data for the CONUS
+        self.nlc_arr = nlc_arr
 
         # the choice to randomize when a technology has more than one NLC cheapest value
         self.randomize = randomize
@@ -83,19 +90,13 @@ class ProcessState:
 
         """
 
-        # in package data {state_name: state_id}
-        states_lookup_file = pkg_resources.resource_filename('cerf', 'data/state-name_to_state-id.yml')
-
-        with open(states_lookup_file, 'r') as yml:
-            states_dict = yaml.load(yml, Loader=yaml.FullLoader)
-
-        if self.target_state_name in states_dict:
-            return states_dict.get(self.target_state_name.lower())
+        if self.target_state_name in self.states_dict:
+            return self.states_dict.get(self.target_state_name.lower())
 
         else:
 
             logging.error(f"State name: `{self.target_state_name}` not in registry.")
-            logging.error(f"Please select a state name from the following:  {list(states_dict.keys())}")
+            logging.error(f"Please select a state name from the following:  {list(self.states_dict.keys())}")
 
             raise KeyError()
 
@@ -121,7 +122,7 @@ class ProcessState:
         state_mask = np.where(state_mask == self.target_state_id, 0, 1)
 
         # extract state footprint from suitability data
-        suitability_array_state = self.data.suitability_arr[:, ymin:ymax, xmin:xmax].copy()
+        suitability_array_state = self.suitability_arr[:, ymin:ymax, xmin:xmax].copy()
 
         # add in suitability where unsuitable is the highest value of NLC
         suitability_array_state += state_mask
@@ -138,7 +139,7 @@ class ProcessState:
         """Extract NLC elements for the current state."""
 
         # extract state footprint from NLC data
-        nlc_arr_state = self.data.nlc_arr[:, self.ymin:self.ymax, self.xmin:self.xmax].copy()
+        nlc_arr_state = self.nlc_arr[:, self.ymin:self.ymax, self.xmin:self.xmax].copy()
 
         # insert zero array, mask it as index [0, :, :] so the tech_id 0 will always be min if nothing is left to site
         nlc_arr_state = np.insert(nlc_arr_state, 0, np.zeros_like(nlc_arr_state[0, :, :]), axis=0)
@@ -164,7 +165,7 @@ class ProcessState:
         final_array = np.where(final_array == 0, np.nan, final_array)
 
         # place final array back in grid space for all regions
-        sited_arr = np.zeros_like(self.data.suitability_arr[0, :, :]) * np.nan
+        sited_arr = np.zeros_like(self.suitability_arr[0, :, :]) * np.nan
         sited_arr[self.ymin:self.ymax, self.xmin:self.xmax] = final_array
 
         # write outputs if so desired
@@ -181,8 +182,8 @@ class ProcessState:
         return sited_arr
 
 
-def process_state(target_state_name, settings_dict, technology_dict, technology_order, expansion_dict,
-                  data, randomize=True, seed_value=0, verbose=False, write_output=True):
+def process_state(target_state_name, settings_dict, technology_dict, technology_order, expansion_dict, states_dict,
+                  suitability_arr, nlc_arr, randomize=True, seed_value=0, verbose=False, write_output=True):
     """Convenience wrapper to log time and site an expansion plan for a target state for the target year.
 
     :param target_state_name:                   Name of the target state as it is represented in the state raster.
@@ -200,6 +201,15 @@ def process_state(target_state_name, settings_dict, technology_dict, technology_
 
     :param expansion_dict:                      Expansion plan data dictionary from cerf.read_config.ReadConfig
     :type expansion_dict:                       dict
+
+    :param states_dict:                         Mapping from state name to state ID from cerf.read_config.ReadConfig
+    :type states_dict:                          dict
+
+    :param suitability_arr:                     3D array where {tech_id, x, y} for suitability data
+    :type suitability_arr:                      ndarray
+
+    :param nlc_arr:                             3D array where {tech_id, x, y} for NLC data
+    :type nlc_arr:                              ndarray
 
     :param data:                                Object containing all data (NLC, etc.) to run the expansion. This
                                                 data is generated from the cerf.stage.Stage class.
@@ -235,7 +245,9 @@ def process_state(target_state_name, settings_dict, technology_dict, technology_
                            technology_dict=technology_dict,
                            technology_order=technology_order,
                            expansion_dict=expansion_dict,
-                           data=data,
+                           states_dict=states_dict,
+                           suitability_arr=suitability_arr,
+                           nlc_arr=nlc_arr,
                            target_state_name=target_state_name,
                            randomize=randomize,
                            seed_value=seed_value,

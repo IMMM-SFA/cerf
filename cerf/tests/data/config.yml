@@ -1,5 +1,5 @@
 # project settings
-#TODO:  Select which outputs to write    
+#TODO:  Select which outputs to write
 settings:
 
     # target year to run
@@ -533,6 +533,15 @@ utility_zones:
 
         51:
             zone_name: zone_51
+            lmp: 79.20000000000061
+            lmp_by_capacity_factor:
+                0.8: 81.70000000000061
+                0.5: 89.70000000000061
+                0.3: 99.70000000000061
+                0.1: 158.40000000000123
+
+        52:
+            zone_name: zone_52
             lmp: 79.20000000000061
             lmp_by_capacity_factor:
                 0.8: 81.70000000000061
