@@ -24,22 +24,28 @@ class LocationalMarginalPricing:
 
     """
 
-    def __init__(self, config, technology_order):
+    # type hints
+    utility_dict: dict
+    technology_dict: dict
+    technology_order: list
+
+    def __init__(self, utility_dict, technology_dict, technology_order):
+
+        # dictionary containing utility zone information
+        self.utility_dict = utility_dict
+
+        # dictionary containing technology specific information
+        self.technology_dict = technology_dict
+
+        # order of technologies to process
+        self.technology_order = technology_order
 
         # raster file containing the utility zone per grid cell
-        zones_raster_file = config.get('utility_zones').get('utility_zone_raster_file')
+        zones_raster_file = self.utility_dict.get('utility_zone_raster_file')
 
         # read in utility zones raster as a 2D numpy array
         with rasterio.open(zones_raster_file) as src:
             self.zones_arr = src.read(1)
-
-        self.technology_dict = config.get('technology')
-        self.technology_order = technology_order
-
-        self.utility_dict = config.get('utility_zones')
-
-        # get the lmp array and tech order list
-        self.lmp_arr = self.get_lmp()
 
     @staticmethod
     def bin_cf(capacity_factor):
@@ -59,6 +65,11 @@ class LocationalMarginalPricing:
 
         elif capacity_factor < 0.3:
             cf = 0.1
+
+        else:
+            cf = 0.0
+            msg = f"The capacity factor provided `{capacity_factor}` is outside the bounds of 0.0 through 1.0"
+            raise ValueError(msg)
 
         return cf
 

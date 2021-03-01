@@ -1,7 +1,20 @@
 # project settings
+#TODO:  Select which outputs to write    
 settings:
+
+    # target year to run
     run_year: 2010
-    state_raster_file: /Users/d3y010/projects/cerf/data/gis/rast/promod_20121028_conus.img
+
+    # location to store the output data to
+    output_directory: /Users/d3y010/Desktop/nlc
+
+    # randomize selection of a site for a technology when NLC values are equal
+    #  the first pass is always random but setting `randomize` to False and
+    #  passing a seed value will ensure that runs are reproducible
+    randomize: True
+
+    # if `randomize` is False, set a seed value for reproducibility; the default is 0
+    seed_value: 0
 
 # technology specific information
 # TODO:  Make these technology assumptions dynamic with GCAM outputs

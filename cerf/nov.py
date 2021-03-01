@@ -1,5 +1,7 @@
 import calendar
 
+import numpy as np
+
 
 class NetOperationalValue:
     """Calculate Net Operational Value (NOV) in ($ / yr) per grid cell for all technologies.
@@ -63,7 +65,27 @@ class NetOperationalValue:
                                             Units:  $/MWh
     :type lmp_arr:                          ndarray
 
+    :param target_year:                     Target year of the simulation as a four digit integer (e.g., 2010)
+    :type target_year:                      int
+
     """
+
+    # type hints
+    discount_rate: float
+    lifetime: int
+    unit_size: int
+    capacity_factor: float
+    variable_cost_esc_rate: float
+    fuel_esc_rate: float
+    carbon_esc_rate: float
+    variable_om: float
+    heat_rate: float
+    fuel_price: float
+    carbon_tax: float
+    carbon_capture_rate: float
+    fuel_co2_content: float
+    lmp_arr: np.ndarray
+    target_year: int
 
     # constants for conversion
     FUEL_CO2_CONTENT_CONVERSION_FACTOR = 0.000000293071
@@ -105,9 +127,6 @@ class NetOperationalValue:
 
         # calculate levelizing factor for carbon
         self.lf_carbon = self.calc_levelization_factor_carbon()
-
-        # calculate NOV
-        self.nov = self.calc_nov()
 
     @staticmethod
     def convert_fuel_price(fuel_price):

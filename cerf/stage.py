@@ -7,9 +7,10 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 
 """
 
-import logger
-import numpy as np
+import logging
+
 import rasterio
+import numpy as np
 
 from cerf.lmp import LocationalMarginalPricing
 from cerf.nov import NetOperationalValue
@@ -17,35 +18,55 @@ from cerf.nov import NetOperationalValue
 
 class Stage:
 
-    def __init__(self, config, technology_dict, technology_order):
+    # type hints
+    settings_dict: dict
+    utility_dict: dict
+    technology_dict: dict
+    technology_order: list
 
-        self.config = config
+    def __init__(self, settings_dict, utility_dict, technology_dict, technology_order):
+
+        # dictionary containing project level settings
+        self.settings = settings_dict
+
+        # dictionary containing utility zone information
+        self.utility_dict = utility_dict
+
+        # dictionary containing technology specific information
         self.technology_dict = technology_dict
+
+        # order of technologies to process
         self.technology_order = technology_order
 
         # get LMP array per tech [tech_order, x, y]
+        logging.info('Processing locational marginal pricing (LMP)')
         self.lmp_arr = self.calculate_lmp()
 
         # get interconnection cost per tech [tech_order, x, y]
+        logging.info('Calculating interconnection costs (IC)')
         self.ic_arr = self.calculate_ic()
 
         # get NOV array per tech [tech_order, x, y]
+        logging.info('Calculating net operational cost (NOV)')
         self.nov_arr = self.calculate_nov()
 
         # get NLC array per tech [tech_order, x, y]
+        logging.info('Calculating net locational cost (NLC)')
         self.nlc_arr = self.calculate_nlc()
 
         # combine all suitability rasters into an array
+        logging.info('Building suitability array')
         self.suitability_arr = self.build_suitability_array()
 
     def calculate_lmp(self):
         """Calculate Locational Marginal Pricing."""
 
         # create technology specific locational marginal price based on capacity factor
-        pricing = LocationalMarginalPricing(self.config, self.technology_order)
+        pricing = LocationalMarginalPricing(self.utility_dict, self.technology_dict, self.technology_order)
+        lmp_arr = pricing.get_lmp()
 
         # get lmp array per tech [tech_order, x, y]
-        return pricing.lmp_arr
+        return lmp_arr
 
     def calculate_ic(self):
         """Calculate interconnection costs."""
@@ -84,9 +105,10 @@ class Stage:
                                        carbon_capture_rate=self.technology_dict[i]['carbon_capture_rate'],
                                        fuel_co2_content=self.technology_dict[i]['fuel_co2_content'],
                                        lmp_arr=self.lmp_arr[index, :, :],
-                                       target_year=self.config['settings']['run_year'])
+                                       target_year=self.settings.get('run_year'))
 
-            nov_arr[index, :, :] = econ.nov
+            nov_tech_arr = econ.calc_nov()
+            nov_arr[index, :, :] = nov_tech_arr
 
         return nov_arr
 

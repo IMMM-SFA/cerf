@@ -38,13 +38,13 @@ class TestLmp(unittest.TestCase):
         cfg = ReadConfig(TestLmp.CONFIG_FILE)
 
         # create technology specific locational marginal price based on capacity factor
-        pricing = LocationalMarginalPricing(cfg.config, cfg.technology_order)
+        pricing = LocationalMarginalPricing(cfg.utility_dict, cfg.technology_dict, cfg.technology_order)
 
         # get lmp array per tech [tech_order, x, y]
-        self.lmp_arr = pricing.lmp_arr
+        lmp_arr = pricing.get_lmp()
 
         # trim down LMP array for testing
-        slim_lmps = self.get_sample(pricing.lmp_arr)
+        slim_lmps = self.get_sample(lmp_arr)
 
         # test LMP array equality
         np.testing.assert_array_equal(TestLmp.SLIM_LMP_ARRAY, slim_lmps)

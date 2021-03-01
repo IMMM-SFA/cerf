@@ -108,5 +108,9 @@ def array_to_raster(arr, template_raster_file, output_raster_file):
 
         metadata = src.meta.copy()
 
+        # update metadata
+        metadata.update(dtype=np.float64,
+                        nodata=np.nan)
+
         with rasterio.open(output_raster_file, 'w', **metadata) as dest:
             dest.write(arr, 1)
