@@ -51,7 +51,7 @@ class TestCompete(unittest.TestCase):
         # apply exclusion
         return np.ma.masked_array(arr, exc)
 
-    def test_competetion(self):
+    def test_competition(self):
         """Ensure that the competition algorithm performs as expected."""
 
         # create a fake NLC masked array to use for testing
