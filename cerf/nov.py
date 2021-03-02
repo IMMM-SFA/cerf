@@ -68,6 +68,9 @@ class NetOperationalValue:
     :param target_year:                     Target year of the simulation as a four digit integer (e.g., 2010)
     :type target_year:                      int
 
+    :param consider_leap_year:              Choose to account for leap year in the number of hours per year calculation
+    :type consider_leap_year:               bool
+
     """
 
     # type hints
@@ -86,6 +89,7 @@ class NetOperationalValue:
     fuel_co2_content: float
     lmp_arr: np.ndarray
     target_year: int
+    consider_leap_year: bool
 
     # constants for conversion
     FUEL_CO2_CONTENT_CONVERSION_FACTOR = 0.000000293071
@@ -95,7 +99,7 @@ class NetOperationalValue:
 
     def __init__(self, discount_rate, lifetime, unit_size, capacity_factor, variable_cost_esc_rate,
                  fuel_esc_rate, carbon_esc_rate, variable_om, heat_rate, fuel_price, carbon_tax,
-                 carbon_capture_rate, fuel_co2_content, lmp_arr, target_year):
+                 carbon_capture_rate, fuel_co2_content, lmp_arr, target_year, consider_leap_year=False):
 
         # assign class attributes
         self.discount_rate = discount_rate
@@ -114,6 +118,8 @@ class NetOperationalValue:
         # create conversions
         self.fuel_price = self.convert_fuel_price(fuel_price)
         self.fuel_co2_content = self.convert_fuel_co2_content(fuel_co2_content)
+
+        # adjust by leap year if so desired
         self.hours_per_year = self.assign_hours_per_year(target_year)
 
         # calculate annuity factor
@@ -141,10 +147,10 @@ class NetOperationalValue:
         return fuel_co2_content * NetOperationalValue.FUEL_CO2_CONTENT_CONVERSION_FACTOR
 
     @classmethod
-    def assign_hours_per_year(cls, target_year):
+    def assign_hours_per_year(cls, target_year, consider_leap_year):
         """Assign the hours per year based on whether or not the target year is a leap year."""
 
-        if calendar.isleap(target_year):
+        if calendar.isleap(target_year) and consider_leap_year:
             return cls.HOURS_PER_YEAR_LEAP
         else:
             return cls.HOURS_PER_YEAR_NONLEAP
@@ -176,7 +182,6 @@ class NetOperationalValue:
     def calc_nov(self):
         """Calculate NOV array for all technologies."""
 
-        # TODO:  Remove leap year consideration
         term1 = self.unit_size * self.capacity_factor * self.hours_per_year
         term2 = self.lmp_arr * self.lf_fuel
         term3 = self.variable_om * self.lf_vom
