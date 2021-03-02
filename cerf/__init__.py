@@ -1,5 +1,6 @@
 from cerf.model import *
 from cerf.install_supplement import *
-from cerf.nov import NetOperationalValue
+from cerf.parallel import run_parallel
 
-__all__ = ['model', 'InstallSupplement', 'NetOperationalValue']
+
+__all__ = ['model', 'InstallSupplement', 'run_parallel']
