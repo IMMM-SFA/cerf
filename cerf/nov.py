@@ -120,7 +120,7 @@ class NetOperationalValue:
         self.fuel_co2_content = self.convert_fuel_co2_content(fuel_co2_content)
 
         # adjust by leap year if so desired
-        self.hours_per_year = self.assign_hours_per_year(target_year)
+        self.hours_per_year = self.assign_hours_per_year(target_year, consider_leap_year)
 
         # calculate annuity factor
         self.annuity_factor = self.calc_annuity_factor()
