@@ -17,6 +17,12 @@ from cerf.stage import Stage
 
 
 class Model(ReadConfig):
+    """Model wrapper for CERF.
+
+    :param config_file:                 Full path with file name and extension to the input config.yml file
+    :type config_file:                  str
+
+    """
 
     # type hints
     config_file: str

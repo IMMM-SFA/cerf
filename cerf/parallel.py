@@ -20,14 +20,43 @@ import cerf.utils as util
 
 
 def generate_model(config_file):
-    """Generate model instance and stage data."""
+    """Generate model instance for use in parallel applications.
 
-    # instantiate model
+    :param config_file:                 Full path with file name and extension to the input config.yml file
+    :type config_file:                  str
+
+    """
+
     return Model(config_file)
 
 
 def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'):
-    """Run all states in parallel"""
+    """Run all CONUS states in parallel.
+
+    :param model:                       Instantiated CERF model class containing configuration options
+    :type model:                        class
+
+    :param data:                        Data from cerf.stage.Stage containing NLC and suitability arrays
+
+    :param config_file:                 Full path with file name and extension to the input config.yml file
+    :type config_file:                  str
+
+    :param write_output:                Write output as a raster to the output directory specified in the config file
+    :type write_output:                 bool
+
+    :param n_jobs:                      The number of processors to utilize.  Default is -1 which is all but 1.
+    :type n_jobs:                       int
+
+    :param method:                      Backend parallelization method used in Joblib.  Default is `sequential` to
+                                        manage overhead for local runs.  Options for advanced configurations are:
+                                        `loky`, `threading`, and `multiprocessing`.
+                                        See https://joblib.readthedocs.io/en/latest/parallel.html for details.
+    :type method:                       str
+
+    :return:                            A 2D arrays containing sites as the technology ID per grid cell.  All
+                                        non-sited grid cells are given the value of NaN.
+
+    """
 
     # start time for parallel run
     t0 = time.time()
@@ -47,6 +76,7 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
                                                                              write_output=False) for i in model.states_dict.keys())
 
     logging.info(f"All states processed in {round((time.time() - t0), 7)} seconds.")
+    logging.info("Aggregating outputs to a common grid...")
 
     # aggregate results into a single raster
     array_shape = results[0].shape
@@ -78,19 +108,49 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
     return result_arr_2d
 
 
-def run_parallel(config_file):
+def run_parallel(config_file, write_output=True, n_jobs=-1, method='sequential'):
+    """Generate model instance for use in parallel applications.
 
+    :param config_file:                 Full path with file name and extension to the input config.yml file
+    :type config_file:                  str
+
+    :param write_output:                Write output as a raster to the output directory specified in the config file
+    :type write_output:                 bool
+
+    :param n_jobs:                      The number of processors to utilize.  Default is -1 which is all but 1.
+    :type n_jobs:                       int
+
+    :param method:                      Backend parallelization method used in Joblib.  Default is `sequential` to
+                                        manage overhead for local runs.  Options for advanced configurations are:
+                                        `loky`, `threading`, and `multiprocessing`.
+                                        See https://joblib.readthedocs.io/en/latest/parallel.html for details.
+    :type method:                       str
+
+    :return:                            A 2D arrays containing sites as the technology ID per grid cell.  All
+                                        non-sited grid cells are given the value of NaN.
+
+    """
+
+    # instantiate CERF model
     model = generate_model(config_file)
 
+    # process supporting data
     data = model.stage()
 
-    res = cerf_parallel(model, data)
+    # process all CERF CONUS states in parallel and store the result as a 2D arrays containing sites as
+    #  the technology ID per grid cell.  All non-sited grid cells are given the value of NaN.
+    result = cerf_parallel(model=model,
+                           data=data,
+                           write_output=write_output,
+                           n_jobs=n_jobs,
+                           method=method)
 
     logging.info(f"CERF model run completed in {round(time.time() - model.start_time, 7)}")
 
+    # clean up logger
     model.close_logger()
 
-    return res
+    return result
 
 
 if __name__ == '__main__':
