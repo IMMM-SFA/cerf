@@ -151,9 +151,10 @@ class ProcessState:
     def competition(self):
         """Compete technologies."""
 
-        comp = Competition(technology_dict=self.technology_dict,
+        comp = Competition(target_state_name=self.target_state_name,
+                           technology_dict=self.technology_dict,
                            technology_order=self.technology_order,
-                           expansion_dict=self.expansion_dict,
+                           expansion_dict=self.expansion_dict[self.target_state_name],
                            nlc_mask=self.suitable_nlc_state,
                            randomize=self.randomize,
                            seed_value=self.seed_value,
@@ -237,23 +238,33 @@ def process_state(target_state_name, settings_dict, technology_dict, technology_
 
     logging.info(f'Processing state:  {target_state_name}')
 
-    # initial time for processing state
-    state_t0 = time.time()
+    # check to see if state has any sites in the expansion
+    n_sites = sum([expansion_dict[target_state_name][k]['n_sites'] for k in expansion_dict[target_state_name].keys()])
 
-    # process expansion plan and competition for a single state for the target year
-    process = ProcessState(settings_dict=settings_dict,
-                           technology_dict=technology_dict,
-                           technology_order=technology_order,
-                           expansion_dict=expansion_dict,
-                           states_dict=states_dict,
-                           suitability_arr=suitability_arr,
-                           nlc_arr=nlc_arr,
-                           target_state_name=target_state_name,
-                           randomize=randomize,
-                           seed_value=seed_value,
-                           verbose=verbose,
-                           write_output=write_output)
+    # if there are no sites in the expansion, return an all NaN 2D array
+    if n_sites <= 0:
+        logging.warning(f"There were no sites expected for any technology in `{target_state_name}`")
+        return nlc_arr[0, :, :] * np.nan
 
-    logging.info(f'Processed `{target_state_name}` in {round(time.time() - state_t0, 7)} seconds')
+    else:
 
-    return process.sited_arr
+        # initial time for processing state
+        state_t0 = time.time()
+
+        # process expansion plan and competition for a single state for the target year
+        process = ProcessState(settings_dict=settings_dict,
+                               technology_dict=technology_dict,
+                               technology_order=technology_order,
+                               expansion_dict=expansion_dict,
+                               states_dict=states_dict,
+                               suitability_arr=suitability_arr,
+                               nlc_arr=nlc_arr,
+                               target_state_name=target_state_name,
+                               randomize=randomize,
+                               seed_value=seed_value,
+                               verbose=verbose,
+                               write_output=write_output)
+
+        logging.info(f'Processed `{target_state_name}` in {round(time.time() - state_t0, 7)} seconds')
+
+        return process.sited_arr

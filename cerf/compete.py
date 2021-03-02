@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 
 from cerf.utils import buffer_flat_array
@@ -44,6 +46,7 @@ class Competition:
     """
 
     def __init__(self,
+                 target_state_name,
                  technology_dict,
                  technology_order,
                  expansion_dict,
@@ -51,6 +54,9 @@ class Competition:
                  randomize=True,
                  seed_value=0,
                  verbose=False):
+
+        # target state
+        self.target_state_name = target_state_name
 
         # dictionary containing technology specific information
         self.technology_dict = technology_dict
@@ -82,16 +88,37 @@ class Competition:
         self.sited_arr_1d = np.zeros_like(self.cheapest_arr_1d)
 
         # set initial value to for available grid cells
-        self.avail_grids = 1
+        self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
 
         # create dictionary of {tech_id: flat_nlc_array, ...}
         self.nlc_flat_dict = {i: self.nlc_mask[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
 
-        self.sited_array = self.compete()
+        # run competition and site
+        self.sited_array, self.expansion_dict = self.compete()
+
+        # evaluate sites to see if expansion plan was met
+        self.log_outcome()
+
+    def log_outcome(self):
+        """Log a warning sites that were not able to be sited."""
+
+        for k in self.expansion_dict.keys():
+
+            tech_name = self.expansion_dict[k]['tech_name']
+            remaining_sites = self.expansion_dict[k]['n_sites']
+
+            if remaining_sites > 0:
+                logging.warning(f"Unable to achieve full siting for `{tech_name}` in `{self.target_state_name}`:  {remaining_sites} unsited.")
 
     def compete(self):
 
-        while self.avail_grids > 0:
+        # dictionary of iterations per technology
+        iter_dict = {}
+
+        # initialize keep sighting designation; False if no more sites or area to site
+        keep_siting = True
+
+        while keep_siting:
 
             # evaluate by technology
             for index, tech_id in enumerate(self.technology_order):
@@ -103,11 +130,11 @@ class Competition:
                 # get the indices of the target tech ids where the target tech is the cheapest option
                 tech = np.where(self.cheapest_arr_1d == tech_index)[0]
 
-                # if there are more power plants to site and there are grids available to site them...
-                if self.avail_grids > 0 and tech.shape[0] > 0:
+                # the number of sites for the target tech
+                required_sites = self.expansion_dict[tech_id]['n_sites']
 
-                    # the number of sites for the target tech
-                    required_sites = self.expansion_dict[tech_id]
+                # if there are more power plants to site and there are grids available to site them...
+                if self.avail_grids > 0 and tech.shape[0] > 0 and required_sites > 0:
 
                     # site with buffer and exclude buffered area from further siting
                     still_siting = True
@@ -141,6 +168,7 @@ class Competition:
 
                         # update the number of sites left to site
                         required_sites -= 1
+                        self.expansion_dict[tech_id].update(n_sites=required_sites)
 
                         # remove any buffered elements as an option to site
                         tech_indices_to_delete = [np.where(tech == i)[0][0] for i in buffer_indices_list if i in tech]
@@ -157,12 +185,9 @@ class Competition:
                     # add sited techs to output array
                     self.sited_arr_1d[rdx] = tech_id
 
-                    # update dictionary with how many plants are left to site
-                    self.expansion_dict[tech_id] = self.expansion_dict[tech_id] - rdx.shape[0]
-
                     if self.verbose:
-                        print('\nUpdate expansion plan to represent siting requirements:')
-                        print(self.expansion_dict)
+                        logging.info('\nUpdate expansion plan to represent siting requirements:')
+                        logging.info(self.expansion_dict)
 
                     # update original array with excluded area where siting occurred
                     # if target technology has no more sites to be sited
@@ -183,6 +208,12 @@ class Competition:
                                                                       self.nlc_mask_shape[1],
                                                                       self.nlc_mask_shape[2])))
 
+                    # if the technology has achieved its full expansion, then mask the rest of its suitable area so
+                    #  other technologies can now compete for the grid cells it previously won but now no longer needs
+                    if self.expansion_dict[tech_id]['n_sites'] == 0:
+                        self.nlc_mask[tech_index, :, :] = np.ma.masked_array(self.nlc_mask[tech_index, :, :],
+                                                                             np.ones_like(self.nlc_mask[tech_index, :, :]))
+
                     # show cheapest option, add 1 to the index to represent the technology number
                     self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
 
@@ -192,8 +223,19 @@ class Competition:
                     # check for any available grids to site in
                     self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
 
+                    # are there any sites left to site
+                    left_to_site = sum([self.expansion_dict[i]['n_sites'] for i in self.expansion_dict.keys()])
+
+                    # stop technology iteration if all area is consumed or if all sites have been sited
+                    if self.avail_grids == 0 or left_to_site == 0:
+                        keep_siting = False
+
                     if self.verbose:
-                        print(f'\nAvailable grid cells:  {self.avail_grids}')
+                        logging.info(f'\nAvailable grid cells:  {self.avail_grids}')
+
+                # there are no more suitable grid cells
+                elif self.avail_grids == 0:
+                    keep_siting = False
 
         # reshape output array to 2D
-        return self.sited_arr_1d.reshape(self.cheapest_arr.shape)
+        return self.sited_arr_1d.reshape(self.cheapest_arr.shape), self.expansion_dict

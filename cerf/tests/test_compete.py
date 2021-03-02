@@ -7,7 +7,9 @@ from cerf.compete import Competition
 
 class TestCompete(unittest.TestCase):
 
-    EXPANSION_PLAN = {1: 1, 2: 1, 3: 1}  # n sites per tech
+    EXPANSION_PLAN = {1: {'n_sites': 1, 'tech_name': 'test1'},
+                      2: {'n_sites': 1, 'tech_name': 'test2'},
+                      3: {'n_sites': 1, 'tech_name': 'test3'}}  # n sites per tech
     TECH_DICT = {1: {'buffer_in_km': 1}, 2: {'buffer_in_km': 1}, 3: {'buffer_in_km': 1}}  # buffer per tech
     TECH_ORDER = [1, 2, 3]
 
@@ -36,7 +38,9 @@ class TestCompete(unittest.TestCase):
                            [0, 1, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0]])
 
-    COMP_EXP_PLAN = {1: 0, 2: 0, 3: 0}
+    COMP_EXP_PLAN = {1: {'n_sites': 0, 'tech_name': 'test1'},
+                     2: {'n_sites': 0, 'tech_name': 'test2'},
+                     3: {'n_sites': 0, 'tech_name': 'test3'}}
 
     @classmethod
     def create_masked_nlc_array(cls):
@@ -57,7 +61,8 @@ class TestCompete(unittest.TestCase):
         # create a fake NLC masked array to use for testing
         nlc_arr = self.create_masked_nlc_array()
 
-        comp = Competition(technology_dict=TestCompete.TECH_DICT,
+        comp = Competition(target_state_name='test',
+                           technology_dict=TestCompete.TECH_DICT,
                            technology_order=TestCompete.TECH_ORDER,
                            expansion_dict=TestCompete.EXPANSION_PLAN,
                            nlc_mask=nlc_arr,

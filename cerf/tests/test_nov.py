@@ -11,7 +11,7 @@ import unittest
 
 import numpy as np
 
-from cerf import NetOperationalValue
+from cerf.nov import NetOperationalValue
 
 
 class TestNov(unittest.TestCase):

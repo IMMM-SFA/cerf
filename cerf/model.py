@@ -11,12 +11,9 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 import logging
 import time
 
-from joblib import Parallel, delayed
-
+from cerf.process_state import process_state
 from cerf.read_config import ReadConfig
 from cerf.stage import Stage
-
-from cerf.process_state import process_state
 
 
 class Model(ReadConfig):
@@ -26,11 +23,16 @@ class Model(ReadConfig):
 
     def __init__(self, config_file):
 
-        # inherit the configuration reader class attributes
-        super(Model, self).__init__(config_file)
+        # start time for model run
+        self.start_time = time.time()
 
         # initialize console handler for logger
         self.console_handler()
+
+        logging.info("Starting CERF model")
+
+        # inherit the configuration reader class attributes
+        super(Model, self).__init__(config_file)
 
     def stage(self):
         """Execute model."""
@@ -67,23 +69,11 @@ class Model(ReadConfig):
                                   verbose=self.settings_dict.get('verbose', False),
                                   write_output=write_output)
 
+        logging.info(f"CERF model run completed in {round(time.time() - self.start_time, 7)}")
+
         self.close_logger()
 
         return sited_arr
-
-
-def run_state_parallel(config_file, target_state_name):
-    """Initialize the parallel runs."""
-
-    sited_arr = Model(config_file).run_single_state(target_state_name)
-
-
-def run_all_states(config_file):
-    """Run all states in parallel"""
-
-    state_dict = ReadConfig.read_yaml(pkg_resources.resource_filename('cerf', 'data/state-name_to_state-id.yml'))
-
-    results = Parallel(n_jobs=-1, backend='loky')(delayed(run_state_parallel)(config_file, i) for i in ['virginia', 'west_virginia', 'new_jersey', 'kentucky', 'florida', 'new_york', 'georgia', 'oregon', 'rhode_island'])
 
 
 if __name__ == '__main__':
@@ -91,9 +81,4 @@ if __name__ == '__main__':
     import pkg_resources
 
     c = pkg_resources.resource_filename('cerf', 'tests/data/config.yml')
-    # m = Model(c).run_single_state(target_state_name='oregon')
-    # m = Model(c).run_all_states()
-
-    run_all_states(c)
-
-
+    m = Model(c).run_single_state(target_state_name='missouri')
