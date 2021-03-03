@@ -1,0 +1,597 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cerf.tests package &mdash; cerf 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="setup module" href="setup.html" />
+    <link rel="prev" title="cerf.process_inputs package" href="cerf.process_inputs.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> cerf
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">cerf</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cerf.html">cerf package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="cerf.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="cerf.data.html">cerf.data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cerf.process_inputs.html">cerf.process_inputs package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">cerf.tests package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#module-cerf.compete">cerf.compete module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#module-cerf.install_supplement">cerf.install_supplement module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#module-cerf.interconnect">cerf.interconnect module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#module-cerf.lmp">cerf.lmp module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#module-cerf.logger">cerf.logger module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#module-cerf.model">cerf.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#module-cerf.nov">cerf.nov module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#cerf-outputs-module">cerf.outputs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#module-cerf.parallel">cerf.parallel module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#module-cerf.process_state">cerf.process_state module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#module-cerf.read_config">cerf.read_config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#module-cerf.spatial_reader">cerf.spatial_reader module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#module-cerf.stage">cerf.stage module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#module-cerf.utils">cerf.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.html#module-cerf">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html">setup module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cerf</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">cerf</a> &raquo;</li>
+        
+          <li><a href="cerf.html">cerf package</a> &raquo;</li>
+        
+      <li>cerf.tests package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/cerf.tests.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="cerf-tests-package">
+<h1>cerf.tests package<a class="headerlink" href="#cerf-tests-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-cerf.tests.test_compete">
+<span id="cerf-tests-test-compete-module"></span><h2>cerf.tests.test_compete module<a class="headerlink" href="#module-cerf.tests.test_compete" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="cerf.tests.test_compete.TestCompete">
+<em class="property">class </em><code class="sig-prename descclassname">cerf.tests.test_compete.</code><code class="sig-name descname">TestCompete</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">methodName</span><span class="o">=</span><span class="default_value">'runTest'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_compete.TestCompete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="py attribute">
+<dt id="cerf.tests.test_compete.TestCompete.COMP_EXP_PLAN">
+<code class="sig-name descname">COMP_EXP_PLAN</code><em class="property"> = {1: {'n_sites': 0, 'tech_name': 'test1'}, 2: {'n_sites': 0, 'tech_name': 'test2'}, 3: {'n_sites': 0, 'tech_name': 'test3'}}</em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.COMP_EXP_PLAN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_compete.TestCompete.COMP_SITED">
+<code class="sig-name descname">COMP_SITED</code><em class="property"> = array([[0, 2, 0, 0, 0, 0, 0],        [0, 0, 0, 0, 0, 3, 0],        [0, 1, 0, 0, 0, 0, 0],        [0, 0, 0, 0, 0, 0, 0]])</em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.COMP_SITED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_compete.TestCompete.EXPANSION_PLAN">
+<code class="sig-name descname">EXPANSION_PLAN</code><em class="property"> = {1: {'n_sites': 1, 'tech_name': 'test1'}, 2: {'n_sites': 1, 'tech_name': 'test2'}, 3: {'n_sites': 1, 'tech_name': 'test3'}}</em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.EXPANSION_PLAN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_compete.TestCompete.NLC_ARR">
+<code class="sig-name descname">NLC_ARR</code><em class="property"> = array([[[1.2, 3.2, 3. , 3.2, 3. , 3.2, 3. ],         [2.4, 5. , 2.4, 3.2, 3. , 3.2, 3. ],         [7. , 2.4, 9. , 3.2, 3. , 3.2, 3. ],         [2.4, 5. , 2.4, 3.2, 3. , 3.2, 3. ]],         [[2. , 1. , 1.4, 3.2, 3. , 3.2, 3. ],         [5. , 5. , 7. , 3.2, 3. , 3.2, 3. ],         [1. , 9. , 3. , 3.2, 3. , 3.2, 3. ],         [2.4, 5. , 2.4, 3.2, 3. , 3.2, 3. ]],         [[0. , 1. , 0. , 3.2, 3. , 3.2, 3. ],         [5. , 4. , 7. , 3.2, 3. , 3.2, 3. ],         [1. , 9. , 9. , 3.2, 3. , 3.2, 3. ],         [2.4, 5. , 2.4, 3.2, 3. , 3.2, 3. ]]])</em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.NLC_ARR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_compete.TestCompete.SUIT_ARR">
+<code class="sig-name descname">SUIT_ARR</code><em class="property"> = array([[[0, 0, 1, 0, 1, 0, 1],         [1, 0, 1, 0, 1, 0, 1],         [0, 0, 1, 0, 1, 0, 1],         [1, 0, 1, 0, 1, 0, 1]],         [[1, 0, 1, 0, 1, 0, 1],         [1, 0, 1, 0, 1, 0, 1],         [1, 0, 0, 0, 1, 0, 1],         [1, 0, 1, 0, 1, 0, 1]],         [[0, 0, 0, 0, 1, 0, 1],         [0, 0, 0, 0, 1, 0, 1],         [1, 1, 1, 0, 1, 0, 1],         [1, 0, 1, 0, 1, 0, 1]]])</em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.SUIT_ARR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_compete.TestCompete.TECH_DICT">
+<code class="sig-name descname">TECH_DICT</code><em class="property"> = {1: {'buffer_in_km': 1}, 2: {'buffer_in_km': 1}, 3: {'buffer_in_km': 1}}</em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.TECH_DICT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_compete.TestCompete.TECH_ORDER">
+<code class="sig-name descname">TECH_ORDER</code><em class="property"> = [1, 2, 3]</em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.TECH_ORDER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cerf.tests.test_compete.TestCompete.create_masked_nlc_array">
+<em class="property">classmethod </em><code class="sig-name descname">create_masked_nlc_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.create_masked_nlc_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a masked NLC array by suitability to use in testing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.tests.test_compete.TestCompete.test_competition">
+<code class="sig-name descname">test_competition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.test_competition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure that the competition algorithm performs as expected.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.tests.test_lmp">
+<span id="cerf-tests-test-lmp-module"></span><h2>cerf.tests.test_lmp module<a class="headerlink" href="#module-cerf.tests.test_lmp" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="cerf.tests.test_lmp.TestLmp">
+<em class="property">class </em><code class="sig-prename descclassname">cerf.tests.test_lmp.</code><code class="sig-name descname">TestLmp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">methodName</span><span class="o">=</span><span class="default_value">'runTest'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="py attribute">
+<dt id="cerf.tests.test_lmp.TestLmp.CONFIG_FILE">
+<code class="sig-name descname">CONFIG_FILE</code><em class="property"> = '/Users/d3y010/repos/github/cerf/cerf/tests/data/config.yml'</em><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp.CONFIG_FILE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_lmp.TestLmp.SLIM_LMP_ARRAY">
+<code class="sig-name descname">SLIM_LMP_ARRAY</code><em class="property"> = array([[[ 66. ,  66. ,  66. , ...,  73.6,  73.6,  73.6],         [ 66. ,  66. ,  66. , ...,  73.6,  73.6,  73.6],         [ 66. ,  66. ,  66. , ...,  73.6,  73.6,  73.6],         ...,         [101.4, 101.4, 101.4, ...,   nan,   nan,   nan],         [101.4, 101.4, 101.4, ...,   nan,   nan,   nan],         [101.4, 101.4, 101.4, ...,   nan,   nan,   nan]],         [[ 58. ,  58. ,  58. , ...,  65.6,  65.6,  65.6],         [ 58. ,  58. ,  58. , ...,  65.6,  65.6,  65.6],         [ 58. ,  58. ,  58. , ...,  65.6,  65.6,  65.6],         ...,         [ 93.4,  93.4,  93.4, ...,   nan,   nan,   nan],         [ 93.4,  93.4,  93.4, ...,   nan,   nan,   nan],         [ 93.4,  93.4,  93.4, ...,   nan,   nan,   nan]]])</em><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp.SLIM_LMP_ARRAY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_lmp.TestLmp.TECH_DICT_FILE">
+<code class="sig-name descname">TECH_DICT_FILE</code><em class="property"> = '/Users/d3y010/repos/github/cerf/cerf/tests/data/comp_data/technology_dict.p'</em><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp.TECH_DICT_FILE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_lmp.TestLmp.TECH_DICT_FULL">
+<code class="sig-name descname">TECH_DICT_FULL</code><em class="property"> = {'biomass_conv': {'capacity_factor': 0.6090000000000005, 'carbon_capture_rate': 0.0, 'fuel_co2_content': 0.3035999999999996, 'fuel_esc_rate': 0.0, 'fuel_price': 0.0, 'heat_rate': 15117.64999999997, 'interconnection_cost_per_km': 552, 'lifetime': 60.0, 'unit_size': 80, 'variable_cost_esc_rate': -0.00398993418629034, 'variable_om': 11.68495803744351}, 'biomass_igcc_with_ccs': {'capacity_factor': 0.0, 'carbon_capture_rate': 0.0, 'fuel_co2_content': 0.30359999999999976, 'fuel_esc_rate': 0.0, 'fuel_price': 0.0, 'heat_rate': 13022.900000000012, 'interconnection_cost_per_km': 774, 'lifetime': 60.0, 'unit_size': 380, 'variable_cost_esc_rate': -0.00564811220001504, 'variable_om': 17.9470626210458}, 'biomass_igcc_wo_ccs': {'capacity_factor': 0.0, 'carbon_capture_rate': 0.0, 'fuel_co2_content': 0.30359999999999976, 'fuel_esc_rate': 0.0, 'fuel_price': 0.0, 'heat_rate': 10662.5, 'interconnection_cost_per_km': 774, 'lifetime': 60.0, 'unit_size': 400, 'variable_cost_esc_rate': -0.00443288530388608, 'variable_om': 15.009683666881898}, 'coal_conv': {'capacity_factor': 0.7099148936170215, 'carbon_capture_rate': 0.0, 'fuel_co2_content': 0.36036, 'fuel_esc_rate': 0.10655117647058819, 'fuel_price': 2.4214745098039177, 'heat_rate': 10139.700000000012, 'interconnection_cost_per_km': 774, 'lifetime': 60.0, 'unit_size': 600, 'variable_cost_esc_rate': -0.00398993418629034, 'variable_om': 6.003873466752742}, 'coal_igcc_with_ccs': {'capacity_factor': 0.0, 'carbon_capture_rate': 0.0, 'fuel_co2_content': 0.36036, 'fuel_esc_rate': 0.10655117647058823, 'fuel_price': 2.4214745098039225, 'heat_rate': 10215.599999999991, 'interconnection_cost_per_km': 774, 'lifetime': 60.0, 'unit_size': 380, 'variable_cost_esc_rate': -0.00583677050505782, 'variable_om': 10.006455777921193}, 'coal_igcc_wo_ccs': {'capacity_factor': 0.0, 'carbon_capture_rate': 0.0, 'fuel_co2_content': 0.36036, 'fuel_esc_rate': 0.10655117647058823, 'fuel_price': 2.4214745098039225, 'heat_rate': 8383.299999999994, 'interconnection_cost_per_km': 774, 'lifetime': 60.0, 'unit_size': 550, 'variable_cost_esc_rate': -0.00443288530388608, 'variable_om': 6.488056810845706}, 'gas_cc': {'capacity_factor': 0.34167346938775517, 'carbon_capture_rate': 0.0, 'fuel_co2_content': 0.18743999999999994, 'fuel_esc_rate': 0.0223286274509804, 'fuel_price': 4.357389411764707, 'heat_rate': 6630.599999999989, 'interconnection_cost_per_km': 774, 'lifetime': 60.0, 'unit_size': 400, 'variable_cost_esc_rate': -0.00458144958070683, 'variable_om': 5.245319561007097}, 'gas_turbine': {'capacity_factor': 0.14402040816326525, 'carbon_capture_rate': 0.0, 'fuel_co2_content': 0.18743999999999994, 'fuel_esc_rate': 0.022328627450980396, 'fuel_price': 4.3573894117647045, 'heat_rate': 9050.400000000009, 'interconnection_cost_per_km': 774, 'lifetime': 60.0, 'unit_size': 400, 'variable_cost_esc_rate': -0.00398993418629034, 'variable_om': 10.006455777921193}, 'nuclear': {'capacity_factor': 0.8999999999999995, 'carbon_capture_rate': 0.0, 'fuel_co2_content': 0.0, 'fuel_esc_rate': 0.04639000000000001, 'fuel_price': 0.7128099999999996, 'heat_rate': 10246.19999999998, 'interconnection_cost_per_km': 1104, 'lifetime': 60.0, 'unit_size': 1350, 'variable_cost_esc_rate': -0.00104311614063357, 'variable_om': 2.098127824402843}, 'oil_turbine': {'capacity_factor': 0.12137254901960799, 'carbon_capture_rate': 0.0, 'fuel_co2_content': 0.25872000000000017, 'fuel_esc_rate': 0.6219349019607842, 'fuel_price': 14.980409999999996, 'heat_rate': 9399.400000000009, 'interconnection_cost_per_km': 774, 'lifetime': 60.0, 'unit_size': 400, 'variable_cost_esc_rate': -0.00398993418629034, 'variable_om': 10.006455777921193}, 'solar': {'capacity_factor': 0.3422424242424243, 'carbon_capture_rate': 0.0, 'fuel_co2_content': 0.0, 'fuel_esc_rate': 0.0, 'fuel_price': 0.0, 'heat_rate': 3412.0, 'interconnection_cost_per_km': 552, 'lifetime': 30.0, 'unit_size': 80, 'variable_cost_esc_rate': -0.00249607760279447, 'variable_om': 0.0}, 'wind': {'capacity_factor': 0.4496842105263159, 'carbon_capture_rate': 0.0, 'fuel_co2_content': 0.0, 'fuel_esc_rate': 0.0, 'fuel_price': 0.0, 'heat_rate': 3412.0, 'interconnection_cost_per_km': 774, 'lifetime': 30.0, 'unit_size': 251, 'variable_cost_esc_rate': -0.00249607760279447, 'variable_om': 0.0}}</em><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp.TECH_DICT_FULL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_lmp.TestLmp.TECH_ORDER_LIST">
+<code class="sig-name descname">TECH_ORDER_LIST</code><em class="property"> = ['biomass_conv', 'nuclear']</em><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp.TECH_ORDER_LIST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_lmp.TestLmp.UTILITY_ZONES_RASTER_FILE">
+<code class="sig-name descname">UTILITY_ZONES_RASTER_FILE</code><em class="property"> = '/Users/d3y010/repos/github/cerf/cerf/tests/data/inputs/spatial/utility_zones_1km.img'</em><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp.UTILITY_ZONES_RASTER_FILE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cerf.tests.test_lmp.TestLmp.get_sample">
+<em class="property">static </em><code class="sig-name descname">get_sample</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arr</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp.get_sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a sample from the LMP dictionary to reduce comparison size.  Sample space covers the Southeast U.S.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.tests.test_lmp.TestLmp.slim_techs">
+<em class="property">classmethod </em><code class="sig-name descname">slim_techs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp.slim_techs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only use two technologies to speed up tests.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.tests.test_lmp.TestLmp.test_lmp_outputs">
+<code class="sig-name descname">test_lmp_outputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp.test_lmp_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test to make sure LMP outputs match expected.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.tests.test_nov">
+<span id="cerf-tests-test-nov-module"></span><h2>cerf.tests.test_nov module<a class="headerlink" href="#module-cerf.tests.test_nov" title="Permalink to this headline">¶</a></h2>
+<p>Tests for Net Operational Value calculations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>Chris R. Vernon</p>
+</dd>
+<dt class="field-even">email</dt>
+<dd class="field-even"><p><a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
+</dd>
+</dl>
+<p>License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</p>
+<dl class="py class">
+<dt id="cerf.tests.test_nov.TestNov">
+<em class="property">class </em><code class="sig-prename descclassname">cerf.tests.test_nov.</code><code class="sig-name descname">TestNov</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">methodName</span><span class="o">=</span><span class="default_value">'runTest'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_nov.TestNov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Tests for the NOV calculations.</p>
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.CAPACITY_FACTOR">
+<code class="sig-name descname">CAPACITY_FACTOR</code><em class="property"> = 0.9</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.CAPACITY_FACTOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.CARBON_CAPTURE_RATE">
+<code class="sig-name descname">CARBON_CAPTURE_RATE</code><em class="property"> = 0.0</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.CARBON_CAPTURE_RATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.CARBON_ESC_RATE">
+<code class="sig-name descname">CARBON_ESC_RATE</code><em class="property"> = 0.0</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.CARBON_ESC_RATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.CARBON_TAX">
+<code class="sig-name descname">CARBON_TAX</code><em class="property"> = 0.0</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.CARBON_TAX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.DISCOUNT_RATE">
+<code class="sig-name descname">DISCOUNT_RATE</code><em class="property"> = 0.05</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.DISCOUNT_RATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.EXPECTED_ANNUITY_FACTOR">
+<code class="sig-name descname">EXPECTED_ANNUITY_FACTOR</code><em class="property"> = 0.05282818452724236</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.EXPECTED_ANNUITY_FACTOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.EXPECTED_LF_CARBON">
+<code class="sig-name descname">EXPECTED_LF_CARBON</code><em class="property"> = 0.999999999999999</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.EXPECTED_LF_CARBON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.EXPECTED_LF_FUEL">
+<code class="sig-name descname">EXPECTED_LF_FUEL</code><em class="property"> = 2.8587075325530398</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.EXPECTED_LF_FUEL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.EXPECTED_LF_VOM">
+<code class="sig-name descname">EXPECTED_LF_VOM</code><em class="property"> = 0.9819019248539469</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.EXPECTED_LF_VOM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.EXPECTED_NOV_NOCARBON_LEAP">
+<code class="sig-name descname">EXPECTED_NOV_NOCARBON_LEAP</code><em class="property"> = array([1.78572638e+09])</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.EXPECTED_NOV_NOCARBON_LEAP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.EXPECTED_NOV_NOCARBON_NOLEAP">
+<code class="sig-name descname">EXPECTED_NOV_NOCARBON_NOLEAP</code><em class="property"> = array([1.78084735e+09])</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.EXPECTED_NOV_NOCARBON_NOLEAP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.EXPECTED_NOV_WITHCARBON_NOLEAP">
+<code class="sig-name descname">EXPECTED_NOV_WITHCARBON_NOLEAP</code><em class="property"> = array([1.78084734e+09])</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.EXPECTED_NOV_WITHCARBON_NOLEAP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.FUEL_CO2_CONTENT">
+<code class="sig-name descname">FUEL_CO2_CONTENT</code><em class="property"> = 0.0</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.FUEL_CO2_CONTENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.FUEL_ESC_RATE">
+<code class="sig-name descname">FUEL_ESC_RATE</code><em class="property"> = 0.04639</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.FUEL_ESC_RATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.FUEL_PRICE">
+<code class="sig-name descname">FUEL_PRICE</code><em class="property"> = 0.712809999999999</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.FUEL_PRICE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.HEAT_RATE">
+<code class="sig-name descname">HEAT_RATE</code><em class="property"> = 10246.19999999998</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.HEAT_RATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.LIFETIME">
+<code class="sig-name descname">LIFETIME</code><em class="property"> = 60</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.LIFETIME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.LMP_ARR">
+<code class="sig-name descname">LMP_ARR</code><em class="property"> = array([66.95609874])</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.LMP_ARR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.UNIT_SIZE">
+<code class="sig-name descname">UNIT_SIZE</code><em class="property"> = 1350</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.UNIT_SIZE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.VARIABLE_COST_ESC_RATE">
+<code class="sig-name descname">VARIABLE_COST_ESC_RATE</code><em class="property"> = -0.00104311614063357</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.VARIABLE_COST_ESC_RATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_nov.TestNov.VARIABLE_OM">
+<code class="sig-name descname">VARIABLE_OM</code><em class="property"> = 2.09812782440284</em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.VARIABLE_OM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cerf.tests.test_nov.TestNov.instantiate_nov">
+<em class="property">classmethod </em><code class="sig-name descname">instantiate_nov</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">target_year</span></em>, <em class="sig-param"><span class="n">carbon_tax</span></em>, <em class="sig-param"><span class="n">fuel_co2_content</span></em>, <em class="sig-param"><span class="n">carbon_capture_rate</span></em>, <em class="sig-param"><span class="n">consider_leap_year</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_nov.TestNov.instantiate_nov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiate NOV class with test values.  The additional parameters can be passed to
+test NOV under different carbon conditions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.tests.test_nov.TestNov.test_nocarbon_leap_nov">
+<code class="sig-name descname">test_nocarbon_leap_nov</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_nov.TestNov.test_nocarbon_leap_nov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test NOV outcome with no carbon and on a leap year.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.tests.test_nov.TestNov.test_nocarbon_noleap_nov">
+<code class="sig-name descname">test_nocarbon_noleap_nov</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_nov.TestNov.test_nocarbon_noleap_nov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test NOV outcome with no carbon and no leap year.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.tests.test_nov.TestNov.test_with_carbon_noleap_nov">
+<code class="sig-name descname">test_with_carbon_noleap_nov</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_nov.TestNov.test_with_carbon_noleap_nov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test NOV outcome with carbon and not on a leap year.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.tests.test_read_config">
+<span id="cerf-tests-test-read-config-module"></span><h2>cerf.tests.test_read_config module<a class="headerlink" href="#module-cerf.tests.test_read_config" title="Permalink to this headline">¶</a></h2>
+<p>Tests to ensure high-level functionality and outputs remain consistent.</p>
+<p>&#64;author Chris R. vernon
+&#64;email <a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
+<p>License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</p>
+<dl class="py class">
+<dt id="cerf.tests.test_read_config.TestReadConfig">
+<em class="property">class </em><code class="sig-prename descclassname">cerf.tests.test_read_config.</code><code class="sig-name descname">TestReadConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">methodName</span><span class="o">=</span><span class="default_value">'runTest'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_read_config.TestReadConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Test configuration reader.</p>
+<dl class="py method">
+<dt id="cerf.tests.test_read_config.TestReadConfig.test_config_reader">
+<code class="sig-name descname">test_config_reader</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_read_config.TestReadConfig.test_config_reader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests for configuration reader.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.tests.test_spatial_reader">
+<span id="cerf-tests-test-spatial-reader-module"></span><h2>cerf.tests.test_spatial_reader module<a class="headerlink" href="#module-cerf.tests.test_spatial_reader" title="Permalink to this headline">¶</a></h2>
+<p>Tests for spatial_reader.py</p>
+<p>&#64;author Chris R. vernon
+&#64;email <a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
+<p>License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</p>
+<dl class="py class">
+<dt id="cerf.tests.test_spatial_reader.TestSpatialReader">
+<em class="property">class </em><code class="sig-prename descclassname">cerf.tests.test_spatial_reader.</code><code class="sig-name descname">TestSpatialReader</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">methodName</span><span class="o">=</span><span class="default_value">'runTest'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_spatial_reader.TestSpatialReader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Tests for <cite>spatial_reader.py</cite></p>
+<dl class="py method">
+<dt id="cerf.tests.test_spatial_reader.TestSpatialReader.test_sum_rasters">
+<code class="sig-name descname">test_sum_rasters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_spatial_reader.TestSpatialReader.test_sum_rasters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests for <cite>sum_rasters</cite> function.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.tests.test_utils">
+<span id="cerf-tests-test-utils-module"></span><h2>cerf.tests.test_utils module<a class="headerlink" href="#module-cerf.tests.test_utils" title="Permalink to this headline">¶</a></h2>
+<p>Tests for CERF utilities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>Chris R. Vernon</p>
+</dd>
+<dt class="field-even">email</dt>
+<dd class="field-even"><p><a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
+</dd>
+</dl>
+<p>License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</p>
+<dl class="py class">
+<dt id="cerf.tests.test_utils.TestUtils">
+<em class="property">class </em><code class="sig-prename descclassname">cerf.tests.test_utils.</code><code class="sig-name descname">TestUtils</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">methodName</span><span class="o">=</span><span class="default_value">'runTest'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_utils.TestUtils" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Tests for the NOV calculations.</p>
+<dl class="py attribute">
+<dt id="cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_0">
+<code class="sig-name descname">COMP_BUFF_FLAT_0</code><em class="property"> = array([[7., 7., 7., 0., 0.],        [7., 7., 7., 0., 0.],        [7., 7., 7., 0., 0.],        [0., 0., 0., 0., 0.]])</em><a class="headerlink" href="#cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_0_LIST">
+<code class="sig-name descname">COMP_BUFF_FLAT_0_LIST</code><em class="property"> = [0, 1, 2, 5, 6, 7, 10, 11, 12]</em><a class="headerlink" href="#cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_0_LIST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_19">
+<code class="sig-name descname">COMP_BUFF_FLAT_19</code><em class="property"> = array([[0., 0., 0., 0., 0.],        [0., 0., 7., 7., 7.],        [0., 0., 7., 7., 7.],        [0., 0., 7., 7., 7.]])</em><a class="headerlink" href="#cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_19" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_19_LIST">
+<code class="sig-name descname">COMP_BUFF_FLAT_19_LIST</code><em class="property"> = [17, 18, 19, 12, 13, 14, 7, 8, 9]</em><a class="headerlink" href="#cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_19_LIST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cerf.tests.test_utils.TestUtils.test_buffer_flat_array">
+<code class="sig-name descname">test_buffer_flat_array</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.tests.test_utils.TestUtils.test_buffer_flat_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test to make sure the buffer flat array function if working correctly.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.tests">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cerf.tests" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="setup.html" class="btn btn-neutral float-right" title="setup module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="cerf.process_inputs.html" class="btn btn-neutral float-left" title="cerf.process_inputs package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Chris Vernon.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
