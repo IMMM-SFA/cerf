@@ -1,5 +1,0 @@
-include cerf/data/*
-include cerf/tests/data/comp_data/*
-include cerf/tests/data/inputs/spatial/biomass/*
-include cerf/tests/data/inputs/spatial/nuclear/*
-include cerf/tests/data/inputs/spatial/utility_zones_1km.img
