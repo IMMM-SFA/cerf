@@ -13,6 +13,7 @@ import time
 
 from joblib import Parallel, delayed
 import numpy as np
+import pandas as pd
 
 from cerf.model import Model
 from cerf.process_state import process_state

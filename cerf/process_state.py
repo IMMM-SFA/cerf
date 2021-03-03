@@ -13,6 +13,7 @@ import pkg_resources
 import time
 
 import numpy as np
+import pandas as pd
 import rasterio
 
 import cerf.utils as util
@@ -29,6 +30,8 @@ class ProcessState:
                  states_dict,
                  suitability_arr,
                  nlc_arr,
+                 xcoords,
+                 ycoords,
                  target_state_name='virginia',
                  randomize=True,
                  seed_value=0,
@@ -61,6 +64,10 @@ class ProcessState:
 
         # NLC data for the CONUS
         self.nlc_arr = nlc_arr
+
+        # coordinates for each index
+        self.xcoords = xcoords
+        self.ycoords = ycoords
 
         # the choice to randomize when a technology has more than one NLC cheapest value
         self.randomize = randomize
@@ -156,14 +163,14 @@ class ProcessState:
                            technology_order=self.technology_order,
                            expansion_dict=self.expansion_dict[self.target_state_name],
                            nlc_mask=self.suitable_nlc_state,
+                           xcoords=self.xcoords,
+                           ycoords=self.ycoords,
                            randomize=self.randomize,
                            seed_value=self.seed_value,
                            verbose=self.verbose)
 
-        final_array = comp.sited_array
-
         # create an output raster of sited techs; 0 is NaN
-        final_array = np.where(final_array == 0, np.nan, final_array)
+        final_array = np.where(comp.sited_array == 0, np.nan, comp.sited_array)
 
         # place final array back in grid space for all regions
         sited_arr = np.zeros_like(self.suitability_arr[0, :, :]) * np.nan
@@ -173,18 +180,24 @@ class ProcessState:
         if self.write_outputs:
 
             # create output file path
-            file_name = f"cerf_sited_{self.settings_dict['run_year']}_{self.target_state_name}.tif"
-            out_file = os.path.join(self.settings_dict.get('output_directory'), file_name)
+            raster_file_name = f"cerf_sited_{self.settings_dict['run_year']}_{self.target_state_name}.tif"
+            raster_out_file = os.path.join(self.settings_dict.get('output_directory'), raster_file_name)
 
             # write output using a template to prescribe the metadata
             template_raster = self.technology_dict[self.technology_order[0]]['interconnection_distance_raster_file']
-            util.array_to_raster(sited_arr, template_raster, out_file)
+            util.array_to_raster(sited_arr, template_raster, raster_out_file)
+
+            # create output CSV file of coordinate data
+            csv_file_name = f"cerf_sited_{self.settings_dict['run_year']}_{self.target_state_name}.csv"
+            csv_out_file = os.path.join(self.settings_dict.get('output_directory'), csv_file_name)
+            df = pd.DataFrame(comp.sited_dict).to_csv(csv_out_file, index=False)
 
         return sited_arr
 
 
 def process_state(target_state_name, settings_dict, technology_dict, technology_order, expansion_dict, states_dict,
-                  suitability_arr, nlc_arr, randomize=True, seed_value=0, verbose=False, write_output=True):
+                  suitability_arr, nlc_arr, xcoords, ycoords,randomize=True, seed_value=0, verbose=False,
+                  write_output=True):
     """Convenience wrapper to log time and site an expansion plan for a target state for the target year.
 
     :param target_state_name:                   Name of the target state as it is represented in the state raster.
@@ -259,6 +272,8 @@ def process_state(target_state_name, settings_dict, technology_dict, technology_
                                states_dict=states_dict,
                                suitability_arr=suitability_arr,
                                nlc_arr=nlc_arr,
+                               xcoords=xcoords,
+                               ycoords=ycoords,
                                target_state_name=target_state_name,
                                randomize=randomize,
                                seed_value=seed_value,

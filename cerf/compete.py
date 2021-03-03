@@ -51,6 +51,8 @@ class Competition:
                  technology_order,
                  expansion_dict,
                  nlc_mask,
+                 xcoords,
+                 ycoords,
                  randomize=True,
                  seed_value=0,
                  verbose=False):
@@ -78,6 +80,16 @@ class Competition:
         # number of technologies
         self.n_techs = len(self.technology_order)
 
+        # dictionary to hold sited information
+        self.sited_dict = {'index': [],
+                           'xcoord': [],
+                           'ycoord': [],
+                           'nlc': []}
+
+        # coordinates for each index
+        self.xcoords = xcoords
+        self.ycoords = ycoords
+
         # show cheapest option, add 1 to the index to represent the technology number
         self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
 
@@ -94,7 +106,7 @@ class Competition:
         self.nlc_flat_dict = {i: self.nlc_mask[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
 
         # run competition and site
-        self.sited_array, self.expansion_dict = self.compete()
+        self.sited_array = self.compete()
 
         # evaluate sites to see if expansion plan was met
         self.log_outcome()
@@ -111,9 +123,6 @@ class Competition:
                 logging.warning(f"Unable to achieve full siting for `{tech_name}` in `{self.target_state_name}`:  {remaining_sites} unsited.")
 
     def compete(self):
-
-        # dictionary of iterations per technology
-        iter_dict = {}
 
         # initialize keep sighting designation; False if no more sites or area to site
         keep_siting = True
@@ -149,6 +158,17 @@ class Competition:
 
                         # select a random index that has a winning cell for the check where multiple low NLC may exists
                         target_ix = np.random.choice(tech_nlc_cheap)
+
+                        try:
+                            # add selected index to sited dictionary
+                            self.sited_dict['index'].append(target_ix)
+                            self.sited_dict['xcoord'].append(self.xcoords[target_ix])
+                            self.sited_dict['ycoord'].append(self.ycoords[target_ix])
+                            self.sited_dict['nlc'].append(self.nlc_flat_dict[tech_id][target_ix])
+                        except IndexError:
+                            print(target_ix)
+                            print(self.xcoords.shape)
+                            raise
 
                         # add selected index to list
                         sited_list.append(target_ix)
@@ -238,4 +258,4 @@ class Competition:
                     keep_siting = False
 
         # reshape output array to 2D
-        return self.sited_arr_1d.reshape(self.cheapest_arr.shape), self.expansion_dict
+        return self.sited_arr_1d.reshape(self.cheapest_arr.shape)

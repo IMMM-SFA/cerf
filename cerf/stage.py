@@ -8,6 +8,7 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 """
 
 import logging
+import pkg_resources
 
 import rasterio
 import numpy as np
@@ -37,6 +38,10 @@ class Stage:
 
         # order of technologies to process
         self.technology_order = technology_order
+
+        # load coordinate data
+        self.xcoords = np.load(pkg_resources.resource_filename('cerf', 'data/conus_xcoords_albers_1d.npy'))
+        self.ycoords = np.load(pkg_resources.resource_filename('cerf', 'data/conus_ycoords_albers_1d.npy'))
 
         # get LMP array per tech [tech_order, x, y]
         logging.info('Processing locational marginal pricing (LMP)')

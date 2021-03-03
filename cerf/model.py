@@ -70,6 +70,8 @@ class Model(ReadConfig):
                                   states_dict=self.states_dict,
                                   suitability_arr=data.suitability_arr,
                                   nlc_arr=data.nlc_arr,
+                                  xcoords=data.xcoords,
+                                  ycoords=data.ycoords,
                                   randomize=self.settings_dict.get('randomize', True),
                                   seed_value=self.settings_dict.get('seed_value', 0),
                                   verbose=self.settings_dict.get('verbose', False),
@@ -87,4 +89,4 @@ if __name__ == '__main__':
     import pkg_resources
 
     c = pkg_resources.resource_filename('cerf', 'tests/data/config.yml')
-    m = Model(c).run_single_state(target_state_name='missouri')
+    m = Model(c).run_single_state(target_state_name='virginia')
