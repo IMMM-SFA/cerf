@@ -105,6 +105,7 @@ class Competition:
                            'tech_id': [],
                            'xcoord': [],
                            'ycoord': [],
+                           'buffer_in_km': [],
                            'utility_zone': [],
                            'locational_marginal_pricing': [],
                            'net_operational_value': [],
@@ -189,6 +190,7 @@ class Competition:
                         self.sited_dict['tech_id'].append(tech_id)
                         self.sited_dict['xcoord'].append(self.xcoords[target_ix])
                         self.sited_dict['ycoord'].append(self.ycoords[target_ix])
+                        self.sited_dict['buffer_in_km'].append(self.technology_dict[tech_id]['buffer_in_km'])
                         self.sited_dict['utility_zone'].append(self.zones_flat_arr[target_ix])
                         self.sited_dict['locational_marginal_pricing'].append(self.lmp_flat_dict[tech_id][target_ix])
                         self.sited_dict['net_operational_value'].append(self.nov_flat_dict[tech_id][target_ix])
