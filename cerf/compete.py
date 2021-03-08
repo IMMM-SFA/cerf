@@ -1,6 +1,7 @@
 import logging
 
 import numpy as np
+import pandas as pd
 
 from cerf.utils import buffer_flat_array
 
@@ -130,7 +131,7 @@ class Competition:
         self.nlc_flat_dict = {i: self.nlc_mask[ix+1, :, :].flatten() for ix, i in enumerate(self.technology_order)}
 
         # run competition and site
-        self.sited_array = self.compete()
+        self.sited_array, self.sited_df = self.compete()
 
         # evaluate sites to see if expansion plan was met
         self.log_outcome()
@@ -282,4 +283,4 @@ class Competition:
                     keep_siting = False
 
         # reshape output array to 2D
-        return self.sited_arr_1d.reshape(self.cheapest_arr.shape)
+        return self.sited_arr_1d.reshape(self.cheapest_arr.shape), pd.DataFrame(self.sited_dict)

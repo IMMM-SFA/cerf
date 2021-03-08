@@ -16,7 +16,6 @@ import numpy as np
 import pandas as pd
 import rasterio
 
-import cerf.utils as util
 from cerf.compete import Competition
 
 
@@ -111,7 +110,7 @@ class ProcessState:
         self.zones_flat_arr = self.extract_utility_zones()
 
         logging.info(f"Competing technologies to site expansion for {self.target_state_name}")
-        self.sited_arr, self.sited_df = self.competition()
+        self.run_data = self.competition()
 
     def get_state_id(self):
         """Load state name to state id YAML file to a dictionary.
@@ -227,26 +226,11 @@ class ProcessState:
                            seed_value=self.seed_value,
                            verbose=self.verbose)
 
-        # create an output raster of sited techs; 0 is NaN
-        final_array = np.where(comp.sited_array == 0, np.nan, comp.sited_array)
-
-        # place final array back in grid space for all regions
-        sited_arr = np.zeros_like(self.suitability_arr[0, :, :]) * np.nan
-        sited_arr[self.ymin:self.ymax, self.xmin:self.xmax] = final_array
-
         # create data frame of sited data
         df = pd.DataFrame(comp.sited_dict)
 
         # write outputs if so desired
         if self.write_outputs:
-
-            # create output file path
-            raster_file_name = f"cerf_sited_{self.settings_dict['run_year']}_{self.target_state_name}.tif"
-            raster_out_file = os.path.join(self.settings_dict.get('output_directory'), raster_file_name)
-
-            # write output using a template to prescribe the metadata
-            template_raster = self.technology_dict[self.technology_order[0]]['interconnection_distance_raster_file']
-            util.array_to_raster(sited_arr, template_raster, raster_out_file)
 
             # create output CSV file of coordinate data
             csv_file_name = f"cerf_sited_{self.settings_dict['run_year']}_{self.target_state_name}.csv"
@@ -254,7 +238,7 @@ class ProcessState:
 
             df.to_csv(csv_out_file, index=False)
 
-        return sited_arr, df
+        return comp
 
 
 def process_state(target_state_name, settings_dict, technology_dict, technology_order, expansion_dict, states_dict,

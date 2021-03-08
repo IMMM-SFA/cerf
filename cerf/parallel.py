@@ -101,7 +101,7 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
 
         # ensure some sites were able to be sited for the target state
         if i is not None:
-            df = pd.concat([df, i.sited_df])
+            df = pd.concat([df, i.run_data.sited_df])
 
     if write_output:
 
