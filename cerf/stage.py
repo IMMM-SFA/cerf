@@ -13,6 +13,7 @@ import pkg_resources
 import rasterio
 import numpy as np
 
+import cerf.utils as util
 from cerf.lmp import LocationalMarginalPricing
 from cerf.nov import NetOperationalValue
 
@@ -40,8 +41,8 @@ class Stage:
         self.technology_order = technology_order
 
         # load coordinate data
-        self.xcoords = np.load(pkg_resources.resource_filename('cerf', 'data/conus_xcoords_albers_2d.npy'))
-        self.ycoords = np.load(pkg_resources.resource_filename('cerf', 'data/conus_ycoords_albers_2d.npy'))
+        self.cerf_stateid_raster_file = pkg_resources.resource_filename('cerf', 'data/cerf_conus_states_albers_1km.tif')
+        self.xcoords, self.ycoords = util.raster_to_coord_arrays(self.cerf_stateid_raster_file)
 
         # raster file containing the utility zone per grid cell
         self.zones_arr = self.load_utility_raster()

@@ -1,7 +1,7 @@
 
-import rasterio
-
 import numpy as np
+import rasterio
+import xarray as xr
 
 
 def buffer_flat_array(target_index, arr, nrows, ncols, ncells, set_value):
@@ -114,3 +114,23 @@ def array_to_raster(arr, template_raster_file, output_raster_file):
 
         with rasterio.open(output_raster_file, 'w', **metadata) as dest:
             dest.write(arr, 1)
+
+
+def raster_to_coord_arrays(template_raster):
+    """Use the template raster to create two 2D arrays containing the X and Y coordinates of every grid cell.
+
+    :param template_raster:                 Full path with file name and extension to the input raster.
+    :type template_raster:                  str
+
+    :return:                                [0] 2D array of X coordinates
+                                            [1] 2D array of Y coordinates
+
+    """
+
+    # Read the data
+    da = xr.open_rasterio(template_raster)
+
+    # Compute the lon/lat coordinates with rasterio.warp.transform
+    x, y = np.meshgrid(da['x'], da['y'])
+
+    return x, y
