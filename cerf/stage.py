@@ -8,10 +8,12 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 """
 
 import logging
+import pkg_resources
 
 import rasterio
 import numpy as np
 
+import cerf.utils as util
 from cerf.lmp import LocationalMarginalPricing
 from cerf.nov import NetOperationalValue
 
@@ -38,6 +40,13 @@ class Stage:
         # order of technologies to process
         self.technology_order = technology_order
 
+        # load coordinate data
+        self.cerf_stateid_raster_file = pkg_resources.resource_filename('cerf', 'data/cerf_conus_states_albers_1km.tif')
+        self.xcoords, self.ycoords = util.raster_to_coord_arrays(self.cerf_stateid_raster_file)
+
+        # raster file containing the utility zone per grid cell
+        self.zones_arr = self.load_utility_raster()
+
         # get LMP array per tech [tech_order, x, y]
         logging.info('Processing locational marginal pricing (LMP)')
         self.lmp_arr = self.calculate_lmp()
@@ -58,11 +67,21 @@ class Stage:
         logging.info('Building suitability array')
         self.suitability_arr = self.build_suitability_array()
 
+    def load_utility_raster(self):
+        """Load the utility zones raster for the CONUS into a 2D array."""
+
+        # raster file containing the utility zone per grid cell
+        zones_raster_file = self.utility_dict.get('utility_zone_raster_file')
+
+        # read in utility zones raster as a 2D numpy array
+        with rasterio.open(zones_raster_file) as src:
+            return src.read(1)
+
     def calculate_lmp(self):
         """Calculate Locational Marginal Pricing."""
 
         # create technology specific locational marginal price based on capacity factor
-        pricing = LocationalMarginalPricing(self.utility_dict, self.technology_dict, self.technology_order)
+        pricing = LocationalMarginalPricing(self.utility_dict, self.technology_dict, self.technology_order, self.zones_arr)
         lmp_arr = pricing.get_lmp()
 
         # get lmp array per tech [tech_order, x, y]

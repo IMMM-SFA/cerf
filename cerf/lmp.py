@@ -1,5 +1,4 @@
 import numpy as np
-import rasterio
 
 
 class LocationalMarginalPricing:
@@ -24,12 +23,7 @@ class LocationalMarginalPricing:
 
     """
 
-    # type hints
-    utility_dict: dict
-    technology_dict: dict
-    technology_order: list
-
-    def __init__(self, utility_dict, technology_dict, technology_order):
+    def __init__(self, utility_dict, technology_dict, technology_order, zones_arr):
 
         # dictionary containing utility zone information
         self.utility_dict = utility_dict
@@ -40,12 +34,8 @@ class LocationalMarginalPricing:
         # order of technologies to process
         self.technology_order = technology_order
 
-        # raster file containing the utility zone per grid cell
-        zones_raster_file = self.utility_dict.get('utility_zone_raster_file')
-
-        # read in utility zones raster as a 2D numpy array
-        with rasterio.open(zones_raster_file) as src:
-            self.zones_arr = src.read(1)
+        # array containing the utility zone per grid cell
+        self.zones_arr = zones_arr
 
     @staticmethod
     def bin_cf(capacity_factor):
