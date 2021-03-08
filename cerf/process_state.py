@@ -212,6 +212,7 @@ class ProcessState:
         """Compete technologies."""
 
         comp = Competition(target_state_name=self.target_state_name,
+                           settings_dict=self.settings_dict,
                            technology_dict=self.technology_dict,
                            technology_order=self.technology_order,
                            expansion_dict=self.expansion_dict[self.target_state_name],

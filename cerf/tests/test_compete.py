@@ -10,7 +10,9 @@ class TestCompete(unittest.TestCase):
     EXPANSION_PLAN = {1: {'n_sites': 1, 'tech_name': 'test1'},
                       2: {'n_sites': 1, 'tech_name': 'test2'},
                       3: {'n_sites': 1, 'tech_name': 'test3'}}  # n sites per tech
-    TECH_DICT = {1: {'buffer_in_km': 1}, 2: {'buffer_in_km': 1}, 3: {'buffer_in_km': 1}}  # buffer per tech
+    TECH_DICT = {1: {'buffer_in_km': 1, 'lifetime': 60},
+                 2: {'buffer_in_km': 1, 'lifetime': 60},
+                 3: {'buffer_in_km': 1, 'lifetime': 60}}  # buffer per tech
     TECH_ORDER = [1, 2, 3]
 
     # proxy NLC array
@@ -32,6 +34,9 @@ class TestCompete(unittest.TestCase):
                         [[1, 0, 1, 0, 1, 0, 1], [1, 0, 1, 0, 1, 0, 1], [1, 0, 0, 0, 1, 0, 1], [1, 0, 1, 0, 1, 0, 1]],
                         [[0, 0, 0, 0, 1, 0, 1], [0, 0, 0, 0, 1, 0, 1], [1, 1, 1, 0, 1, 0, 1], [1, 0, 1, 0, 1, 0, 1]]])
 
+    # trimmed down settings dictionary
+    SETTINGS_DICT = {'run_year': 2010}
+
     # expected outcome
     COMP_SITED = np.array([[0, 2, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0],
@@ -46,6 +51,9 @@ class TestCompete(unittest.TestCase):
                        'tech_id': [1, 2, 3],
                        'xcoord': [2.4, 3.2, 3.2],
                        'ycoord': [2.4, 3.2, 3.2],
+                       'buffer_in_km': [1, 1, 1],
+                       'sited_year': [2010, 2010, 2010],
+                       'retirement_year': [2070, 2070, 2070],
                        'utility_zone': [2, 3, 3],
                        'locational_marginal_pricing': [2.4, 1.0, 3.2],
                        'net_operational_value': [2.4, 1.0, 3.2],
@@ -87,6 +95,7 @@ class TestCompete(unittest.TestCase):
         fake_dict, fake_flat_array = self.create_proxy_arrays()
 
         comp = Competition(target_state_name='test',
+                           settings_dict=TestCompete.SETTINGS_DICT,
                            technology_dict=TestCompete.TECH_DICT,
                            technology_order=TestCompete.TECH_ORDER,
                            expansion_dict=TestCompete.EXPANSION_PLAN,
