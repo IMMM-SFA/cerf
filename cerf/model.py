@@ -62,14 +62,18 @@ class Model(ReadConfig):
         # prepare all data for state level run
         data = self.stage()
 
-        sited_arr = process_state(target_state_name=target_state_name,
+        process = process_state(target_state_name=target_state_name,
                                   settings_dict=self.settings_dict,
                                   technology_dict=self.technology_dict,
                                   technology_order=self.technology_order,
                                   expansion_dict=self.expansion_dict,
                                   states_dict=self.states_dict,
                                   suitability_arr=data.suitability_arr,
+                                  lmp_arr=data.lmp_arr,
+                                  nov_arr=data.nov_arr,
+                                  ic_arr=data.ic_arr,
                                   nlc_arr=data.nlc_arr,
+                                  zones_arr=data.zones_arr,
                                   xcoords=data.xcoords,
                                   ycoords=data.ycoords,
                                   randomize=self.settings_dict.get('randomize', True),
@@ -81,7 +85,7 @@ class Model(ReadConfig):
 
         self.close_logger()
 
-        return sited_arr
+        return process
 
 
 if __name__ == '__main__':
@@ -89,4 +93,4 @@ if __name__ == '__main__':
     import pkg_resources
 
     c = pkg_resources.resource_filename('cerf', 'tests/data/config.yml')
-    m = Model(c).run_single_state(target_state_name='virginia')
+    process = Model(c).run_single_state(target_state_name='virginia')

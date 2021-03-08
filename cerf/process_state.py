@@ -29,10 +29,14 @@ class ProcessState:
                  expansion_dict,
                  states_dict,
                  suitability_arr,
+                 lmp_arr,
+                 nov_arr,
+                 ic_arr,
                  nlc_arr,
+                 zones_arr,
                  xcoords,
                  ycoords,
-                 target_state_name='virginia',
+                 target_state_name,
                  randomize=True,
                  seed_value=0,
                  verbose=False,
@@ -62,8 +66,20 @@ class ProcessState:
         # suitability data for the CONUS
         self.suitability_arr = suitability_arr
 
+        # LMP array for the CONUS
+        self.lmp_arr = lmp_arr
+
+        # NOV array for the CONUS
+        self.nov_arr = nov_arr
+
+        # IC array for the CONUS
+        self.ic_arr = ic_arr
+
         # NLC data for the CONUS
         self.nlc_arr = nlc_arr
+
+        # utility zones for the CONUS
+        self.zones_arr = zones_arr
 
         # coordinates for each index
         self.xcoords = xcoords
@@ -87,8 +103,15 @@ class ProcessState:
         logging.info(f"Creating a NLC state level array for {self.target_state_name}")
         self.suitable_nlc_state = self.mask_nlc()
 
+        logging.info(f"Get grid coordinates for {self.target_state_name}")
+        self.xcoords_state, self.ycoords_state = self.get_grid_coordinates()
+
+        logging.info(f"Extracting additional metrics for {self.target_state_name}")
+        self.lmp_flat_dict, self.nov_flat_dict, self.ic_flat_dict = self.extract_state_metrics()
+        self.zones_flat_arr = self.extract_utility_zones()
+
         logging.info(f"Competing technologies to site expansion for {self.target_state_name}")
-        self.sited_arr = self.competition()
+        self.sited_arr, self.sited_df = self.competition()
 
     def get_state_id(self):
         """Load state name to state id YAML file to a dictionary.
@@ -155,6 +178,37 @@ class ProcessState:
         # apply the mask to NLC data
         return np.ma.masked_array(nlc_arr_state, mask=self.suitability_array_state)
 
+    def get_grid_coordinates(self):
+        """Generate 1D arrays of grid coordinates (X, Y) to use for siting based on the bounds of the target state."""
+
+        xcoord_2d_state = self.xcoords[self.ymin:self.ymax, self.xmin:self.xmax].flatten()
+        ycoord_2d_state = self.ycoords[self.ymin:self.ymax, self.xmin:self.xmax].flatten()
+
+        return xcoord_2d_state, ycoord_2d_state
+
+    def extract_state_metrics(self):
+        """Extract the LMP, NOV, and IC arrays for the target state and return them as dictionaries where
+        {tech_id: flat_array, ...}.
+
+        """
+
+        # extract the target state
+        lmp_arr_state = self.lmp_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
+        nov_arr_state = self.nov_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
+        ic_arr_state = self.ic_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
+
+        # create a reference dictionary where {tech_id: flat_state_array, ...}
+        lmp_flat_dict = {i: lmp_arr_state[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
+        nov_flat_dict = {i: nov_arr_state[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
+        ic_flat_dict = {i: ic_arr_state[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
+
+        return lmp_flat_dict, nov_flat_dict, ic_flat_dict
+
+    def extract_utility_zones(self):
+        """Extract the utility zones elements for the target state and return as a flat array."""
+
+        return self.zones_arr[self.ymin:self.ymax, self.xmin:self.xmax].flatten()
+
     def competition(self):
         """Compete technologies."""
 
@@ -162,9 +216,13 @@ class ProcessState:
                            technology_dict=self.technology_dict,
                            technology_order=self.technology_order,
                            expansion_dict=self.expansion_dict[self.target_state_name],
+                           lmp_dict=self.lmp_flat_dict,
+                           nov_dict=self.nov_flat_dict,
+                           ic_dict=self.ic_flat_dict,
                            nlc_mask=self.suitable_nlc_state,
-                           xcoords=self.xcoords,
-                           ycoords=self.ycoords,
+                           zones_arr=self.zones_flat_arr,
+                           xcoords=self.xcoords_state,
+                           ycoords=self.ycoords_state,
                            randomize=self.randomize,
                            seed_value=self.seed_value,
                            verbose=self.verbose)
@@ -175,6 +233,9 @@ class ProcessState:
         # place final array back in grid space for all regions
         sited_arr = np.zeros_like(self.suitability_arr[0, :, :]) * np.nan
         sited_arr[self.ymin:self.ymax, self.xmin:self.xmax] = final_array
+
+        # create data frame of sited data
+        df = pd.DataFrame(comp.sited_dict)
 
         # write outputs if so desired
         if self.write_outputs:
@@ -190,14 +251,15 @@ class ProcessState:
             # create output CSV file of coordinate data
             csv_file_name = f"cerf_sited_{self.settings_dict['run_year']}_{self.target_state_name}.csv"
             csv_out_file = os.path.join(self.settings_dict.get('output_directory'), csv_file_name)
-            df = pd.DataFrame(comp.sited_dict).to_csv(csv_out_file, index=False)
 
-        return sited_arr
+            df.to_csv(csv_out_file, index=False)
+
+        return sited_arr, df
 
 
 def process_state(target_state_name, settings_dict, technology_dict, technology_order, expansion_dict, states_dict,
-                  suitability_arr, nlc_arr, xcoords, ycoords,randomize=True, seed_value=0, verbose=False,
-                  write_output=True):
+                  suitability_arr, lmp_arr, nov_arr, ic_arr, nlc_arr, zones_arr, xcoords, ycoords,randomize=True,
+                  seed_value=0, verbose=False, write_output=True):
     """Convenience wrapper to log time and site an expansion plan for a target state for the target year.
 
     :param target_state_name:                   Name of the target state as it is represented in the state raster.
@@ -257,7 +319,7 @@ def process_state(target_state_name, settings_dict, technology_dict, technology_
     # if there are no sites in the expansion, return an all NaN 2D array
     if n_sites <= 0:
         logging.warning(f"There were no sites expected for any technology in `{target_state_name}`")
-        return nlc_arr[0, :, :] * np.nan
+        return None
 
     else:
 
@@ -271,7 +333,11 @@ def process_state(target_state_name, settings_dict, technology_dict, technology_
                                expansion_dict=expansion_dict,
                                states_dict=states_dict,
                                suitability_arr=suitability_arr,
+                               lmp_arr=lmp_arr,
+                               nov_arr=nov_arr,
+                               ic_arr=ic_arr,
                                nlc_arr=nlc_arr,
+                               zones_arr=zones_arr,
                                xcoords=xcoords,
                                ycoords=ycoords,
                                target_state_name=target_state_name,
@@ -282,4 +348,4 @@ def process_state(target_state_name, settings_dict, technology_dict, technology_
 
         logging.info(f'Processed `{target_state_name}` in {round(time.time() - state_t0, 7)} seconds')
 
-        return process.sited_arr
+        return process

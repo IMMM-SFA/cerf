@@ -50,7 +50,11 @@ class Competition:
                  technology_dict,
                  technology_order,
                  expansion_dict,
+                 lmp_dict,
+                 nov_dict,
+                 ic_dict,
                  nlc_mask,
+                 zones_arr,
                  xcoords,
                  ycoords,
                  randomize=True,
@@ -69,8 +73,23 @@ class Competition:
         # dictionary containing the expansion plan
         self.expansion_dict = expansion_dict
 
+        # locational marginal pricing
+        self.lmp_flat_dict = lmp_dict
+
+        # net operational value
+        self.nov_flat_dict = nov_dict
+
+        # interconnection costs
+        self.ic_flat_dict = ic_dict
+
+        # utility zones array
+        self.zones_flat_arr = zones_arr
+
+        # net locational costs with suitability mask for the target state
         self.nlc_mask = nlc_mask
         self.nlc_mask_shape = self.nlc_mask.shape
+
+        # log out additional info
         self.verbose = verbose
 
         # use random seed to create reproducible outcomes
@@ -81,10 +100,15 @@ class Competition:
         self.n_techs = len(self.technology_order)
 
         # dictionary to hold sited information
-        self.sited_dict = {'index': [],
+        self.sited_dict = {'state_name': [],
+                           'tech_id': [],
                            'xcoord': [],
                            'ycoord': [],
-                           'nlc': []}
+                           'utility_zone': [],
+                           'locational_marginal_pricing': [],
+                           'net_operational_value': [],
+                           'interconnection_cost': [],
+                           'net_locational_cost': []}
 
         # coordinates for each index
         self.xcoords = xcoords
@@ -103,7 +127,7 @@ class Competition:
         self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
 
         # create dictionary of {tech_id: flat_nlc_array, ...}
-        self.nlc_flat_dict = {i: self.nlc_mask[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
+        self.nlc_flat_dict = {i: self.nlc_mask[ix+1, :, :].flatten() for ix, i in enumerate(self.technology_order)}
 
         # run competition and site
         self.sited_array = self.compete()
@@ -154,21 +178,21 @@ class Competition:
                         tech_nlc = self.nlc_flat_dict[tech_id][tech]
 
                         # get the least expensive NLC indices from the winners
-                        tech_nlc_cheap = tech[np.where(tech_nlc == np.min(tech_nlc))]
+                        tech_nlc_cheap = tech[np.where(tech_nlc == np.nanmin(tech_nlc))]
 
                         # select a random index that has a winning cell for the check where multiple low NLC may exists
                         target_ix = np.random.choice(tech_nlc_cheap)
 
-                        try:
-                            # add selected index to sited dictionary
-                            self.sited_dict['index'].append(target_ix)
-                            self.sited_dict['xcoord'].append(self.xcoords[target_ix])
-                            self.sited_dict['ycoord'].append(self.ycoords[target_ix])
-                            self.sited_dict['nlc'].append(self.nlc_flat_dict[tech_id][target_ix])
-                        except IndexError:
-                            print(target_ix)
-                            print(self.xcoords.shape)
-                            raise
+                        # add selected index to sited dictionary
+                        self.sited_dict['state_name'].append(self.target_state_name)
+                        self.sited_dict['tech_id'].append(tech_id)
+                        self.sited_dict['xcoord'].append(self.xcoords[target_ix])
+                        self.sited_dict['ycoord'].append(self.ycoords[target_ix])
+                        self.sited_dict['utility_zone'].append(self.zones_flat_arr[target_ix])
+                        self.sited_dict['locational_marginal_pricing'].append(self.lmp_flat_dict[tech_id][target_ix])
+                        self.sited_dict['net_operational_value'].append(self.nov_flat_dict[tech_id][target_ix])
+                        self.sited_dict['interconnection_cost'].append(self.ic_flat_dict[tech_id][target_ix])
+                        self.sited_dict['net_locational_cost'].append(self.nlc_flat_dict[tech_id][target_ix])
 
                         # add selected index to list
                         sited_list.append(target_ix)

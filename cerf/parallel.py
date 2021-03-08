@@ -70,43 +70,46 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
                                                                              expansion_dict=model.expansion_dict,
                                                                              states_dict=model.states_dict,
                                                                              suitability_arr=data.suitability_arr,
+                                                                             lmp_arr=data.lmp_arr,
+                                                                             nov_arr=data.nov_arr,
+                                                                             ic_arr=data.ic_arr,
                                                                              nlc_arr=data.nlc_arr,
+                                                                             zones_arr=data.zones_arr,
+                                                                             xcoords=data.xcoords,
+                                                                             ycoords=data.ycoords,
                                                                              randomize=model.settings_dict.get('randomize', True),
                                                                              seed_value=model.settings_dict.get('seed_value', 0),
                                                                              verbose=model.settings_dict.get('verbose', False),
                                                                              write_output=False) for i in model.states_dict.keys())
 
     logging.info(f"All states processed in {round((time.time() - t0), 7)} seconds.")
-    logging.info("Aggregating outputs to a common grid...")
+    logging.info("Aggregating outputs...")
 
-    # aggregate results into a single raster
-    array_shape = results[0].shape
-    n_techs = len(results)
+    # create a data frame to hold the outputs
+    df = pd.DataFrame({'state_name': [],
+          'tech_id': [],
+          'xcoord': [],
+          'ycoord': [],
+          'utility_zone': [],
+          'locational_marginal_pricing': [],
+          'net_operational_value': [],
+          'interconnection_cost': [],
+          'net_locational_cost': []})
 
-    # construct a 3D array to house outputs
-    result_arr_3d = np.zeros(shape=(n_techs, array_shape[0], array_shape[1]))
+    # combine the outputs for all states
+    for i in results:
 
-    # add results to 3D array
-    for index in range(n_techs):
-        result_arr_3d[index, :, :] = results[index]
-
-    # create a 2D array that aggregates all individual state results; all NaN elements become 0.0
-    result_arr_2d = np.nansum(result_arr_3d, axis=0)
-
-    # replace 0 with NaN
-    result_arr_2d = np.where(result_arr_2d == 0, np.nan, result_arr_2d)
+        # ensure some sites were able to be sited for the target state
+        if i is not None:
+            df = pd.concat([df, i.sited_df])
 
     if write_output:
 
-        # output raster file for sited power plants
-        out_file = os.path.join(model.settings_dict.get('output_directory'), f"cerf_sited_{model.settings_dict.get('run_year')}_conus.tif")
-        logging.info(f"Aggregated outputs for all states to raster file:  {out_file}")
+        # write output CSV
+        out_csv = os.path.join(model.settings_dict.get('output_directory'), f"cerf_sited_{model.settings_dict.get('run_year')}_conus.csv")
+        df.to_csv(out_csv, index=False)
 
-        # write output using a template to prescribe the metadata
-        template_raster = model.technology_dict[model.technology_order[0]]['interconnection_distance_raster_file']
-        util.array_to_raster(result_arr_2d, template_raster, out_file)
-
-    return result_arr_2d
+    return df
 
 
 def run_parallel(config_file, write_output=True, n_jobs=-1, method='sequential'):

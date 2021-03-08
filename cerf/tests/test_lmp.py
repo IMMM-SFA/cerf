@@ -3,6 +3,7 @@ import pkg_resources
 import unittest
 
 import numpy as np
+import rasterio
 
 from cerf.read_config import ReadConfig
 from cerf.lmp import LocationalMarginalPricing
@@ -30,6 +31,17 @@ class TestLmp(unittest.TestCase):
 
         return arr[:, 1500:2000, 3000:4000].copy()
 
+    @staticmethod
+    def load_utility_raster(utility_dict):
+        """Load the utility zones raster for the CONUS into a 2D array."""
+
+        # raster file containing the utility zone per grid cell
+        zones_raster_file = utility_dict.get('utility_zone_raster_file')
+
+        # read in utility zones raster as a 2D numpy array
+        with rasterio.open(zones_raster_file) as src:
+            return src.read(1)
+
     def test_lmp_outputs(self):
         """Test to make sure LMP outputs match expected."""
 
@@ -39,8 +51,11 @@ class TestLmp(unittest.TestCase):
         # update configuration to use package data for testing
         cfg.utility_dict.update(utility_zone_raster_file=TestLmp.UTILITY_ZONES_RASTER_FILE)
 
+        # read in zones array
+        zones_arr = self.load_utility_raster(cfg.utility_dict)
+
         # create technology specific locational marginal price based on capacity factor
-        pricing = LocationalMarginalPricing(cfg.utility_dict, cfg.technology_dict, cfg.technology_order)
+        pricing = LocationalMarginalPricing(cfg.utility_dict, cfg.technology_dict, cfg.technology_order, zones_arr)
 
         # get lmp array per tech [tech_order, x, y]
         lmp_arr = pricing.get_lmp()
