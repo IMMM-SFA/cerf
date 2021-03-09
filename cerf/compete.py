@@ -3,7 +3,7 @@ import logging
 import numpy as np
 import pandas as pd
 
-from cerf.utils import buffer_flat_array
+import utils as util
 
 
 class Competition:
@@ -59,6 +59,7 @@ class Competition:
                  zones_arr,
                  xcoords,
                  ycoords,
+                 indices_flat,
                  randomize=True,
                  seed_value=0,
                  verbose=False):
@@ -90,6 +91,9 @@ class Competition:
         # utility zones array
         self.zones_flat_arr = zones_arr
 
+        # flat array of full grid indices value for the target state
+        self.indices_flat = indices_flat
+
         # net locational costs with suitability mask for the target state
         self.nlc_mask = nlc_mask
         self.nlc_mask_shape = self.nlc_mask.shape
@@ -105,18 +109,7 @@ class Competition:
         self.n_techs = len(self.technology_order)
 
         # dictionary to hold sited information
-        self.sited_dict = {'state_name': [],
-                           'tech_id': [],
-                           'xcoord': [],
-                           'ycoord': [],
-                           'buffer_in_km': [],
-                           'sited_year': [],
-                           'retirement_year': [],
-                           'utility_zone': [],
-                           'locational_marginal_pricing': [],
-                           'net_operational_value': [],
-                           'interconnection_cost': [],
-                           'net_locational_cost': []}
+        self.sited_dict = util.empty_sited_dict()
 
         # coordinates for each index
         self.xcoords = xcoords
@@ -199,6 +192,7 @@ class Competition:
                         self.sited_dict['tech_id'].append(tech_id)
                         self.sited_dict['xcoord'].append(self.xcoords[target_ix])
                         self.sited_dict['ycoord'].append(self.ycoords[target_ix])
+                        self.sited_dict['index'].append(self.indices_flat[target_ix])
                         self.sited_dict['buffer_in_km'].append(self.technology_dict[tech_id]['buffer_in_km'])
                         self.sited_dict['sited_year'].append(self.settings_dict['run_year'])
                         self.sited_dict['retirement_year'].append(retirement_year)
@@ -211,10 +205,8 @@ class Competition:
                         # add selected index to list
                         sited_list.append(target_ix)
 
-                        # TODO:  make buffer inheritance to next suitability year optional
-                        # TODO:  write out exclusion data after buffer applied
                         # apply buffer
-                        result = buffer_flat_array(target_index=target_ix,
+                        result = util.buffer_flat_array(target_index=target_ix,
                                                    arr=self.cheapest_arr_1d,
                                                    nrows=self.cheapest_arr.shape[0],
                                                    ncols=self.cheapest_arr.shape[1],
@@ -295,5 +287,8 @@ class Competition:
                 elif self.avail_grids == 0:
                     keep_siting = False
 
+                # create sited data frame
+                df = pd.DataFrame(self.sited_dict).astype(util.sited_dtypes())
+
         # reshape output array to 2D
-        return self.sited_arr_1d.reshape(self.cheapest_arr.shape), pd.DataFrame(self.sited_dict)
+        return self.sited_arr_1d.reshape(self.cheapest_arr.shape), df
