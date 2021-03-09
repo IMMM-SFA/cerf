@@ -101,9 +101,7 @@ class Model(ReadConfig):
                                 randomize=self.settings_dict.get('randomize', True),
                                 seed_value=self.settings_dict.get('seed_value', 0),
                                 verbose=self.settings_dict.get('verbose', False),
-                                write_output=write_output,
-                                initialize_site_data=self.initialize_site_data,
-                                init_df=data.init_df)
+                                write_output=write_output)
 
         logging.info(f"CERF model run completed in {round(time.time() - self.start_time, 7)}")
 
