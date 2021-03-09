@@ -1,5 +1,8 @@
 
+import logging
+
 import numpy as np
+import pandas as pd
 import rasterio
 import xarray as xr
 
@@ -134,3 +137,81 @@ def raster_to_coord_arrays(template_raster):
     x, y = np.meshgrid(da['x'], da['y'])
 
     return x, y
+
+
+def ingest_sited_data(run_year, x_array, y_array, sited_csv=None, sited_df=None):
+    """Import sited data containing the locations and additional data to establish an initial suitability condition
+    representing power plants and their siting buffer.
+
+    Required fields are the following and they can appear anywhere in the CSV or data frame:
+
+    `xcoord`:  the X coordinate of the site in meters in USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
+    `ycoord`:  the Y coordinate of the site in meters in USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
+    `retirement_year`:  the year (int four digit, e.g., 2050) that the power plant is to be decommissioned
+    `buffer_in_km':  the buffer around the site to apply in kilometers
+
+    :param run_year:                        Four-digit year of the current run (e.g., 2050)
+    :type run_year:                         int
+
+    :param x_array:                         2D array of X coordinates for the entire grid space
+    :type x_array:                          ndarray
+
+    :param y_array:                         2D array of Y coordinates for the entire grid space
+    :type y_array:                          ndarray
+
+    :param sited_csv:                       Full path with file name and extension for the input siting file
+    :type sited_csv:                        str
+
+    :param sited_df:                        Pandas DataFrame of sited data
+    :type sited_df:                         DataFrame
+
+    :return:                                2D array of 0 (suitable) and 1 (unsuitable) values where 1 are the sites
+                                            and their buffers of active power plants
+
+    """
+
+    # if the user chooses to pass a CSV of data
+    if (sited_csv is None) and (sited_df is None):
+        msg = "The user must pass either a CSV file path to `sited_csv` or a Pandas DataFrame to `sited_df`"
+        logging.error(msg)
+        raise AssertionError()
+
+    elif (sited_csv is not None) and (sited_df is not None):
+        logging.info("Both a `sited_csv` and `sited_df` were provided.  Using `sited_df`")
+        df = sited_df
+
+    elif (sited_csv is not None) and (sited_df is None):
+        df = pd.read_csv(sited_csv)
+
+    else:
+        df = sited_df
+
+    # create a data frame using the x, y coordinate data for the entire grid space
+    df_coords = pd.DataFrame({'xcoord': x_array.flatten(), 'ycoord': y_array.flatten()})
+
+    # initialize an array to hold the 0, 1 sited and buffer data
+    sited_arr = np.zeros_like(x_array).flatten()
+
+    # only keep sites that are not retired
+    df_active = df.loc[df['retirement_year'] > run_year].copy()
+
+    # assign the index of the coordinate in 1D grid space to the sited data as a spatial reference
+    l = []
+    for i in df_active[['xcoord', 'ycoord']].values:
+        v = df_coords.loc[(df_coords['xcoord'].round(4) == i[0]) & (df_coords['ycoord'].round(4) == i[1])]
+        l.append(v.index.values[0])
+
+    # key is the index of the full coordinate data frame to the coordinates for each site
+    df_active['key'] = l
+
+    # apply the corresponding buffer to each site and
+    for ix in df_active['key'].tolist():
+
+        # get the buffer size for the site
+        site_buffer_km = df_active.loc[df_active['key'] == ix]['buffer_in_km'].values[0]
+
+        # apply the buffer to the site and set to the entire array
+        sited_arr = buffer_flat_array(ix, sited_arr, x_array.shape[0], x_array.shape[1], site_buffer_km, 1)[0]
+
+    return sited_arr.reshape(x_array.shape)
+
