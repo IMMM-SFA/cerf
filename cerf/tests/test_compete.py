@@ -48,6 +48,7 @@ class TestCompete(unittest.TestCase):
                      3: {'n_sites': 0, 'tech_name': 'test3'}}
 
     COMP_SITED_DICT = {'state_name': ['test', 'test', 'test'],
+                       'index': [2.4, 3.2, 3.2],
                        'tech_id': [1, 2, 3],
                        'xcoord': [2.4, 3.2, 3.2],
                        'ycoord': [2.4, 3.2, 3.2],
@@ -106,6 +107,7 @@ class TestCompete(unittest.TestCase):
                            zones_arr=fake_flat_array.astype(np.int32),
                            xcoords=fake_flat_array,
                            ycoords=fake_flat_array,
+                           indices_flat=fake_flat_array,
                            randomize=False,
                            seed_value=0,
                            verbose=False)

@@ -12,7 +12,7 @@ from cerf.lmp import LocationalMarginalPricing
 class TestLmp(unittest.TestCase):
 
     # supporting data
-    CONFIG_FILE = pkg_resources.resource_filename('cerf', 'tests/data/config.yml')
+    CONFIG_FILE = pkg_resources.resource_filename('cerf', 'tests/data/config_2010.yml')
     UTILITY_ZONES_RASTER_FILE = pkg_resources.resource_filename('cerf', 'tests/data/inputs/spatial/utility_zones_1km.img')
     TECH_DICT_FILE = pkg_resources.resource_filename('cerf', 'tests/data/comp_data/technology_dict.p')
     TECH_DICT_FULL = pickle.load(open(TECH_DICT_FILE, 'rb'))
