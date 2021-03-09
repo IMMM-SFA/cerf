@@ -10,8 +10,9 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 import logging
 import pkg_resources
 
-import rasterio
 import numpy as np
+import pandas as pd
+import rasterio
 
 import cerf.utils as util
 from cerf.lmp import LocationalMarginalPricing
@@ -57,6 +58,9 @@ class Stage:
         # raster file containing the utility zone per grid cell
         self.zones_arr = self.load_utility_raster()
 
+        # load the utility zone LMP file to a data frame
+        self.utility_zone_lmp_df = pd.read_csv(self.utility_dict['utility_zone_lmp_file'])
+
         # get LMP array per tech [tech_order, x, y]
         logging.info('Processing locational marginal pricing (LMP)')
         self.lmp_arr = self.calculate_lmp()
@@ -91,7 +95,11 @@ class Stage:
         """Calculate Locational Marginal Pricing."""
 
         # create technology specific locational marginal price based on capacity factor
-        pricing = LocationalMarginalPricing(self.utility_dict, self.technology_dict, self.technology_order, self.zones_arr)
+        pricing = LocationalMarginalPricing(self.utility_dict,
+                                            self.technology_dict,
+                                            self.technology_order,
+                                            self.zones_arr,
+                                            self.utility_zone_lmp_df)
         lmp_arr = pricing.get_lmp()
 
         # get lmp array per tech [tech_order, x, y]
