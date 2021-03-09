@@ -22,12 +22,26 @@ class Model(ReadConfig):
     :param config_file:                 Full path with file name and extension to the input config.yml file
     :type config_file:                  str
 
+    :param   initialize_site_data:      None if no initialization is required, otherwise either a CSV file or
+                                        Pandas DataFrame of siting data bearing the following required fields:
+
+                                        `xcoord`:  the X coordinate of the site in meters in
+                                        USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
+
+                                        `ycoord`:  the Y coordinate of the site in meters in
+                                        USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
+
+                                        `retirement_year`:  the year (int four digit, e.g., 2050) that the power
+                                        plant is to be decommissioned
+
+                                        `buffer_in_km':  the buffer around the site to apply in kilometers
+
     """
 
     # type hints
     config_file: str
 
-    def __init__(self, config_file):
+    def __init__(self, config_file, initialize_site_data=None):
 
         # start time for model run
         self.start_time = time.time()
@@ -40,6 +54,9 @@ class Model(ReadConfig):
         # inherit the configuration reader class attributes
         super(Model, self).__init__(config_file)
 
+        # siting data to use as the initial condition
+        self.initialize_site_data = initialize_site_data
+
     def stage(self):
         """Execute model."""
 
@@ -50,7 +67,11 @@ class Model(ReadConfig):
         staging_t0 = time.time()
 
         # prepare all data for state level run
-        data = Stage(self.settings_dict, self.utility_dict, self.technology_dict, self.technology_order)
+        data = Stage(self.settings_dict,
+                     self.utility_dict,
+                     self.technology_dict,
+                     self.technology_order,
+                     self.initialize_site_data)
 
         logging.info(f'Staged data in {round((time.time() - staging_t0), 7)} seconds')
 
@@ -63,23 +84,24 @@ class Model(ReadConfig):
         data = self.stage()
 
         process = process_state(target_state_name=target_state_name,
-                                  settings_dict=self.settings_dict,
-                                  technology_dict=self.technology_dict,
-                                  technology_order=self.technology_order,
-                                  expansion_dict=self.expansion_dict,
-                                  states_dict=self.states_dict,
-                                  suitability_arr=data.suitability_arr,
-                                  lmp_arr=data.lmp_arr,
-                                  nov_arr=data.nov_arr,
-                                  ic_arr=data.ic_arr,
-                                  nlc_arr=data.nlc_arr,
-                                  zones_arr=data.zones_arr,
-                                  xcoords=data.xcoords,
-                                  ycoords=data.ycoords,
-                                  randomize=self.settings_dict.get('randomize', True),
-                                  seed_value=self.settings_dict.get('seed_value', 0),
-                                  verbose=self.settings_dict.get('verbose', False),
-                                  write_output=write_output)
+                                settings_dict=self.settings_dict,
+                                technology_dict=self.technology_dict,
+                                technology_order=self.technology_order,
+                                expansion_dict=self.expansion_dict,
+                                states_dict=self.states_dict,
+                                suitability_arr=data.suitability_arr,
+                                lmp_arr=data.lmp_arr,
+                                nov_arr=data.nov_arr,
+                                ic_arr=data.ic_arr,
+                                nlc_arr=data.nlc_arr,
+                                zones_arr=data.zones_arr,
+                                xcoords=data.xcoords,
+                                ycoords=data.ycoords,
+                                indices_2d=data.indices_2d,
+                                randomize=self.settings_dict.get('randomize', True),
+                                seed_value=self.settings_dict.get('seed_value', 0),
+                                verbose=self.settings_dict.get('verbose', False),
+                                write_output=write_output)
 
         logging.info(f"CERF model run completed in {round(time.time() - self.start_time, 7)}")
 
@@ -92,5 +114,6 @@ if __name__ == '__main__':
 
     import pkg_resources
 
-    c = pkg_resources.resource_filename('cerf', 'tests/data/config.yml')
+    c = pkg_resources.resource_filename('cerf', 'tests/data/config_2010.yml')
+
     process = Model(c).run_single_state(target_state_name='virginia')

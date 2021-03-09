@@ -26,10 +26,10 @@ class Stage:
     technology_dict: dict
     technology_order: list
 
-    def __init__(self, settings_dict, utility_dict, technology_dict, technology_order):
+    def __init__(self, settings_dict, utility_dict, technology_dict, technology_order, initialize_site_data):
 
         # dictionary containing project level settings
-        self.settings = settings_dict
+        self.settings_dict = settings_dict
 
         # dictionary containing utility zone information
         self.utility_dict = utility_dict
@@ -40,9 +40,19 @@ class Stage:
         # order of technologies to process
         self.technology_order = technology_order
 
+        # initialize model with existing site data
+        self.initialize_site_data = initialize_site_data
+
         # load coordinate data
         self.cerf_stateid_raster_file = pkg_resources.resource_filename('cerf', 'data/cerf_conus_states_albers_1km.tif')
         self.xcoords, self.ycoords = util.raster_to_coord_arrays(self.cerf_stateid_raster_file)
+
+        # generate grid indices in a flat array
+        self.indices_flat = np.array(np.arange(self.xcoords.flatten().shape[0]))
+        self.indices_2d = self.indices_flat.reshape(self.xcoords.shape)
+
+        # initialization data for siting
+        self.init_arr, self.init_df = self.get_sited_data()
 
         # raster file containing the utility zone per grid cell
         self.zones_arr = self.load_utility_raster()
@@ -124,7 +134,7 @@ class Stage:
                                        carbon_capture_rate=self.technology_dict[i]['carbon_capture_rate'],
                                        fuel_co2_content=self.technology_dict[i]['fuel_co2_content'],
                                        lmp_arr=self.lmp_arr[index, :, :],
-                                       target_year=self.settings.get('run_year'))
+                                       target_year=self.settings_dict.get('run_year'))
 
             nov_tech_arr = econ.calc_nov()
             nov_arr[index, :, :] = nov_tech_arr
@@ -136,6 +146,27 @@ class Stage:
 
         # the most negative number will be the least expensive
         return self.ic_arr - self.nov_arr
+
+    def get_sited_data(self):
+        """If initial condition data is provided generate an array to use unsuitable where sites and their buffers
+        exists.  Also return a data frame of active sites (not reaching retirement age) to include in the current years
+        output.
+
+        """
+
+        # if initial condition data is provided, apply to all technologies
+        if self.initialize_site_data is not None:
+
+            # load siting data into a 2D array for the full grid space
+            logging.info("Initializing previous siting data")
+            init_arr, init_df = util.ingest_sited_data(run_year=self.settings_dict['run_year'],
+                                                       x_array=self.xcoords,
+                                                       siting_data=self.initialize_site_data)
+
+            return init_arr, init_df
+
+        else:
+            return None, None
 
     def build_suitability_array(self):
         """Build suitability array for all technologies."""
@@ -154,6 +185,9 @@ class Stage:
 
                 # read to 2D array
                 tech_arr = src.read(1)
+
+                if self.initialize_site_data is not None:
+                    tech_arr = np.maximum(tech_arr, self.init_arr)
 
                 # add to suitability array avoid overwriting the default dimension
                 suitability_array[index, :, :] = tech_arr

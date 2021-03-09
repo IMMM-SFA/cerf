@@ -35,6 +35,7 @@ class ProcessState:
                  zones_arr,
                  xcoords,
                  ycoords,
+                 indices_2d,
                  target_state_name,
                  randomize=True,
                  seed_value=0,
@@ -101,6 +102,11 @@ class ProcessState:
 
         logging.info(f"Creating a NLC state level array for {self.target_state_name}")
         self.suitable_nlc_state = self.mask_nlc()
+
+        logging.info(f"Generating grid indices for {self.target_state_name}")
+        # grid indices for the entire grid in a 2D array
+        self.indices_2d = indices_2d
+        self.indices_flat_state = self.get_grid_indices()
 
         logging.info(f"Get grid coordinates for {self.target_state_name}")
         self.xcoords_state, self.ycoords_state = self.get_grid_coordinates()
@@ -177,6 +183,12 @@ class ProcessState:
         # apply the mask to NLC data
         return np.ma.masked_array(nlc_arr_state, mask=self.suitability_array_state)
 
+    def get_grid_indices(self):
+        """Generate a 1D array of grid indices the target state to use as a way to map state level outcomes back to the
+        full grid space."""
+
+        return self.indices_2d[self.ymin:self.ymax, self.xmin:self.xmax].flatten()
+
     def get_grid_coordinates(self):
         """Generate 1D arrays of grid coordinates (X, Y) to use for siting based on the bounds of the target state."""
 
@@ -212,6 +224,7 @@ class ProcessState:
         """Compete technologies."""
 
         comp = Competition(target_state_name=self.target_state_name,
+                           settings_dict=self.settings_dict,
                            technology_dict=self.technology_dict,
                            technology_order=self.technology_order,
                            expansion_dict=self.expansion_dict[self.target_state_name],
@@ -222,6 +235,7 @@ class ProcessState:
                            zones_arr=self.zones_flat_arr,
                            xcoords=self.xcoords_state,
                            ycoords=self.ycoords_state,
+                           indices_flat=self.indices_flat_state,
                            randomize=self.randomize,
                            seed_value=self.seed_value,
                            verbose=self.verbose)
@@ -242,8 +256,8 @@ class ProcessState:
 
 
 def process_state(target_state_name, settings_dict, technology_dict, technology_order, expansion_dict, states_dict,
-                  suitability_arr, lmp_arr, nov_arr, ic_arr, nlc_arr, zones_arr, xcoords, ycoords,randomize=True,
-                  seed_value=0, verbose=False, write_output=True):
+                  suitability_arr, lmp_arr, nov_arr, ic_arr, nlc_arr, zones_arr, xcoords, ycoords, indices_2d,
+                  randomize=True, seed_value=0, verbose=False, write_output=True):
     """Convenience wrapper to log time and site an expansion plan for a target state for the target year.
 
     :param target_state_name:                   Name of the target state as it is represented in the state raster.
@@ -324,6 +338,7 @@ def process_state(target_state_name, settings_dict, technology_dict, technology_
                                zones_arr=zones_arr,
                                xcoords=xcoords,
                                ycoords=ycoords,
+                               indices_2d=indices_2d,
                                target_state_name=target_state_name,
                                randomize=randomize,
                                seed_value=seed_value,

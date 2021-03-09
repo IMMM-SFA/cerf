@@ -1,7 +1,46 @@
 
+import logging
+
 import numpy as np
+import pandas as pd
 import rasterio
 import xarray as xr
+
+
+def empty_sited_dict():
+    """Initialize a sited data frame."""
+
+    return {'state_name': [],
+            'tech_id': [],
+            'xcoord': [],
+            'ycoord': [],
+            'index': [],
+            'buffer_in_km': [],
+            'sited_year': [],
+            'retirement_year': [],
+            'utility_zone': [],
+            'locational_marginal_pricing': [],
+            'net_operational_value': [],
+            'interconnection_cost': [],
+            'net_locational_cost': []}
+
+
+def sited_dtypes():
+    """Return data type dictionary for the sited data frame."""
+
+    return {'state_name': str,
+            'tech_id': np.int64,
+            'xcoord': np.float64,
+            'ycoord': np.float64,
+            'utility_zone': np.int64,
+            'locational_marginal_pricing': np.float64,
+            'net_operational_value': np.float64,
+            'interconnection_cost': np.float64,
+            'net_locational_cost': np.float64,
+            'index': np.int64,
+            'retirement_year': np.int64,
+            'sited_year': np.int64,
+            'buffer_in_km': np.int64}
 
 
 def buffer_flat_array(target_index, arr, nrows, ncols, ncells, set_value):
@@ -134,3 +173,61 @@ def raster_to_coord_arrays(template_raster):
     x, y = np.meshgrid(da['x'], da['y'])
 
     return x, y
+
+
+def ingest_sited_data(run_year, x_array, siting_data):
+    """Import sited data containing the locations and additional data to establish an initial suitability condition
+    representing power plants and their siting buffer.
+
+    Required fields are the following and they can appear anywhere in the CSV or data frame:
+
+    `xcoord`:  the X coordinate of the site in meters in USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
+    `ycoord`:  the Y coordinate of the site in meters in USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
+    `retirement_year`:  the year (int four digit, e.g., 2050) that the power plant is to be decommissioned
+    `buffer_in_km':  the buffer around the site to apply in kilometers
+
+    :param run_year:                        Four-digit year of the current run (e.g., 2050)
+    :type run_year:                         int
+
+    :param x_array:                         2D array of X coordinates for the entire grid space
+    :type x_array:                          ndarray
+
+    :param y_array:                         2D array of Y coordinates for the entire grid space
+    :type y_array:                          ndarray
+
+    :param siting_data:                     Full path with file name and extension for the input siting file or a
+                                            Pandas DataFrame
+    :type siting_data:                      str, DataFrame
+
+    :return:                                [0] 2D array of 0 (suitable) and 1 (unsuitable) values where 1 are the sites
+                                            and their buffers of active power plants
+
+                                            [1] Pandas DataFrame of active sites (not retired)
+
+    """
+
+    # assign input data to a data frame
+    if isinstance(siting_data, pd.DataFrame):
+        df = siting_data
+    elif isinstance(siting_data, str):
+        df = pd.read_csv(siting_data, dtype=sited_dtypes())
+    else:
+        msg = "The user must pass either a CSV file path to `sited_csv` or a Pandas DataFrame to `sited_df`"
+        logging.error(msg)
+        raise TypeError()
+
+    # only keep sites that are not retired
+    df_active = df.loc[df['retirement_year'] > run_year].copy()
+
+    # initialize an array to hold the 0, 1 sited and buffer data
+    sited_arr = np.zeros_like(x_array).flatten()
+
+    for ix in df_active['index'].tolist():
+
+        # get the buffer size for the site
+        site_buffer_km = df_active.loc[df_active['index'] == ix]['buffer_in_km'].values[0]
+
+        # apply the buffer to the site and set to the entire array
+        sited_arr = buffer_flat_array(ix, sited_arr, x_array.shape[0], x_array.shape[1], site_buffer_km, 1)[0]
+
+    return sited_arr.reshape(x_array.shape).astype(np.int8), df_active
