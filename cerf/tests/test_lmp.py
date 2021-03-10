@@ -71,7 +71,7 @@ class TestLmp(unittest.TestCase):
         slim_lmps = self.get_sample(lmp_arr)
 
         # test LMP array equality
-        np.testing.assert_array_equal(TestLmp.SLIM_LMP_ARRAY, slim_lmps)
+        np.testing.assert_array_equal(np.around(TestLmp.SLIM_LMP_ARRAY, 4), np.around(slim_lmps, 4))
 
 
 if __name__ == '__main__':
