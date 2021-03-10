@@ -23,7 +23,7 @@ class LocationalMarginalPricing:
 
     """
 
-    def __init__(self, utility_dict, technology_dict, technology_order, zones_arr):
+    def __init__(self, utility_dict, technology_dict, technology_order, zones_arr, utility_zone_lmp_df):
 
         # dictionary containing utility zone information
         self.utility_dict = utility_dict
@@ -37,31 +37,30 @@ class LocationalMarginalPricing:
         # array containing the utility zone per grid cell
         self.zones_arr = zones_arr
 
+        # data frame containing the 8760 LMPs per zone
+        self.utility_zone_lmp_df = utility_zone_lmp_df
+
     @staticmethod
-    def bin_cf(capacity_factor):
-        """Bin capacity factor for use in deriving the appropriate locational marginal price."""
+    def get_cf_bin(capacity_factor):
+        """Get the correct start and through index values to average over for calculating LMP."""
 
-        if capacity_factor >= 0.9:
-            cf = 0.9
+        if capacity_factor == 1.0:
+            start_index = 0
+            through_index = 8760
 
-        elif (capacity_factor < 0.9) and (capacity_factor >= 0.8):
-            cf = 0.8
+        elif capacity_factor >= 0.5:
+            start_index = int(np.ceil(8760 * (1 - capacity_factor)))
+            through_index = 8760
 
-        elif (capacity_factor < 0.8) and (capacity_factor >= 0.5):
-            cf = 0.5
-
-        elif (capacity_factor < 0.5) and (capacity_factor >= 0.3):
-            cf = 0.3
-
-        elif capacity_factor < 0.3:
-            cf = 0.1
-
-        else:
-            cf = 0.0
+        elif capacity_factor == 0.0:
             msg = f"The capacity factor provided `{capacity_factor}` is outside the bounds of 0.0 through 1.0"
             raise ValueError(msg)
 
-        return cf
+        else:
+            start_index = 0
+            through_index = int(np.ceil(8760 * capacity_factor))
+
+        return start_index, through_index
 
     def get_lmp(self):
         """Create LMP array for the current technology.
@@ -78,10 +77,17 @@ class LocationalMarginalPricing:
         for index, i in enumerate(self.technology_order):
 
             # assign the correct LMP based on the capacity factor of the technology
-            cf_lmp = self.bin_cf(self.technology_dict[i]['capacity_factor'])
+            start_index, through_index = self.get_cf_bin(self.technology_dict[i]['capacity_factor'])
+
+            # sort by descending lmp for each zone
+            df_sorted = self.utility_zone_lmp_df.copy()
+
+            for i in self.utility_zone_lmp_df.columns:
+                df_sorted[i] = self.utility_zone_lmp_df[i].sort_values(ascending=False).values
 
             # create a dictionary of LMP values for each power zone based on tech capacity factor
-            lmp_dict = {k: self.utility_dict['zone_id'][k]['lmp_by_capacity_factor'][cf_lmp] for k in self.utility_dict['zone_id'].keys()}
+            lmp_dict = df_sorted.iloc[start_index:through_index].mean(axis=0).to_dict()
+            lmp_dict = {int(k): lmp_dict[k] for k in lmp_dict.keys()}
 
             # add in no data
             lmp_dict[self.utility_dict['utility_zone_raster_nodata_value']] = np.nan
