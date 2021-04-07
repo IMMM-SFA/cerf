@@ -12,7 +12,7 @@ jobs:
 
       env:
         OS: ${{ matrix.os }}
-        PYTHON: '3.8'
+        PYTHON: '3.9'
 
       steps:
 
@@ -21,12 +21,26 @@ jobs:
         - name: Set up Python
           uses: actions/setup-python@master
           with:
-            python-version: 3.8
+            python-version: 3.9
 
         - name: Install dependencies
           run: |
             python -m pip install --upgrade pip
-            pip install -r requirements.txt
+            curl -O https://download.lfd.uci.edu/pythonlibs/w4tscw6k/numpy-1.20.2+mkl-cp39-cp39-win_amd64.whl
+            pip install numpy-1.20.2+mkl-cp39-cp39-win_amd64.whl
+            curl -O https://download.lfd.uci.edu/pythonlibs/w4tscw6k/GDAL-3.2.2-cp39-cp39-win_amd64.whl
+            pip install GDAL-3.2.2-cp39-cp39-win_amd64.whl
+            curl -O https://download.lfd.uci.edu/pythonlibs/w4tscw6k/rasterio-1.2.1-cp39-cp39-win_amd64.whl
+            pip install rasterio-1.2.1-cp39-cp39-win_amd64.whl
+            pip install pandas
+            pip install xarray
+            pip install PyYAML
+            pip install requests
+            pip install joblib
+            pip install matplotlib
+            pip install seaborn
+            python setup.py install
+            pip install numpy --upgrade
 
         - name: Test on Windows
           run: |
