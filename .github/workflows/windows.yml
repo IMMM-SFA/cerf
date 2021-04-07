@@ -32,7 +32,13 @@ jobs:
             pip install GDAL-3.2.2-cp39-cp39-win_amd64.whl
             curl -O https://download.lfd.uci.edu/pythonlibs/w4tscw6k/rasterio-1.2.1-cp39-cp39-win_amd64.whl
             pip install rasterio-1.2.1-cp39-cp39-win_amd64.whl
-            pip install -r requirements.txt
+            pip install pandas
+            pip install xarray
+            pip install PyYAML
+            pip install requests
+            pip install joblib
+            pip install matplotlib
+            pip install seaborn
             python setup.py install
             pip install numpy --upgrade
 
