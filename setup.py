@@ -22,6 +22,6 @@ setup(
     description='A Geospatial Model for Assessing Future Energy Technology Expansion Feasibility',
     long_description=readme(),
     install_requires=get_requirements(),
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     include_package_data=True
 )
