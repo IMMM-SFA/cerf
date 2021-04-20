@@ -1,3 +1,6 @@
+# jupyter
+notebooks/.ipynb_checkpoints/
+
 # cerf
 example/outputs/
 example/inputs/spatial/
