@@ -1,5 +1,5 @@
 ---
-title: 'mosartwmpy: A Python implementation of the MOSART-WM coupled hydrologic routing and water management model'
+title: 'cerf: A Python package to evaluate the feasibility and costs of power plant siting for alternate futures'
 tags:
   - Python
   - power plant siting
