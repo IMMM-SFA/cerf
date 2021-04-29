@@ -27,6 +27,12 @@ class Stage:
     technology_dict: dict
     technology_order: list
 
+    # dictionary of size kV line needed to connect to power plant unit size in MW
+    KV_TO_MW_REQUIREMENT = {230: {'low_mw': 1, 'high_mw': 250},
+                            345: {'low_mw': 251, 'high_mw': 500},
+                            500: {'low_mw': 501, 'high_mw': 1250},
+                            765: {'low_mw': 1251, 'high_mw': 99999999}}
+
     def __init__(self, settings_dict, utility_dict, technology_dict, technology_order, initialize_site_data):
 
         # dictionary containing project level settings
@@ -43,6 +49,9 @@ class Stage:
 
         # initialize model with existing site data
         self.initialize_site_data = initialize_site_data
+
+        # tech_id to tech_name dictionary
+        self.tech_name_dict = ({k: self.technology_dict[k].get('tech_name') for k in self.technology_dict.keys()})
 
         # load coordinate data
         self.cerf_stateid_raster_file = pkg_resources.resource_filename('cerf', 'data/cerf_conus_states_albers_1km.tif')
@@ -113,8 +122,15 @@ class Stage:
 
         for index, i in enumerate(self.technology_order):
 
+            # get the transmission distance raster associated with the target technology
+            transmission_dist_raster = self.technology_dict[i].get('interconnection_distance_raster_file', None)
+
+            # if interconnection raster not specified by user, load based on unit size
+            if transmission_dist_raster is None:
+                transmission_dist_raster = self.get_transmission_line_file(i)
+
             # load distance to suitable transmission infrastructure raster
-            with rasterio.open(self.technology_dict[i].get('interconnection_distance_raster_file')) as src:
+            with rasterio.open(transmission_dist_raster) as src:
                 ic_dist_km_arr = src.read(1) / 1000  # convert meters to km
 
             # calculate interconnection costs per grid cell
@@ -155,6 +171,21 @@ class Stage:
         # the most negative number will be the least expensive
         return self.ic_arr - self.nov_arr
 
+    def get_transmission_line_file(self, techid):
+        """Get the transmission line file that matches the unit size requirements from the default settings."""
+
+        # get power plant unit size
+        unit_size_mw = self.technology_dict[techid].get('unit_size')
+
+        # get the kV line size needed to support interconnection for the target technology
+        for k in self.KV_TO_MW_REQUIREMENT.keys():
+
+            low_mw_limit = unit_size_mw >= self.KV_TO_MW_REQUIREMENT[k].get('low_mw')
+            high_mw_limit = unit_size_mw <= self.KV_TO_MW_REQUIREMENT[k].get('high_mw')
+
+            if low_mw_limit and high_mw_limit:
+                return pkg_resources.resource_filename('cerf',  f'data/hifld_substation_{k}kv_dist_m.tif')
+
     def get_sited_data(self):
         """If initial condition data is provided generate an array to use unsuitable where sites and their buffers
         exists.  Also return a data frame of active sites (not reaching retirement age) to include in the current years
@@ -186,7 +217,10 @@ class Stage:
         for index, i in enumerate(self.technology_order):
 
             # path to the input raster
-            tech_suitability_raster_file = self.technology_dict[i].get('suitability_raster_file')
+            tech_suitability_raster_file = self.technology_dict[i].get('suitability_raster_file', None)
+
+            if tech_suitability_raster_file is None:
+                tech_suitability_raster_file = pkg_resources.resource_filename('cerf', f'data/suitability_{self.tech_name_dict[i]}.sdat')
 
             # load raster to array
             with rasterio.open(tech_suitability_raster_file) as src:

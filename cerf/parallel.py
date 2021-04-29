@@ -28,16 +28,16 @@ def generate_model(config_file, initialize_site_data=None):
     :param   initialize_site_data:      None if no initialization is required, otherwise either a CSV file or
                                         Pandas DataFrame of siting data bearing the following required fields:
 
-                                        `xcoord`:  the X coordinate of the site in meters in
+                                        xcoord:  the X coordinate of the site in meters in
                                         USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
 
-                                        `ycoord`:  the Y coordinate of the site in meters in
+                                        ycoord:  the Y coordinate of the site in meters in
                                         USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
 
-                                        `retirement_year`:  the year (int four digit, e.g., 2050) that the power
+                                        retirement_year:  the year (int four digit, e.g., 2050) that the power
                                         plant is to be decommissioned
 
-                                        `buffer_in_km':  the buffer around the site to apply in kilometers
+                                        buffer_in_km:  the buffer around the site to apply in kilometers
 
     """
 
@@ -134,25 +134,25 @@ def run_parallel(config_file, write_output=True, n_jobs=-1, method='sequential',
     :param n_jobs:                      The number of processors to utilize.  Default is -1 which is all but 1.
     :type n_jobs:                       int
 
-    :param method:                      Backend parallelization method used in Joblib.  Default is `sequential` to
+    :param method:                      Backend parallelization method used in Joblib.  Default is sequential to
                                         manage overhead for local runs.  Options for advanced configurations are:
-                                        `loky`, `threading`, and `multiprocessing`.
+                                        loky, threading, and multiprocessing.
                                         See https://joblib.readthedocs.io/en/latest/parallel.html for details.
     :type method:                       str
 
     :param   initialize_site_data:      None if no initialization is required, otherwise either a CSV file or
                                         Pandas DataFrame of siting data bearing the following required fields:
 
-                                        `xcoord`:  the X coordinate of the site in meters in
+                                        xcoord:  the X coordinate of the site in meters in
                                         USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
 
-                                        `ycoord`:  the Y coordinate of the site in meters in
+                                        ycoord:  the Y coordinate of the site in meters in
                                         USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
 
-                                        `retirement_year`:  the year (int four digit, e.g., 2050) that the power
+                                        retirement_year:  the year (int four digit, e.g., 2050) that the power
                                         plant is to be decommissioned
 
-                                        `buffer_in_km':  the buffer around the site to apply in kilometers
+                                        buffer_in_km:  the buffer around the site to apply in kilometers
 
     :return:                            A 2D arrays containing sites as the technology ID per grid cell.  All
                                         non-sited grid cells are given the value of NaN.
@@ -185,7 +185,7 @@ if __name__ == '__main__':
 
     import pkg_resources
 
-    for yr in [2010, 2050]:
+    for yr in [2010]:  # , 2050]:
 
         print(f"PROCESSING YEAR:  {yr}")
 

@@ -181,10 +181,10 @@ def ingest_sited_data(run_year, x_array, siting_data):
 
     Required fields are the following and they can appear anywhere in the CSV or data frame:
 
-    `xcoord`:  the X coordinate of the site in meters in USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
-    `ycoord`:  the Y coordinate of the site in meters in USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
-    `retirement_year`:  the year (int four digit, e.g., 2050) that the power plant is to be decommissioned
-    `buffer_in_km':  the buffer around the site to apply in kilometers
+    xcoord:  the X coordinate of the site in meters in USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
+    ycoord:  the Y coordinate of the site in meters in USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
+    retirement_year:  the year (int four digit, e.g., 2050) that the power plant is to be decommissioned
+    buffer_in_km:  the buffer around the site to apply in kilometers
 
     :param run_year:                        Four-digit year of the current run (e.g., 2050)
     :type run_year:                         int
@@ -212,7 +212,7 @@ def ingest_sited_data(run_year, x_array, siting_data):
     elif isinstance(siting_data, str):
         df = pd.read_csv(siting_data, dtype=sited_dtypes())
     else:
-        msg = "The user must pass either a CSV file path to `sited_csv` or a Pandas DataFrame to `sited_df`"
+        msg = "The user must pass either a CSV file path to 'sited_csv' or a Pandas DataFrame to 'sited_df'"
         logging.error(msg)
         raise TypeError()
 

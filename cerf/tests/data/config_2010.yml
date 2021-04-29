@@ -18,11 +18,11 @@ settings:
 
 # technology specific information
 # TODO:  Make these technology assumptions dynamic with GCAM outputs
-# TODO:  check about unit size from GCAM; captial costs are dependent on unit size
+# TODO:  check about unit size from GCAM; capital costs are dependent on unit size
 technology:
 
     9:
-        tech_name: biomass_conv
+        tech_name: biomass
         lifetime: 60.0
         capacity_factor: 0.6090000000000005
         variable_cost_esc_rate: -0.00398993418629034
@@ -38,8 +38,6 @@ technology:
         carbon_esc_rate: 0.0
         carbon_tax: 0.0
         buffer_in_km: 5
-        suitability_raster_file: /Users/d3y010/projects/cerf/data/gis/rast/suitability_biomass.sdat
-        interconnection_distance_raster_file: /Users/d3y010/projects/cerf/data/gis/rast/platts_substations_500kv_up_distance.img
 
     11:
         tech_name: nuclear
@@ -58,8 +56,6 @@ technology:
         carbon_esc_rate: 0.0
         carbon_tax: 0.0
         buffer_in_km: 5
-        suitability_raster_file: /Users/d3y010/projects/cerf/data/gis/rast/suitability_nuclear.sdat
-        interconnection_distance_raster_file: /Users/d3y010/projects/cerf/data/gis/rast/platts_substations_500kv_up_distance.img
 
 # expansion plan from GCAM
 expansion_plan:

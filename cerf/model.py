@@ -25,16 +25,16 @@ class Model(ReadConfig):
     :param   initialize_site_data:      None if no initialization is required, otherwise either a CSV file or
                                         Pandas DataFrame of siting data bearing the following required fields:
 
-                                        `xcoord`:  the X coordinate of the site in meters in
+                                        xcoord:  the X coordinate of the site in meters in
                                         USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
 
-                                        `ycoord`:  the Y coordinate of the site in meters in
+                                        ycoord:  the Y coordinate of the site in meters in
                                         USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
 
-                                        `retirement_year`:  the year (int four digit, e.g., 2050) that the power
+                                        retirement_year:  the year (int four digit, e.g., 2050) that the power
                                         plant is to be decommissioned
 
-                                        `buffer_in_km':  the buffer around the site to apply in kilometers
+                                        buffer_in_km:  the buffer around the site to apply in kilometers
 
     """
 
