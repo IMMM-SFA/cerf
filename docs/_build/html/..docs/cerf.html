@@ -1,0 +1,1208 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cerf package &mdash; cerf 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> cerf
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">cerf package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-cerf.compete">cerf.compete module</a></li>
+<li><a class="reference internal" href="#module-cerf.install_supplement">cerf.install_supplement module</a></li>
+<li><a class="reference internal" href="#module-cerf.interconnect">cerf.interconnect module</a></li>
+<li><a class="reference internal" href="#module-cerf.lmp">cerf.lmp module</a></li>
+<li><a class="reference internal" href="#module-cerf.logger">cerf.logger module</a></li>
+<li><a class="reference internal" href="#module-cerf.model">cerf.model module</a></li>
+<li><a class="reference internal" href="#module-cerf.nov">cerf.nov module</a></li>
+<li><a class="reference internal" href="#module-cerf.parallel">cerf.parallel module</a></li>
+<li><a class="reference internal" href="#module-cerf.process_state">cerf.process_state module</a></li>
+<li><a class="reference internal" href="#module-cerf.read_config">cerf.read_config module</a></li>
+<li><a class="reference internal" href="#module-cerf.spatial_reader">cerf.spatial_reader module</a></li>
+<li><a class="reference internal" href="#module-cerf.stage">cerf.stage module</a></li>
+<li><a class="reference internal" href="#module-cerf.utils">cerf.utils module</a></li>
+<li><a class="reference internal" href="#module-cerf">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">cerf</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>cerf package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/..docs/cerf.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="cerf-package">
+<h1>cerf package<a class="headerlink" href="#cerf-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cerf.data.html">cerf.data package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cerf.data.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.data.html#module-cerf.data.package_data">cerf.data.package_data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.data.html#module-cerf.data">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cerf.process_inputs.html">cerf.process_inputs package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cerf.process_inputs.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.process_inputs.html#module-cerf.process_inputs.process_expansion">cerf.process_inputs.process_expansion module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.process_inputs.html#module-cerf.process_inputs">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cerf.tests.html">cerf.tests package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#module-cerf.tests.test_compete">cerf.tests.test_compete module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#module-cerf.tests.test_lmp">cerf.tests.test_lmp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#module-cerf.tests.test_nov">cerf.tests.test_nov module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#module-cerf.tests.test_read_config">cerf.tests.test_read_config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#module-cerf.tests.test_spatial_reader">cerf.tests.test_spatial_reader module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#module-cerf.tests.test_utils">cerf.tests.test_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#module-cerf.tests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-cerf.compete">
+<span id="cerf-compete-module"></span><h2>cerf.compete module<a class="headerlink" href="#module-cerf.compete" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="cerf.compete.Competition">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cerf.compete.</span></code><code class="sig-name descname"><span class="pre">Competition</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_state_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expansion_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmp_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nov_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlc_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zones_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xcoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ycoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices_flat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.compete.Competition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Technology competition algorithm for CERF.</p>
+<p>Grid cell level net locational cost (NLC) per technology and an electricity technology capacity expansion plan
+are used to compete technologies against each other to see which will win the grid cell. The technology
+that wins the grid cell is then sited until no further winning cells exist. Once sited, the location of the
+winning technology’s grid cell, along with its buffer, are no longer available for siting. The competition
+array is recalculated after all technologies have passed through an iteration. This process is completed until
+there are either no cells left to site in or there are no more sites left to site for any technology. For
+technologies that have the same NLC value in multiple grid cells, random selection is available by default.  If the
+user wishes to have the outcomes be repeatable, the randomizer can be set to False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expansion_plan</strong> (<em>dict</em>) – Dictionary of {tech_id: number_of_sites, …}</p></li>
+<li><p><strong>nlc_mask</strong> (<em>ndarray</em>) – 3D masked array of [tech_id, x, y] for Net Locational Costs. Each
+technology has been masked with its suitability data, so only
+grid cells that are suitable have an NLC per tech. The 0 index
+position is a default dimension which is chosen if no technologies
+are able to compete.</p></li>
+<li><p><strong>technology_dict</strong> (<em>dict</em>) – A technology dictionary containing at a minimum
+{tech_id:  buffer_in_km, …}</p></li>
+<li><p><strong>randomize</strong> (<em>bool</em>) – Choose to make randomization of site selection where NLC is the same
+in multiple grid cells for a single technology random. If False,
+the seed_value will be used as a way to reproduce the exact siting.
+Default:  True</p></li>
+<li><p><strong>seed_value</strong> (<em>int</em>) – Value for the see if randomize is False.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Log out siting information. Default False.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="cerf.compete.Competition.compete">
+<code class="sig-name descname"><span class="pre">compete</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.compete.Competition.compete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cerf.compete.Competition.log_outcome">
+<code class="sig-name descname"><span class="pre">log_outcome</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.compete.Competition.log_outcome" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log a warning sites that were not able to be sited.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.install_supplement">
+<span id="cerf-install-supplement-module"></span><h2>cerf.install_supplement module<a class="headerlink" href="#module-cerf.install_supplement" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="cerf.install_supplement.InstallSupplement">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cerf.install_supplement.</span></code><code class="sig-name descname"><span class="pre">InstallSupplement</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">example_data_directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.install_supplement.InstallSupplement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Download and unpack example data supplement from Zenodo that matches the current installed
+distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>example_data_directory</strong> – Full path to the directory you wish to install
+the example data to.  Must be write-enabled
+for the user.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="cerf.install_supplement.InstallSupplement.DATA_VERSION_URLS">
+<code class="sig-name descname"><span class="pre">DATA_VERSION_URLS</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'1.0.0':</span> <span class="pre">'https://doi.org/10.5281/zenodo.3629645'}</span></em><a class="headerlink" href="#cerf.install_supplement.InstallSupplement.DATA_VERSION_URLS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cerf.install_supplement.InstallSupplement.fetch_zenodo">
+<code class="sig-name descname"><span class="pre">fetch_zenodo</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cerf'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.install_supplement.InstallSupplement.fetch_zenodo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download and unpack the Zenodo example data supplement for the
+current distribution.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.interconnect">
+<span id="cerf-interconnect-module"></span><h2>cerf.interconnect module<a class="headerlink" href="#module-cerf.interconnect" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="cerf.interconnect.Interconnection">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cerf.interconnect.</span></code><code class="sig-name descname"><span class="pre">Interconnection</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raster_230kv_dist_km_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raster_345kv_dist_km_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raster_500kv_dist_km_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raster_765kv_dist_km_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raster_gaspipe_dist_km_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.interconnect.Interconnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Calculate interconnection costs per grid cell in $ / yr using:</p>
+<dl>
+<dt>Interconnection Cost ($ / yr) = Distance to nearest suitable transmission line (km) *</dt><dd><blockquote>
+<div><p>Electric grid interconnection captial cost ($ / km) *
+Annuity factor
++ (if gas-fired technology) Distance to nearest suitable gas pipeline (km) *
+Gas interconnection captial cost ($ / km) *
+Annuity factor</p>
+</div></blockquote>
+<p>where, Annuity factor is (d(1 + d)**n) / ((1 + d)**n - 1)
+where, d = real annual discount rate (%), n = asset lifetime (years)</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="cerf.interconnect.Interconnection.COST">
+<code class="sig-name descname"><span class="pre">COST</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{552:</span> <span class="pre">{'high_mw':</span> <span class="pre">250,</span> <span class="pre">'low_mw':</span> <span class="pre">1},</span> <span class="pre">774:</span> <span class="pre">{'high_mw':</span> <span class="pre">750,</span> <span class="pre">'low_mw':</span> <span class="pre">251},</span> <span class="pre">1104:</span> <span class="pre">{'high_mw':</span> <span class="pre">None,</span> <span class="pre">'low_mw':</span> <span class="pre">751}}</span></em><a class="headerlink" href="#cerf.interconnect.Interconnection.COST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.interconnect.Interconnection.GAS_PIPE_COST">
+<code class="sig-name descname"><span class="pre">GAS_PIPE_COST</span></code><em class="property"> <span class="pre">=</span> <span class="pre">677</span></em><a class="headerlink" href="#cerf.interconnect.Interconnection.GAS_PIPE_COST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.interconnect.Interconnection.RANGES">
+<code class="sig-name descname"><span class="pre">RANGES</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{230:</span> <span class="pre">{'high_mw':</span> <span class="pre">250,</span> <span class="pre">'low_mw':</span> <span class="pre">1},</span> <span class="pre">345:</span> <span class="pre">{'high_mw':</span> <span class="pre">500,</span> <span class="pre">'low_mw':</span> <span class="pre">251},</span> <span class="pre">500:</span> <span class="pre">{'high_mw':</span> <span class="pre">1250,</span> <span class="pre">'low_mw':</span> <span class="pre">501},</span> <span class="pre">765:</span> <span class="pre">{'high_mw':</span> <span class="pre">None,</span> <span class="pre">'low_mw':</span> <span class="pre">1251}}</span></em><a class="headerlink" href="#cerf.interconnect.Interconnection.RANGES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cerf.interconnect.Interconnection.get_">
+<code class="sig-name descname"><span class="pre">get_</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.interconnect.Interconnection.get_" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.lmp">
+<span id="cerf-lmp-module"></span><h2>cerf.lmp module<a class="headerlink" href="#module-cerf.lmp" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="cerf.lmp.LocationalMarginalPricing">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cerf.lmp.</span></code><code class="sig-name descname"><span class="pre">LocationalMarginalPricing</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">utility_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zones_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">utility_zone_lmp_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.lmp.LocationalMarginalPricing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Create a 3D array of locational marginal pricing per technology by capacity factor.</p>
+<p>LMPs are provided per capacity factor quantile as represented in the <cite>zones_xml_file</cite>.
+Each technologies capacity factor is matched to the corresponding LMP per utility zone
+and is thus used to create a 2D array that establishes the appropriate LMP per grid cell
+per technology.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – A configuration dictionary.</p>
+</dd>
+</dl>
+<p>USAGE:</p>
+<p># instantiate the LMP class and create a 3D numpy array with the shape (techid, x, y)
+#   containing LMP values per 1km grid cell
+pricing = Lmp(config)</p>
+<p># access the LMP array by
+pricing.lmp_arr</p>
+<dl class="py method">
+<dt id="cerf.lmp.LocationalMarginalPricing.get_cf_bin">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">get_cf_bin</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity_factor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.lmp.LocationalMarginalPricing.get_cf_bin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the correct start and through index values to average over for calculating LMP.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.lmp.LocationalMarginalPricing.get_lmp">
+<code class="sig-name descname"><span class="pre">get_lmp</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.lmp.LocationalMarginalPricing.get_lmp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create LMP array for the current technology.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>3D numpy array of LMP where [tech_id, x, y]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.logger">
+<span id="cerf-logger-module"></span><h2>cerf.logger module<a class="headerlink" href="#module-cerf.logger" title="Permalink to this headline">¶</a></h2>
+<p>Logger for CERF model.</p>
+<p>Copyright (c) 2018, Battelle Memorial Institute</p>
+<p>Open source under license BSD 2-Clause - see LICENSE and DISCLAIMER</p>
+<p>&#64;author:  Chris R. Vernon (<a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a>)</p>
+<dl class="py class">
+<dt id="cerf.logger.Logger">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cerf.logger.</span></code><code class="sig-name descname"><span class="pre">Logger</span></code><a class="headerlink" href="#cerf.logger.Logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Initialize project-wide logger. The logger outputs to both stdout and a file.</p>
+<dl class="py attribute">
+<dt id="cerf.logger.Logger.LOG_FORMAT_STRING">
+<code class="sig-name descname"><span class="pre">LOG_FORMAT_STRING</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'%(asctime)s</span> <span class="pre">-</span> <span class="pre">%(name)s</span> <span class="pre">-</span> <span class="pre">%(levelname)s</span> <span class="pre">-</span> <span class="pre">%(message)s'</span></em><a class="headerlink" href="#cerf.logger.Logger.LOG_FORMAT_STRING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cerf.logger.Logger.close_logger">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">close_logger</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.logger.Logger.close_logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shutdown logger.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.logger.Logger.console_handler">
+<code class="sig-name descname"><span class="pre">console_handler</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.logger.Logger.console_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct console handler.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.logger.Logger.file_handler">
+<code class="sig-name descname"><span class="pre">file_handler</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.logger.Logger.file_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct file handler.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.logger.Logger.initialize_logger">
+<code class="sig-name descname"><span class="pre">initialize_logger</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.logger.Logger.initialize_logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize logger to stdout and file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.logger.Logger.log_format">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">log_format</span></code><a class="headerlink" href="#cerf.logger.Logger.log_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate log formatter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.logger.Logger.logger">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">logger</span></code><a class="headerlink" href="#cerf.logger.Logger.logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize logger as level info.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.model">
+<span id="cerf-model-module"></span><h2>cerf.model module<a class="headerlink" href="#module-cerf.model" title="Permalink to this headline">¶</a></h2>
+<p>Model interface for CERF</p>
+<p>&#64;author Chris R. vernon
+&#64;email <a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
+<p>License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</p>
+<dl class="py class">
+<dt id="cerf.model.Model">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cerf.model.</span></code><code class="sig-name descname"><span class="pre">Model</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_site_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.model.Model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cerf.read_config.ReadConfig" title="cerf.read_config.ReadConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">cerf.read_config.ReadConfig</span></code></a></p>
+<p>Model wrapper for CERF.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_file</strong> (<em>str</em>) – Full path with file name and extension to the input config.yml file</p></li>
+<li><p><strong>initialize_site_data</strong> – <p>None if no initialization is required, otherwise either a CSV file or
+Pandas DataFrame of siting data bearing the following required fields:</p>
+<p>xcoord:  the X coordinate of the site in meters in
+USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</p>
+<p>ycoord:  the Y coordinate of the site in meters in
+USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</p>
+<p>retirement_year:  the year (int four digit, e.g., 2050) that the power
+plant is to be decommissioned</p>
+<p>buffer_in_km:  the buffer around the site to apply in kilometers</p>
+</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="cerf.model.Model.config_file">
+<code class="sig-name descname"><span class="pre">config_file</span></code><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#cerf.model.Model.config_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cerf.model.Model.run_single_state">
+<code class="sig-name descname"><span class="pre">run_single_state</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_state_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.model.Model.run_single_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute a single state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.model.Model.stage">
+<code class="sig-name descname"><span class="pre">stage</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.model.Model.stage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute model.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.nov">
+<span id="cerf-nov-module"></span><h2>cerf.nov module<a class="headerlink" href="#module-cerf.nov" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="cerf.nov.NetOperationalValue">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cerf.nov.</span></code><code class="sig-name descname"><span class="pre">NetOperationalValue</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">discount_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacity_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_cost_esc_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuel_esc_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carbon_esc_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_om</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heat_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuel_price</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carbon_tax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carbon_capture_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuel_co2_content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmp_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consider_leap_year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.nov.NetOperationalValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Calculate Net Operational Value (NOV) in ($ / yr) per grid cell for all technologies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>discount_rate</strong> (<em>float</em>) – The time value of money in real terms.
+Units:  fraction</p></li>
+<li><p><strong>lifetime</strong> (<em>int</em>) – Years of the expected technology plant lifetime.
+Units:  years</p></li>
+<li><p><strong>unit_size</strong> (<em>int</em>) – The size of the expected power plant.
+Units:  megawatt</p></li>
+<li><p><strong>capacity_factor</strong> (<em>float</em>) – Capacity factor defined as average annual power generated divided by the
+potential output if the plant operated at its rated capacity for a year.
+Units:  fraction</p></li>
+<li><p><strong>variable_cost_esc_rate</strong> (<em>float</em>) – Escalation rate of variable cost.
+Units:  fraction</p></li>
+<li><p><strong>fuel_esc_rate</strong> (<em>float</em>) – Escalation rate of fuel.
+Units:  fraction</p></li>
+<li><p><strong>carbon_esc_rate</strong> (<em>float</em>) – Escalation rate of carbon.
+Units:  fraction</p></li>
+<li><p><strong>variable_om</strong> (<em>float</em>) – Variable operation and maintenance costs of yearly capacity use.
+Units:  $/MWh</p></li>
+<li><p><strong>heat_rate</strong> (<em>float</em>) – Amount of energy used by a power plant to generate one kilowatt-hour of
+electricity.
+Units:  Btu/kWh</p></li>
+<li><p><strong>fuel_price</strong> (<em>float</em>) – Cost of fuel per unit.
+Units:  from GCAM ($/GJ) gets converted to ($/MBtu)</p></li>
+<li><p><strong>carbon_tax</strong> (<em>float</em>) – The fee imposed on the burning of carbon-based fuels.
+Units:  $/ton</p></li>
+<li><p><strong>carbon_capture_rate</strong> (<em>float</em>) – Rate of carbon capture.
+Units:  fraction</p></li>
+<li><p><strong>fuel_co2_content</strong> (<em>float</em>) – CO2 content of the fuel and the heat rate of the technology.
+Units:  from GCAM (tons/MWh) gets converted to (tons/Btu)</p></li>
+<li><p><strong>lmp_arr</strong> (<em>ndarray</em>) – Locational Marginal Price (LMP) per grid cell for each technology in a
+multi-dimensional array where the shape is [tech_id, xcoord, ycoord].
+Units:  $/MWh</p></li>
+<li><p><strong>target_year</strong> (<em>int</em>) – Target year of the simulation as a four digit integer (e.g., 2010)</p></li>
+<li><p><strong>consider_leap_year</strong> (<em>bool</em>) – Choose to account for leap year in the number of hours per year calculation</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.FUEL_CO2_CONTENT_CONVERSION_FACTOR">
+<code class="sig-name descname"><span class="pre">FUEL_CO2_CONTENT_CONVERSION_FACTOR</span></code><em class="property"> <span class="pre">=</span> <span class="pre">2.93071e-07</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.FUEL_CO2_CONTENT_CONVERSION_FACTOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.FUEL_PRICE_CONVERSION_FACTOR">
+<code class="sig-name descname"><span class="pre">FUEL_PRICE_CONVERSION_FACTOR</span></code><em class="property"> <span class="pre">=</span> <span class="pre">1.055056</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.FUEL_PRICE_CONVERSION_FACTOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.HOURS_PER_YEAR_LEAP">
+<code class="sig-name descname"><span class="pre">HOURS_PER_YEAR_LEAP</span></code><em class="property"> <span class="pre">=</span> <span class="pre">8784</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.HOURS_PER_YEAR_LEAP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.HOURS_PER_YEAR_NONLEAP">
+<code class="sig-name descname"><span class="pre">HOURS_PER_YEAR_NONLEAP</span></code><em class="property"> <span class="pre">=</span> <span class="pre">8760</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.HOURS_PER_YEAR_NONLEAP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cerf.nov.NetOperationalValue.assign_hours_per_year">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">assign_hours_per_year</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consider_leap_year</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.nov.NetOperationalValue.assign_hours_per_year" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign the hours per year based on whether or not the target year is a leap year.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.nov.NetOperationalValue.calc_annuity_factor">
+<code class="sig-name descname"><span class="pre">calc_annuity_factor</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.nov.NetOperationalValue.calc_annuity_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate annuity factor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.nov.NetOperationalValue.calc_levelization_factor_carbon">
+<code class="sig-name descname"><span class="pre">calc_levelization_factor_carbon</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.nov.NetOperationalValue.calc_levelization_factor_carbon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the levelizing factor for carbon.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.nov.NetOperationalValue.calc_levelization_factor_fuel">
+<code class="sig-name descname"><span class="pre">calc_levelization_factor_fuel</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.nov.NetOperationalValue.calc_levelization_factor_fuel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the levelizing factor for fuel.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.nov.NetOperationalValue.calc_levelization_factor_vom">
+<code class="sig-name descname"><span class="pre">calc_levelization_factor_vom</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.nov.NetOperationalValue.calc_levelization_factor_vom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the levelizing factor for variable OM.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.nov.NetOperationalValue.calc_nov">
+<code class="sig-name descname"><span class="pre">calc_nov</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.nov.NetOperationalValue.calc_nov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate NOV array for all technologies.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.capacity_factor">
+<code class="sig-name descname"><span class="pre">capacity_factor</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.capacity_factor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.carbon_capture_rate">
+<code class="sig-name descname"><span class="pre">carbon_capture_rate</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.carbon_capture_rate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.carbon_esc_rate">
+<code class="sig-name descname"><span class="pre">carbon_esc_rate</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.carbon_esc_rate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.carbon_tax">
+<code class="sig-name descname"><span class="pre">carbon_tax</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.carbon_tax" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.consider_leap_year">
+<code class="sig-name descname"><span class="pre">consider_leap_year</span></code><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.consider_leap_year" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cerf.nov.NetOperationalValue.convert_fuel_co2_content">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">convert_fuel_co2_content</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fuel_co2_content</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.nov.NetOperationalValue.convert_fuel_co2_content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert fuel CO2 content from units tons/MWh to tons/Btu</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.nov.NetOperationalValue.convert_fuel_price">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">convert_fuel_price</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fuel_price</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.nov.NetOperationalValue.convert_fuel_price" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert fuel price from units $/GJ to $/MBtu</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.discount_rate">
+<code class="sig-name descname"><span class="pre">discount_rate</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.discount_rate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.fuel_co2_content">
+<code class="sig-name descname"><span class="pre">fuel_co2_content</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.fuel_co2_content" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.fuel_esc_rate">
+<code class="sig-name descname"><span class="pre">fuel_esc_rate</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.fuel_esc_rate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.fuel_price">
+<code class="sig-name descname"><span class="pre">fuel_price</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.fuel_price" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.heat_rate">
+<code class="sig-name descname"><span class="pre">heat_rate</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.heat_rate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.lifetime">
+<code class="sig-name descname"><span class="pre">lifetime</span></code><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.lifetime" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.lmp_arr">
+<code class="sig-name descname"><span class="pre">lmp_arr</span></code><em class="property"><span class="pre">:</span> <span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.lmp_arr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.target_year">
+<code class="sig-name descname"><span class="pre">target_year</span></code><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.target_year" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.unit_size">
+<code class="sig-name descname"><span class="pre">unit_size</span></code><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.unit_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.variable_cost_esc_rate">
+<code class="sig-name descname"><span class="pre">variable_cost_esc_rate</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.variable_cost_esc_rate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.nov.NetOperationalValue.variable_om">
+<code class="sig-name descname"><span class="pre">variable_om</span></code><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.variable_om" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.parallel">
+<span id="cerf-parallel-module"></span><h2>cerf.parallel module<a class="headerlink" href="#module-cerf.parallel" title="Permalink to this headline">¶</a></h2>
+<p>Parallelization module for CERF</p>
+<p>&#64;author Chris R. vernon
+&#64;email <a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
+<p>License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</p>
+<dl class="py function">
+<dt id="cerf.parallel.cerf_parallel">
+<code class="sig-prename descclassname"><span class="pre">cerf.parallel.</span></code><code class="sig-name descname"><span class="pre">cerf_parallel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sequential'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.parallel.cerf_parallel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run all CONUS states in parallel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>class</em>) – Instantiated CERF model class containing configuration options</p></li>
+<li><p><strong>data</strong> – Data from cerf.stage.Stage containing NLC and suitability arrays</p></li>
+<li><p><strong>config_file</strong> (<em>str</em>) – Full path with file name and extension to the input config.yml file</p></li>
+<li><p><strong>write_output</strong> (<em>bool</em>) – Write output as a raster to the output directory specified in the config file</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – The number of processors to utilize.  Default is -1 which is all but 1.</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – Backend parallelization method used in Joblib.  Default is <cite>sequential</cite> to
+manage overhead for local runs.  Options for advanced configurations are:
+<cite>loky</cite>, <cite>threading</cite>, and <cite>multiprocessing</cite>.
+See <a class="reference external" href="https://joblib.readthedocs.io/en/latest/parallel.html">https://joblib.readthedocs.io/en/latest/parallel.html</a> for details.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A 2D arrays containing sites as the technology ID per grid cell.  All
+non-sited grid cells are given the value of NaN.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cerf.parallel.generate_model">
+<code class="sig-prename descclassname"><span class="pre">cerf.parallel.</span></code><code class="sig-name descname"><span class="pre">generate_model</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_site_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.parallel.generate_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate model instance for use in parallel applications.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_file</strong> (<em>str</em>) – Full path with file name and extension to the input config.yml file</p></li>
+<li><p><strong>initialize_site_data</strong> – <p>None if no initialization is required, otherwise either a CSV file or
+Pandas DataFrame of siting data bearing the following required fields:</p>
+<p>xcoord:  the X coordinate of the site in meters in
+USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</p>
+<p>ycoord:  the Y coordinate of the site in meters in
+USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</p>
+<p>retirement_year:  the year (int four digit, e.g., 2050) that the power
+plant is to be decommissioned</p>
+<p>buffer_in_km:  the buffer around the site to apply in kilometers</p>
+</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cerf.parallel.run_parallel">
+<code class="sig-prename descclassname"><span class="pre">cerf.parallel.</span></code><code class="sig-name descname"><span class="pre">run_parallel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sequential'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_site_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.parallel.run_parallel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate model instance for use in parallel applications.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_file</strong> (<em>str</em>) – Full path with file name and extension to the input config.yml file</p></li>
+<li><p><strong>write_output</strong> (<em>bool</em>) – Write output as a raster to the output directory specified in the config file</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – The number of processors to utilize.  Default is -1 which is all but 1.</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – Backend parallelization method used in Joblib.  Default is sequential to
+manage overhead for local runs.  Options for advanced configurations are:
+loky, threading, and multiprocessing.
+See <a class="reference external" href="https://joblib.readthedocs.io/en/latest/parallel.html">https://joblib.readthedocs.io/en/latest/parallel.html</a> for details.</p></li>
+<li><p><strong>initialize_site_data</strong> – <p>None if no initialization is required, otherwise either a CSV file or
+Pandas DataFrame of siting data bearing the following required fields:</p>
+<p>xcoord:  the X coordinate of the site in meters in
+USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</p>
+<p>ycoord:  the Y coordinate of the site in meters in
+USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</p>
+<p>retirement_year:  the year (int four digit, e.g., 2050) that the power
+plant is to be decommissioned</p>
+<p>buffer_in_km:  the buffer around the site to apply in kilometers</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A 2D arrays containing sites as the technology ID per grid cell.  All
+non-sited grid cells are given the value of NaN.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.process_state">
+<span id="cerf-process-state-module"></span><h2>cerf.process_state module<a class="headerlink" href="#module-cerf.process_state" title="Permalink to this headline">¶</a></h2>
+<p>Process a state for the target year.</p>
+<p>&#64;author Chris R. vernon
+&#64;email <a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
+<p>License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</p>
+<dl class="py class">
+<dt id="cerf.process_state.ProcessState">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cerf.process_state.</span></code><code class="sig-name descname"><span class="pre">ProcessState</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expansion_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suitability_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmp_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nov_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlc_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zones_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xcoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ycoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices_2d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_state_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.process_state.ProcessState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="cerf.process_state.ProcessState.competition">
+<code class="sig-name descname"><span class="pre">competition</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.process_state.ProcessState.competition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compete technologies.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.process_state.ProcessState.extract_state_metrics">
+<code class="sig-name descname"><span class="pre">extract_state_metrics</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.process_state.ProcessState.extract_state_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the LMP, NOV, and IC arrays for the target state and return them as dictionaries where
+{tech_id: flat_array, …}.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.process_state.ProcessState.extract_state_suitability">
+<code class="sig-name descname"><span class="pre">extract_state_suitability</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.process_state.ProcessState.extract_state_suitability" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract a single state from the suitability.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.process_state.ProcessState.extract_utility_zones">
+<code class="sig-name descname"><span class="pre">extract_utility_zones</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.process_state.ProcessState.extract_utility_zones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the utility zones elements for the target state and return as a flat array.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.process_state.ProcessState.get_grid_coordinates">
+<code class="sig-name descname"><span class="pre">get_grid_coordinates</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.process_state.ProcessState.get_grid_coordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate 1D arrays of grid coordinates (X, Y) to use for siting based on the bounds of the target state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.process_state.ProcessState.get_grid_indices">
+<code class="sig-name descname"><span class="pre">get_grid_indices</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.process_state.ProcessState.get_grid_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a 1D array of grid indices the target state to use as a way to map state level outcomes back to the
+full grid space.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.process_state.ProcessState.get_state_id">
+<code class="sig-name descname"><span class="pre">get_state_id</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.process_state.ProcessState.get_state_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load state name to state id YAML file to a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Corresponding state ID for the user passed state name.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.process_state.ProcessState.mask_nlc">
+<code class="sig-name descname"><span class="pre">mask_nlc</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.process_state.ProcessState.mask_nlc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract NLC elements for the current state.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="cerf.process_state.process_state">
+<code class="sig-prename descclassname"><span class="pre">cerf.process_state.</span></code><code class="sig-name descname"><span class="pre">process_state</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_state_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expansion_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suitability_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmp_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nov_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlc_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zones_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xcoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ycoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices_2d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.process_state.process_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience wrapper to log time and site an expansion plan for a target state for the target year.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_state_name</strong> (<em>str</em>) – Name of the target state as it is represented in the state raster.
+Must be all lower case with spacing separated by an underscore.</p></li>
+<li><p><strong>settings_dict</strong> (<em>dict</em>) – Project level setting dictionary from cerf.read_config.ReadConfig</p></li>
+<li><p><strong>technology_dict</strong> (<em>dict</em>) – Technology level data dictionary from cerf.read_config.ReadConfig</p></li>
+<li><p><strong>technology_order</strong> (<em>list</em>) – Technology processing order to index by from cerf.read_config.ReadConfig</p></li>
+<li><p><strong>expansion_dict</strong> (<em>dict</em>) – Expansion plan data dictionary from cerf.read_config.ReadConfig</p></li>
+<li><p><strong>states_dict</strong> (<em>dict</em>) – Mapping from state name to state ID from cerf.read_config.ReadConfig</p></li>
+<li><p><strong>suitability_arr</strong> (<em>ndarray</em>) – 3D array where {tech_id, x, y} for suitability data</p></li>
+<li><p><strong>nlc_arr</strong> (<em>ndarray</em>) – 3D array where {tech_id, x, y} for NLC data</p></li>
+<li><p><strong>data</strong> (<em>class</em>) – Object containing all data (NLC, etc.) to run the expansion. This
+data is generated from the cerf.stage.Stage class.</p></li>
+<li><p><strong>randomize</strong> (<em>bool</em>) – Choice to randomize when a technology has more than one NLC
+cheapest value</p></li>
+<li><p><strong>seed_value</strong> (<em>int</em>) – A random seed value that is used when the user wants to replicate
+a run exactly</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Log verbose siting information</p></li>
+<li><p><strong>write_output</strong> (<em>bool</em>) – Choice to write output to a file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>2D NumPy array of sited technologies in the CONUS grid space where
+grid cell values are in the technology number as provided by the
+expansion plan</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.read_config">
+<span id="cerf-read-config-module"></span><h2>cerf.read_config module<a class="headerlink" href="#module-cerf.read_config" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="cerf.read_config.ReadConfig">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cerf.read_config.</span></code><code class="sig-name descname"><span class="pre">ReadConfig</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.read_config.ReadConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cerf.logger.Logger" title="cerf.logger.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">cerf.logger.Logger</span></code></a></p>
+<p>Read the configuration YAML file to a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config_file</strong> (<em>str</em>) – Full path with file name and extension to the input config.yml file</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="cerf.read_config.ReadConfig.config_file">
+<code class="sig-name descname"><span class="pre">config_file</span></code><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#cerf.read_config.ReadConfig.config_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cerf.read_config.ReadConfig.get_states_dict">
+<code class="sig-name descname"><span class="pre">get_states_dict</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.read_config.ReadConfig.get_states_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a dictionary of state name to state ID from the YAML file in package data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.read_config.ReadConfig.get_yaml">
+<code class="sig-name descname"><span class="pre">get_yaml</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.read_config.ReadConfig.get_yaml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the YAML config file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>YAML config object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.read_config.ReadConfig.read_yaml">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">read_yaml</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yaml_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.read_config.ReadConfig.read_yaml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a YAML file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.spatial_reader">
+<span id="cerf-spatial-reader-module"></span><h2>cerf.spatial_reader module<a class="headerlink" href="#module-cerf.spatial_reader" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-cerf.stage">
+<span id="cerf-stage-module"></span><h2>cerf.stage module<a class="headerlink" href="#module-cerf.stage" title="Permalink to this headline">¶</a></h2>
+<p>Stage data for CERF run.</p>
+<p>&#64;author Chris R. vernon
+&#64;email <a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
+<p>License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</p>
+<dl class="py class">
+<dt id="cerf.stage.Stage">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cerf.stage.</span></code><code class="sig-name descname"><span class="pre">Stage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">utility_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_site_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.stage.Stage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt id="cerf.stage.Stage.KV_TO_MW_REQUIREMENT">
+<code class="sig-name descname"><span class="pre">KV_TO_MW_REQUIREMENT</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{230:</span> <span class="pre">{'high_mw':</span> <span class="pre">250,</span> <span class="pre">'low_mw':</span> <span class="pre">1},</span> <span class="pre">345:</span> <span class="pre">{'high_mw':</span> <span class="pre">500,</span> <span class="pre">'low_mw':</span> <span class="pre">251},</span> <span class="pre">500:</span> <span class="pre">{'high_mw':</span> <span class="pre">1250,</span> <span class="pre">'low_mw':</span> <span class="pre">501},</span> <span class="pre">765:</span> <span class="pre">{'high_mw':</span> <span class="pre">99999999,</span> <span class="pre">'low_mw':</span> <span class="pre">1251}}</span></em><a class="headerlink" href="#cerf.stage.Stage.KV_TO_MW_REQUIREMENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cerf.stage.Stage.build_suitability_array">
+<code class="sig-name descname"><span class="pre">build_suitability_array</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.stage.Stage.build_suitability_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build suitability array for all technologies.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.stage.Stage.calculate_ic">
+<code class="sig-name descname"><span class="pre">calculate_ic</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.stage.Stage.calculate_ic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate interconnection costs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.stage.Stage.calculate_lmp">
+<code class="sig-name descname"><span class="pre">calculate_lmp</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.stage.Stage.calculate_lmp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate Locational Marginal Pricing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.stage.Stage.calculate_nlc">
+<code class="sig-name descname"><span class="pre">calculate_nlc</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.stage.Stage.calculate_nlc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate Net Locational Costs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.stage.Stage.calculate_nov">
+<code class="sig-name descname"><span class="pre">calculate_nov</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.stage.Stage.calculate_nov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate Net Operational Value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.stage.Stage.get_sited_data">
+<code class="sig-name descname"><span class="pre">get_sited_data</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.stage.Stage.get_sited_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>If initial condition data is provided generate an array to use unsuitable where sites and their buffers
+exists.  Also return a data frame of active sites (not reaching retirement age) to include in the current years
+output.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.stage.Stage.get_transmission_line_file">
+<code class="sig-name descname"><span class="pre">get_transmission_line_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">techid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.stage.Stage.get_transmission_line_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the transmission line file that matches the unit size requirements from the default settings.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="cerf.stage.Stage.load_utility_raster">
+<code class="sig-name descname"><span class="pre">load_utility_raster</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.stage.Stage.load_utility_raster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the utility zones raster for the CONUS into a 2D array.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.stage.Stage.settings_dict">
+<code class="sig-name descname"><span class="pre">settings_dict</span></code><em class="property"><span class="pre">:</span> <span class="pre">dict</span></em><a class="headerlink" href="#cerf.stage.Stage.settings_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.stage.Stage.technology_dict">
+<code class="sig-name descname"><span class="pre">technology_dict</span></code><em class="property"><span class="pre">:</span> <span class="pre">dict</span></em><a class="headerlink" href="#cerf.stage.Stage.technology_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.stage.Stage.technology_order">
+<code class="sig-name descname"><span class="pre">technology_order</span></code><em class="property"><span class="pre">:</span> <span class="pre">list</span></em><a class="headerlink" href="#cerf.stage.Stage.technology_order" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="cerf.stage.Stage.utility_dict">
+<code class="sig-name descname"><span class="pre">utility_dict</span></code><em class="property"><span class="pre">:</span> <span class="pre">dict</span></em><a class="headerlink" href="#cerf.stage.Stage.utility_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.utils">
+<span id="cerf-utils-module"></span><h2>cerf.utils module<a class="headerlink" href="#module-cerf.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="cerf.utils.array_to_raster">
+<code class="sig-prename descclassname"><span class="pre">cerf.utils.</span></code><code class="sig-name descname"><span class="pre">array_to_raster</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_raster_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_raster_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.utils.array_to_raster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a raster file from a 2D array.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cerf.utils.buffer_flat_array">
+<code class="sig-prename descclassname"><span class="pre">cerf.utils.</span></code><code class="sig-name descname"><span class="pre">buffer_flat_array</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nrows</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncells</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.utils.buffer_flat_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign a value to the neighboring elements of a 1D array as if they
+were in 2D space. The number of neighbors are based on the <cite>ncells</cite> argument
+which is used to define the window around the target cell to be altered as
+if they were in 2D space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_index</strong> (<em>int</em>) – Index of the target element in the 1D array</p></li>
+<li><p><strong>arr</strong> (<em>ndarray</em>) – A 1D array that has been flattened from a corresponding 2D array</p></li>
+<li><p><strong>nrows</strong> (<em>int</em>) – The number of rows in the parent 2D array</p></li>
+<li><p><strong>ncols</strong> (<em>int</em>) – The number of columns in the parent 2D array</p></li>
+<li><p><strong>ncells</strong> (<em>int</em>) – The number of cells for the buffer extending as a radius</p></li>
+<li><p><strong>set_value</strong> (<em>int; float</em>) – The value to set for the selected buffer</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[0] Modified 1D array
+[1] list of buffered indices</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cerf.utils.empty_sited_dict">
+<code class="sig-prename descclassname"><span class="pre">cerf.utils.</span></code><code class="sig-name descname"><span class="pre">empty_sited_dict</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.utils.empty_sited_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize a sited data frame.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cerf.utils.ingest_sited_data">
+<code class="sig-prename descclassname"><span class="pre">cerf.utils.</span></code><code class="sig-name descname"><span class="pre">ingest_sited_data</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">siting_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.utils.ingest_sited_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import sited data containing the locations and additional data to establish an initial suitability condition
+representing power plants and their siting buffer.</p>
+<p>Required fields are the following and they can appear anywhere in the CSV or data frame:</p>
+<p>xcoord:  the X coordinate of the site in meters in USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
+ycoord:  the Y coordinate of the site in meters in USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
+retirement_year:  the year (int four digit, e.g., 2050) that the power plant is to be decommissioned
+buffer_in_km:  the buffer around the site to apply in kilometers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>run_year</strong> (<em>int</em>) – Four-digit year of the current run (e.g., 2050)</p></li>
+<li><p><strong>x_array</strong> (<em>ndarray</em>) – 2D array of X coordinates for the entire grid space</p></li>
+<li><p><strong>y_array</strong> (<em>ndarray</em>) – 2D array of Y coordinates for the entire grid space</p></li>
+<li><p><strong>siting_data</strong> (<em>str</em><em>, </em><em>DataFrame</em>) – Full path with file name and extension for the input siting file or a
+Pandas DataFrame</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>[0] 2D array of 0 (suitable) and 1 (unsuitable) values where 1 are the sites
+and their buffers of active power plants</p>
+<p>[1] Pandas DataFrame of active sites (not retired)</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cerf.utils.raster_to_coord_arrays">
+<code class="sig-prename descclassname"><span class="pre">cerf.utils.</span></code><code class="sig-name descname"><span class="pre">raster_to_coord_arrays</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_raster</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.utils.raster_to_coord_arrays" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the template raster to create two 2D arrays containing the X and Y coordinates of every grid cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>template_raster</strong> (<em>str</em>) – Full path with file name and extension to the input raster.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[0] 2D array of X coordinates
+[1] 2D array of Y coordinates</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cerf.utils.sited_dtypes">
+<code class="sig-prename descclassname"><span class="pre">cerf.utils.</span></code><code class="sig-name descname"><span class="pre">sited_dtypes</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#cerf.utils.sited_dtypes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return data type dictionary for the sited data frame.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cerf" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="cerf.InstallSupplement">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">cerf.</span></code><code class="sig-name descname"><span class="pre">InstallSupplement</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">example_data_directory</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.InstallSupplement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Download and unpack example data supplement from Zenodo that matches the current installed
+distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>example_data_directory</strong> – Full path to the directory you wish to install
+the example data to.  Must be write-enabled
+for the user.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="cerf.InstallSupplement.DATA_VERSION_URLS">
+<code class="sig-name descname"><span class="pre">DATA_VERSION_URLS</span></code><em class="property"> <span class="pre">=</span> <span class="pre">{'1.0.0':</span> <span class="pre">'https://doi.org/10.5281/zenodo.3629645'}</span></em><a class="headerlink" href="#cerf.InstallSupplement.DATA_VERSION_URLS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="cerf.InstallSupplement.fetch_zenodo">
+<code class="sig-name descname"><span class="pre">fetch_zenodo</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cerf'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.InstallSupplement.fetch_zenodo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download and unpack the Zenodo example data supplement for the
+current distribution.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="cerf.config_file">
+<code class="sig-prename descclassname"><span class="pre">cerf.</span></code><code class="sig-name descname"><span class="pre">config_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.config_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sample configuration file for 2010.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>yr</strong> (<em>int</em>) – Target four-digit year</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Path to the target sample config file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="cerf.run_parallel">
+<code class="sig-prename descclassname"><span class="pre">cerf.</span></code><code class="sig-name descname"><span class="pre">run_parallel</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sequential'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_site_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerf.run_parallel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate model instance for use in parallel applications.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_file</strong> (<em>str</em>) – Full path with file name and extension to the input config.yml file</p></li>
+<li><p><strong>write_output</strong> (<em>bool</em>) – Write output as a raster to the output directory specified in the config file</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em>) – The number of processors to utilize.  Default is -1 which is all but 1.</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – Backend parallelization method used in Joblib.  Default is sequential to
+manage overhead for local runs.  Options for advanced configurations are:
+loky, threading, and multiprocessing.
+See <a class="reference external" href="https://joblib.readthedocs.io/en/latest/parallel.html">https://joblib.readthedocs.io/en/latest/parallel.html</a> for details.</p></li>
+<li><p><strong>initialize_site_data</strong> – <p>None if no initialization is required, otherwise either a CSV file or
+Pandas DataFrame of siting data bearing the following required fields:</p>
+<p>xcoord:  the X coordinate of the site in meters in
+USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</p>
+<p>ycoord:  the Y coordinate of the site in meters in
+USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</p>
+<p>retirement_year:  the year (int four digit, e.g., 2050) that the power
+plant is to be decommissioned</p>
+<p>buffer_in_km:  the buffer around the site to apply in kilometers</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A 2D arrays containing sites as the technology ID per grid cell.  All
+non-sited grid cells are given the value of NaN.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Chris Vernon.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

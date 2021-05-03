@@ -10,7 +10,6 @@ Introduction
 ------------
 .. toctree::
    :maxdepth: 1
-   :caption: Contents:
 
    README.md
 
@@ -21,10 +20,3 @@ cerf Python API
    :maxdepth: 1
 
    cerf
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
