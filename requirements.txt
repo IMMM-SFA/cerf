@@ -1,0 +1,9 @@
+numpy==1.19.4
+pandas==1.1.4
+rasterio==1.2.3
+xarray==0.16.1
+PyYAML==5.4.1,
+requests==2.25.1
+joblib==1.0.1
+matplotlib==3.3.3
+seaborn==0.11.1
