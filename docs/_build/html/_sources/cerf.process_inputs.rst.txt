@@ -12,15 +12,6 @@ cerf.process\_inputs.process\_expansion module
    :undoc-members:
    :show-inheritance:
 
-cerf.process\_inputs.process\_utils module
-------------------------------------------
-
-.. automodule:: cerf.process_inputs.process_utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-
 Module contents
 ---------------
 

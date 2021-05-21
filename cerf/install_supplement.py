@@ -1,38 +1,35 @@
-import argparse
 import os
-import requests
 import zipfile
 
+import requests
+
 from pkg_resources import get_distribution
-from io import BytesIO
+from io import BytesIO as BytesIO
 
 
 class InstallSupplement:
     """Download and unpack example data supplement from Zenodo that matches the current installed
-    distribution.
-
+    cerf distribution.
     :param example_data_directory:              Full path to the directory you wish to install
-                                                the example data to.  Must be write-enabled
+                                                the cerf example data to.  Must be write-enabled
                                                 for the user.
     """
 
     # URL for DOI minted example data hosted on Zenodo
-    DATA_VERSION_URLS = {'1.0.0': 'https://doi.org/10.5281/zenodo.3629645'}
+    DATA_VERSION_URLS = {'1.0.0': 'https://zenodo.org/record/3629645/files/example.zip?download=1',
+                         '2.0.0': 'https://zenodo.org/record/3629645/files/example.zip?download=1'}
 
     def __init__(self, example_data_directory):
 
-        # full path to the root directory where the example dir will be stored
+        # full path to the cerf root directory where the example dir will be stored
         self.example_data_directory = example_data_directory
 
-        self.fetch_zenodo()
-
-    def fetch_zenodo(self, model_name='cerf'):
+    def fetch_zenodo(self):
         """Download and unpack the Zenodo example data supplement for the
-        current distribution."""
+        current cerf distribution."""
 
-        # get the current version that is installed
-        current_version = get_distribution(model_name).version
-
+        # get the current version of cerf that is installed
+        current_version = get_distribution('cerf').version
 
         try:
             data_link = InstallSupplement.DATA_VERSION_URLS[current_version]
@@ -42,7 +39,7 @@ class InstallSupplement:
             raise(msg.format(current_version))
 
         # retrieve content from URL
-        print("Downloading supplemental data for version {}".format(current_version))
+        print("Downloading example data for cerf version {}...".format(current_version))
         r = requests.get(data_link)
 
         with zipfile.ZipFile(BytesIO(r.content)) as zipped:
@@ -53,12 +50,18 @@ class InstallSupplement:
                 zipped.extract(f, self.example_data_directory)
 
 
-if __name__ == "__main__":
+def get_package_data(example_data_directory):
+    """Download and unpack example data supplement from Zenodo that matches the current installed
+    cerf distribution.
 
-    parser = argparse.ArgumentParser()
-    help_msg = 'Full path to the directory you wish to install the supplemental data to.'
-    parser.add_argument('example_data_directory', type=str, help=help_msg)
-    args = parser.parse_args()
+    :param example_data_directory:              Full path to the directory you wish to install
+                                                the cerf example data to.  Must be write-enabled
+                                                for the user.
 
-    zen = InstallSupplement(args.example_data_directory)
-    del zen
+    :type example_data_directory:               str
+
+    """
+
+    zen = InstallSupplement(example_data_directory)
+
+    zen.fetch_zenodo()

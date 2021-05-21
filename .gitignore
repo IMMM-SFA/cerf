@@ -1,5 +1,7 @@
+cerf/data/hifld_*
+
 # readthedocs
-docs/
+docs/*
 
 # jupyter
 notebooks/.ipynb_checkpoints/
@@ -11,7 +13,6 @@ example/inputs/spatial/
 build/
 cerf.egg-info/
 dist/
-
 
 # pycharm
 .idea

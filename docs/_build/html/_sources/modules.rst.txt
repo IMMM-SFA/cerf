@@ -5,4 +5,3 @@ cerf
    :maxdepth: 4
 
    cerf
-   setup

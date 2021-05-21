@@ -70,14 +70,6 @@ cerf.nov module
    :undoc-members:
    :show-inheritance:
 
-cerf.outputs module
--------------------
-
-.. automodule:: cerf.outputs
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 cerf.parallel module
 --------------------
 
@@ -125,7 +117,6 @@ cerf.utils module
    :members:
    :undoc-members:
    :show-inheritance:
-
 
 Module contents
 ---------------
