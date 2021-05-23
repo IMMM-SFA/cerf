@@ -20,10 +20,14 @@ authors:
   - name: Kendall Mongird
     orcid: 0000-0003-2807-7088
     affiliation: 1
+  - name: Gokul Iyer
+    orcid: 0000-0002-3565-7526
+    affiliation: 2
 affiliations:
  - name: Pacific Northwest National Laboratory, Richland, WA., USA
    index: 1
-date: 22 March 2021
+ - name: Joint Global Change Research Institute, PNNL, College Park, MD., USA
+date: 24 May 2021
 bibliography: paper.bib
 ---
 
@@ -91,6 +95,35 @@ Annuity factor (`ANF`) is calculated as:
 DR(1 + DR)<sup>n</sup>  / ((1 + DR)<sup>n</sup> - 1)
 
 where, `DR` is the real annual discount rate as a percentage and `n` is the asset lifetime in years.
+
+## Core functionality
+
+### Install data supplement for testing and example setup
+The following function will allow the user to download and unpack the data supplement for `cerf` to a user-specified location.  The data is stored on a Zenodo archive and will match to the release version of the software automatically.
+
+```python
+import cerf
+
+cerf.get_package_data('<my directory>')
+```
+
+### Run all states in parallel for multiple years and initialize subsequent years with previous data
+Site an electricity technology expansion plan for all CONUS states using the results of 2010 to initialize year 2050 siting.  Power plants that have not reached their retirement age by 2050 will still be present in the 2050 outputs.
+
+```python
+
+for index, yr in enumerate([2010, 2050]):
+
+    # cerf's built-in default configuration files
+    sample_config_file = cerf.config_file(yr)
+
+    # initialize the model with the previous year's siting data if not the start year
+    if index == 0:
+        sited_df = cerf.run_parallel(sample_config_file)
+
+    else:
+        sited_df = cerf.run_parallel(sample_config_file, initialize_site_data=sited_df)
+```
 
 # Acknowledgements
 This research was supported by the U.S. Department of Energy, Office of Science, as part of research in MultiSector Dynamics, Earth and Environmental System Modeling Program. The Pacific Northwest National Laboratory is operated for DOE by Battelle Memorial Institute under contract DE-AC05-76RL01830. The views and opinions expressed in this paper are those of the authors alone.
