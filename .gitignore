@@ -1,5 +1,8 @@
 cerf/data/hifld_*
 
+# pyenv
+.python-version
+
 # readthedocs
 docs/*
 
