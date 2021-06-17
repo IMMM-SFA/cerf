@@ -38,9 +38,6 @@ class Model(ReadConfig):
 
     """
 
-    # type hints
-    config_file: str
-
     def __init__(self, config_file, initialize_site_data=None):
 
         # start time for model run
@@ -108,12 +105,3 @@ class Model(ReadConfig):
         self.close_logger()
 
         return process
-
-
-if __name__ == '__main__':
-
-    import pkg_resources
-
-    c = pkg_resources.resource_filename('cerf', 'tests/data/config_2010.yml')
-
-    process = Model(c).run_single_state(target_state_name='virginia')

@@ -1,13 +1,13 @@
 import pickle
-import pkg_resources
 import unittest
 
 import numpy as np
 import pandas as pd
+import pkg_resources
 import rasterio
 
-from cerf.read_config import ReadConfig
 from cerf.lmp import LocationalMarginalPricing
+from cerf.read_config import ReadConfig
 
 
 class TestLmp(unittest.TestCase):

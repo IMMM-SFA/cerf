@@ -1,7 +1,6 @@
-from pkg_resources import resource_filename
-
-import matplotlib.pyplot as plt
 import matplotlib.image as img
+import matplotlib.pyplot as plt
+from pkg_resources import resource_filename
 
 
 def plot_results():

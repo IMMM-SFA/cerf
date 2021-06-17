@@ -1,14 +1,15 @@
-import os
 import logging
-import pkg_resources
+import os
 
+import pkg_resources
 import yaml
 
 from cerf.logger import Logger
 
 
 class ReadConfig(Logger):
-    """Read the configuration YAML file to a dictionary.
+    """Read the configuration YAML file to a dictionary. Users can optionally pass in individual technology,
+    expansion plan, settings, and / or utility zone YAML files that will override the default configuration.
 
         :param config_file:                 Full path with file name and extension to the input config.yml file
         :type config_file:                  str

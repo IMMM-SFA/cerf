@@ -1,10 +1,9 @@
 import os
 import zipfile
+from io import BytesIO as BytesIO
 
 import requests
-
 from pkg_resources import get_distribution
-from io import BytesIO as BytesIO
 
 
 class InstallSupplement:

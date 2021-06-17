@@ -1,12 +1,11 @@
 # project settings
-#TODO:  Select which outputs to write
 settings:
 
     # target year to run
     run_year: 2010
 
     # location to store the output data to
-    output_directory: /Users/d3y010/Desktop/nlc
+    output_directory: None
 
     # randomize selection of a site for a technology when NLC values are equal
     #  the first pass is always random but setting `randomize` to False and
@@ -17,8 +16,6 @@ settings:
     seed_value: 0
 
 # technology specific information
-# TODO:  Make these technology assumptions dynamic with GCAM outputs
-# TODO:  check about unit size from GCAM; capital costs are dependent on unit size
 technology:
 
     9:
@@ -506,10 +503,10 @@ expansion_plan:
 utility_zones:
 
     # full path with file name and extension to the utility zones raster file
-    utility_zone_raster_file: /Users/d3y010/projects/cerf/data/gis/rast/cerf_powerzones.img
+    utility_zone_raster_file: None
 
     # no data value in the utility zone raster
     utility_zone_raster_nodata_value: 255
 
     # lmp csv file containing 8760 LMP per zone where columns are each zone with a numeric zone id header
-    utility_zone_lmp_file: /Users/d3y010/repos/github/cerf/cerf/tests/data/inputs/fake_lmp_8760_per_zone.zip
+    utility_zone_lmp_file: None

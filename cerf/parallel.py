@@ -11,8 +11,8 @@ import logging
 import os
 import time
 
-from joblib import Parallel, delayed
 import pandas as pd
+from joblib import Parallel, delayed
 
 import cerf.utils as util
 from cerf.model import Model
@@ -179,20 +179,3 @@ def run_parallel(config_file, write_output=True, n_jobs=-1, method='sequential',
     model.close_logger()
 
     return df
-
-
-if __name__ == '__main__':
-
-    import pkg_resources
-
-    for yr in [2010]:  # , 2050]:
-
-        print(f"PROCESSING YEAR:  {yr}")
-
-        c = pkg_resources.resource_filename('cerf', f'tests/data/config_{yr}.yml')
-
-        if yr == 2010:
-            sited_df = run_parallel(c)
-
-        else:
-            sited_df = run_parallel(c, initialize_site_data=sited_df)
