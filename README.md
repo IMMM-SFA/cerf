@@ -1,7 +1,7 @@
-[![linux](https://github.com/IMMM-SFA/cerf/actions/workflows/linux.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/linux.yml) 
-[![osx](https://github.com/IMMM-SFA/cerf/actions/workflows/osx.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/osx.yml) 
-[![windows](https://github.com/IMMM-SFA/cerf/actions/workflows/windows.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/windows.yml) 
-[![codecov](https://codecov.io/gh/IMMM-SFA/cerf/branch/version-two/graph/badge.svg?token=9jbGJv8XCJ)](https://codecov.io/gh/IMMM-SFA/cerf) 
+[![linux](https://github.com/IMMM-SFA/cerf/actions/workflows/linux.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/linux.yml)
+[![osx](https://github.com/IMMM-SFA/cerf/actions/workflows/osx.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/osx.yml)
+[![windows](https://github.com/IMMM-SFA/cerf/actions/workflows/windows.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/windows.yml)
+[![codecov](https://codecov.io/gh/IMMM-SFA/cerf/branch/version-two/graph/badge.svg?token=9jbGJv8XCJ)](https://codecov.io/gh/IMMM-SFA/cerf)
 [![Documentation Status](https://readthedocs.org/projects/im3-cerf/badge/?version=latest)](https://im3-cerf.readthedocs.io/en/latest/?badge=latest)
 [![DOI](https://zenodo.org/badge/115649750.svg)](https://zenodo.org/badge/latestdoi/115649750)
 
@@ -10,24 +10,73 @@
 ### A geospatial model for assessing and analyzing future energy technology expansion feasibility
 
 ## Overview
-We present the `cerf` Python package (a.k.a., the Capacity Expansion Regional Feasibility model; CERF) which helps evaluate the feasibility and structure of future electricity capacity expansion plans by siting power plants in areas that have been deemed the least cost option while considering dynamic future conditions.  We can use `cerf` to gain an understanding of topics such as:  1) whether or not future projected electricity expansion plans from models such as GCAM-USA are possible to achieve, 2) where suitability (e.g., cooling water availability) may influence our ability to achieve certain expansions, and/or 3) how power plant infrastructure build outs and value may evolve into the future when considering locational marginal pricing from a grid operations model.
+The Capacity Expansion Regional Feasibility model (CERF) helps us evaluate the feasibility and structure of future electricity capacity expansion plans by siting power plants in areas that have been deemed the least cost option. We can use CERF to gain an understanding of topics such as: 1) whether or not future projected electricity expansion plans from models such as GCAM are possible to achieve, 2) where suitability (e.g., cooling water availability) may influence our ability to achieve certain expansions, and/or 3) how power plant infrastructure build outs and value may evolve into the future when considering locational marginal pricing from a grid operations model.
+
+CERF currently operates at a 1 km2 resolution over the conterminous United States. Each grid cell is given an initial value of suitable (0) or unsuitable (1) based on a collection of suitability criteria gleaned from the literature. CERF's default suitability layers include both those that are common to all thermal technologies as well as technology-specific suitability criteria. Common suitability layers represent categories such as protected lands, critical habitat areas, and much more. Technology-specific suitability layers are those that satisfy requirements that may not be applicable to all technologies. An example would be minimum mean annual flow requirements for cooling water availability for individual thermal technologies.
+
+We introduce a metric named Net Locational Cost (NLC) that is used compete power plant technologies for each grid cell based on the least expensive option. NLC is calculated by subtracting the Net Operational Value (NOV) of the proposed power plant from the cost of its interconnection to the grid to represent the potential deployment value. Both the NOV parameter which incorporates many technology-specific values such as variable operations and maintenance costs, carbon price, heat rate, etc. and the interconnection cost parameter used for both electricity transmission and gas pipelines have variables that are accessible to the user for modification per time step.
 
 ## Get Started with CERF
 
-***Install CERF***
+### Install `cerf`
 
-Clone CERF into your desired location: `git clone https://github.com/IMMM-SFA/cerf.git`
-
-From the directory you cloned CERF into and your `setup.py` file exists run `python setup.py install` which will install CERF as a Python package on your machine and install of the required Python dependencies.
-
-To install the data supplement necessary to run CERF enter a Python prompt and run:
-```python
-from cerf import InstallSupplement
-
-InstallSupplement('<enter the path where you want to save the data>')
+```bash
+python -m pip install -e git://github.com/IMMM-SFA/cerf.git@main#egg=cerf
 ```
 
-## CERF Setup
+### Download and unpack the example data using the following from a Python prompt
+
+```python
+import cerf
+
+# the directory that you want to download and extract the example data to
+data_dir = "<my data download location>"
+
+# download and unzip the package data to your local machine
+cerf.get_package_data(data_dir)
+
+```
+
+### Setting up a `cerf` configuration file
+The `cerf` model ingests a YAML configuration file containing the following sections.
+
+#### Project level settings
+Contained within the `settings` key, these are project level settings.
+
+```yaml
+settings:
+
+    # target year to run
+    run_year: 2010
+
+    # location to store the output data to
+    output_directory: <your output directory>
+
+    # randomize selection of a site for a technology when NLC values are equal
+    #  the first pass is always random but setting `randomize` to False and
+    #  passing a seed value will ensure that runs are reproducible
+    randomize: True
+
+    # if `randomize` is False, set a seed value for reproducibility; the default is 0
+    seed_value: 0
+```
+
+#### Technology specific settings
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## `cerf` Setup
 
 The following describes the requirements and format of each input:
 
