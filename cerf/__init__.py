@@ -6,4 +6,4 @@ from cerf.parallel import run_parallel
 from cerf.transmission import process_hifld_substations, transmission_to_distance_raster
 
 __all__ = ['model', 'InstallSupplement', 'run_parallel', 'config_file', 'plot_results', 'get_package_data',
-           'process_hifld_substations', 'transmission_to_distance_raster']
+           'process_hifld_substations', 'transmission_to_distance_raster', 'cerf_crs']
