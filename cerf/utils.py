@@ -7,6 +7,29 @@ import rasterio
 import xarray as xr
 
 
+def kilometers_to_miles(input_km_value):
+    """Convert kilometers to miles.
+
+    :param input_km_value:          Kilometer value to convert to miles
+    :type input_km_value:           float, int
+
+    :return:                        Miles
+
+    """
+
+    return input_km_value * 0.621371
+
+
+def suppress_callback(value):
+    """Do not log callback output for whitebox functions.
+
+    :param value:                   Value of callback
+
+    """
+
+    pass
+
+
 def empty_sited_dict():
     """Initialize a sited data frame."""
 

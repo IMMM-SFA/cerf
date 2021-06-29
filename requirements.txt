@@ -7,3 +7,4 @@ requests~=2.25.1
 joblib~=1.0.1
 matplotlib~=3.3.3
 seaborn~=0.11.1
+whitebox~=1.5.1
