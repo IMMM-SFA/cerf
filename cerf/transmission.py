@@ -26,8 +26,7 @@ def process_eia_natural_gas_pipelines(pipeline_file=None):
     """
 
     if pipeline_file is None:
-
-        pass
+        return gpd.read_file(pkg_resources.resource_filename('cerf', 'data/eia_natural_gas_pipelines_conus_albers.shp'))
 
     else:
 
