@@ -10,15 +10,46 @@ import geopandas as gpd
 from rasterio import features
 
 from cerf.utils import suppress_callback
+from cerf.data.package_data import cerf_crs
+
+
+def process_eia_natural_gas_pipelines(pipeline_file=None):
+    """Select natural gas pipelines from EIA data that have a status of operating and a length greater than 0.
+
+    :param pipeline_file:                   Full path with file name and extension to the input pipelines shapefile.
+                                            If None, CERF will use the default data stored in the package.
+
+    :type pipeline_file:                    str
+
+    :returns:                               A geodataframe containing the target pipelines
+
+    """
+
+    if pipeline_file is None:
+
+        pass
+
+    else:
+
+        # load cerf's default coordinate reference system object
+        target_crs = cerf_crs()
+
+        # read in data and reproject
+        gdf = gpd.read_file(pipeline_file).to_crs(target_crs)
+
+        # only keep features with a length > 0
+        gdf = gdf.loc[gdf.geometry.length > 0].copy()
+
+        # only keep operational pipelines
+        return gdf.loc[gdf['Status'] == 'Operating'].copy()
 
 
 def process_hifld_substations(substation_file=None):
-    """Select substations from HIFLD data that are within the CONUS and either in service or under
-    construction.
+    """Select substations from HIFLD data that are within the CONUS and either in service or under construction.
 
     This data is assumed to have the following fields:  ['TYPE', 'STATE', 'STATUS'].
 
-    :param substation_file:                 Full path with file name and extension to the input substations file.
+    :param substation_file:                 Full path with file name and extension to the input substations shapefile.
                                             If None, CERF will use the default data stored in the package.
 
     :type substation_file:                  str
@@ -39,7 +70,11 @@ def process_hifld_substations(substation_file=None):
         with open(states_file, 'r') as yml:
             states = yaml.load(yml, Loader=yaml.FullLoader)
 
-        gdf = gpd.read_file(substation_file)
+        # load cerf's default coordinate reference system object
+        target_crs = cerf_crs()
+
+        # load and reproject
+        gdf = gpd.read_file(substation_file).to_crs(target_crs)
 
         # keep only substations in the CONUS that are either in service or under construction
         return gdf.loc[(gdf['TYPE'] == 'SUBSTATION') &
