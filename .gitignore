@@ -1,4 +1,4 @@
-cerf/data/hifld_*
+cerf/data/*_dist_m.tif
 
 # pyenv
 .python-version
