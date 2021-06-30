@@ -17,6 +17,7 @@ import rasterio
 import cerf.utils as util
 from cerf.lmp import LocationalMarginalPricing
 from cerf.nov import NetOperationalValue
+from cerf.interconnect import Interconnection
 
 
 class Stage:
@@ -117,24 +118,22 @@ class Stage:
     def calculate_ic(self):
         """Calculate interconnection costs."""
 
-        # set up array to hold interconnection costs
-        ic_arr = np.zeros_like(self.lmp_arr)
+        # instantiate class
+        # TODO:  add options to parameterize this from the config file
+        ic = Interconnection(template_array=self.lmp_arr,
+                             technology_dict=self.technology_dict,
+                             technology_order=self.technology_order,
+                             substation_file=None,
+                             costs_to_connect_dict=None,
+                             pipeline_file=None,
+                             output_rasterized_file=False,
+                             output_dist_file=False,
+                             output_alloc_file=False,
+                             output_cost_file=False,
+                             transmission_gdf=None,
+                             output_dir=None)
 
-        for index, i in enumerate(self.technology_order):
-
-            # get the transmission distance raster associated with the target technology
-            transmission_dist_raster = self.technology_dict[i].get('interconnection_distance_raster_file', None)
-
-            # if interconnection raster not specified by user, load based on unit size
-            if transmission_dist_raster is None:
-                transmission_dist_raster = self.get_transmission_line_file(i)
-
-            # load distance to suitable transmission infrastructure raster
-            with rasterio.open(transmission_dist_raster) as src:
-                ic_dist_km_arr = src.read(1) / 1000  # convert meters to km
-
-            # calculate interconnection costs per grid cell
-            ic_arr[index, :, :] = ic_dist_km_arr * self.technology_dict[i]['interconnection_cost_per_km']
+        ic_arr = ic.generate_interconnection_costs_array()
 
         return ic_arr
 
@@ -170,21 +169,6 @@ class Stage:
 
         # the most negative number will be the least expensive
         return self.ic_arr - self.nov_arr
-
-    def get_transmission_line_file(self, techid):
-        """Get the transmission line file that matches the unit size requirements from the default settings."""
-
-        # get power plant unit size
-        unit_size_mw = self.technology_dict[techid].get('unit_size')
-
-        # get the kV line size needed to support interconnection for the target technology
-        for k in self.KV_TO_MW_REQUIREMENT.keys():
-
-            low_mw_limit = unit_size_mw >= self.KV_TO_MW_REQUIREMENT[k].get('low_mw')
-            high_mw_limit = unit_size_mw <= self.KV_TO_MW_REQUIREMENT[k].get('high_mw')
-
-            if low_mw_limit and high_mw_limit:
-                return pkg_resources.resource_filename('cerf',  f'data/hifld_substation_{k}kv_dist_m.tif')
 
     def get_sited_data(self):
         """If initial condition data is provided generate an array to use unsuitable where sites and their buffers

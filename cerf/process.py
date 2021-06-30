@@ -1,4 +1,4 @@
-"""Parallelization module for CERF
+"""Processing module for CERF
 
 @author Chris R. vernon
 @email chris.vernon@pnnl.gov
@@ -122,8 +122,8 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
     return df
 
 
-def run_parallel(config_file, write_output=True, n_jobs=-1, method='sequential', initialize_site_data=None):
-    """Generate model instance for use in parallel applications.
+def execute(config_file, write_output=True, n_jobs=-1, method='sequential', initialize_site_data=None):
+    """Run all CERF states for the CONUS for the target year.
 
     :param config_file:                 Full path with file name and extension to the input config.yml file
     :type config_file:                  str
