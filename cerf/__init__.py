@@ -3,7 +3,7 @@ from .install_supplement import *
 from .model import *
 from .outputs import *
 from .process import execute
-from .transmission import *
+from .interconnect import *
 
 
 # __all__ = ['model', 'InstallSupplement', 'run_parallel', 'config_file', 'plot_results', 'get_package_data',
