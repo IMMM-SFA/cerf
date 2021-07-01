@@ -76,8 +76,8 @@ class Interconnection:
 
     """
 
-    # cost of gas pipeline in thousands $2015/km
-    GAS_PIPE_COST = 737
+    # cost of gas pipeline in $2015/km
+    GAS_PIPE_COST = 737000
 
     def __init__(self, template_array, technology_dict, technology_order, substation_file=None, costs_to_connect_dict=None, pipeline_file=None,
                  output_rasterized_file=False,  output_dist_file=False, output_alloc_file=False, output_cost_file=False,
