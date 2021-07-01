@@ -140,8 +140,7 @@ class Interconnection:
             # keep only substations in the CONUS that are either in service or under construction
             gdf = gdf.loc[(gdf['TYPE'] == 'SUBSTATION') &
                           (gdf['STATE'].isin(states.keys())) &
-                          (gdf['STATUS'].isin(('IN SERVICE', 'UNDER CONST'))) &
-                          (gdf['MIN_VOLT'] >= 0)].copy()
+                          (gdf['STATUS'].isin(('IN SERVICE', 'UNDER CONST')))].copy()
 
             # assign a field to rasterize by containing the cost of transmission per km
             gdf['_rval_'] = 0

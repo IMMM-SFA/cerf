@@ -4,7 +4,7 @@
 0:
 
   # the minimum voltage (MIN_VOLT) minimum
-  min_voltage: 0
+  min_voltage: -99999999999999999
 
   # the minimum voltage (MIN_VOLT) max limit; NOT to be confused with 'MAX_VOLT' in the data
   max_voltage: 99
