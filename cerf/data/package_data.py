@@ -1,3 +1,4 @@
+import os
 import pickle
 import pkg_resources
 
@@ -14,7 +15,7 @@ def config_file(yr):
 
     """
 
-    return pkg_resources.resource_filename('cerf', f'tests/data/config_{yr}.yml')
+    return pkg_resources.resource_filename('cerf', f'data/config_{yr}.yml')
 
 
 def cerf_crs():
@@ -32,3 +33,34 @@ def costs_per_kv_substation():
 
     with open(f, 'r') as yml:
         return yaml.load(yml, Loader=yaml.FullLoader)
+
+
+def load_sample_config(yr):
+    """Read the config YAML file for illustrative purposes.
+
+    :param yr:                  Target configuration year in YYYY format.
+    :type yr:                   int
+
+    :return:                    dictionary for the configuration
+
+    """
+
+    available_years = list(range(2010, 2055, 5))
+
+    if yr not in available_years:
+        raise KeyError(f"Year '{yr}' not available as a default configuration file.  Must be in {available_years}")
+
+    f = pkg_resources.resource_filename('cerf', f'data/config_{yr}.yml')
+
+    with open(f, 'r') as yml:
+        return yaml.load(yml, Loader=yaml.FullLoader)
+
+
+def list_available_suitability_files():
+    """Return a list of available suitability files."""
+
+    root_dir = pkg_resources.resource_filename('cerf', 'data')
+
+    return [os.path.join(root_dir, i) for i in os.listdir(root_dir) if
+            (i.split('_')[0] == 'suitability') and
+            (os.path.splitext(i)[-1] == '.sdat')]

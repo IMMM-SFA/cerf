@@ -16,9 +16,6 @@ from cerf.utils import suppress_callback
 from cerf.data.package_data import cerf_crs, costs_per_kv_substation
 
 
-
-
-
 class Interconnection:
     """Calculate interconnection costs per grid cell in $ / yr using:
 

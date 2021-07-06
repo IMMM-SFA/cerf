@@ -1,10 +1,11 @@
 import numpy as np
+import pandas as pd
 
 
 class LocationalMarginalPricing:
     """Create a 3D array of locational marginal pricing per technology by capacity factor.
 
-    LMPs are provided per capacity factor quantile as represented in the `zones_xml_file`.
+    LMPs ($/MWh) are provided per capacity factor quantile as represented in the `zones_xml_file`.
     Each technologies capacity factor is matched to the corresponding LMP per utility zone
     and is thus used to create a 2D array that establishes the appropriate LMP per grid cell
     per technology.
@@ -23,7 +24,7 @@ class LocationalMarginalPricing:
 
     """
 
-    def __init__(self, utility_dict, technology_dict, technology_order, zones_arr, utility_zone_lmp_df):
+    def __init__(self, utility_dict, technology_dict, technology_order, zones_arr, utility_zone_lmp_csv):
 
         # dictionary containing utility zone information
         self.utility_dict = utility_dict
@@ -38,7 +39,10 @@ class LocationalMarginalPricing:
         self.zones_arr = zones_arr
 
         # data frame containing the 8760 LMPs per zone
-        self.utility_zone_lmp_df = utility_zone_lmp_df
+        self.utility_zone_lmp_df = pd.read_csv(utility_zone_lmp_csv)
+
+        # drop hours column
+        self.utility_zone_lmp_df.drop(column='hours', inplace=True)
 
     @staticmethod
     def get_cf_bin(capacity_factor):
@@ -79,9 +83,10 @@ class LocationalMarginalPricing:
             # assign the correct LMP based on the capacity factor of the technology
             start_index, through_index = self.get_cf_bin(self.technology_dict[i]['capacity_factor'])
 
-            # sort by descending lmp for each zone
+            # make a copy of the data frame
             df_sorted = self.utility_zone_lmp_df.copy()
 
+            # sort by descending lmp for each zone
             for i in self.utility_zone_lmp_df.columns:
                 df_sorted[i] = self.utility_zone_lmp_df[i].sort_values(ascending=False).values
 
