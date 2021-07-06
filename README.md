@@ -94,7 +94,7 @@ These are technology-specific settings.
 | buffer_in_km | Buffer around the site to apply in kilometers which becomes unsuitable for other sites after siting | number of km | int |
 | require_pipelines | If the technology is gas related, pipelines will be used when calculating the interconnection cost | NA | bool |
 | suitability_raster_file | Full path with file name and extension to the accompanying suitability raster file | NA | str |
-
+| utility_zone_lmp_file | LMP CSV file containing 8760 LMP per zone where columns are each zone with a numeric zone ID header that corresponds with the zones represented in the `utility_zone_raster_file` found in the `utility_zones` section and an additional hour column named `hour` holding the hour of each record | $/MWh for the LMPs in the file | str |
 
 The following is an example implementation in the YAML configuration file:
 
@@ -119,6 +119,7 @@ technology:
         buffer_in_km: 5
         require_pipelines: False
         suitability_raster_file: <path to file>
+        utility_zone_lmp_file: <path to lmp file>
 ```
 
 #### `expansion_plan`
@@ -141,6 +142,42 @@ expansion_plan:
         9:
             tech_name: biomass
             n_sites: 2
+```
+
+#### `utility_zones`
+These are the utility zone data representing the linkage between each grid and technology and their locational marginal price (LMP).
+
+| Name | Description | Unit | Type |
+| --- | --- | --- | --- |
+| utility_zone_raster_file | Full path with file name and extension to the utility zones raster file | NA | str |
+| utility_zone_raster_nodata_value | No data value in the utility zone raster | NA | int; float |
+
+
+The following is an example implementation in the YAML configuration file:
+
+```yaml
+utility_zones:
+
+    utility_zone_raster_file: <path to zone raster>
+    utility_zone_raster_nodata_value: 255
+```
+
+The `cerf` package comes equipped with a sample utility zones raster file and a sample hourly (8760) locational marginal price file for illustrative purposes only.
+
+You can take a look at the utility zones raster file by running:
+
+```python
+import cerf
+
+utility_file = cerf.sample_utility_zones_raster_file()
+```
+
+You can also view the sample hourly locational marginal price file as a Pandas DataFrame using:
+
+```python
+import cerf
+
+df = cerf.get_sample_lmp_data()
 ```
 
 

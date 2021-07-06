@@ -3,6 +3,7 @@ import pickle
 import pkg_resources
 
 import yaml
+import pandas as pd
 
 
 def config_file(yr):
@@ -64,3 +65,17 @@ def list_available_suitability_files():
     return [os.path.join(root_dir, i) for i in os.listdir(root_dir) if
             (i.split('_')[0] == 'suitability') and
             (os.path.splitext(i)[-1] == '.sdat')]
+
+
+def sample_utility_zones_raster_file():
+    """Return path for the sample utility zones raster file."""
+
+    return pkg_resources.resource_filename('cerf', 'data/utility_zones_1km.img')
+
+
+def get_sample_lmp_data():
+    """Return the sample 8760 hourly locational marginal price data as a Pandas DataFrame."""
+
+    f = pkg_resources.resource_filename('cerf', 'illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
+
+    return pd.read_csv(f)

@@ -13,7 +13,7 @@ import geopandas as gpd
 from rasterio import features
 
 from cerf.utils import suppress_callback
-from cerf.data.package_data import cerf_crs, costs_per_kv_substation
+from cerf.package_data import cerf_crs, costs_per_kv_substation
 
 
 class Interconnection:

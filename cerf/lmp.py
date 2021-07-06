@@ -1,5 +1,8 @@
 import numpy as np
 import pandas as pd
+import pkg_resources
+
+import logging
 
 
 class LocationalMarginalPricing:
@@ -42,7 +45,7 @@ class LocationalMarginalPricing:
         self.utility_zone_lmp_df = pd.read_csv(utility_zone_lmp_csv)
 
         # drop hours column
-        self.utility_zone_lmp_df.drop(column='hours', inplace=True)
+        self.utility_zone_lmp_df.drop('hour', inplace=True, axis=1)
 
     @staticmethod
     def get_cf_bin(capacity_factor):
@@ -83,12 +86,22 @@ class LocationalMarginalPricing:
             # assign the correct LMP based on the capacity factor of the technology
             start_index, through_index = self.get_cf_bin(self.technology_dict[i]['capacity_factor'])
 
+            # get the LMP file for the technology from the configuration file
+            lmp_file = self.technology_dict[i].get('utility_zone_lmp_file', None)
+
+            # use illustrative default if none provided
+            if lmp_file == "None":
+                lmp_file = pkg_resources.resource_filename('cerf', 'data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
+
+            logging.info(f"Using LMP file for {self.technology_dict[i]['tech_name']}:  {lmp_file}")
+
             # make a copy of the data frame
-            df_sorted = self.utility_zone_lmp_df.copy()
+            df_sorted = pd.read_csv(lmp_file)
+            df_sorted.drop('hour', axis=1, inplace=True)
 
             # sort by descending lmp for each zone
-            for i in self.utility_zone_lmp_df.columns:
-                df_sorted[i] = self.utility_zone_lmp_df[i].sort_values(ascending=False).values
+            for i in df_sorted.columns:
+                df_sorted[i] = df_sorted[i].sort_values(ascending=False).values
 
             # create a dictionary of LMP values for each power zone based on tech capacity factor
             lmp_dict = df_sorted.iloc[start_index:through_index].mean(axis=0).to_dict()

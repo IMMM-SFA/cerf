@@ -37,6 +37,7 @@ technology:
         buffer_in_km: 5
         require_pipelines: False
         suitability_raster_file: None
+        utility_zone_lmp_file: None
 
     11:
         tech_name: nuclear
@@ -57,6 +58,7 @@ technology:
         buffer_in_km: 5
         require_pipelines: False
         suitability_raster_file: None
+        utility_zone_lmp_file: None
 
 
 # expansion plan from GCAM
