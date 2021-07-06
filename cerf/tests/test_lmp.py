@@ -13,14 +13,7 @@ class TestLmp(unittest.TestCase):
 
     # supporting data
     SLIM_LMP_ARRAY = np.load(pkg_resources.resource_filename('cerf', 'tests/data/comp_data/lmp_arr.npy'))
-    TECH_ORDER_LIST = ['biomass_conv', 'nuclear']
     LMP_FILE = pkg_resources.resource_filename('cerf', 'data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
-
-    @classmethod
-    def slim_techs(cls):
-        """Only use two technologies to speed up tests."""
-
-        return {k: cls.TECH_DICT_FULL[k] for k in cls.TECH_DICT_FULL.keys() if k in ('biomass_conv', 'nuclear')}
 
     @staticmethod
     def get_sample(arr):
