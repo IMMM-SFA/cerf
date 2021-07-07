@@ -38,6 +38,9 @@ class TestLmp(unittest.TestCase):
     def test_lmp_outputs(self):
         """Test to make sure LMP outputs match expected."""
 
+        # set seed for reproducibility
+        np.random.seed(0)
+
         # read in configuration file
         cfg_file = config_file(yr=2010)
         cfg = ReadConfig(cfg_file)
@@ -49,8 +52,7 @@ class TestLmp(unittest.TestCase):
         pricing = LocationalMarginalPricing(cfg.utility_dict,
                                             cfg.technology_dict,
                                             cfg.technology_order,
-                                            zones_arr,
-                                            TestLmp.LMP_FILE)
+                                            zones_arr)
 
         # get lmp array per tech [tech_order, x, y]
         lmp_arr = pricing.get_lmp()
