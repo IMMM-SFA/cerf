@@ -44,7 +44,14 @@ class Interconnection:
     :param costs_to_connect_dict:           A dictionary containing the cost of connection per km to a substation
                                             having a certain minimum voltage range.  Default is to load from the
                                             CERF data file 'costs_per_kv_substation.yml' by specifying 'None'
-    :type costs_to_connect_dict:
+
+    :type costs_to_connect_dict:            dict
+
+    :param costs_to_connect_file:           A YAML file containing the cost of connection per km to a substation
+                                            having a certain minimum voltage range.  Default is to load from the
+                                            CERF data file 'costs_per_kv_substation.yml' by specifying 'None'
+
+    :type costs_to_connect_file:            str
 
     :param pipeline_file:                   Full path with file name and extension to the input pipelines shapefile.
                                             If None, CERF will use the default data stored in the package.
@@ -76,8 +83,9 @@ class Interconnection:
     # cost of gas pipeline in $2015/km
     GAS_PIPE_COST = 737000
 
-    def __init__(self, template_array, technology_dict, technology_order, substation_file=None, costs_to_connect_dict=None, pipeline_file=None,
-                 output_rasterized_file=False,  output_dist_file=False, output_alloc_file=False, output_cost_file=False,
+    def __init__(self, template_array, technology_dict, technology_order, substation_file=None,
+                 costs_to_connect_dict=None, costs_to_connect_file=None, pipeline_file=None,
+                 output_rasterized_file=False, output_dist_file=False, output_alloc_file=False, output_cost_file=False,
                  transmission_gdf=None, output_dir=None):
 
         self.template_array = template_array
@@ -85,6 +93,7 @@ class Interconnection:
         self.technology_order = technology_order
         self.substation_file = substation_file
         self.costs_to_connect_dict = costs_to_connect_dict
+        self.costs_to_connect_file = costs_to_connect_file
         self.pipeline_file = pipeline_file
         self.output_rasterized_file = output_rasterized_file
         self.output_dist_file = output_dist_file
@@ -113,8 +122,12 @@ class Interconnection:
         """
 
         # load cost dictionary from package data if none passed
-        if self.costs_to_connect_dict is None:
+        if (self.costs_to_connect_dict is None) and (self.costs_to_connect_file is None):
             self.costs_to_connect_dict = costs_per_kv_substation()
+
+        elif self.costs_to_connect_file is not None:
+            with open(self.costs_to_connect_file, 'r') as yml:
+                self.costs_to_connect_dict = yaml.load(yml, Loader=yaml.FullLoader)
 
         if self.substation_file is None:
             return gpd.read_file(pkg_resources.resource_filename('cerf', 'data/hifld_substations_conus_albers.zip'))
