@@ -68,27 +68,24 @@ class Stage:
         # raster file containing the utility zone per grid cell
         self.zones_arr = self.load_utility_raster()
 
-        # load the utility zone LMP file to a data frame
-        self.utility_zone_lmp_df = pd.read_csv(self.utility_dict['utility_zone_lmp_file'])
-
         # get LMP array per tech [tech_order, x, y]
-        logging.info('Processing locational marginal pricing (LMP)')
+        logging.debug('Processing locational marginal pricing (LMP)')
         self.lmp_arr = self.calculate_lmp()
 
         # get interconnection cost per tech [tech_order, x, y]
-        logging.info('Calculating interconnection costs (IC)')
+        logging.debug('Calculating interconnection costs (IC)')
         self.ic_arr = self.calculate_ic()
 
         # get NOV array per tech [tech_order, x, y]
-        logging.info('Calculating net operational cost (NOV)')
+        logging.debug('Calculating net operational cost (NOV)')
         self.nov_arr = self.calculate_nov()
 
         # get NLC array per tech [tech_order, x, y]
-        logging.info('Calculating net locational cost (NLC)')
+        logging.debug('Calculating net locational cost (NLC)')
         self.nlc_arr = self.calculate_nlc()
 
         # combine all suitability rasters into an array
-        logging.info('Building suitability array')
+        logging.debug('Building suitability array')
         self.suitability_arr = self.build_suitability_array()
 
     def load_utility_raster(self):
@@ -96,6 +93,12 @@ class Stage:
 
         # raster file containing the utility zone per grid cell
         zones_raster_file = self.utility_dict.get('utility_zone_raster_file')
+
+        # use default if none passed
+        if zones_raster_file == 'None':
+            zones_raster_file = pkg_resources.resource_filename('cerf', 'data/utility_zones_1km.img')
+
+        logging.info(f"Using 'zones_raster_file':  {zones_raster_file}")
 
         # read in utility zones raster as a 2D numpy array
         with rasterio.open(zones_raster_file) as src:
@@ -108,8 +111,7 @@ class Stage:
         pricing = LocationalMarginalPricing(self.utility_dict,
                                             self.technology_dict,
                                             self.technology_order,
-                                            self.zones_arr,
-                                            self.utility_zone_lmp_df)
+                                            self.zones_arr)
         lmp_arr = pricing.get_lmp()
 
         # get lmp array per tech [tech_order, x, y]
@@ -181,7 +183,7 @@ class Stage:
         if self.initialize_site_data is not None:
 
             # load siting data into a 2D array for the full grid space
-            logging.info("Initializing previous siting data")
+            logging.debug("Initializing previous siting data")
             init_arr, init_df = util.ingest_sited_data(run_year=self.settings_dict['run_year'],
                                                        x_array=self.xcoords,
                                                        siting_data=self.initialize_site_data)
@@ -203,8 +205,10 @@ class Stage:
             # path to the input raster
             tech_suitability_raster_file = self.technology_dict[i].get('suitability_raster_file', None)
 
-            if tech_suitability_raster_file is None:
+            if tech_suitability_raster_file == "None":
                 tech_suitability_raster_file = pkg_resources.resource_filename('cerf', f'data/suitability_{self.tech_name_dict[i]}.sdat')
+
+            logging.info(f"Using suitability file for '{self.technology_dict[i]['tech_name']}':  {tech_suitability_raster_file}")
 
             # load raster to array
             with rasterio.open(tech_suitability_raster_file) as src:

@@ -19,7 +19,7 @@ settings:
 technology:
 
     9:
-        tech_name: biomass_conv
+        tech_name: biomass
         lifetime: 60.0
         capacity_factor: 0.6090000000000005
         variable_cost_esc_rate: -0.00398993418629034
@@ -65,7 +65,7 @@ expansion_plan:
 
     alabama:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 0
 
         11:
@@ -74,7 +74,7 @@ expansion_plan:
 
     arizona:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 5
 
         11:
@@ -83,7 +83,7 @@ expansion_plan:
 
     arkansas:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 10
 
         11:
@@ -92,7 +92,7 @@ expansion_plan:
 
     california:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 1
 
         11:
@@ -101,7 +101,7 @@ expansion_plan:
 
     colorado:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 9
 
         11:
@@ -110,7 +110,7 @@ expansion_plan:
 
     connecticut:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 2
 
         11:
@@ -119,7 +119,7 @@ expansion_plan:
 
     delaware:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 4
 
         11:
@@ -128,7 +128,7 @@ expansion_plan:
 
     district_of_columbia:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 9
 
         11:
@@ -137,7 +137,7 @@ expansion_plan:
 
     florida:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 8
 
         11:
@@ -146,7 +146,7 @@ expansion_plan:
 
     georgia:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 6
 
         11:
@@ -155,7 +155,7 @@ expansion_plan:
 
     idaho:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 10
 
         11:
@@ -164,7 +164,7 @@ expansion_plan:
 
     illinois:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 1
 
         11:
@@ -173,7 +173,7 @@ expansion_plan:
 
     indiana:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 4
 
         11:
@@ -182,7 +182,7 @@ expansion_plan:
 
     iowa:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 4
 
         11:
@@ -191,7 +191,7 @@ expansion_plan:
 
     kansas:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 5
 
         11:
@@ -200,7 +200,7 @@ expansion_plan:
 
     kentucky:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 7
 
         11:
@@ -209,7 +209,7 @@ expansion_plan:
 
     louisiana:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 4
 
         11:
@@ -218,7 +218,7 @@ expansion_plan:
 
     maine:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 3
 
         11:
@@ -227,7 +227,7 @@ expansion_plan:
 
     maryland:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 3
 
         11:
@@ -236,7 +236,7 @@ expansion_plan:
 
     massachusetts:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 5
 
         11:
@@ -245,7 +245,7 @@ expansion_plan:
 
     michigan:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 1
 
         11:
@@ -254,7 +254,7 @@ expansion_plan:
 
     minnesota:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 0
 
         11:
@@ -263,7 +263,7 @@ expansion_plan:
 
     mississippi:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 5
 
         11:
@@ -272,7 +272,7 @@ expansion_plan:
 
     missouri:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 0
 
         11:
@@ -281,7 +281,7 @@ expansion_plan:
 
     montana:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 9
 
         11:
@@ -290,7 +290,7 @@ expansion_plan:
 
     nebraska:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 1
 
         11:
@@ -299,7 +299,7 @@ expansion_plan:
 
     nevada:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 4
 
         11:
@@ -308,7 +308,7 @@ expansion_plan:
 
     new_hampshire:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 3
 
         11:
@@ -317,7 +317,7 @@ expansion_plan:
 
     new_jersey:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 4
 
         11:
@@ -326,7 +326,7 @@ expansion_plan:
 
     new_mexico:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 0
 
         11:
@@ -335,7 +335,7 @@ expansion_plan:
 
     new_york:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 8
 
         11:
@@ -344,7 +344,7 @@ expansion_plan:
 
     north_carolina:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 6
 
         11:
@@ -353,7 +353,7 @@ expansion_plan:
 
     north_dakota:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 9
 
         11:
@@ -362,7 +362,7 @@ expansion_plan:
 
     ohio:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 6
 
         11:
@@ -371,7 +371,7 @@ expansion_plan:
 
     oklahoma:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 10
 
         11:
@@ -380,7 +380,7 @@ expansion_plan:
 
     oregon:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 1
 
         11:
@@ -389,7 +389,7 @@ expansion_plan:
 
     pennsylvania:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 10
 
         11:
@@ -398,7 +398,7 @@ expansion_plan:
 
     rhode_island:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 10
 
         11:
@@ -407,7 +407,7 @@ expansion_plan:
 
     south_carolina:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 3
 
         11:
@@ -416,7 +416,7 @@ expansion_plan:
 
     south_dakota:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 5
 
         11:
@@ -425,7 +425,7 @@ expansion_plan:
 
     tennessee:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 1
 
         11:
@@ -434,7 +434,7 @@ expansion_plan:
 
     texas:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 1
 
         11:
@@ -443,7 +443,7 @@ expansion_plan:
 
     utah:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 3
 
         11:
@@ -452,7 +452,7 @@ expansion_plan:
 
     vermont:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 5
 
         11:
@@ -461,7 +461,7 @@ expansion_plan:
 
     virginia:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 2
 
         11:
@@ -470,7 +470,7 @@ expansion_plan:
 
     washington:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 6
 
         11:
@@ -479,7 +479,7 @@ expansion_plan:
 
     west_virginia:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 7
 
         11:
@@ -488,7 +488,7 @@ expansion_plan:
 
     wisconsin:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 1
 
         11:
@@ -497,7 +497,7 @@ expansion_plan:
 
     wyoming:
         9:
-            tech_name: biomass_conv
+            tech_name: biomass
             n_sites: 6
 
         11:

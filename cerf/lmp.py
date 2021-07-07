@@ -1,8 +1,58 @@
 import numpy as np
 import pandas as pd
-import pkg_resources
 
 import logging
+
+import pkg_resources
+
+
+def generate_random_lmp_dataframe(n_zones=57, low_value=10, mid_value=300, high_value=500, n_samples=5000):
+    """Generate a random dataframe of hourly 8760 LMP values per utility zone.  Let high value LMPs only be used
+    for 15 percent of the data.
+
+    :param n_zones:                     Number of zones to process
+    :param low_value:                   Desired minimum value of MWh
+    :param mid_value:                   Desired mid value of MWh to split the 85-15 split to
+    :param high_value:                  Desired max value of MWh
+    :param n_samples:                   Number of intervals to split the min, max choices by
+
+    :return:                            Data frame of LMPs per zone
+
+    """
+
+    # initialize a dictionary with the hour count for the number of hours in a year
+    d = {'hour': list(range(1, 8761, 1))}
+
+    # create an array with n_samples covering an equal space from low to mid values
+    array_1 = np.linspace(low_value, mid_value, n_samples)
+
+    # create an array with n_samples covering an equal space from mid to low values
+    array_2 = np.linspace(mid_value, high_value, n_samples)
+
+    # let only 15 percent of values come from high cost values
+    threshold = 8760 - (8760 * 0.15)
+
+    # create an LMP array for each zone
+    for i in range(n_zones):
+
+        # construct a list of random LMP values
+        l = []
+        for j in range(8760):
+
+            if j < threshold:
+                l.append(np.random.choice(array_1))
+
+            else:
+                l.append(np.random.choice(array_2))
+
+        # shuffle the list
+        np.random.shuffle(l)
+
+        # assign to dict
+        d[i] = l
+
+    # convert to data frame
+    return pd.DataFrame(d)
 
 
 class LocationalMarginalPricing:
@@ -27,7 +77,7 @@ class LocationalMarginalPricing:
 
     """
 
-    def __init__(self, utility_dict, technology_dict, technology_order, zones_arr, utility_zone_lmp_csv):
+    def __init__(self, utility_dict, technology_dict, technology_order, zones_arr):
 
         # dictionary containing utility zone information
         self.utility_dict = utility_dict
@@ -40,12 +90,6 @@ class LocationalMarginalPricing:
 
         # array containing the utility zone per grid cell
         self.zones_arr = zones_arr
-
-        # data frame containing the 8760 LMPs per zone
-        self.utility_zone_lmp_df = pd.read_csv(utility_zone_lmp_csv)
-
-        # drop hours column
-        self.utility_zone_lmp_df.drop('hour', inplace=True, axis=1)
 
     @staticmethod
     def get_cf_bin(capacity_factor):
@@ -91,12 +135,24 @@ class LocationalMarginalPricing:
 
             # use illustrative default if none provided
             if lmp_file == "None":
+
+                # default illustrative LMP file
                 lmp_file = pkg_resources.resource_filename('cerf', 'data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
 
-            logging.info(f"Using LMP file for {self.technology_dict[i]['tech_name']}:  {lmp_file}")
+                # generate a random multiplier to change the data up to positive 30 percent per tech
+                modify_percent = np.random.choice(np.arange(1.01, 1.3, 0.01))
+
+                # apply to lmp data frame
+                lmp_df = pd.read_csv(lmp_file) * modify_percent
+
+                logging.info(f"Using LMP from default illustrative package data for {self.technology_dict[i]['tech_name']}")
+
+            else:
+                logging.info(f"Using LMP file for {self.technology_dict[i]['tech_name']}:  {lmp_file}")
+                lmp_df = pd.read_csv(lmp_file)
 
             # make a copy of the data frame
-            df_sorted = pd.read_csv(lmp_file)
+            df_sorted = lmp_df.copy()
             df_sorted.drop('hour', axis=1, inplace=True)
 
             # sort by descending lmp for each zone

@@ -22,7 +22,7 @@ class Model(ReadConfig):
     :param config_file:                 Full path with file name and extension to the input config.yml file
     :type config_file:                  str
 
-    :param   initialize_site_data:      None if no initialization is required, otherwise either a CSV file or
+    :param initialize_site_data:        None if no initialization is required, otherwise either a CSV file or
                                         Pandas DataFrame of siting data bearing the following required fields:
 
                                         xcoord:  the X coordinate of the site in meters in
@@ -36,15 +36,18 @@ class Model(ReadConfig):
 
                                         buffer_in_km:  the buffer around the site to apply in kilometers
 
+    :param log_level:                   Log level.  Options are 'info' and 'debug'.  Default 'info'
+    :type log_level:                    str
+
     """
 
-    def __init__(self, config_file, initialize_site_data=None):
+    def __init__(self, config_file, initialize_site_data=None, log_level='info'):
 
         # start time for model run
         self.start_time = time.time()
 
         # initialize console handler for logger
-        self.console_handler()
+        self.console_handler(log_level)
 
         logging.info("Starting CERF model")
 
@@ -58,7 +61,7 @@ class Model(ReadConfig):
         """Execute model."""
 
         # prepare data for use in siting an expansion per state for a target year
-        logging.info('Staging data...')
+        logging.debug('Staging data...')
 
         # initial time for staging data
         staging_t0 = time.time()
@@ -70,7 +73,7 @@ class Model(ReadConfig):
                      self.technology_order,
                      self.initialize_site_data)
 
-        logging.info(f'Staged data in {round((time.time() - staging_t0), 7)} seconds')
+        logging.debug(f'Staged data in {round((time.time() - staging_t0), 7)} seconds')
 
         return data
 

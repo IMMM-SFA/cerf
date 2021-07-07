@@ -43,19 +43,29 @@ class Logger:
         if self.write_logfile:
             self.file_handler()
 
-    def console_handler(self):
+    def console_handler(self, log_level):
         """Construct console handler."""
 
         console_handler = logging.StreamHandler(sys.stdout)
-        console_handler.setLevel(logging.INFO)
+
+        if log_level == 'debug':
+            console_handler.setLevel(logging.DEBUG)
+        else:
+            console_handler.setLevel(logging.INFO)
+
         console_handler.setFormatter(self.log_format)
         self.logger.addHandler(console_handler)
 
-    def file_handler(self):
+    def file_handler(self, log_level):
         """Construct file handler."""
 
         file_handler = logging.FileHandler(self.logfile)
-        file_handler.setLevel(logging.INFO)
+
+        if log_level == 'debug':
+            file_handler.setLevel(logging.DEBUG)
+        else:
+            file_handler.setLevel(logging.INFO)
+
         file_handler.setFormatter(self.log_format)
         self.logger.addHandler(file_handler)
 

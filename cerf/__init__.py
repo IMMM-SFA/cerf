@@ -4,3 +4,4 @@ from .model import *
 from .outputs import *
 from .process import execute
 from .interconnect import *
+from .lmp import *

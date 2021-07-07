@@ -78,4 +78,4 @@ def get_sample_lmp_data():
 
     f = pkg_resources.resource_filename('cerf', 'data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
 
-    return pd.read_csv(f), f
+    return pd.read_csv(f)

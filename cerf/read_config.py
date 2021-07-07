@@ -63,7 +63,7 @@ class ReadConfig(Logger):
         # if config file not passed
         if self.config_file is None:
             msg = "Config file must be passed as an argument using:  config_file='<path to config.yml'>"
-            logging.info(msg)
+            logging.error(msg)
             raise AttributeError(msg)
 
         # check for path exists
@@ -73,7 +73,7 @@ class ReadConfig(Logger):
 
         else:
             msg = f"Config file not found for path:  {self.config_file}"
-            logging.info(msg)
+            logging.error(msg)
             raise FileNotFoundError(msg)
 
     def get_states_dict(self):

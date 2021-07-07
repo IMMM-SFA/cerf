@@ -19,7 +19,7 @@ from cerf.model import Model
 from cerf.process_state import process_state
 
 
-def generate_model(config_file, initialize_site_data=None):
+def generate_model(config_file, initialize_site_data=None, log_level='info'):
     """Generate model instance for use in parallel applications.
 
     :param config_file:                 Full path with file name and extension to the input config.yml file
@@ -39,9 +39,12 @@ def generate_model(config_file, initialize_site_data=None):
 
                                         buffer_in_km:  the buffer around the site to apply in kilometers
 
+    :param log_level:                   Log level.  Options are 'info' and 'debug'.  Default 'info'
+    :type log_level:                    str
+
     """
 
-    return Model(config_file, initialize_site_data)
+    return Model(config_file, initialize_site_data, log_level)
 
 
 def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'):
@@ -96,8 +99,8 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
                                                                              verbose=model.settings_dict.get('verbose', False),
                                                                              write_output=False) for i in model.states_dict.keys())
 
-    logging.info(f"All states processed in {round((time.time() - t0), 7)} seconds.")
-    logging.info("Aggregating outputs...")
+    logging.debug(f"All states processed in {round((time.time() - t0), 7)} seconds.")
+    logging.debug("Aggregating outputs...")
 
     # create a data frame to hold the outputs
     df = pd.DataFrame(util.empty_sited_dict()).astype(util.sited_dtypes())
@@ -122,7 +125,7 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
     return df
 
 
-def execute(config_file, write_output=True, n_jobs=-1, method='sequential', initialize_site_data=None):
+def execute(config_file, write_output=True, n_jobs=-1, method='sequential', initialize_site_data=None, log_level='info'):
     """Run all CERF states for the CONUS for the target year.
 
     :param config_file:                 Full path with file name and extension to the input config.yml file
@@ -140,7 +143,7 @@ def execute(config_file, write_output=True, n_jobs=-1, method='sequential', init
                                         See https://joblib.readthedocs.io/en/latest/parallel.html for details.
     :type method:                       str
 
-    :param   initialize_site_data:      None if no initialization is required, otherwise either a CSV file or
+    :param initialize_site_data:        None if no initialization is required, otherwise either a CSV file or
                                         Pandas DataFrame of siting data bearing the following required fields:
 
                                         xcoord:  the X coordinate of the site in meters in
@@ -154,13 +157,15 @@ def execute(config_file, write_output=True, n_jobs=-1, method='sequential', init
 
                                         buffer_in_km:  the buffer around the site to apply in kilometers
 
-    :return:                            A 2D arrays containing sites as the technology ID per grid cell.  All
-                                        non-sited grid cells are given the value of NaN.
+    :param log_level:                   Log level.  Options are 'info' and 'debug'.  Default 'info'
+    :type log_level:                    str
+
+    :return:                            A data frame containing each sited power plant and their attributes
 
     """
 
     # instantiate CERF model
-    model = generate_model(config_file, initialize_site_data=initialize_site_data)
+    model = generate_model(config_file, initialize_site_data=initialize_site_data, log_level=log_level.lower())
 
     # process supporting data
     data = model.stage()

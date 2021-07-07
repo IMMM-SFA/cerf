@@ -189,7 +189,7 @@ class ProcessExpansion:
         df['cerf_name'] = np.where((df['technology'] == 'Biomass') &
                                    (df['subtech'] == 'Conv') &
                                    (df['storage'].isin(('wo CCS', 'w CCS'))),
-                                   'biomass_conv', df['cerf_name'])
+                                   'biomass', df['cerf_name'])
         # biomass igcc without ccs
         df['cerf_name'] = np.where((df['technology'] == 'Biomass') &
                                    (df['subtech'] == 'IGCC') &

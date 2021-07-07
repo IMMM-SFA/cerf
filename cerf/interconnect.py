@@ -281,7 +281,6 @@ class Interconnection:
         for index, i in enumerate(self.technology_order):
 
             # get technology specific information
-            # TODO:  add require_pipelines to tech dictionary
             require_pipelines = self.technology_dict[i].get('require_pipelines', False)
             discount_rate = self.technology_dict[i].get('discount_rate')
             lifetime = self.technology_dict[i].get('lifetime')

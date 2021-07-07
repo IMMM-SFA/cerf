@@ -97,25 +97,25 @@ class ProcessState:
         # set write outputs flag
         self.write_outputs = write_output
 
-        logging.info(f"Extracting suitable grids for {self.target_state_name}")
+        logging.debug(f"Extracting suitable grids for {self.target_state_name}")
         self.suitability_array_state, self.ymin, self.ymax, self.xmin, self.xmax = self.extract_state_suitability()
 
-        logging.info(f"Creating a NLC state level array for {self.target_state_name}")
+        logging.debug(f"Creating a NLC state level array for {self.target_state_name}")
         self.suitable_nlc_state = self.mask_nlc()
 
-        logging.info(f"Generating grid indices for {self.target_state_name}")
+        logging.debug(f"Generating grid indices for {self.target_state_name}")
         # grid indices for the entire grid in a 2D array
         self.indices_2d = indices_2d
         self.indices_flat_state = self.get_grid_indices()
 
-        logging.info(f"Get grid coordinates for {self.target_state_name}")
+        logging.debug(f"Get grid coordinates for {self.target_state_name}")
         self.xcoords_state, self.ycoords_state = self.get_grid_coordinates()
 
-        logging.info(f"Extracting additional metrics for {self.target_state_name}")
+        logging.debug(f"Extracting additional metrics for {self.target_state_name}")
         self.lmp_flat_dict, self.nov_flat_dict, self.ic_flat_dict = self.extract_state_metrics()
         self.zones_flat_arr = self.extract_utility_zones()
 
-        logging.info(f"Competing technologies to site expansion for {self.target_state_name}")
+        logging.debug(f"Competing technologies to site expansion for {self.target_state_name}")
         self.run_data = self.competition()
 
     def get_state_id(self):
@@ -309,7 +309,7 @@ def process_state(target_state_name, settings_dict, technology_dict, technology_
 
     """
 
-    logging.info(f'Processing state:  {target_state_name}')
+    logging.debug(f'Processing state:  {target_state_name}')
 
     # check to see if state has any sites in the expansion
     n_sites = sum([expansion_dict[target_state_name][k]['n_sites'] for k in expansion_dict[target_state_name].keys()])
@@ -345,6 +345,6 @@ def process_state(target_state_name, settings_dict, technology_dict, technology_
                                verbose=verbose,
                                write_output=write_output)
 
-        logging.info(f'Processed `{target_state_name}` in {round(time.time() - state_t0, 7)} seconds')
+        logging.debug(f'Processed `{target_state_name}` in {round(time.time() - state_t0, 7)} seconds')
 
         return process

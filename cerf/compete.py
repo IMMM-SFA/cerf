@@ -236,8 +236,8 @@ class Competition:
                     self.sited_arr_1d[rdx] = tech_id
 
                     if self.verbose:
-                        logging.info('\nUpdate expansion plan to represent siting requirements:')
-                        logging.info(self.expansion_dict)
+                        logging.debug('\nUpdate expansion plan to represent siting requirements:')
+                        logging.debug(self.expansion_dict)
 
                     # update original array with excluded area where siting occurred
                     # if target technology has no more sites to be sited
@@ -281,7 +281,7 @@ class Competition:
                         keep_siting = False
 
                     if self.verbose:
-                        logging.info(f'\nAvailable grid cells:  {self.avail_grids}')
+                        logging.debug(f'\nAvailable grid cells:  {self.avail_grids}')
 
                 # there are no more suitable grid cells
                 elif self.avail_grids == 0:
