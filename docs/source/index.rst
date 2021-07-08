@@ -1,18 +1,8 @@
-.. toctree::
-   :maxdepth: 1
-   :hidden:
-   :titlesonly:
 
-   getting_started
-   user_guide
-   modules
-
-
-******************
 cerf documentation
-******************
+==================
 
-**cerf** is an open-source geospatial model for assessing and analyzing future energy technology expansion feasibility.
+**cerf** is an open-source geospatial Python package for assessing and analyzing future electricity technology capacity expansion feasibility.
 
 
 .. panels::
@@ -80,13 +70,21 @@ cerf documentation
 
     +++
 
-    .. link-button:: about
+    .. link-button:: getting_started
             :type: ref
             :text: To the development guide
             :classes: btn-block btn-secondary stretched-link
 
 
 .. include:: footer.rst
+
+
+.. toctree::
+   :maxdepth: 2
+
+   getting_started
+   user_guide
+   modules
 
 
 Indices and tables
