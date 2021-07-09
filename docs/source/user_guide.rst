@@ -2,8 +2,6 @@
 User guide
 ===============
 
-
-
 Setting up a **cerf** run
 -------------------------
 
@@ -298,9 +296,109 @@ You can view the built-in costs per kV to connect to a substation using:
     costs_dict = cerf.costs_per_kv_substation()
 
 
+Preparing suitability rasters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The **cerf** package comes equipped with sample suitability data but you can build your on as well.
+
+You can see which suitability rasters are available in the `cerf` package by running:
+
+.. code-block:: python
+
+    import cerf
+
+    cerf.list_available_suitability_files()
 
 
-Suitability raster data
-~~~~~~~~~~~~~~~~~~~~~~~
+Rasters for spatial suitability at a resolution of 1km over the CONUS are required to conform to the format referenced in the following table.  Suitability rasters can be prepared using any GIS.
+
+.. table::
+
+    +----------------------+-------------------------------------------------------------+
+    | Attribute            | Description                                                 |
+    +======================+=============================================================+
+    | | Number of columns  | 4693, 2999                                                  |
+    | | Number of rows     |                                                             |
+    +----------------------+-------------------------------------------------------------+
+    | Coordinate system    | | PROJCS\["USA\_Contiguous\_Albers\_Equal\_Area\_Conic",    |
+    |                      | | GEOGCS\["GCS\_North\_American\_1983",                     |
+    |                      | | DATUM\["North\_American\_Datum\_1983",                    |
+    |                      | | SPHEROID\["GRS\_1980",6378137.0,298.257222101\]\],        |
+    |                      | | PRIMEM\["Greenwich",0.0\],                                |
+    |                      | | UNIT\["Degree",0.0174532925199433\]\],                    |
+    |                      | | PROJECTION\["Albers\_Conic\_Equal\_Area"\],               |
+    |                      | | PARAMETER\["false\_easting",0.0\],                        |
+    |                      | | PARAMETER\["false\_northing",0.0\],                       |
+    |                      | | PARAMETER\["longitude\_of\_center",-96.0\],               |
+    |                      | | PARAMETER\["standard\_parallel\_1",29.5\],                |
+    |                      | | PARAMETER\["standard\_parallel\_2",45.5\],                |
+    |                      | | PARAMETER\["latitude\_of\_center",37.5\],                 |
+    |                      | | UNIT\["Meters",1.0\]\]                                    |
+    +----------------------+-------------------------------------------------------------+
+    | Origin               | (-2405552.835500000044703, 1609934.799499999964610)         |
+    +----------------------+-------------------------------------------------------------+
+    | Pixel Size           | (1000, -1000)                                               |
+    +----------------------+-------------------------------------------------------------+
+    | Upper Left           | (-2405552.836, 1609934.799)                                 |
+    +----------------------+-------------------------------------------------------------+
+    | Lower Left           | (-2405552.836, -1389065.201)                                |
+    +----------------------+-------------------------------------------------------------+
+    | Upper Right          | (2287447.164, 1609934.799)                                  |
+    +----------------------+-------------------------------------------------------------+
+    | Lower Right          | (2287447.164, -1389065.201)                                 |
+    +----------------------+-------------------------------------------------------------+
+    | Center               | (-59052.836, 110434.799)                                    |
+    +----------------------+-------------------------------------------------------------+
+    | Type                 | Byte                                                        |
+    +----------------------+-------------------------------------------------------------+
+
+
+Tutorials
+---------
+
+Jupyter Notebooks
+
+Run **cerf**
+~~~~~~~~~~~~~
+
+asdf
+
+
+Fundamental equations and concepts
+----------------------------------
+
+The following are the building blocks of how **cerf** sites power plants.
+
+
+Net Locational Costs (NLC)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+asdf
+
+
+Net Operational Value (NOV)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+asdf
+
+
+Interconnection Costs (IC)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+IC = (D\ :subscript:`elec` * C\ :subscript:`elec` * AF) + (D\ :subscript:`gas` * C\ :subscript:`gas` * AF)
+
+Interconnection Cost ($ / yr) = Distance to nearest suitable transmission line (km) *
+                                    Electric grid interconnection captial cost ($ / km) *
+                                    Annuity factor
+                                    + (if gas-fired technology) Distance to nearest suitable gas pipeline (km) *
+                                    Gas interconnection captial cost ($ / km) *
+                                    Annuity factor
+
+        where, Annuity factor is (d(1 + d)**n) / ((1 + d)**n - 1)
+        where, d = real annual discount rate (%), n = asset lifetime (years)
+
+
+Competetion algorithm
+~~~~~~~~~~~~~~~~~~~~~
 
 asdf

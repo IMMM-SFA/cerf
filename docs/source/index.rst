@@ -70,7 +70,7 @@ cerf documentation
 
     +++
 
-    .. link-button:: getting_started
+    .. link-button:: contributing
             :type: ref
             :text: To the development guide
             :classes: btn-block btn-secondary stretched-link
@@ -85,6 +85,7 @@ cerf documentation
    getting_started
    user_guide
    modules
+   contributing
 
 
 Indices and tables
