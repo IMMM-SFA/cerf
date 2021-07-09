@@ -7,6 +7,11 @@ User guide
 Setting up a **cerf** run
 -------------------------
 
+The following with indroduce you to the input data required by **cerf** and how to set up a configuration file to run **cerf**.
+
+Configration file setup
+~~~~~~~~~~~~~~~~~~~~~~~
+
 The **cerf** package utilizes a YAML configuration file customized by the user with project level and technology-specific settings, an electricity technology capacity expansion plan, and utility zone data for each year intended to model. **cerf** comes equipped with prebuilt configuration files for years 2010 through 2050 to provide an illustrative example. Each example configuration file can be viewed using the following:
 
 .. code-block:: python
@@ -24,48 +29,23 @@ These are required values for project-level settings.
 
 .. table::
 
-    +-------------------+-----------------------------------+------+------+
-    | Name              | Description                       | Unit | Type |
-    +===================+===================================+======+======+
-    | run_year          | Target year to run in YYYY format | year | int  |
-    +-------------------+-----------------------------------+------+------+
-    | randomize         | | Randomize selection of a site   | NA   | str  |
-    |                   |   for a technology  when NLC      |      |      |
-    |                   | | values are equal. The first     |      |      |
-    |                   |   pass is for a technology for    |      |      |
-    |                   | | a technology                    |      |      |
-    +-------------------+-----------------------------------+------+------+
-    | seed_value        | | If `randomize` is False, set a  | NA   | bool |
-    |                   |   seed value for reproducibility; |      |      |
-    |                   | | the default is 0                |      |      |
-    +-------------------+-----------------------------------+------+------+
+    +--------------------+-------------------------------------------------------+-------+-------+
+    | Name               | Description                                           | Unit  | Type  |
+    +====================+=======================================================+=======+=======+
+    | run_year           | Target year to run in YYYY format                     | year  | int   |
+    +--------------------+-------------------------------------------------------+-------+-------+
+    | output_directory   | Directory to write the output data to                 | NA    | str   |
+    +--------------------+-------------------------------------------------------+-------+-------+
+    | randomize          | | Randomize selection of a site for a technology when | NA    | str   |
+    |                    | | NLC values are equal. The first pass is always      |       |       |
+    |                    | | random but setting `randomize` to False and passing |       |       |
+    |                    | | a seed value will ensure that runs are reproducible |       |       |
+    +--------------------+-------------------------------------------------------+-------+-------+
+    | seed_value         | | If ``randomize`` is False; set a seed value for     | NA    | int   |
+    |                    | | reproducibility; the default is 0                   |       |       |
+    +--------------------+-------------------------------------------------------+-------+-------+
 
-.. list-table::
-  :header-rows: 1
 
-  * - Name
-    - Description
-    - Unit
-    - Type
-  * - run_year
-    - Target year to run in YYYY format
-    - year
-    - int
-  * - output_directory
-    - Directory to write the output data to
-    - NA
-    - str
-  * - randomize
-    - Randomize selection of a site for a technology
-      when NLC values are equal. The first pass is always
-      random but setting `randomize` to False and passing
-      a seed value will ensure that runs are reproducible
-    - NA
-    - bool
-  * - seed_value
-    - If `randomize` is False, set a seed value for reproducibility; the default is 0
-    - NA
-    - int
 
 The following is an example implementation in the YAML configuration file:
 
@@ -77,3 +57,250 @@ The following is an example implementation in the YAML configuration file:
       output_directory: <your output directory>
       randomize: False
       seed_value: 0
+
+
+``technology``
+^^^^^^^^^^^^^^
+
+These are technology-specific settings.
+
+.. table::
+
+    +-------------------------+---------------------------------------------+----------+----------+
+    | Name                    | Description                                 | Unit     | Type     |
+    +=========================+=============================================+==========+==========+
+    | <tech id number>        | | This is an integer ID key given to the    | NA       | int      |
+    |                         | | technology for reference purposes.  This  |          |          |
+    |                         | | ID should match the corresponding         |          |          |
+    |                         | | technology in the electricity technology  |          |          |
+    |                         | | expansion plan.                           |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | tech_name               | Name of the technology                      | NA       | str      |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | lifetime                | Asset lifetime                              | n_years  | int      |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | capacity_factor         | | Defined as average annual power generated | fraction | float    |
+    |                         | | divided by the potential output if the    |          |          |
+    |                         | | plant operated at its rated capacity for a|          |          |
+    |                         | | year                                      |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | variable_cost_esc_rate  | Escalation rate of variable cost            | fraction | float    |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | fuel_esc_rate           | Escalation rate of fuel                     | fraction | float    |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | unit_size               | The size of the expected power plant        | MW       | float    |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | variable_om             | | Variable operation and maintenance costs  | $/MWh    | float    |
+    |                         | | of yearly capacity use                    |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | heat_rate               | | Amount of energy used by a power plant to | Btu/kWh  | float    |
+    |                         | | generate one kilowatt-hour of electricity |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | fuel_price              | Cost of fuel per unit                       | $/GJ     | float    |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | carbon_capture_rate     | Rate of carbon capture                      | fraction | float    |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | fuel_co2_content        | | CO2 content of the fuel and the heat rate | tons/MWh | float    |
+    |                         | | of the technology                         |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | discount_rate           | The time value of money in real terms       | fraction | float    |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | carbon_esc_rate         | Escalation rate of carbon                   | fraction | float    |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | carbon_tax              | | The fee imposed on the burning of         | $/ton    | float    |
+    |                         | | carbon-based fuels                        |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | buffer_in_km            | | Buffer around the site to apply in        | n_km     | int      |
+    |                         | | kilometers which becomes unsuitable for   |          |          |
+    |                         | | other sites after siting                  |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | require_pipelines       | | If the technology is gas related pipelines| NA       | bool     |
+    |                         | | will be used when calculating the         |          |          |
+    |                         | | interconnection cost                      |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | suitability_raster_file | | Full path with file name and extension to | NA       | str      |
+    |                         | | the accompanying suitability raster file  |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | utility_zone_lmp_file   | | LMP CSV file containing 8760 LMP per zone | $/MWh    | str      |
+    |                         | | where columns are each zone with a numeric|          |          |
+    |                         | | zone ID header that corresponds with the  |          |          |
+    |                         | | zones represented in the                  |          |          |
+    |                         | | ``utility_zone_raster_file`` found in the |          |          |
+    |                         | | ``utility_zones`` section and an          |          |          |
+    |                         | | additional hour column named ``hour``     |          |          |
+    |                         | | holding the hour of each record           |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+
+The following is an example implementation in the YAML configuration file:
+
+.. code-block:: yaml
+
+    technology:
+
+        9:
+            tech_name: biomass
+            lifetime: 60
+            capacity_factor: 0.6090000000000005
+            variable_cost_esc_rate: -0.00398993418629034
+            fuel_esc_rate: 0.0
+            unit_size: 80
+            variable_om: 11.68495803744351
+            heat_rate: 15117.64999999997
+            fuel_price: 0.0
+            carbon_capture_rate: 0.0
+            fuel_co2_content: 0.3035999999999996
+            discount_rate: 0.05
+            carbon_esc_rate: 0.0
+            carbon_tax: 0.0
+            buffer_in_km: 5
+            require_pipelines: False
+            suitability_raster_file: <path to file>
+            utility_zone_lmp_file: <path to lmp file>
+
+
+``expansion_plan``
+^^^^^^^^^^^^^^^^^^
+
+These are technology-specific settings.
+
+.. table::
+
+    +-------------------------+---------------------------------------------+----------+----------+
+    | Name                    | Description                                 | Unit     | Type     |
+    +=========================+=============================================+==========+==========+
+    | <state name>            | | Name key of state in all lower case with  | NA       | str      |
+    |                         | | underscore separation                     |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | <tech id key>           | | Technology ID key matching what is in the | NA       | int      |
+    |                         | | technology section (e.g. 9)               |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | tech_name               | | Name of the technology matching the name  | NA       | str      |
+    |                         | | in the technology section                 |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | n_sites                 | Number of sites desired                     | n_sites  | int      |
+    +-------------------------+---------------------------------------------+----------+----------+
+
+The following is an example implementation in the YAML configuration file:
+
+.. code-block:: yaml
+
+    expansion_plan:
+
+        arizona:
+            9:
+                tech_name: biomass
+                n_sites: 2
+
+
+``utility_zones``
+^^^^^^^^^^^^^^^^^^
+
+These are the utility zone data representing the linkage between each grid and technology and their locational marginal price (LMP).
+
+.. table::
+
+    +----------------------------------+---------------------------------------------+----------+----------+
+    | Name                             | Description                                 | Unit     | Type     |
+    +==================================+=============================================+==========+==========+
+    | utility_zone_raster_file         | | Full path with file name and extension to | NA       | str      |
+    |                                  | | the utility zones raster file             |          |          |
+    +----------------------------------+---------------------------------------------+----------+----------+
+    | utility_zone_raster_nodata_value | No data value in the utility zone raster    | NA       | float    |
+    +----------------------------------+---------------------------------------------+----------+----------+
+
+The following is an example implementation in the YAML configuration file:
+
+.. code-block:: yaml
+
+    utility_zones:
+
+        utility_zone_raster_file: <path to zone raster>
+        utility_zone_raster_nodata_value: 255
+
+
+The `cerf` package comes equipped with a sample utility zones raster file and a sample hourly (8760) locational marginal price file for illustrative purposes only.
+
+You can take a look at the utility zones raster file by running:
+
+.. code-block:: python
+
+    import cerf
+
+    utility_file = cerf.sample_utility_zones_raster_file()
+
+
+You can also view the sample hourly locational marginal price file as a Pandas DataFrame using:
+
+.. code-block:: python
+
+    import cerf
+
+    df = cerf.get_sample_lmp_data()
+
+
+``infrastructure``
+^^^^^^^^^^^^^^^^^^
+
+These are the electricity transmission and gas pipeline infrastructure data.
+
+.. table::
+
+    +-------------------------+---------------------------------------------+----------+----------+
+    | Name                    | Description                                 | Unit     | Type     |
+    +=========================+=============================================+==========+==========+
+    | substation_file         | | Full path with file name and extension to | NA       | str      |
+    |                         | | he input substations shapefile. If None   |          |          |
+    |                         | | `cerf` will use the default data stored in|          |          |
+    |                         | | the package.                              |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | costs_to_connect_file   | | A YAML file containing the cost of        | NA       | dict     |
+    |                         | | connection per km to a substation having a|          |          |
+    |                         | | certain minimum voltage range.  Default is|          |          |
+    |                         | | to load from the CERF data file           |          |          |
+    |                         | | 'costs_per_kv_substation.yml' by          |          |          |
+    |                         | | specifying 'None'                         |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | pipeline_file           | | Full path with file name and extension to | NA       | str      |
+    |                         | | he input pipelines shapefile. If None     |          |          |
+    |                         | | CERF will use the default data stored in  |          |          |
+    |                         | | the package.                              |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | output_rasterized_file  | Write distance raster                       | NA       | bool     |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | output_dist_file        | Write distance raster                       | NA       | bool     |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | output_alloc_file       | Write allocation file                       | NA       | bool     |
+    +-------------------------+---------------------------------------------+----------+----------+
+    | output_cost_file        | Write cost file                             | NA       | bool     |
+    +-------------------------+---------------------------------------------+----------+----------+
+
+The following is an example implementation in the YAML configuration file:
+
+.. code-block:: yaml
+
+    infrastructure:
+
+        substation_file: <path to substation shapefile>
+        costs_to_connect_file: <path to the yaml file>
+        pipeline_file: <path to the pipeline file>
+        output_rasterized_file: False
+        output_dist_file: False
+        output_alloc_file: False
+        output_cost_file: False
+
+
+You can view the built-in costs per kV to connect to a substation using:
+
+.. code-block:: python
+
+    import cerf
+
+    costs_dict = cerf.costs_per_kv_substation()
+
+
+
+
+Suitability raster data
+~~~~~~~~~~~~~~~~~~~~~~~
+
+asdf
