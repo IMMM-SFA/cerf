@@ -1,6 +1,4 @@
-[![linux](https://github.com/IMMM-SFA/cerf/actions/workflows/linux.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/linux.yml)
-[![osx](https://github.com/IMMM-SFA/cerf/actions/workflows/osx.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/osx.yml)
-[![windows](https://github.com/IMMM-SFA/cerf/actions/workflows/windows.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/windows.yml)
+[![build](https://github.com/IMMM-SFA/cerf/actions/workflows/build.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/IMMM-SFA/cerf/branch/version-two/graph/badge.svg?token=9jbGJv8XCJ)](https://codecov.io/gh/IMMM-SFA/cerf)
 [![Documentation Status](https://readthedocs.org/projects/im3-cerf/badge/?version=latest)](https://im3-cerf.readthedocs.io/en/latest/?badge=latest)
 [![DOI](https://zenodo.org/badge/115649750.svg)](https://zenodo.org/badge/latestdoi/115649750)
