@@ -45,3 +45,12 @@ rtree           0.9.7
 shapely         1.7.1
 geopandas       0.9.0
 =============   ================
+
+
+Optional dependencies
+
+=============       ================
+Dependency          Minimum Version
+=============       ================
+sphinx_rtd_theme    0.5.1
+sphinx_panels       0.6.0
