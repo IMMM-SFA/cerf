@@ -81,16 +81,10 @@ cerf documentation
 
 .. toctree::
    :maxdepth: 2
+   :hidden:
 
    getting_started
    user_guide
    modules
    contributing
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   license
