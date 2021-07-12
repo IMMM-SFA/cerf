@@ -179,13 +179,18 @@ class NetOperationalValue:
         k = (1.0 + self.carbon_esc) / (1.0 + self.discount_rate)
         return k * (1.0 - pow(k, self.lifetime)) * self.annuity_factor / (1.0 - k)
 
+    def calc_generation(self):
+        """Calculate electricity generation."""
+
+        return self.unit_size * self.capacity_factor * self.hours_per_year
+
     def calc_nov(self):
         """Calculate NOV array for all technologies."""
 
-        term1 = self.unit_size * self.capacity_factor * self.hours_per_year
+        generation = self.calc_generation()
         term2 = self.lmp_arr * self.lf_fuel
         term3 = self.variable_om * self.lf_vom
         term4 = self.heat_rate * (self.fuel_price / 1000) * self.lf_fuel
         term5 = (self.carbon_tax * self.fuel_co2_content * self.heat_rate * self.lf_carbon / 1000000) * (1 - self.carbon_capture_rate)
 
-        return term1 * (term2 - (term3 + term4 + term5))
+        return generation * (term2 - (term3 + term4 + term5))

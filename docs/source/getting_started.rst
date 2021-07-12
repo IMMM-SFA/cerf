@@ -8,7 +8,8 @@ The Capacity Expansion Regional Feasibility model (CERF) helps us evaluate the f
 
 CERF currently operates at a 1 km :superscript:`2` resolution over the conterminous United States. Each grid cell is given an initial value of suitable (0) or unsuitable (1) based on a collection of suitability criteria gleaned from the literature. CERF's default suitability layers include both those that are common to all thermal technologies as well as technology-specific suitability criteria. Common suitability layers represent categories such as protected lands, critical habitat areas, and much more. Technology-specific suitability layers are those that satisfy requirements that may not be applicable to all technologies. An example would be minimum mean annual flow requirements for cooling water availability for individual thermal technologies.
 
-We introduce a metric named Net Locational Cost (NLC) that is used compete power plant technologies for each grid cell based on the least expensive option. NLC is calculated by subtracting the Net Operational Value (NOV) of the proposed power plant from the cost of its interconnection to the grid to represent the potential deployment value. Both the NOV parameter which incorporates many technology-specific values such as variable operations and maintenance costs, carbon price, heat rate, etc. and the interconnection cost parameter used for both electricity transmission and gas pipelines have variables that are accessible to the user for modification per time step.
+We introduce a metric named Net Locational Cost (NLC) that is used compete power plant technologies for each grid cell based on the least expensive option. NLC is calculated by subtracting the Net Operating Value (NOV) of the proposed power plant from the cost of its interconnection to the grid to represent the potential deployment value. Both the NOV parameter which incorporates many technology-specific values such as variable operations and maintenance costs, carbon price, heat rate, etc. and the interconnection cost parameter used for both electricity transmission and gas pipelines have variables that are accessible to the user for modification per time step.
+
 
 Python version support
 ----------------------
@@ -22,6 +23,7 @@ Installation
 **cerf** can be installed via pip by running the following from a terminal window::
 
     pip install cerf
+
 
 Dependencies
 ------------
@@ -48,9 +50,11 @@ geopandas       0.9.0
 
 
 Optional dependencies
+---------------------
 
-=============       ================
-Dependency          Minimum Version
-=============       ================
-sphinx_rtd_theme    0.5.1
-sphinx_panels       0.6.0
+==================    ================
+Dependency            Minimum Version
+==================    ================
+sphinx_rtd_theme      0.5.1
+sphinx_panels         0.6.0
+==================    ================
