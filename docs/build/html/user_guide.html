@@ -110,6 +110,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#tutorials">Tutorials</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#cerf-quickstarter"><strong>cerf</strong> quickstarter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#site-a-single-year-for-the-conus">Site a single year for the CONUS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#site-multiple-years-for-the-conus-and-inherit-sited-plants">Site multiple years for the CONUS and inherit sited plants</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#fundamental-equations-and-concepts">Fundamental equations and concepts</a><ul>
@@ -118,7 +120,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#generation-g">Generation (G)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#levelization-factor-lfi">Levelization factor (LF<sub>i</sub>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#annuity-factor-af">Annuity factor (AF)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id2">Locational marginal price (LMP)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Locational marginal price (LMP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#operating-cost-oc">Operating cost (OC)</a></li>
 </ul>
 </li>
@@ -762,7 +764,47 @@
 <p>Jupyter Notebooks</p>
 <div class="section" id="cerf-quickstarter">
 <h3><strong>cerf</strong> quickstarter<a class="headerlink" href="#cerf-quickstarter" title="Permalink to this headline">¶</a></h3>
-<p>The following is a link to a Jupyter Notebook to run <strong>cerf</strong> without having to install any software:  <a class="reference external" href="https://github.com/IMMM-SFA/cerf">cerf quickstarter</a></p>
+<p>The following is a link to a Jupyter Notebook to run <strong>cerf</strong> without having to install any software:  <cite>cerf quickstarter &lt;https://github.com/IMMM-SFA/cerf&gt;</cite></p>
+</div>
+<div class="section" id="site-a-single-year-for-the-conus">
+<h3>Site a single year for the CONUS<a class="headerlink" href="#site-a-single-year-for-the-conus" title="Permalink to this headline">¶</a></h3>
+<p>Site power plants for the default illustrative expansion plan for all states in the CONUS for a single year.  Return the results as a Pandas DataFame.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cerf</span>
+
+<span class="c1"># sample year</span>
+<span class="n">yr</span> <span class="o">=</span> <span class="mi">2010</span>
+
+<span class="c1"># load the sample configuration file path for the target year</span>
+<span class="n">config_file</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">config_file</span><span class="p">(</span><span class="n">yr</span><span class="p">)</span>
+
+<span class="c1"># run the configuration for the target year and return a data frame</span>
+<span class="n">result_df</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="site-multiple-years-for-the-conus-and-inherit-sited-plants">
+<h3>Site multiple years for the CONUS and inherit sited plants<a class="headerlink" href="#site-multiple-years-for-the-conus-and-inherit-sited-plants" title="Permalink to this headline">¶</a></h3>
+<p>Site power plants for the default illustrative expansion plan for all states in the CONUS.  Return the results as a Pandas DataFame.  The final <code class="docutils literal notranslate"><span class="pre">result_df</span></code> variable will contain any 2010 power plants that have not yet retired and newly sited plants for year 2050 for all technologies and states.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cerf</span>
+
+<span class="c1"># process year 2010 and 2050</span>
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">yr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2050</span><span class="p">]):</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing year:  </span><span class="si">{</span><span class="n">yr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># load the sample configuration file path for the target year</span>
+    <span class="n">config_file</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">config_file</span><span class="p">(</span><span class="n">yr</span><span class="p">)</span>
+
+    <span class="c1"># do not intialize the run with previously sited data if it is the first time step</span>
+    <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">result_df</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result_df</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span>
+                                 <span class="n">write_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                 <span class="n">initialize_site_data</span><span class="o">=</span><span class="n">result_df</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="fundamental-equations-and-concepts">
@@ -797,8 +839,8 @@
 <p><img src="_images/math/8ff73e9308fe851036cbddd32ed53043fdddb6c9.png" alt="AF = \frac{d(1 + d)^n}{(1 + d)^n - 1}"/></p>
 </div><p>where, <em>d</em> is the real annual discount rate as a fraction and <em>n</em> is the asset lifetime in years.</p>
 </div>
-<div class="section" id="id2">
-<h4>Locational marginal price (LMP)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id1">
+<h4>Locational marginal price (LMP)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
 <div class="math">
 <p><img src="_images/math/834367e23684863bd51bb3642d7095990344eca8.png" alt="LMP_{lev} = LMP * LF_{fuel}"/></p>
 </div><p>where, <em>LMP</em> is the locational marginal price (<em>LMP</em>) in $/MWh and <em>LF</em><sub>fuel</sub> is the levelization factor of fuel.  <em>LMP</em> is also an input to <strong>cerf</strong> and is described in full <a class="reference external" href="www.google.com">here</a>.</p>
