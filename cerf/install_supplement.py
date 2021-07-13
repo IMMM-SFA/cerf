@@ -9,6 +9,7 @@ from pkg_resources import get_distribution
 class InstallSupplement:
     """Download and unpack example data supplement from Zenodo that matches the current installed
     cerf distribution.
+
     :param example_data_directory:              Full path to the directory you wish to install
                                                 the cerf example data to.  Must be write-enabled
                                                 for the user.
