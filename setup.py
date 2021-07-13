@@ -1,3 +1,4 @@
+import re
 from setuptools import setup, find_packages
 
 
@@ -13,15 +14,18 @@ def get_requirements():
         return f.read().split()
 
 
+version = re.search(r"__version__ = ['\"]([^'\"]*)['\"]", open('cerf/__init__.py').read(), re.M).group(1)
+
+
 setup(
     name='cerf',
-    version='2.0.0',
+    version="2.0.0",
     packages=find_packages(),
     url='https://github.com/IMMM-SFA/cerf',
     license='BSD2-Simplified',
     author='Chris R. Vernon; Nino Zuljevic',
     author_email='chris.vernon@pnnl.gov; nino.zuljevic@pnnl.gov',
-    description='A Geospatial Model for Assessing Future Energy Technology Expansion Feasibility',
+    description='An open-source geospatial Python package for assessing and analyzing future electricity technology capacity expansion feasibility',
     long_description=readme(),
     long_description_content_type="text/markdown",
     python_requires='>=3.7.*, <4',

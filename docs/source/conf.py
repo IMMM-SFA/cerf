@@ -79,6 +79,11 @@ html_css_files = [
 ]
 
 
+
+import cerf
+version = str(cerf.__version__)
+
+
 # -- Extension configuration -------------------------------------------------
 # panels_add_bootstrap_css = False
 

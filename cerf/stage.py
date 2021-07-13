@@ -92,10 +92,10 @@ class Stage:
         """Load the utility zones raster for the CONUS into a 2D array."""
 
         # raster file containing the utility zone per grid cell
-        zones_raster_file = self.utility_dict.get('utility_zone_raster_file')
+        zones_raster_file = self.utility_dict.get('utility_zone_raster_file', None)
 
         # use default if none passed
-        if zones_raster_file == 'None':
+        if zones_raster_file is None:
             zones_raster_file = pkg_resources.resource_filename('cerf', 'data/utility_zones_1km.img')
 
         logging.info(f"Using 'zones_raster_file':  {zones_raster_file}")
@@ -205,7 +205,7 @@ class Stage:
             # path to the input raster
             tech_suitability_raster_file = self.technology_dict[i].get('suitability_raster_file', None)
 
-            if tech_suitability_raster_file == "None":
+            if tech_suitability_raster_file is None:
                 tech_suitability_raster_file = pkg_resources.resource_filename('cerf', f'data/suitability_{self.tech_name_dict[i]}.sdat')
 
             logging.info(f"Using suitability file for '{self.technology_dict[i]['tech_name']}':  {tech_suitability_raster_file}")

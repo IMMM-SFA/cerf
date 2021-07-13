@@ -5,3 +5,6 @@ from .outputs import *
 from .process import execute
 from .interconnect import *
 from .lmp import *
+
+
+__version__ = "2.0.0"

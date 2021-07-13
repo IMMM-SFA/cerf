@@ -9,15 +9,12 @@ import pkg_resources
 def generate_random_lmp_dataframe(n_zones=57, low_value=10, mid_value=300, high_value=500, n_samples=5000):
     """Generate a random dataframe of hourly 8760 LMP values per utility zone.  Let high value LMPs only be used
     for 15 percent of the data.
-
     :param n_zones:                     Number of zones to process
     :param low_value:                   Desired minimum value of MWh
     :param mid_value:                   Desired mid value of MWh to split the 85-15 split to
     :param high_value:                  Desired max value of MWh
     :param n_samples:                   Number of intervals to split the min, max choices by
-
     :return:                            Data frame of LMPs per zone
-
     """
 
     # initialize a dictionary with the hour count for the number of hours in a year
@@ -125,42 +122,35 @@ class LocationalMarginalPricing:
 
         lmp_arr = np.zeros(shape=(n_technologies, self.zones_arr.shape[0], self.zones_arr.shape[1]))
 
+        # get the LMP file for the technology from the configuration file
+        lmp_file = self.utility_dict.get('utility_zone_lmp_file', None)
+
+        # use illustrative default if none provided
+        if lmp_file is None:
+
+            # default illustrative LMP file
+            lmp_file = pkg_resources.resource_filename('cerf', 'data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
+            logging.info(f"Using LMP from default illustrative package data:  {lmp_file}")
+
+        else:
+            logging.info(f"Using LMP file:  {lmp_file}")
+
+        lmp_df = pd.read_csv(lmp_file)
+
+        # drop the hour field
+        lmp_df.drop('hour', axis=1, inplace=True)
+
         for index, i in enumerate(self.technology_order):
 
             # assign the correct LMP based on the capacity factor of the technology
             start_index, through_index = self.get_cf_bin(self.technology_dict[i]['capacity_factor'])
 
-            # get the LMP file for the technology from the configuration file
-            lmp_file = self.technology_dict[i].get('utility_zone_lmp_file', None)
-
-            # use illustrative default if none provided
-            if lmp_file == "None":
-
-                # default illustrative LMP file
-                lmp_file = pkg_resources.resource_filename('cerf', 'data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
-
-                # generate a random multiplier to change the data up to positive 30 percent per tech
-                modify_percent = np.random.choice(np.arange(1.01, 1.3, 0.01))
-
-                # apply to lmp data frame
-                lmp_df = pd.read_csv(lmp_file) * modify_percent
-
-                logging.info(f"Using LMP from default illustrative package data for {self.technology_dict[i]['tech_name']}")
-
-            else:
-                logging.info(f"Using LMP file for {self.technology_dict[i]['tech_name']}:  {lmp_file}")
-                lmp_df = pd.read_csv(lmp_file)
-
-            # make a copy of the data frame
-            df_sorted = lmp_df.copy()
-            df_sorted.drop('hour', axis=1, inplace=True)
-
             # sort by descending lmp for each zone
-            for i in df_sorted.columns:
-                df_sorted[i] = df_sorted[i].sort_values(ascending=False).values
+            for i in lmp_df.columns:
+                lmp_df[i] = lmp_df[i].sort_values(ascending=False).values
 
             # create a dictionary of LMP values for each power zone based on tech capacity factor
-            lmp_dict = df_sorted.iloc[start_index:through_index].mean(axis=0).to_dict()
+            lmp_dict = lmp_df.iloc[start_index:through_index].mean(axis=0).to_dict()
             lmp_dict = {int(k): lmp_dict[k] for k in lmp_dict.keys()}
 
             # add in no data

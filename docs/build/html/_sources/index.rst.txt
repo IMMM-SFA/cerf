@@ -1,6 +1,14 @@
+:notoc:
 
 cerf documentation
 ==================
+
+**Date**: |today| **Version**: |version|
+
+**Useful links**:
+`Source Repository <https://github.com/immm-sfa/cerf>`_ |
+`Issues & Ideas <https://github.com/immm-sfa/cerf/issues>`_ |
+`Interactive Quickstarter <https://github.com/immm-sfa/cerf>`_
 
 **cerf** is an open-source geospatial Python package for assessing and analyzing future electricity technology capacity expansion feasibility.
 
