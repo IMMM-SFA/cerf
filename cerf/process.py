@@ -19,11 +19,14 @@ from cerf.model import Model
 from cerf.process_state import process_state
 
 
-def generate_model(config_file, initialize_site_data=None, log_level='info'):
+def generate_model(config_file=None, config_dict=None, initialize_site_data=None, log_level='info'):
     """Generate model instance for use in parallel applications.
 
     :param config_file:                 Full path with file name and extension to the input config.yml file
     :type config_file:                  str
+
+    :param config_dict:                 Optional instead of config_file. Configuration dictionary.
+    :type config_dict:                  dict
 
     :param   initialize_site_data:      None if no initialization is required, otherwise either a CSV file or
                                         Pandas DataFrame of siting data bearing the following required fields:
@@ -44,7 +47,7 @@ def generate_model(config_file, initialize_site_data=None, log_level='info'):
 
     """
 
-    return Model(config_file, initialize_site_data, log_level)
+    return Model(config_file, config_dict, initialize_site_data, log_level)
 
 
 def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'):
@@ -125,11 +128,14 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
     return df
 
 
-def execute(config_file, write_output=True, n_jobs=-1, method='sequential', initialize_site_data=None, log_level='info'):
+def execute(config_file=None, config_dict=None, write_output=True, n_jobs=-1, method='sequential', initialize_site_data=None, log_level='info'):
     """Run all CERF states for the CONUS for the target year.
 
     :param config_file:                 Full path with file name and extension to the input config.yml file
     :type config_file:                  str
+
+    :param config_dict:                 Optional instead of config_file. Configuration dictionary.
+    :type config_dict:                  dict
 
     :param write_output:                Write output as a raster to the output directory specified in the config file
     :type write_output:                 bool
@@ -165,7 +171,7 @@ def execute(config_file, write_output=True, n_jobs=-1, method='sequential', init
     """
 
     # instantiate CERF model
-    model = generate_model(config_file, initialize_site_data=initialize_site_data, log_level=log_level.lower())
+    model = generate_model(config_file, config_dict, initialize_site_data=initialize_site_data, log_level=log_level.lower())
 
     # process supporting data
     data = model.stage()

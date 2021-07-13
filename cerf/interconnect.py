@@ -236,55 +236,53 @@ class Interconnection:
             # get shapes
             shapes = ((geom, value) for geom, value in zip(gdf.geometry, gdf['_rval_']))
 
-        # with tempfile.TemporaryDirectory() as tempdir:
+        with tempfile.TemporaryDirectory() as tempdir:
 
-        tempdir = tempfile.mkdtemp()
+            # if write desired
+            if any((self.output_rasterized_file, self.output_dist_file, self.output_alloc_file, self.output_cost_file)):
 
-        # if write desired
-        if any((self.output_rasterized_file, self.output_dist_file, self.output_alloc_file, self.output_cost_file)):
+                if self.output_dir is None:
+                    msg = "If writing rasters to file must specify 'output_dir'"
+                    logging.error(msg)
+                    raise NotADirectoryError(msg)
 
-            if self.output_dir is None:
-                msg = "If writing rasters to file must specify 'output_dir'"
-                logging.error(msg)
-                raise NotADirectoryError(msg)
-
+                else:
+                    out_rast = os.path.join(self.output_dir, f'cerf_transmission_raster_{setting}.tif')
+                    out_dist = os.path.join(self.output_dir, f'cerf_transmission_distance_{setting}.tif')
+                    out_alloc = os.path.join(self.output_dir, f'cerf_transmission_allocation_{setting}.tif')
+                    out_costs = os.path.join(self.output_dir, f'cerf_transmission_costs_{setting}.tif')
             else:
-                out_rast = os.path.join(self.output_dir, f'cerf_transmission_raster_{setting}.tif')
-                out_dist = os.path.join(self.output_dir, f'cerf_transmission_distance_{setting}.tif')
-                out_alloc = os.path.join(self.output_dir, f'cerf_transmission_allocation_{setting}.tif')
-                out_costs = os.path.join(self.output_dir, f'cerf_transmission_costs_{setting}.tif')
-        else:
-            out_rast = os.path.join(tempdir, f'cerf_transmission_raster_{setting}.tif')
-            out_dist = os.path.join(tempdir, f'cerf_transmission_distance_{setting}.tif')
-            out_alloc = os.path.join(tempdir, f'cerf_transmission_allocation_{setting}.tif')
-            out_costs = os.path.join(tempdir, f'cerf_transmission_costs_{setting}.tif')
+                out_rast = os.path.join(tempdir, f'cerf_transmission_raster_{setting}.tif')
+                out_dist = os.path.join(tempdir, f'cerf_transmission_distance_{setting}.tif')
+                out_alloc = os.path.join(tempdir, f'cerf_transmission_allocation_{setting}.tif')
+                out_costs = os.path.join(tempdir, f'cerf_transmission_costs_{setting}.tif')
 
-        # rasterize transmission vector data and write to memory
-        with rasterio.open(out_rast, 'w', **metadata) as dataset:
-            # burn features into raster
-            burned = features.rasterize(shapes=shapes, fill=0, out=arr, transform=dataset.transform)
+            # rasterize transmission vector data and write to memory
+            with rasterio.open(out_rast, 'w', **metadata) as dataset:
+                # burn features into raster
+                burned = features.rasterize(shapes=shapes, fill=0, out=arr, transform=dataset.transform)
 
-            # write the outputs to file
-            dataset.write_band(1, burned)
+                # write the outputs to file
+                dataset.write_band(1, burned)
 
-        # calculate Euclidean distance and write raster; result just stores the return value 0
-        dist_result = wbt.euclidean_distance(out_rast, out_dist, callback=suppress_callback)
+            # calculate Euclidean distance and write raster; result just stores the return value 0
+            dist_result = wbt.euclidean_distance(out_rast, out_dist, callback=suppress_callback)
 
-        # calculate Euclidean allocation and write raster
-        alloc_result = wbt.euclidean_allocation(out_rast, out_alloc, callback=suppress_callback)
+            # calculate Euclidean allocation and write raster
+            alloc_result = wbt.euclidean_allocation(out_rast, out_alloc, callback=suppress_callback)
 
-        with rasterio.open(out_dist) as dist:
-            dist_arr = dist.read(1)
+            with rasterio.open(out_dist) as dist:
+                dist_arr = dist.read(1)
 
-        with rasterio.open(out_alloc) as alloc:
-            alloc_arr = alloc.read(1)
+            with rasterio.open(out_alloc) as alloc:
+                alloc_arr = alloc.read(1)
 
-        with rasterio.open(out_costs, 'w', **metadata) as out:
+            with rasterio.open(out_costs, 'w', **metadata) as out:
 
-            # distance in km * the cost of the nearest substation; outputs $2015/km
-            cost_arr = (dist_arr * m_to_km_factor) * alloc_arr
+                # distance in km * the cost of the nearest substation; outputs $2015/km
+                cost_arr = (dist_arr * m_to_km_factor) * alloc_arr
 
-            out.write(cost_arr, 1)
+                out.write(cost_arr, 1)
 
         return cost_arr
 

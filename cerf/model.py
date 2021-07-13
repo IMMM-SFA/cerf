@@ -22,6 +22,9 @@ class Model(ReadConfig):
     :param config_file:                 Full path with file name and extension to the input config.yml file
     :type config_file:                  str
 
+    :param config_dict:                 Optional instead of config_file. Configuration dictionary.
+    :type config_dict:                  dict
+
     :param initialize_site_data:        None if no initialization is required, otherwise either a CSV file or
                                         Pandas DataFrame of siting data bearing the following required fields:
 
@@ -41,7 +44,7 @@ class Model(ReadConfig):
 
     """
 
-    def __init__(self, config_file, initialize_site_data=None, log_level='info'):
+    def __init__(self, config_file=None, config_dict=None, initialize_site_data=None, log_level='info'):
 
         # start time for model run
         self.start_time = time.time()
@@ -52,7 +55,7 @@ class Model(ReadConfig):
         logging.info("Starting CERF model")
 
         # inherit the configuration reader class attributes
-        super(Model, self).__init__(config_file)
+        super(Model, self).__init__(config_file, config_dict)
 
         # siting data to use as the initial condition
         self.initialize_site_data = initialize_site_data

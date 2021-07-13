@@ -8,27 +8,35 @@ from cerf.logger import Logger
 
 
 class ReadConfig(Logger):
-    """Read the configuration YAML file to a dictionary. Users can optionally pass in individual technology,
-    expansion plan, settings, and / or utility zone YAML files that will override the default configuration.
+    """Read the configuration YAML file to a dictionary. Users can optionally pass in a configuration dictionary
+    instead.
 
         :param config_file:                 Full path with file name and extension to the input config.yml file
         :type config_file:                  str
+
+        :param config_dict:                 Configuration dictionary.
+        :type config_dict:                  dict
 
     """
 
     # type hints
     config_file: str
 
-    def __init__(self, config_file):
+    def __init__(self, config_file=None, config_dict=None):
 
         # inherit logger class attributes
         super(ReadConfig, self).__init__()
 
-        # yaml config file
-        self.config_file = config_file
+        if config_file is None:
+            self.config = config_dict
 
-        # read into dict
-        self.config = self.get_yaml()
+        else:
+
+            # yaml config file
+            self.config_file = config_file
+
+            # read into dict
+            self.config = self.get_yaml()
 
         # get project level settings
         self.settings_dict = self.config.get('settings')
