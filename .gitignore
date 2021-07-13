@@ -9,6 +9,7 @@ notebooks/.ipynb_checkpoints/
 # cerf
 example/outputs/
 example/inputs/spatial/
+build/
 *.pyc
 cerf.egg-info/
 dist/
