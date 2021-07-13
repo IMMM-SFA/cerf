@@ -1,0 +1,559 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cerf.process_state &mdash; cerf 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cerf.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/getting_started.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> cerf
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">cerf</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>cerf.process_state</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cerf.process_state</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Process a state for the target year.</span>
+
+<span class="sd">@author Chris R. vernon</span>
+<span class="sd">@email chris.vernon@pnnl.gov</span>
+
+<span class="sd">License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
+<span class="kn">import</span> <span class="nn">rasterio</span>
+
+<span class="kn">from</span> <span class="nn">cerf.compete</span> <span class="kn">import</span> <span class="n">Competition</span>
+
+
+<div class="viewcode-block" id="ProcessState"><a class="viewcode-back" href="../../cerf.html#cerf.process_state.ProcessState">[docs]</a><span class="k">class</span> <span class="nc">ProcessState</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">settings_dict</span><span class="p">,</span>
+                 <span class="n">technology_dict</span><span class="p">,</span>
+                 <span class="n">technology_order</span><span class="p">,</span>
+                 <span class="n">expansion_dict</span><span class="p">,</span>
+                 <span class="n">states_dict</span><span class="p">,</span>
+                 <span class="n">suitability_arr</span><span class="p">,</span>
+                 <span class="n">lmp_arr</span><span class="p">,</span>
+                 <span class="n">nov_arr</span><span class="p">,</span>
+                 <span class="n">ic_arr</span><span class="p">,</span>
+                 <span class="n">nlc_arr</span><span class="p">,</span>
+                 <span class="n">zones_arr</span><span class="p">,</span>
+                 <span class="n">xcoords</span><span class="p">,</span>
+                 <span class="n">ycoords</span><span class="p">,</span>
+                 <span class="n">indices_2d</span><span class="p">,</span>
+                 <span class="n">target_state_name</span><span class="p">,</span>
+                 <span class="n">randomize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">seed_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">write_output</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+        <span class="c1"># dictionary containing project level settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span> <span class="o">=</span> <span class="n">settings_dict</span>
+
+        <span class="c1"># dictionary containing technology specific information</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span> <span class="o">=</span> <span class="n">technology_dict</span>
+
+        <span class="c1"># order of technologies to process</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span> <span class="o">=</span> <span class="n">technology_order</span>
+
+        <span class="c1"># dictionary containing the expansion plan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">expansion_dict</span> <span class="o">=</span> <span class="n">expansion_dict</span>
+
+        <span class="c1"># states dictionary with state name to state ID mapping</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">states_dict</span> <span class="o">=</span> <span class="n">states_dict</span>
+
+        <span class="c1"># target state name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span> <span class="o">=</span> <span class="n">target_state_name</span>
+
+        <span class="c1"># the id of the target state as it is represented in the state raster</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_state_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_state_id</span><span class="p">()</span>
+
+        <span class="c1"># suitability data for the CONUS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suitability_arr</span> <span class="o">=</span> <span class="n">suitability_arr</span>
+
+        <span class="c1"># LMP array for the CONUS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lmp_arr</span> <span class="o">=</span> <span class="n">lmp_arr</span>
+
+        <span class="c1"># NOV array for the CONUS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nov_arr</span> <span class="o">=</span> <span class="n">nov_arr</span>
+
+        <span class="c1"># IC array for the CONUS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ic_arr</span> <span class="o">=</span> <span class="n">ic_arr</span>
+
+        <span class="c1"># NLC data for the CONUS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nlc_arr</span> <span class="o">=</span> <span class="n">nlc_arr</span>
+
+        <span class="c1"># utility zones for the CONUS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zones_arr</span> <span class="o">=</span> <span class="n">zones_arr</span>
+
+        <span class="c1"># coordinates for each index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xcoords</span> <span class="o">=</span> <span class="n">xcoords</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ycoords</span> <span class="o">=</span> <span class="n">ycoords</span>
+
+        <span class="c1"># the choice to randomize when a technology has more than one NLC cheapest value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">randomize</span> <span class="o">=</span> <span class="n">randomize</span>
+
+        <span class="c1"># a random seed value that is used when the user wants to replicate a run exactly</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed_value</span> <span class="o">=</span> <span class="n">seed_value</span>
+
+        <span class="c1"># log verbose siting information</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+
+        <span class="c1"># set write outputs flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_outputs</span> <span class="o">=</span> <span class="n">write_output</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracting suitable grids for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suitability_array_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_state_suitability</span><span class="p">()</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating a NLC state level array for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suitable_nlc_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mask_nlc</span><span class="p">()</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating grid indices for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># grid indices for the entire grid in a 2D array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indices_2d</span> <span class="o">=</span> <span class="n">indices_2d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">indices_flat_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_grid_indices</span><span class="p">()</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Get grid coordinates for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xcoords_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ycoords_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_grid_coordinates</span><span class="p">()</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracting additional metrics for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lmp_flat_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nov_flat_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ic_flat_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_state_metrics</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zones_flat_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_utility_zones</span><span class="p">()</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Competing technologies to site expansion for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">competition</span><span class="p">()</span>
+
+<div class="viewcode-block" id="ProcessState.get_state_id"><a class="viewcode-back" href="../../cerf.html#cerf.process_state.ProcessState.get_state_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_state_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load state name to state id YAML file to a dictionary.</span>
+
+<span class="sd">        :return:                        Corresponding state ID for the user passed state name.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">states_dict</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">states_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;State name: `</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span><span class="si">}</span><span class="s2">` not in registry.&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Please select a state name from the following:  </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">states_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ProcessState.extract_state_suitability"><a class="viewcode-back" href="../../cerf.html#cerf.process_state.ProcessState.extract_state_suitability">[docs]</a>    <span class="k">def</span> <span class="nf">extract_state_suitability</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Extract a single state from the suitability.&quot;&quot;&quot;</span>
+
+        <span class="c1"># load the state raster as array</span>
+        <span class="n">state_raster_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/cerf_conus_states_albers_1km.tif&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">state_raster_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">src</span><span class="p">:</span>
+            <span class="n">states_arr</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># get target state indices in grid space</span>
+        <span class="n">state_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">states_arr</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_state_id</span><span class="p">)</span>
+
+        <span class="c1"># get minimum and maximum bounds</span>
+        <span class="n">ymin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">state_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">ymax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">state_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">xmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">state_indices</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">xmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">state_indices</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="c1"># extract state and give binary designation</span>
+        <span class="n">state_mask</span> <span class="o">=</span> <span class="n">states_arr</span><span class="p">[</span><span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">state_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">state_mask</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_state_id</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># extract state footprint from suitability data</span>
+        <span class="n">suitability_array_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">suitability_arr</span><span class="p">[:,</span> <span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># add in suitability where unsuitable is the highest value of NLC</span>
+        <span class="n">suitability_array_state</span> <span class="o">+=</span> <span class="n">state_mask</span>
+
+        <span class="c1"># at this point, we have all suitable grid cells as 0 and all not as 1</span>
+        <span class="n">suitability_array_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">suitability_array_state</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># exclude all area for the default dimension</span>
+        <span class="n">suitability_array_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">suitability_array_state</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">suitability_array_state</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">suitability_array_state</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span></div>
+
+<div class="viewcode-block" id="ProcessState.mask_nlc"><a class="viewcode-back" href="../../cerf.html#cerf.process_state.ProcessState.mask_nlc">[docs]</a>    <span class="k">def</span> <span class="nf">mask_nlc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Extract NLC elements for the current state.&quot;&quot;&quot;</span>
+
+        <span class="c1"># extract state footprint from NLC data</span>
+        <span class="n">nlc_arr_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nlc_arr</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># insert zero array, mask it as index [0, :, :] so the tech_id 0 will always be min if nothing is left to site</span>
+        <span class="n">nlc_arr_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">nlc_arr_state</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">nlc_arr_state</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">nlc_arr_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">nlc_arr_state</span><span class="p">,</span> <span class="n">nan</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">nlc_arr_state</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># apply the mask to NLC data</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">nlc_arr_state</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">suitability_array_state</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ProcessState.get_grid_indices"><a class="viewcode-back" href="../../cerf.html#cerf.process_state.ProcessState.get_grid_indices">[docs]</a>    <span class="k">def</span> <span class="nf">get_grid_indices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate a 1D array of grid indices the target state to use as a way to map state level outcomes back to the</span>
+<span class="sd">        full grid space.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices_2d</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ProcessState.get_grid_coordinates"><a class="viewcode-back" href="../../cerf.html#cerf.process_state.ProcessState.get_grid_coordinates">[docs]</a>    <span class="k">def</span> <span class="nf">get_grid_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate 1D arrays of grid coordinates (X, Y) to use for siting based on the bounds of the target state.&quot;&quot;&quot;</span>
+
+        <span class="n">xcoord_2d_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xcoords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">ycoord_2d_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ycoords</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">xcoord_2d_state</span><span class="p">,</span> <span class="n">ycoord_2d_state</span></div>
+
+<div class="viewcode-block" id="ProcessState.extract_state_metrics"><a class="viewcode-back" href="../../cerf.html#cerf.process_state.ProcessState.extract_state_metrics">[docs]</a>    <span class="k">def</span> <span class="nf">extract_state_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Extract the LMP, NOV, and IC arrays for the target state and return them as dictionaries where</span>
+<span class="sd">        {tech_id: flat_array, ...}.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># extract the target state</span>
+        <span class="n">lmp_arr_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmp_arr</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">]</span>
+        <span class="n">nov_arr_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nov_arr</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">]</span>
+        <span class="n">ic_arr_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ic_arr</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">]</span>
+
+        <span class="c1"># create a reference dictionary where {tech_id: flat_state_array, ...}</span>
+        <span class="n">lmp_flat_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">lmp_arr_state</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">ix</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">)}</span>
+        <span class="n">nov_flat_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">nov_arr_state</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">ix</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">)}</span>
+        <span class="n">ic_flat_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">ic_arr_state</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">ix</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">)}</span>
+
+        <span class="k">return</span> <span class="n">lmp_flat_dict</span><span class="p">,</span> <span class="n">nov_flat_dict</span><span class="p">,</span> <span class="n">ic_flat_dict</span></div>
+
+<div class="viewcode-block" id="ProcessState.extract_utility_zones"><a class="viewcode-back" href="../../cerf.html#cerf.process_state.ProcessState.extract_utility_zones">[docs]</a>    <span class="k">def</span> <span class="nf">extract_utility_zones</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Extract the utility zones elements for the target state and return as a flat array.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">zones_arr</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ProcessState.competition"><a class="viewcode-back" href="../../cerf.html#cerf.process_state.ProcessState.competition">[docs]</a>    <span class="k">def</span> <span class="nf">competition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compete technologies.&quot;&quot;&quot;</span>
+
+        <span class="n">comp</span> <span class="o">=</span> <span class="n">Competition</span><span class="p">(</span><span class="n">target_state_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span><span class="p">,</span>
+                           <span class="n">settings_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">,</span>
+                           <span class="n">technology_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">,</span>
+                           <span class="n">technology_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">,</span>
+                           <span class="n">expansion_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">expansion_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span><span class="p">],</span>
+                           <span class="n">lmp_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lmp_flat_dict</span><span class="p">,</span>
+                           <span class="n">nov_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nov_flat_dict</span><span class="p">,</span>
+                           <span class="n">ic_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ic_flat_dict</span><span class="p">,</span>
+                           <span class="n">nlc_mask</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">suitable_nlc_state</span><span class="p">,</span>
+                           <span class="n">zones_arr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">zones_flat_arr</span><span class="p">,</span>
+                           <span class="n">xcoords</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">xcoords_state</span><span class="p">,</span>
+                           <span class="n">ycoords</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ycoords_state</span><span class="p">,</span>
+                           <span class="n">indices_flat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">indices_flat_state</span><span class="p">,</span>
+                           <span class="n">randomize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">randomize</span><span class="p">,</span>
+                           <span class="n">seed_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed_value</span><span class="p">,</span>
+                           <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># create data frame of sited data</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">comp</span><span class="o">.</span><span class="n">sited_dict</span><span class="p">)</span>
+
+        <span class="c1"># write outputs if so desired</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">write_outputs</span><span class="p">:</span>
+
+            <span class="c1"># create output CSV file of coordinate data</span>
+            <span class="n">csv_file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;cerf_sited_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">[</span><span class="s1">&#39;run_year&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span><span class="si">}</span><span class="s2">.csv&quot;</span>
+            <span class="n">csv_out_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;output_directory&#39;</span><span class="p">),</span> <span class="n">csv_file_name</span><span class="p">)</span>
+
+            <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">csv_out_file</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">comp</span></div></div>
+
+
+<div class="viewcode-block" id="process_state"><a class="viewcode-back" href="../../cerf.html#cerf.process_state.process_state">[docs]</a><span class="k">def</span> <span class="nf">process_state</span><span class="p">(</span><span class="n">target_state_name</span><span class="p">,</span> <span class="n">settings_dict</span><span class="p">,</span> <span class="n">technology_dict</span><span class="p">,</span> <span class="n">technology_order</span><span class="p">,</span> <span class="n">expansion_dict</span><span class="p">,</span> <span class="n">states_dict</span><span class="p">,</span>
+                  <span class="n">suitability_arr</span><span class="p">,</span> <span class="n">lmp_arr</span><span class="p">,</span> <span class="n">nov_arr</span><span class="p">,</span> <span class="n">ic_arr</span><span class="p">,</span> <span class="n">nlc_arr</span><span class="p">,</span> <span class="n">zones_arr</span><span class="p">,</span> <span class="n">xcoords</span><span class="p">,</span> <span class="n">ycoords</span><span class="p">,</span> <span class="n">indices_2d</span><span class="p">,</span>
+                  <span class="n">randomize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convenience wrapper to log time and site an expansion plan for a target state for the target year.</span>
+
+<span class="sd">    :param target_state_name:                   Name of the target state as it is represented in the state raster.</span>
+<span class="sd">                                                Must be all lower case with spacing separated by an underscore.</span>
+<span class="sd">    :type target_state_name:                    str</span>
+
+<span class="sd">    :param settings_dict:                       Project level setting dictionary from cerf.read_config.ReadConfig</span>
+<span class="sd">    :type settings_dict:                        dict</span>
+
+<span class="sd">    :param technology_dict:                     Technology level data dictionary from cerf.read_config.ReadConfig</span>
+<span class="sd">    :type technology_dict:                      dict</span>
+
+<span class="sd">    :param technology_order:                    Technology processing order to index by from cerf.read_config.ReadConfig</span>
+<span class="sd">    :type technology_order:                     list</span>
+
+<span class="sd">    :param expansion_dict:                      Expansion plan data dictionary from cerf.read_config.ReadConfig</span>
+<span class="sd">    :type expansion_dict:                       dict</span>
+
+<span class="sd">    :param states_dict:                         Mapping from state name to state ID from cerf.read_config.ReadConfig</span>
+<span class="sd">    :type states_dict:                          dict</span>
+
+<span class="sd">    :param suitability_arr:                     3D array where {tech_id, x, y} for suitability data</span>
+<span class="sd">    :type suitability_arr:                      ndarray</span>
+
+<span class="sd">    :param nlc_arr:                             3D array where {tech_id, x, y} for NLC data</span>
+<span class="sd">    :type nlc_arr:                              ndarray</span>
+
+<span class="sd">    :param data:                                Object containing all data (NLC, etc.) to run the expansion. This</span>
+<span class="sd">                                                data is generated from the cerf.stage.Stage class.</span>
+<span class="sd">    :type data:                                 class</span>
+
+<span class="sd">    :param randomize:                           Choice to randomize when a technology has more than one NLC</span>
+<span class="sd">                                                cheapest value</span>
+<span class="sd">    :type randomize:                            bool</span>
+
+<span class="sd">    :param seed_value:                          A random seed value that is used when the user wants to replicate</span>
+<span class="sd">                                                a run exactly</span>
+<span class="sd">    :type seed_value:                           int</span>
+
+<span class="sd">    :param verbose:                             Log verbose siting information</span>
+<span class="sd">    :type verbose:                               bool</span>
+
+<span class="sd">    :param write_output:                        Choice to write output to a file</span>
+<span class="sd">    :type write_output:                         bool</span>
+
+<span class="sd">    :return:                                    2D NumPy array of sited technologies in the CONUS grid space where</span>
+<span class="sd">                                                grid cell values are in the technology number as provided by the</span>
+<span class="sd">                                                expansion plan</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Processing state:  </span><span class="si">{</span><span class="n">target_state_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># check to see if state has any sites in the expansion</span>
+    <span class="n">n_sites</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">expansion_dict</span><span class="p">[</span><span class="n">target_state_name</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;n_sites&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">expansion_dict</span><span class="p">[</span><span class="n">target_state_name</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+
+    <span class="c1"># if there are no sites in the expansion, return an all NaN 2D array</span>
+    <span class="k">if</span> <span class="n">n_sites</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There were no sites expected for any technology in `</span><span class="si">{</span><span class="n">target_state_name</span><span class="si">}</span><span class="s2">`&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="c1"># initial time for processing state</span>
+        <span class="n">state_t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="c1"># process expansion plan and competition for a single state for the target year</span>
+        <span class="n">process</span> <span class="o">=</span> <span class="n">ProcessState</span><span class="p">(</span><span class="n">settings_dict</span><span class="o">=</span><span class="n">settings_dict</span><span class="p">,</span>
+                               <span class="n">technology_dict</span><span class="o">=</span><span class="n">technology_dict</span><span class="p">,</span>
+                               <span class="n">technology_order</span><span class="o">=</span><span class="n">technology_order</span><span class="p">,</span>
+                               <span class="n">expansion_dict</span><span class="o">=</span><span class="n">expansion_dict</span><span class="p">,</span>
+                               <span class="n">states_dict</span><span class="o">=</span><span class="n">states_dict</span><span class="p">,</span>
+                               <span class="n">suitability_arr</span><span class="o">=</span><span class="n">suitability_arr</span><span class="p">,</span>
+                               <span class="n">lmp_arr</span><span class="o">=</span><span class="n">lmp_arr</span><span class="p">,</span>
+                               <span class="n">nov_arr</span><span class="o">=</span><span class="n">nov_arr</span><span class="p">,</span>
+                               <span class="n">ic_arr</span><span class="o">=</span><span class="n">ic_arr</span><span class="p">,</span>
+                               <span class="n">nlc_arr</span><span class="o">=</span><span class="n">nlc_arr</span><span class="p">,</span>
+                               <span class="n">zones_arr</span><span class="o">=</span><span class="n">zones_arr</span><span class="p">,</span>
+                               <span class="n">xcoords</span><span class="o">=</span><span class="n">xcoords</span><span class="p">,</span>
+                               <span class="n">ycoords</span><span class="o">=</span><span class="n">ycoords</span><span class="p">,</span>
+                               <span class="n">indices_2d</span><span class="o">=</span><span class="n">indices_2d</span><span class="p">,</span>
+                               <span class="n">target_state_name</span><span class="o">=</span><span class="n">target_state_name</span><span class="p">,</span>
+                               <span class="n">randomize</span><span class="o">=</span><span class="n">randomize</span><span class="p">,</span>
+                               <span class="n">seed_value</span><span class="o">=</span><span class="n">seed_value</span><span class="p">,</span>
+                               <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+                               <span class="n">write_output</span><span class="o">=</span><span class="n">write_output</span><span class="p">)</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Processed `</span><span class="si">{</span><span class="n">target_state_name</span><span class="si">}</span><span class="s1">` in </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">state_t0</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span><span class="si">}</span><span class="s1"> seconds&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">process</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Battelle Memorial Institute.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
