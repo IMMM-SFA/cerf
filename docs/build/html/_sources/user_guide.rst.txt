@@ -479,4 +479,6 @@ where, *NLC* is in $/yr; *IC* is interconnection cost in $/yr; and *NOV* is in $
 Competetion algorithm
 ~~~~~~~~~~~~~~~~~~~~~
 
-asdf
+Technology competition algorithm for CERF.
+
+Grid cell level net locational cost (NLC) per technology and an electricity technology capacity expansion plan are used to compete technologies against each other to see which will win the grid cell. The technology that wins the grid cell is then sited until no further winning cells exist. Once sited, the location of the winning technology’s grid cell, along with its buffer, are no longer available for siting. The competition array is recalculated after all technologies have passed through an iteration. This process is completed until there are either no cells left to site in or there are no more sites left to site for any technology. For technologies that have the same NLC value in multiple grid cells, random selection is available by default. If the user wishes to have the outcomes be repeatable, the randomizer can be set to False.
