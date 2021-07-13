@@ -29,7 +29,7 @@ class Logger:
         """Initialize logger as level info."""
 
         logger = logging.getLogger()
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
 
         return logger
 

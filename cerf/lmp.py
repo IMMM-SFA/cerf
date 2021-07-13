@@ -146,8 +146,8 @@ class LocationalMarginalPricing:
             start_index, through_index = self.get_cf_bin(self.technology_dict[i]['capacity_factor'])
 
             # sort by descending lmp for each zone
-            for i in lmp_df.columns:
-                lmp_df[i] = lmp_df[i].sort_values(ascending=False).values
+            for j in lmp_df.columns:
+                lmp_df[j] = lmp_df[j].sort_values(ascending=False).values
 
             # create a dictionary of LMP values for each power zone based on tech capacity factor
             lmp_dict = lmp_df.iloc[start_index:through_index].mean(axis=0).to_dict()
@@ -157,6 +157,6 @@ class LocationalMarginalPricing:
             lmp_dict[self.utility_dict['utility_zone_raster_nodata_value']] = np.nan
 
             # create LMP array for the current technology
-            lmp_arr[index] = np.vectorize(lmp_dict.get)(self.zones_arr)
+            lmp_arr[index, :, :] = np.vectorize(lmp_dict.get)(self.zones_arr)
 
         return lmp_arr

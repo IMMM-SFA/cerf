@@ -64,7 +64,7 @@ class Model(ReadConfig):
         """Execute model."""
 
         # prepare data for use in siting an expansion per state for a target year
-        logging.debug('Staging data...')
+        logging.info('Staging data...')
 
         # initial time for staging data
         staging_t0 = time.time()
@@ -76,7 +76,7 @@ class Model(ReadConfig):
                      self.technology_order,
                      self.initialize_site_data)
 
-        logging.debug(f'Staged data in {round((time.time() - staging_t0), 7)} seconds')
+        logging.info(f'Staged data in {round((time.time() - staging_t0), 7)} seconds')
 
         return data
 

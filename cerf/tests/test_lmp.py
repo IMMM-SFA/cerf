@@ -28,7 +28,7 @@ class TestLmp(unittest.TestCase):
         # raster file containing the utility zone per grid cell
         zones_raster_file = utility_dict.get('utility_zone_raster_file')
 
-        if zones_raster_file == 'None':
+        if zones_raster_file is None:
             zones_raster_file = pkg_resources.resource_filename('cerf', 'data/utility_zones_1km.img')
 
         # read in utility zones raster as a 2D numpy array

@@ -345,6 +345,6 @@ def process_state(target_state_name, settings_dict, technology_dict, technology_
                                verbose=verbose,
                                write_output=write_output)
 
-        logging.debug(f'Processed `{target_state_name}` in {round(time.time() - state_t0, 7)} seconds')
+        logging.info(f'Processed `{target_state_name}` in {round(time.time() - state_t0, 7)} seconds')
 
         return process

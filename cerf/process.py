@@ -102,8 +102,8 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
                                                                              verbose=model.settings_dict.get('verbose', False),
                                                                              write_output=False) for i in model.states_dict.keys())
 
-    logging.debug(f"All states processed in {round((time.time() - t0), 7)} seconds.")
-    logging.debug("Aggregating outputs...")
+    logging.info(f"All states processed in {round((time.time() - t0), 7)} seconds.")
+    logging.info("Aggregating outputs...")
 
     # create a data frame to hold the outputs
     df = pd.DataFrame(util.empty_sited_dict()).astype(util.sited_dtypes())
@@ -128,7 +128,8 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
     return df
 
 
-def execute(config_file=None, config_dict=None, write_output=True, n_jobs=-1, method='sequential', initialize_site_data=None, log_level='info'):
+def execute(config_file=None, config_dict=None, write_output=True, n_jobs=-1, method='sequential',
+            initialize_site_data=None, log_level='info'):
     """Run all CERF states for the CONUS for the target year.
 
     :param config_file:                 Full path with file name and extension to the input config.yml file
@@ -171,7 +172,10 @@ def execute(config_file=None, config_dict=None, write_output=True, n_jobs=-1, me
     """
 
     # instantiate CERF model
-    model = generate_model(config_file, config_dict, initialize_site_data=initialize_site_data, log_level=log_level.lower())
+    model = generate_model(config_file,
+                           config_dict,
+                           initialize_site_data=initialize_site_data,
+                           log_level=log_level.lower())
 
     # process supporting data
     data = model.stage()

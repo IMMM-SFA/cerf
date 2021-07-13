@@ -69,23 +69,23 @@ class Stage:
         self.zones_arr = self.load_utility_raster()
 
         # get LMP array per tech [tech_order, x, y]
-        logging.debug('Processing locational marginal pricing (LMP)')
+        logging.info('Processing locational marginal pricing (LMP)')
         self.lmp_arr = self.calculate_lmp()
 
         # get interconnection cost per tech [tech_order, x, y]
-        logging.debug('Calculating interconnection costs (IC)')
+        logging.info('Calculating interconnection costs (IC)')
         self.ic_arr = self.calculate_ic()
 
         # get NOV array per tech [tech_order, x, y]
-        logging.debug('Calculating net operational cost (NOV)')
+        logging.info('Calculating net operational cost (NOV)')
         self.nov_arr = self.calculate_nov()
 
         # get NLC array per tech [tech_order, x, y]
-        logging.debug('Calculating net locational cost (NLC)')
+        logging.info('Calculating net locational cost (NLC)')
         self.nlc_arr = self.calculate_nlc()
 
         # combine all suitability rasters into an array
-        logging.debug('Building suitability array')
+        logging.info('Building suitability array')
         self.suitability_arr = self.build_suitability_array()
 
     def load_utility_raster(self):
@@ -133,7 +133,7 @@ class Stage:
                              output_alloc_file=False,
                              output_cost_file=False,
                              transmission_gdf=None,
-                             output_dir=None)
+                             output_dir=self.settings_dict.get('output_directory', None))
 
         ic_arr = ic.generate_interconnection_costs_array()
 
@@ -183,7 +183,7 @@ class Stage:
         if self.initialize_site_data is not None:
 
             # load siting data into a 2D array for the full grid space
-            logging.debug("Initializing previous siting data")
+            logging.info("Initializing previous siting data")
             init_arr, init_df = util.ingest_sited_data(run_year=self.settings_dict['run_year'],
                                                        x_array=self.xcoords,
                                                        siting_data=self.initialize_site_data)
