@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cerf.tests.test_lmp &mdash; cerf 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cerf.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/getting_started.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="../../../about.html" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> cerf
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cerf.html">API reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">cerf</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>cerf.tests.test_lmp</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cerf.tests.test_lmp</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
+<span class="kn">import</span> <span class="nn">rasterio</span>
+
+<span class="kn">from</span> <span class="nn">cerf.lmp</span> <span class="kn">import</span> <span class="n">LocationalMarginalPricing</span>
+<span class="kn">from</span> <span class="nn">cerf.read_config</span> <span class="kn">import</span> <span class="n">ReadConfig</span>
+<span class="kn">from</span> <span class="nn">cerf.package_data</span> <span class="kn">import</span> <span class="n">config_file</span>
+
+
+<div class="viewcode-block" id="TestLmp"><a class="viewcode-back" href="../../../cerf.tests.html#cerf.tests.test_lmp.TestLmp">[docs]</a><span class="k">class</span> <span class="nc">TestLmp</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+
+    <span class="c1"># supporting data</span>
+    <span class="n">SLIM_LMP_ARRAY</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;tests/data/comp_data/lmp_arr.npy&#39;</span><span class="p">))</span>
+    <span class="n">LMP_FILE</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TestLmp.get_sample"><a class="viewcode-back" href="../../../cerf.tests.html#cerf.tests.test_lmp.TestLmp.get_sample">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_sample</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a sample from the LMP dictionary to reduce comparison size.  Sample space covers the Southeast U.S.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">arr</span><span class="p">[:,</span> <span class="mi">1500</span><span class="p">:</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">3000</span><span class="p">:</span><span class="mi">4000</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TestLmp.load_utility_raster"><a class="viewcode-back" href="../../../cerf.tests.html#cerf.tests.test_lmp.TestLmp.load_utility_raster">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">load_utility_raster</span><span class="p">(</span><span class="n">utility_dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load the utility zones raster for the CONUS into a 2D array.&quot;&quot;&quot;</span>
+
+        <span class="c1"># raster file containing the utility zone per grid cell</span>
+        <span class="n">zones_raster_file</span> <span class="o">=</span> <span class="n">utility_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;utility_zone_raster_file&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">zones_raster_file</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+            <span class="n">zones_raster_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/utility_zones_1km.img&#39;</span><span class="p">)</span>
+
+        <span class="c1"># read in utility zones raster as a 2D numpy array</span>
+        <span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">zones_raster_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">src</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">src</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestLmp.test_lmp_outputs"><a class="viewcode-back" href="../../../cerf.tests.html#cerf.tests.test_lmp.TestLmp.test_lmp_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">test_lmp_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Test to make sure LMP outputs match expected.&quot;&quot;&quot;</span>
+
+        <span class="c1"># set seed for reproducibility</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># read in configuration file</span>
+        <span class="n">cfg_file</span> <span class="o">=</span> <span class="n">config_file</span><span class="p">(</span><span class="n">yr</span><span class="o">=</span><span class="mi">2010</span><span class="p">)</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">ReadConfig</span><span class="p">(</span><span class="n">cfg_file</span><span class="p">)</span>
+
+        <span class="c1"># read in zones array</span>
+        <span class="n">zones_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_utility_raster</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">utility_dict</span><span class="p">)</span>
+
+        <span class="c1"># create technology specific locational marginal price based on capacity factor</span>
+        <span class="n">pricing</span> <span class="o">=</span> <span class="n">LocationalMarginalPricing</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">utility_dict</span><span class="p">,</span>
+                                            <span class="n">cfg</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">,</span>
+                                            <span class="n">cfg</span><span class="o">.</span><span class="n">technology_order</span><span class="p">,</span>
+                                            <span class="n">zones_arr</span><span class="p">)</span>
+
+        <span class="c1"># get lmp array per tech [tech_order, x, y]</span>
+        <span class="n">lmp_arr</span> <span class="o">=</span> <span class="n">pricing</span><span class="o">.</span><span class="n">get_lmp</span><span class="p">()</span>
+
+        <span class="c1"># trim down LMP array for testing</span>
+        <span class="n">slim_lmps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sample</span><span class="p">(</span><span class="n">lmp_arr</span><span class="p">)</span>
+
+        <span class="c1"># test LMP array equality</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_equal</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">TestLmp</span><span class="o">.</span><span class="n">SLIM_LMP_ARRAY</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">around</span><span class="p">(</span><span class="n">slim_lmps</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Battelle Memorial Institute.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

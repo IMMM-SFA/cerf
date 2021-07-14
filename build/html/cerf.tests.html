@@ -1,0 +1,614 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cerf.tests package &mdash; cerf 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/cerf.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/getting_started.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing to cerf" href="contributing.html" />
+    <link rel="prev" title="cerf.process_inputs package" href="cerf.process_inputs.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> cerf
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="cerf.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cerf.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cerf.data.html">cerf.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cerf.process_inputs.html">cerf.process_inputs package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">cerf.tests package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cerf.tests.test_compete">cerf.tests.test_compete module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cerf.tests.test_lmp">cerf.tests.test_lmp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cerf.tests.test_nov">cerf.tests.test_nov module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cerf.tests.test_read_config">cerf.tests.test_read_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cerf.tests.test_spatial_reader">cerf.tests.test_spatial_reader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cerf.tests.test_utils">cerf.tests.test_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-cerf.tests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf.compete">cerf.compete module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf.install_supplement">cerf.install_supplement module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf.interconnect">cerf.interconnect module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf.lmp">cerf.lmp module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf.logger">cerf.logger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf.model">cerf.model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf.nov">cerf.nov module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf.outputs">cerf.outputs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf.package_data">cerf.package_data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf.process">cerf.process module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf.process_state">cerf.process_state module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf.read_config">cerf.read_config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf.spatial_reader">cerf.spatial_reader module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf.stage">cerf.stage module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf.utils">cerf.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.html#module-cerf">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cerf</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">&lt;no title&gt;</a> &raquo;</li>
+        
+          <li><a href="cerf.html">API reference</a> &raquo;</li>
+        
+      <li>cerf.tests package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/cerf.tests.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="cerf-tests-package">
+<h1>cerf.tests package<a class="headerlink" href="#cerf-tests-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-cerf.tests.test_compete">
+<span id="cerf-tests-test-compete-module"></span><h2>cerf.tests.test_compete module<a class="headerlink" href="#module-cerf.tests.test_compete" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cerf.tests.test_compete.TestCompete">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.tests.test_compete.</span></span><span class="sig-name descname"><span class="pre">TestCompete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_compete.html#TestCompete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_compete.TestCompete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_compete.TestCompete.COMP_EXP_PLAN">
+<span class="sig-name descname"><span class="pre">COMP_EXP_PLAN</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{1:</span> <span class="pre">{'n_sites':</span> <span class="pre">0,</span> <span class="pre">'tech_name':</span> <span class="pre">'test1'},</span> <span class="pre">2:</span> <span class="pre">{'n_sites':</span> <span class="pre">0,</span> <span class="pre">'tech_name':</span> <span class="pre">'test2'},</span> <span class="pre">3:</span> <span class="pre">{'n_sites':</span> <span class="pre">0,</span> <span class="pre">'tech_name':</span> <span class="pre">'test3'}}</span></em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.COMP_EXP_PLAN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_compete.TestCompete.COMP_SITED">
+<span class="sig-name descname"><span class="pre">COMP_SITED</span></span><em class="property"> <span class="pre">=</span> <span class="pre">array([[0,</span> <span class="pre">2,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">3,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0]])</span></em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.COMP_SITED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_compete.TestCompete.COMP_SITED_DICT">
+<span class="sig-name descname"><span class="pre">COMP_SITED_DICT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{'buffer_in_km':</span> <span class="pre">[1,</span> <span class="pre">1,</span> <span class="pre">1],</span> <span class="pre">'index':</span> <span class="pre">[2.4,</span> <span class="pre">3.2,</span> <span class="pre">3.2],</span> <span class="pre">'interconnection_cost':</span> <span class="pre">[2.4,</span> <span class="pre">1.0,</span> <span class="pre">3.2],</span> <span class="pre">'locational_marginal_pricing':</span> <span class="pre">[2.4,</span> <span class="pre">1.0,</span> <span class="pre">3.2],</span> <span class="pre">'net_locational_cost':</span> <span class="pre">[2.4,</span> <span class="pre">1.0,</span> <span class="pre">3.2],</span> <span class="pre">'net_operational_value':</span> <span class="pre">[2.4,</span> <span class="pre">1.0,</span> <span class="pre">3.2],</span> <span class="pre">'retirement_year':</span> <span class="pre">[2070,</span> <span class="pre">2070,</span> <span class="pre">2070],</span> <span class="pre">'sited_year':</span> <span class="pre">[2010,</span> <span class="pre">2010,</span> <span class="pre">2010],</span> <span class="pre">'state_name':</span> <span class="pre">['test',</span> <span class="pre">'test',</span> <span class="pre">'test'],</span> <span class="pre">'tech_id':</span> <span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">3],</span> <span class="pre">'utility_zone':</span> <span class="pre">[2,</span> <span class="pre">3,</span> <span class="pre">3],</span> <span class="pre">'xcoord':</span> <span class="pre">[2.4,</span> <span class="pre">3.2,</span> <span class="pre">3.2],</span> <span class="pre">'ycoord':</span> <span class="pre">[2.4,</span> <span class="pre">3.2,</span> <span class="pre">3.2]}</span></em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.COMP_SITED_DICT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_compete.TestCompete.EXPANSION_PLAN">
+<span class="sig-name descname"><span class="pre">EXPANSION_PLAN</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{1:</span> <span class="pre">{'n_sites':</span> <span class="pre">1,</span> <span class="pre">'tech_name':</span> <span class="pre">'test1'},</span> <span class="pre">2:</span> <span class="pre">{'n_sites':</span> <span class="pre">1,</span> <span class="pre">'tech_name':</span> <span class="pre">'test2'},</span> <span class="pre">3:</span> <span class="pre">{'n_sites':</span> <span class="pre">1,</span> <span class="pre">'tech_name':</span> <span class="pre">'test3'}}</span></em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.EXPANSION_PLAN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_compete.TestCompete.NLC_ARR">
+<span class="sig-name descname"><span class="pre">NLC_ARR</span></span><em class="property"> <span class="pre">=</span> <span class="pre">array([[[1.2,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[2.4,</span> <span class="pre">5.</span> <span class="pre">,</span> <span class="pre">2.4,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[7.</span> <span class="pre">,</span> <span class="pre">2.4,</span> <span class="pre">9.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[2.4,</span> <span class="pre">5.</span> <span class="pre">,</span> <span class="pre">2.4,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">]],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[[2.</span> <span class="pre">,</span> <span class="pre">1.</span> <span class="pre">,</span> <span class="pre">1.4,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[5.</span> <span class="pre">,</span> <span class="pre">5.</span> <span class="pre">,</span> <span class="pre">7.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[1.</span> <span class="pre">,</span> <span class="pre">9.</span> <span class="pre">,</span> <span class="pre">3.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[2.4,</span> <span class="pre">5.</span> <span class="pre">,</span> <span class="pre">2.4,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">]],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[[0.</span> <span class="pre">,</span> <span class="pre">1.</span> <span class="pre">,</span> <span class="pre">0.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[5.</span> <span class="pre">,</span> <span class="pre">4.</span> <span class="pre">,</span> <span class="pre">7.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[1.</span> <span class="pre">,</span> <span class="pre">9.</span> <span class="pre">,</span> <span class="pre">9.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[2.4,</span> <span class="pre">5.</span> <span class="pre">,</span> <span class="pre">2.4,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">,</span> <span class="pre">3.2,</span> <span class="pre">3.</span> <span class="pre">]]])</span></em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.NLC_ARR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_compete.TestCompete.SETTINGS_DICT">
+<span class="sig-name descname"><span class="pre">SETTINGS_DICT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{'run_year':</span> <span class="pre">2010}</span></em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.SETTINGS_DICT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_compete.TestCompete.SUIT_ARR">
+<span class="sig-name descname"><span class="pre">SUIT_ARR</span></span><em class="property"> <span class="pre">=</span> <span class="pre">array([[[0,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1]],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[[1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1]],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[[0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">1]]])</span></em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.SUIT_ARR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_compete.TestCompete.TECH_DICT">
+<span class="sig-name descname"><span class="pre">TECH_DICT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{1:</span> <span class="pre">{'buffer_in_km':</span> <span class="pre">1,</span> <span class="pre">'lifetime':</span> <span class="pre">60},</span> <span class="pre">2:</span> <span class="pre">{'buffer_in_km':</span> <span class="pre">1,</span> <span class="pre">'lifetime':</span> <span class="pre">60},</span> <span class="pre">3:</span> <span class="pre">{'buffer_in_km':</span> <span class="pre">1,</span> <span class="pre">'lifetime':</span> <span class="pre">60}}</span></em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.TECH_DICT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_compete.TestCompete.TECH_ORDER">
+<span class="sig-name descname"><span class="pre">TECH_ORDER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">3]</span></em><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.TECH_ORDER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cerf.tests.test_compete.TestCompete.create_masked_nlc_array">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">create_masked_nlc_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_compete.html#TestCompete.create_masked_nlc_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.create_masked_nlc_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a masked NLC array by suitability to use in testing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cerf.tests.test_compete.TestCompete.create_proxy_arrays">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">create_proxy_arrays</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_compete.html#TestCompete.create_proxy_arrays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.create_proxy_arrays" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create fake arrays to feed into the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cerf.tests.test_compete.TestCompete.test_competition">
+<span class="sig-name descname"><span class="pre">test_competition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_compete.html#TestCompete.test_competition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_compete.TestCompete.test_competition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure that the competition algorithm performs as expected.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.tests.test_lmp">
+<span id="cerf-tests-test-lmp-module"></span><h2>cerf.tests.test_lmp module<a class="headerlink" href="#module-cerf.tests.test_lmp" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="cerf.tests.test_lmp.TestLmp">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.tests.test_lmp.</span></span><span class="sig-name descname"><span class="pre">TestLmp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_lmp.html#TestLmp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_lmp.TestLmp.LMP_FILE">
+<span class="sig-name descname"><span class="pre">LMP_FILE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'/Users/d3y010/repos/github/cerf/cerf/data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip'</span></em><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp.LMP_FILE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_lmp.TestLmp.SLIM_LMP_ARRAY">
+<span class="sig-name descname"><span class="pre">SLIM_LMP_ARRAY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">array([[[104.86803883,</span> <span class="pre">104.86803883,</span> <span class="pre">104.86803883,</span> <span class="pre">...,</span> <span class="pre">147.86260779,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">147.86260779,</span> <span class="pre">147.86260779],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[104.86803883,</span> <span class="pre">104.86803883,</span> <span class="pre">104.86803883,</span> <span class="pre">...,</span> <span class="pre">147.86260779,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">147.86260779,</span> <span class="pre">147.86260779],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[104.86803883,</span> <span class="pre">104.86803883,</span> <span class="pre">104.86803883,</span> <span class="pre">...,</span> <span class="pre">147.86260779,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">147.86260779,</span> <span class="pre">147.86260779],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">...,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[134.07752773,</span> <span class="pre">134.07752773,</span> <span class="pre">134.07752773,</span> <span class="pre">...,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[134.07752773,</span> <span class="pre">134.07752773,</span> <span class="pre">134.07752773,</span> <span class="pre">...,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[134.07752773,</span> <span class="pre">134.07752773,</span> <span class="pre">134.07752773,</span> <span class="pre">...,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan]],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[[139.82203674,</span> <span class="pre">139.82203674,</span> <span class="pre">139.82203674,</span> <span class="pre">...,</span> <span class="pre">182.75470442,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">182.75470442,</span> <span class="pre">182.75470442],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[139.82203674,</span> <span class="pre">139.82203674,</span> <span class="pre">139.82203674,</span> <span class="pre">...,</span> <span class="pre">182.75470442,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">182.75470442,</span> <span class="pre">182.75470442],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[139.82203674,</span> <span class="pre">139.82203674,</span> <span class="pre">139.82203674,</span> <span class="pre">...,</span> <span class="pre">182.75470442,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">182.75470442,</span> <span class="pre">182.75470442],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">...,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[168.9043174</span> <span class="pre">,</span> <span class="pre">168.9043174</span> <span class="pre">,</span> <span class="pre">168.9043174</span> <span class="pre">,</span> <span class="pre">...,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[168.9043174</span> <span class="pre">,</span> <span class="pre">168.9043174</span> <span class="pre">,</span> <span class="pre">168.9043174</span> <span class="pre">,</span> <span class="pre">...,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[168.9043174</span> <span class="pre">,</span> <span class="pre">168.9043174</span> <span class="pre">,</span> <span class="pre">168.9043174</span> <span class="pre">,</span> <span class="pre">...,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan,</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">nan]]])</span></em><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp.SLIM_LMP_ARRAY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cerf.tests.test_lmp.TestLmp.get_sample">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_lmp.html#TestLmp.get_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp.get_sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a sample from the LMP dictionary to reduce comparison size.  Sample space covers the Southeast U.S.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cerf.tests.test_lmp.TestLmp.load_utility_raster">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">load_utility_raster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">utility_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_lmp.html#TestLmp.load_utility_raster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp.load_utility_raster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the utility zones raster for the CONUS into a 2D array.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cerf.tests.test_lmp.TestLmp.test_lmp_outputs">
+<span class="sig-name descname"><span class="pre">test_lmp_outputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_lmp.html#TestLmp.test_lmp_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_lmp.TestLmp.test_lmp_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test to make sure LMP outputs match expected.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.tests.test_nov">
+<span id="cerf-tests-test-nov-module"></span><h2>cerf.tests.test_nov module<a class="headerlink" href="#module-cerf.tests.test_nov" title="Permalink to this headline">¶</a></h2>
+<p>Tests for Net Operational Value calculations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>Chris R. Vernon</p>
+</dd>
+<dt class="field-even">email</dt>
+<dd class="field-even"><p><a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
+</dd>
+</dl>
+<p>License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.tests.test_nov.</span></span><span class="sig-name descname"><span class="pre">TestNov</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_nov.html#TestNov"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_nov.TestNov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Tests for the NOV calculations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.CAPACITY_FACTOR">
+<span class="sig-name descname"><span class="pre">CAPACITY_FACTOR</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.9</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.CAPACITY_FACTOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.CARBON_CAPTURE_RATE">
+<span class="sig-name descname"><span class="pre">CARBON_CAPTURE_RATE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.0</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.CARBON_CAPTURE_RATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.CARBON_ESC_RATE">
+<span class="sig-name descname"><span class="pre">CARBON_ESC_RATE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.0</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.CARBON_ESC_RATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.CARBON_TAX">
+<span class="sig-name descname"><span class="pre">CARBON_TAX</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.0</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.CARBON_TAX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.DISCOUNT_RATE">
+<span class="sig-name descname"><span class="pre">DISCOUNT_RATE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.05</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.DISCOUNT_RATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.EXPECTED_ANNUITY_FACTOR">
+<span class="sig-name descname"><span class="pre">EXPECTED_ANNUITY_FACTOR</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.05282818452724236</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.EXPECTED_ANNUITY_FACTOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.EXPECTED_LF_CARBON">
+<span class="sig-name descname"><span class="pre">EXPECTED_LF_CARBON</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.999999999999999</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.EXPECTED_LF_CARBON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.EXPECTED_LF_FUEL">
+<span class="sig-name descname"><span class="pre">EXPECTED_LF_FUEL</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2.8587075325530398</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.EXPECTED_LF_FUEL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.EXPECTED_LF_VOM">
+<span class="sig-name descname"><span class="pre">EXPECTED_LF_VOM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.9819019248539469</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.EXPECTED_LF_VOM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.EXPECTED_NOV_NOCARBON_LEAP">
+<span class="sig-name descname"><span class="pre">EXPECTED_NOV_NOCARBON_LEAP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">array([1.78572638e+09])</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.EXPECTED_NOV_NOCARBON_LEAP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.EXPECTED_NOV_NOCARBON_NOLEAP">
+<span class="sig-name descname"><span class="pre">EXPECTED_NOV_NOCARBON_NOLEAP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">array([1.78084735e+09])</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.EXPECTED_NOV_NOCARBON_NOLEAP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.EXPECTED_NOV_WITHCARBON_NOLEAP">
+<span class="sig-name descname"><span class="pre">EXPECTED_NOV_WITHCARBON_NOLEAP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">array([1.78084734e+09])</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.EXPECTED_NOV_WITHCARBON_NOLEAP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.FUEL_CO2_CONTENT">
+<span class="sig-name descname"><span class="pre">FUEL_CO2_CONTENT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.0</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.FUEL_CO2_CONTENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.FUEL_ESC_RATE">
+<span class="sig-name descname"><span class="pre">FUEL_ESC_RATE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.04639</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.FUEL_ESC_RATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.FUEL_PRICE">
+<span class="sig-name descname"><span class="pre">FUEL_PRICE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">0.712809999999999</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.FUEL_PRICE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.HEAT_RATE">
+<span class="sig-name descname"><span class="pre">HEAT_RATE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">10246.19999999998</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.HEAT_RATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.LIFETIME">
+<span class="sig-name descname"><span class="pre">LIFETIME</span></span><em class="property"> <span class="pre">=</span> <span class="pre">60</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.LIFETIME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.LMP_ARR">
+<span class="sig-name descname"><span class="pre">LMP_ARR</span></span><em class="property"> <span class="pre">=</span> <span class="pre">array([66.95609874])</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.LMP_ARR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.UNIT_SIZE">
+<span class="sig-name descname"><span class="pre">UNIT_SIZE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1350</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.UNIT_SIZE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.VARIABLE_COST_ESC_RATE">
+<span class="sig-name descname"><span class="pre">VARIABLE_COST_ESC_RATE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">-0.00104311614063357</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.VARIABLE_COST_ESC_RATE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.VARIABLE_OM">
+<span class="sig-name descname"><span class="pre">VARIABLE_OM</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2.09812782440284</span></em><a class="headerlink" href="#cerf.tests.test_nov.TestNov.VARIABLE_OM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.instantiate_nov">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">instantiate_nov</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carbon_tax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuel_co2_content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carbon_capture_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consider_leap_year</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_nov.html#TestNov.instantiate_nov"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_nov.TestNov.instantiate_nov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiate NOV class with test values.  The additional parameters can be passed to
+test NOV under different carbon conditions.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.test_nocarbon_leap_nov">
+<span class="sig-name descname"><span class="pre">test_nocarbon_leap_nov</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_nov.html#TestNov.test_nocarbon_leap_nov"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_nov.TestNov.test_nocarbon_leap_nov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test NOV outcome with no carbon and on a leap year.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.test_nocarbon_noleap_nov">
+<span class="sig-name descname"><span class="pre">test_nocarbon_noleap_nov</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_nov.html#TestNov.test_nocarbon_noleap_nov"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_nov.TestNov.test_nocarbon_noleap_nov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test NOV outcome with no carbon and no leap year.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cerf.tests.test_nov.TestNov.test_with_carbon_noleap_nov">
+<span class="sig-name descname"><span class="pre">test_with_carbon_noleap_nov</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_nov.html#TestNov.test_with_carbon_noleap_nov"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_nov.TestNov.test_with_carbon_noleap_nov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test NOV outcome with carbon and not on a leap year.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.tests.test_read_config">
+<span id="cerf-tests-test-read-config-module"></span><h2>cerf.tests.test_read_config module<a class="headerlink" href="#module-cerf.tests.test_read_config" title="Permalink to this headline">¶</a></h2>
+<p>Tests to ensure high-level functionality and outputs remain consistent.</p>
+<p>&#64;author Chris R. vernon
+&#64;email <a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
+<p>License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="cerf.tests.test_read_config.TestReadConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.tests.test_read_config.</span></span><span class="sig-name descname"><span class="pre">TestReadConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_read_config.html#TestReadConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_read_config.TestReadConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Test configuration reader.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cerf.tests.test_read_config.TestReadConfig.test_config_reader">
+<span class="sig-name descname"><span class="pre">test_config_reader</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_read_config.html#TestReadConfig.test_config_reader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_read_config.TestReadConfig.test_config_reader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests for configuration reader.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.tests.test_spatial_reader">
+<span id="cerf-tests-test-spatial-reader-module"></span><h2>cerf.tests.test_spatial_reader module<a class="headerlink" href="#module-cerf.tests.test_spatial_reader" title="Permalink to this headline">¶</a></h2>
+<p>Tests for spatial_reader.py</p>
+<p>&#64;author Chris R. vernon
+&#64;email <a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
+<p>License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="cerf.tests.test_spatial_reader.TestSpatialReader">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.tests.test_spatial_reader.</span></span><span class="sig-name descname"><span class="pre">TestSpatialReader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_spatial_reader.html#TestSpatialReader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_spatial_reader.TestSpatialReader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Tests for <cite>spatial_reader.py</cite></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="cerf.tests.test_spatial_reader.TestSpatialReader.test_sum_rasters">
+<span class="sig-name descname"><span class="pre">test_sum_rasters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_spatial_reader.html#TestSpatialReader.test_sum_rasters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_spatial_reader.TestSpatialReader.test_sum_rasters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests for <cite>sum_rasters</cite> function.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.tests.test_utils">
+<span id="cerf-tests-test-utils-module"></span><h2>cerf.tests.test_utils module<a class="headerlink" href="#module-cerf.tests.test_utils" title="Permalink to this headline">¶</a></h2>
+<p>Tests for CERF utilities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">author</dt>
+<dd class="field-odd"><p>Chris R. Vernon</p>
+</dd>
+<dt class="field-even">email</dt>
+<dd class="field-even"><p><a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
+</dd>
+</dl>
+<p>License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="cerf.tests.test_utils.TestUtils">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.tests.test_utils.</span></span><span class="sig-name descname"><span class="pre">TestUtils</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_utils.html#TestUtils"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_utils.TestUtils" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">unittest.case.TestCase</span></code></p>
+<p>Tests for the NOV calculations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_0">
+<span class="sig-name descname"><span class="pre">COMP_BUFF_FLAT_0</span></span><em class="property"> <span class="pre">=</span> <span class="pre">array([[7.,</span> <span class="pre">7.,</span> <span class="pre">7.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[7.,</span> <span class="pre">7.,</span> <span class="pre">7.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[7.,</span> <span class="pre">7.,</span> <span class="pre">7.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.]])</span></em><a class="headerlink" href="#cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_0" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_0_LIST">
+<span class="sig-name descname"><span class="pre">COMP_BUFF_FLAT_0_LIST</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7,</span> <span class="pre">10,</span> <span class="pre">11,</span> <span class="pre">12]</span></em><a class="headerlink" href="#cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_0_LIST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_19">
+<span class="sig-name descname"><span class="pre">COMP_BUFF_FLAT_19</span></span><em class="property"> <span class="pre">=</span> <span class="pre">array([[0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.,</span> <span class="pre">0.],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">7.,</span> <span class="pre">7.,</span> <span class="pre">7.],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">7.,</span> <span class="pre">7.,</span> <span class="pre">7.],</span>&#160;&#160;&#160;&#160;&#160;&#160;&#160; <span class="pre">[0.,</span> <span class="pre">0.,</span> <span class="pre">7.,</span> <span class="pre">7.,</span> <span class="pre">7.]])</span></em><a class="headerlink" href="#cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_19" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_19_LIST">
+<span class="sig-name descname"><span class="pre">COMP_BUFF_FLAT_19_LIST</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[17,</span> <span class="pre">18,</span> <span class="pre">19,</span> <span class="pre">12,</span> <span class="pre">13,</span> <span class="pre">14,</span> <span class="pre">7,</span> <span class="pre">8,</span> <span class="pre">9]</span></em><a class="headerlink" href="#cerf.tests.test_utils.TestUtils.COMP_BUFF_FLAT_19_LIST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cerf.tests.test_utils.TestUtils.test_buffer_flat_array">
+<span class="sig-name descname"><span class="pre">test_buffer_flat_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/tests/test_utils.html#TestUtils.test_buffer_flat_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.tests.test_utils.TestUtils.test_buffer_flat_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test to make sure the buffer flat array function if working correctly.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-cerf.tests">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cerf.tests" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing to cerf" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="cerf.process_inputs.html" class="btn btn-neutral float-left" title="cerf.process_inputs package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Battelle Memorial Institute.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

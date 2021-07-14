@@ -1,0 +1,530 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cerf.interconnect &mdash; cerf 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cerf.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/getting_started.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> cerf
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">cerf</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>cerf.interconnect</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cerf.interconnect</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="kn">import</span> <span class="nn">rasterio</span>
+<span class="kn">import</span> <span class="nn">whitebox</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+
+<span class="kn">from</span> <span class="nn">rasterio</span> <span class="kn">import</span> <span class="n">features</span>
+
+<span class="kn">from</span> <span class="nn">cerf.utils</span> <span class="kn">import</span> <span class="n">suppress_callback</span>
+<span class="kn">from</span> <span class="nn">cerf.package_data</span> <span class="kn">import</span> <span class="n">cerf_crs</span><span class="p">,</span> <span class="n">costs_per_kv_substation</span>
+
+
+<div class="viewcode-block" id="Interconnection"><a class="viewcode-back" href="../../cerf.html#cerf.interconnect.Interconnection">[docs]</a><span class="k">class</span> <span class="nc">Interconnection</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Calculate interconnection costs per grid cell in $ / yr using:</span>
+
+<span class="sd">    Interconnection Cost ($ / yr) = Distance to nearest suitable transmission line (km) *</span>
+<span class="sd">                                        Electric grid interconnection captial cost ($ / km) *</span>
+<span class="sd">                                        Annuity factor</span>
+<span class="sd">                                        + (if gas-fired technology) Distance to nearest suitable gas pipeline (km) *</span>
+<span class="sd">                                        Gas interconnection captial cost ($ / km) *</span>
+<span class="sd">                                        Annuity factor</span>
+
+<span class="sd">            where, Annuity factor is (d(1 + d)**n) / ((1 + d)**n - 1)</span>
+<span class="sd">            where, d = real annual discount rate (%), n = asset lifetime (years)</span>
+
+
+<span class="sd">    :param technology_dict:                 Dictionary containing technology specific information from the config file</span>
+<span class="sd">    :type technology_dict:                  dict</span>
+
+<span class="sd">    :param technology_order:                Order of technologies to process</span>
+<span class="sd">    :type technology_order:                 list</span>
+
+<span class="sd">    :param substation_file:                 Full path with file name and extension to the input substations shapefile.</span>
+<span class="sd">                                            If None, CERF will use the default data stored in the package.</span>
+
+<span class="sd">    :type substation_file:                  str</span>
+
+<span class="sd">    :param costs_to_connect_dict:           A dictionary containing the cost of connection per km to a substation</span>
+<span class="sd">                                            having a certain minimum voltage range.  Default is to load from the</span>
+<span class="sd">                                            CERF data file &#39;costs_per_kv_substation.yml&#39; by specifying &#39;None&#39;</span>
+
+<span class="sd">    :type costs_to_connect_dict:            dict</span>
+
+<span class="sd">    :param costs_to_connect_file:           A YAML file containing the cost of connection per km to a substation</span>
+<span class="sd">                                            having a certain minimum voltage range.  Default is to load from the</span>
+<span class="sd">                                            CERF data file &#39;costs_per_kv_substation.yml&#39; by specifying &#39;None&#39;</span>
+
+<span class="sd">    :type costs_to_connect_file:            str</span>
+
+<span class="sd">    :param pipeline_file:                   Full path with file name and extension to the input pipelines shapefile.</span>
+<span class="sd">                                            If None, CERF will use the default data stored in the package.</span>
+
+<span class="sd">    :type pipeline_file:                    str</span>
+
+<span class="sd">    :param output_rasterized_file:          Write distance raster; if True, set &#39;output_dir&#39; value</span>
+<span class="sd">    :type output_rasterized_file:           bool</span>
+
+<span class="sd">    :param output_dist_file:                Write distance raster; if True, set &#39;output_dir&#39; value</span>
+<span class="sd">    :type output_dist_file:                 bool</span>
+
+<span class="sd">    :param output_alloc_file:               Write allocation file; if True, set &#39;output_dir&#39; value</span>
+<span class="sd">    :type output_alloc_file:                bool</span>
+
+<span class="sd">    :param output_cost_file:                Write cost file; if True, set &#39;output_dir&#39; value</span>
+<span class="sd">    :type output_cost_file:                 bool</span>
+
+<span class="sd">    :param transmission_gdf:                GeoDataFrame of transmission infrastructure to be rasterized. If None</span>
+<span class="sd">                                            the &#39;process_hifld_substations&#39; method will generate the data either based</span>
+<span class="sd">                                            off of the &#39;substation_file&#39; or using the default CERF data.</span>
+<span class="sd">    :type transmission_gdf:                 GeoDataFrame</span>
+
+<span class="sd">    :param output_dir:                      Full path to a directory to write outputs to if desired</span>
+<span class="sd">    :type output_dir:                       str</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># cost of gas pipeline in $2015/km</span>
+    <span class="n">GAS_PIPE_COST</span> <span class="o">=</span> <span class="mi">737000</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_array</span><span class="p">,</span> <span class="n">technology_dict</span><span class="p">,</span> <span class="n">technology_order</span><span class="p">,</span> <span class="n">substation_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">costs_to_connect_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">costs_to_connect_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pipeline_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">output_rasterized_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output_dist_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output_alloc_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output_cost_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">transmission_gdf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">template_array</span> <span class="o">=</span> <span class="n">template_array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span> <span class="o">=</span> <span class="n">technology_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span> <span class="o">=</span> <span class="n">technology_order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">substation_file</span> <span class="o">=</span> <span class="n">substation_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span> <span class="o">=</span> <span class="n">costs_to_connect_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_file</span> <span class="o">=</span> <span class="n">costs_to_connect_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_file</span> <span class="o">=</span> <span class="n">pipeline_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_rasterized_file</span> <span class="o">=</span> <span class="n">output_rasterized_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dist_file</span> <span class="o">=</span> <span class="n">output_dist_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_alloc_file</span> <span class="o">=</span> <span class="n">output_alloc_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_cost_file</span> <span class="o">=</span> <span class="n">output_cost_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transmission_gdf</span> <span class="o">=</span> <span class="n">transmission_gdf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">output_dir</span>
+
+<div class="viewcode-block" id="Interconnection.calc_annuity_factor"><a class="viewcode-back" href="../../cerf.html#cerf.interconnect.Interconnection.calc_annuity_factor">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">calc_annuity_factor</span><span class="p">(</span><span class="n">discount_rate</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculate annuity factor.&quot;&quot;&quot;</span>
+
+        <span class="n">fx</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">discount_rate</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">discount_rate</span> <span class="o">*</span> <span class="n">fx</span> <span class="o">/</span> <span class="p">(</span><span class="n">fx</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Interconnection.process_hifld_substations"><a class="viewcode-back" href="../../cerf.html#cerf.interconnect.Interconnection.process_hifld_substations">[docs]</a>    <span class="k">def</span> <span class="nf">process_hifld_substations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Select substations from HIFLD data that are within the CONUS and either in service or under construction and</span>
+<span class="sd">        having a minimum voltage rating &gt;= 0.  A field used to rasterize (&#39;_rval_&#39;) is also added containing the cost of</span>
+<span class="sd">        connection in $/km for each substation.</span>
+
+<span class="sd">        This data is assumed to have the following fields:  [&#39;TYPE&#39;, &#39;STATE&#39;, &#39;STATUS&#39;].</span>
+
+<span class="sd">        :returns:                               A geodataframe containing the target substations</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># load cost dictionary from package data if none passed</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span> <span class="o">=</span> <span class="n">costs_per_kv_substation</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yml</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">substation_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/hifld_substations_conus_albers.zip&#39;</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="c1"># get state abbreviations file from cerf package data</span>
+            <span class="n">states_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/state-abbrev_to_state-name.yml&#39;</span><span class="p">)</span>
+
+            <span class="c1"># get state abbreviations to search for in HIFLD data</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">states_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
+                <span class="n">states</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yml</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+
+            <span class="c1"># load cerf&#39;s default coordinate reference system object</span>
+            <span class="n">target_crs</span> <span class="o">=</span> <span class="n">cerf_crs</span><span class="p">()</span>
+
+            <span class="c1"># load and reproject</span>
+            <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substation_file</span><span class="p">)</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">target_crs</span><span class="p">)</span>
+
+            <span class="c1"># keep only substations in the CONUS that are either in service or under construction</span>
+            <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;TYPE&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;SUBSTATION&#39;</span><span class="p">)</span> <span class="o">&amp;</span>
+                          <span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;STATE&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">states</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="o">&amp;</span>
+                          <span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;STATUS&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">((</span><span class="s1">&#39;IN SERVICE&#39;</span><span class="p">,</span> <span class="s1">&#39;UNDER CONST&#39;</span><span class="p">)))]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+            <span class="c1"># assign a field to rasterize by containing the cost of transmission per km</span>
+            <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;MIN_VOLT&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;min_voltage&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
+                                         <span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;MIN_VOLT&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;max_voltage&#39;</span><span class="p">]),</span>
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;dollar_per_km&#39;</span><span class="p">],</span>
+                                         <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">])</span>
+
+            <span class="k">return</span> <span class="n">gdf</span></div>
+
+<div class="viewcode-block" id="Interconnection.process_eia_natural_gas_pipelines"><a class="viewcode-back" href="../../cerf.html#cerf.interconnect.Interconnection.process_eia_natural_gas_pipelines">[docs]</a>    <span class="k">def</span> <span class="nf">process_eia_natural_gas_pipelines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Select natural gas pipelines from EIA data that have a status of operating and a length greater than 0.</span>
+
+<span class="sd">        :returns:                               A geodataframe containing the target pipelines</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span>
+                <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/eia_natural_gas_pipelines_conus_albers.zip&#39;</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="c1"># load cerf&#39;s default coordinate reference system object</span>
+            <span class="n">target_crs</span> <span class="o">=</span> <span class="n">cerf_crs</span><span class="p">()</span>
+
+            <span class="c1"># read in data and reproject</span>
+            <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pipeline_file</span><span class="p">)</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">target_crs</span><span class="p">)</span>
+
+            <span class="c1"># only keep features with a length &gt; 0</span>
+            <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gdf</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+            <span class="c1"># only keep operational pipelines</span>
+            <span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;Status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Operating&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+            <span class="c1"># set field for rasterize</span>
+            <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GAS_PIPE_COST</span>
+
+            <span class="k">return</span> <span class="n">gdf</span></div>
+
+<div class="viewcode-block" id="Interconnection.transmission_to_cost_raster"><a class="viewcode-back" href="../../cerf.html#cerf.interconnect.Interconnection.transmission_to_cost_raster">[docs]</a>    <span class="k">def</span> <span class="nf">transmission_to_cost_raster</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">setting</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a cost per grid cell in $/km from the input GeoDataFrame of transmission infrastructure having a cost</span>
+<span class="sd">        designation field as &#39;_rval_&#39;</span>
+
+<span class="sd">        :param setting:                         Either &#39;substations&#39; or &#39;pipelines&#39;</span>
+
+<span class="sd">        :return:                                Array of transmission interconnection cost per grid cell</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># conversion factor for meters to km</span>
+        <span class="n">m_to_km_factor</span> <span class="o">=</span> <span class="mf">0.001</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_gdf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">setting</span> <span class="o">==</span> <span class="s1">&#39;substations&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transmission_gdf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_hifld_substations</span><span class="p">()</span>
+
+            <span class="k">elif</span> <span class="n">setting</span> <span class="o">==</span> <span class="s1">&#39;pipelines&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transmission_gdf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_eia_natural_gas_pipelines</span><span class="p">()</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;setting&#39; value &#39;</span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s2">&#39; not supported. Choose either &#39;substations&#39; or &#39;pipelines&#39;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># instantiate whitebox toolset</span>
+        <span class="n">wbt</span> <span class="o">=</span> <span class="n">whitebox</span><span class="o">.</span><span class="n">WhiteboxTools</span><span class="p">()</span>
+
+        <span class="c1"># get the template raster from CERF data</span>
+        <span class="n">template_raster</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/cerf_conus_states_albers_1km.tif&#39;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">template_raster</span><span class="p">)</span> <span class="k">as</span> <span class="n">src</span><span class="p">:</span>
+            <span class="c1"># create 0 where land array</span>
+            <span class="n">arr</span> <span class="o">=</span> <span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">rasterio</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+            <span class="c1"># update metadata datatype to float64</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">metadata</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">float64</span><span class="p">})</span>
+
+            <span class="c1"># reproject transmission data</span>
+            <span class="n">gdf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_gdf</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">crs</span><span class="p">)</span>
+
+            <span class="c1"># get shapes</span>
+            <span class="n">shapes</span> <span class="o">=</span> <span class="p">((</span><span class="n">geom</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">geom</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">gdf</span><span class="o">.</span><span class="n">geometry</span><span class="p">,</span> <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]))</span>
+
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">tempdir</span><span class="p">:</span>
+
+            <span class="c1"># if write desired</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">output_rasterized_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dist_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_alloc_file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_cost_file</span><span class="p">)):</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;If writing rasters to file must specify &#39;output_dir&#39;&quot;</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">out_rast</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;cerf_transmission_raster_</span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s1">.tif&#39;</span><span class="p">)</span>
+                    <span class="n">out_dist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;cerf_transmission_distance_</span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s1">.tif&#39;</span><span class="p">)</span>
+                    <span class="n">out_alloc</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;cerf_transmission_allocation_</span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s1">.tif&#39;</span><span class="p">)</span>
+                    <span class="n">out_costs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;cerf_transmission_costs_</span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s1">.tif&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">out_rast</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;cerf_transmission_raster_</span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s1">.tif&#39;</span><span class="p">)</span>
+                <span class="n">out_dist</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;cerf_transmission_distance_</span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s1">.tif&#39;</span><span class="p">)</span>
+                <span class="n">out_alloc</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;cerf_transmission_allocation_</span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s1">.tif&#39;</span><span class="p">)</span>
+                <span class="n">out_costs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;cerf_transmission_costs_</span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s1">.tif&#39;</span><span class="p">)</span>
+
+            <span class="c1"># rasterize transmission vector data and write to memory</span>
+            <span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">out_rast</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span> <span class="k">as</span> <span class="n">dataset</span><span class="p">:</span>
+                <span class="c1"># burn features into raster</span>
+                <span class="n">burned</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">shapes</span><span class="o">=</span><span class="n">shapes</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">arr</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">transform</span><span class="p">)</span>
+
+                <span class="c1"># write the outputs to file</span>
+                <span class="n">dataset</span><span class="o">.</span><span class="n">write_band</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">burned</span><span class="p">)</span>
+
+            <span class="c1"># calculate Euclidean distance and write raster; result just stores the return value 0</span>
+            <span class="n">dist_result</span> <span class="o">=</span> <span class="n">wbt</span><span class="o">.</span><span class="n">euclidean_distance</span><span class="p">(</span><span class="n">out_rast</span><span class="p">,</span> <span class="n">out_dist</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">suppress_callback</span><span class="p">)</span>
+
+            <span class="c1"># calculate Euclidean allocation and write raster</span>
+            <span class="n">alloc_result</span> <span class="o">=</span> <span class="n">wbt</span><span class="o">.</span><span class="n">euclidean_allocation</span><span class="p">(</span><span class="n">out_rast</span><span class="p">,</span> <span class="n">out_alloc</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">suppress_callback</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">out_dist</span><span class="p">)</span> <span class="k">as</span> <span class="n">dist</span><span class="p">:</span>
+                <span class="n">dist_arr</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">out_alloc</span><span class="p">)</span> <span class="k">as</span> <span class="n">alloc</span><span class="p">:</span>
+                <span class="n">alloc_arr</span> <span class="o">=</span> <span class="n">alloc</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">out_costs</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
+
+                <span class="c1"># distance in km * the cost of the nearest substation; outputs $2015/km</span>
+                <span class="n">cost_arr</span> <span class="o">=</span> <span class="p">(</span><span class="n">dist_arr</span> <span class="o">*</span> <span class="n">m_to_km_factor</span><span class="p">)</span> <span class="o">*</span> <span class="n">alloc_arr</span>
+
+                <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cost_arr</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cost_arr</span></div>
+
+<div class="viewcode-block" id="Interconnection.generate_interconnection_costs_array"><a class="viewcode-back" href="../../cerf.html#cerf.interconnect.Interconnection.generate_interconnection_costs_array">[docs]</a>    <span class="k">def</span> <span class="nf">generate_interconnection_costs_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># set up array to hold interconnection costs</span>
+        <span class="n">ic_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">template_array</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">):</span>
+
+            <span class="c1"># get technology specific information</span>
+            <span class="n">require_pipelines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;require_pipelines&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+            <span class="n">discount_rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;discount_rate&#39;</span><span class="p">)</span>
+            <span class="n">lifetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lifetime&#39;</span><span class="p">)</span>
+
+            <span class="c1"># calulate annuity factor for technology</span>
+            <span class="n">annuity_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_annuity_factor</span><span class="p">(</span><span class="n">discount_rate</span><span class="o">=</span><span class="n">discount_rate</span><span class="p">,</span> <span class="n">lifetime</span><span class="o">=</span><span class="n">lifetime</span><span class="p">)</span>
+
+            <span class="c1"># get transmission cost array</span>
+            <span class="n">substation_cost_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_to_cost_raster</span><span class="p">(</span><span class="n">setting</span><span class="o">=</span><span class="s1">&#39;substations&#39;</span><span class="p">)</span> <span class="o">*</span> <span class="n">annuity_factor</span>
+
+            <span class="k">if</span> <span class="n">require_pipelines</span><span class="p">:</span>
+
+                <span class="c1"># get pipeline cost array</span>
+                <span class="n">pipeline_cost_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_to_cost_raster</span><span class="p">(</span><span class="n">setting</span><span class="o">=</span><span class="s1">&#39;pipelines&#39;</span><span class="p">)</span> <span class="o">*</span> <span class="n">annuity_factor</span>
+
+                <span class="c1"># calculate technology specific interconnection cost</span>
+                <span class="n">total_interconection_cost_array</span> <span class="o">=</span> <span class="n">substation_cost_array</span> <span class="o">+</span> <span class="n">pipeline_cost_array</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">total_interconection_cost_array</span> <span class="o">=</span> <span class="n">substation_cost_array</span>
+
+            <span class="c1"># calculate interconnection costs per grid cell</span>
+            <span class="n">ic_arr</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">total_interconection_cost_array</span>
+
+        <span class="k">return</span> <span class="n">ic_arr</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Battelle Memorial Institute.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

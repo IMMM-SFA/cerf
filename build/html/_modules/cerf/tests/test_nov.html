@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cerf.tests.test_nov &mdash; cerf 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/cerf.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/getting_started.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="../../../about.html" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> cerf
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cerf.html">API reference</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">cerf</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>cerf.tests.test_nov</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cerf.tests.test_nov</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Tests for Net Operational Value calculations.</span>
+
+<span class="sd">:author:   Chris R. Vernon</span>
+<span class="sd">:email:    chris.vernon@pnnl.gov</span>
+
+<span class="sd">License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">cerf.nov</span> <span class="kn">import</span> <span class="n">NetOperationalValue</span>
+
+
+<div class="viewcode-block" id="TestNov"><a class="viewcode-back" href="../../../cerf.tests.html#cerf.tests.test_nov.TestNov">[docs]</a><span class="k">class</span> <span class="nc">TestNov</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tests for the NOV calculations.&quot;&quot;&quot;</span>
+
+    <span class="c1"># inputs as they would come from GCAM and input sources</span>
+    <span class="n">DISCOUNT_RATE</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># fraction</span>
+    <span class="n">LIFETIME</span> <span class="o">=</span> <span class="mi">60</span>  <span class="c1"># years</span>
+    <span class="n">UNIT_SIZE</span> <span class="o">=</span> <span class="mi">1350</span>  <span class="c1"># megawatt</span>
+    <span class="n">CAPACITY_FACTOR</span> <span class="o">=</span> <span class="mf">0.9</span>  <span class="c1"># fraction</span>
+    <span class="n">VARIABLE_COST_ESC_RATE</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.00104311614063357</span>  <span class="c1"># fraction</span>
+    <span class="n">FUEL_ESC_RATE</span> <span class="o">=</span> <span class="mf">0.04639</span>  <span class="c1"># fraction</span>
+    <span class="n">CARBON_ESC_RATE</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># fraction</span>
+    <span class="n">VARIABLE_OM</span> <span class="o">=</span> <span class="mf">2.09812782440284</span>  <span class="c1"># $/MWh</span>
+    <span class="n">HEAT_RATE</span> <span class="o">=</span> <span class="mf">10246.19999999998</span>  <span class="c1"># Btu/kWh</span>
+    <span class="n">FUEL_PRICE</span> <span class="o">=</span> <span class="mf">0.712809999999999</span>  <span class="c1"># $/GJ gets converted to $/MBtu in code</span>
+    <span class="n">CARBON_TAX</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># $/ton</span>
+    <span class="n">CARBON_CAPTURE_RATE</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># fraction</span>
+    <span class="n">FUEL_CO2_CONTENT</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># tons/MWh gets converted to tons/Btu in code</span>
+    <span class="n">LMP_ARR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">66.95609874</span><span class="p">])</span>  <span class="c1"># $/MWh</span>
+
+    <span class="c1"># expected values</span>
+    <span class="n">EXPECTED_ANNUITY_FACTOR</span> <span class="o">=</span> <span class="mf">0.05282818452724236</span>
+    <span class="n">EXPECTED_LF_VOM</span> <span class="o">=</span> <span class="mf">0.9819019248539469</span>
+    <span class="n">EXPECTED_LF_FUEL</span> <span class="o">=</span> <span class="mf">2.8587075325530398</span>
+    <span class="n">EXPECTED_LF_CARBON</span> <span class="o">=</span> <span class="mf">0.999999999999999</span>
+
+    <span class="c1"># difference in expected values when evaluating under different conditions</span>
+    <span class="n">EXPECTED_NOV_NOCARBON_NOLEAP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1780847345.1014912</span><span class="p">])</span>
+    <span class="n">EXPECTED_NOV_NOCARBON_LEAP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1785726378.923687</span><span class="p">])</span>
+    <span class="n">EXPECTED_NOV_WITHCARBON_NOLEAP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1780847344.7371392</span><span class="p">])</span>
+
+<div class="viewcode-block" id="TestNov.instantiate_nov"><a class="viewcode-back" href="../../../cerf.tests.html#cerf.tests.test_nov.TestNov.instantiate_nov">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">instantiate_nov</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">target_year</span><span class="p">,</span> <span class="n">carbon_tax</span><span class="p">,</span> <span class="n">fuel_co2_content</span><span class="p">,</span> <span class="n">carbon_capture_rate</span><span class="p">,</span> <span class="n">consider_leap_year</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Instantiate NOV class with test values.  The additional parameters can be passed to</span>
+<span class="sd">        test NOV under different carbon conditions.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">NetOperationalValue</span><span class="p">(</span><span class="n">discount_rate</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">DISCOUNT_RATE</span><span class="p">,</span>
+                                   <span class="n">lifetime</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">LIFETIME</span><span class="p">,</span>
+                                   <span class="n">unit_size</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">UNIT_SIZE</span><span class="p">,</span>
+                                   <span class="n">capacity_factor</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">CAPACITY_FACTOR</span><span class="p">,</span>
+                                   <span class="n">variable_cost_esc_rate</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">VARIABLE_COST_ESC_RATE</span><span class="p">,</span>
+                                   <span class="n">fuel_esc_rate</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">FUEL_ESC_RATE</span><span class="p">,</span>
+                                   <span class="n">carbon_esc_rate</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">CARBON_ESC_RATE</span><span class="p">,</span>
+                                   <span class="n">variable_om</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">VARIABLE_OM</span><span class="p">,</span>
+                                   <span class="n">heat_rate</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">HEAT_RATE</span><span class="p">,</span>
+                                   <span class="n">fuel_price</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">FUEL_PRICE</span><span class="p">,</span>
+                                   <span class="n">carbon_tax</span><span class="o">=</span><span class="n">carbon_tax</span><span class="p">,</span>
+                                   <span class="n">carbon_capture_rate</span><span class="o">=</span><span class="n">carbon_capture_rate</span><span class="p">,</span>
+                                   <span class="n">fuel_co2_content</span><span class="o">=</span><span class="n">fuel_co2_content</span><span class="p">,</span>
+                                   <span class="n">lmp_arr</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">LMP_ARR</span><span class="p">,</span>
+                                   <span class="n">target_year</span><span class="o">=</span><span class="n">target_year</span><span class="p">,</span>
+                                   <span class="n">consider_leap_year</span><span class="o">=</span><span class="n">consider_leap_year</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestNov.test_nocarbon_noleap_nov"><a class="viewcode-back" href="../../../cerf.tests.html#cerf.tests.test_nov.TestNov.test_nocarbon_noleap_nov">[docs]</a>    <span class="k">def</span> <span class="nf">test_nocarbon_noleap_nov</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Test NOV outcome with no carbon and no leap year.&quot;&quot;&quot;</span>
+
+        <span class="c1"># create a no carbon, no leap year run</span>
+        <span class="n">econ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instantiate_nov</span><span class="p">(</span><span class="n">target_year</span><span class="o">=</span><span class="mi">2010</span><span class="p">,</span>  <span class="c1"># four digit year</span>
+                                    <span class="n">carbon_tax</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>  <span class="c1"># $/ton</span>
+                                    <span class="n">fuel_co2_content</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>  <span class="c1"># tons/MWh gets converted to tons/Btu</span>
+                                    <span class="n">carbon_capture_rate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>  <span class="c1"># fraction</span>
+                                    <span class="n">consider_leap_year</span><span class="o">=</span><span class="kc">False</span>
+                                    <span class="p">)</span>
+        <span class="n">nov_tech_arr</span> <span class="o">=</span> <span class="n">econ</span><span class="o">.</span><span class="n">calc_nov</span><span class="p">()</span>
+
+        <span class="c1"># test the calculation of annuity factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">TestNov</span><span class="o">.</span><span class="n">EXPECTED_ANNUITY_FACTOR</span><span class="p">,</span> <span class="n">econ</span><span class="o">.</span><span class="n">annuity_factor</span><span class="p">)</span>
+
+        <span class="c1"># test the calculation of the levelization factor for variable OM</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">TestNov</span><span class="o">.</span><span class="n">EXPECTED_LF_VOM</span><span class="p">,</span> <span class="n">econ</span><span class="o">.</span><span class="n">lf_vom</span><span class="p">)</span>
+
+        <span class="c1"># test the calculation of the levelization factor for fuel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">TestNov</span><span class="o">.</span><span class="n">EXPECTED_LF_FUEL</span><span class="p">,</span> <span class="n">econ</span><span class="o">.</span><span class="n">lf_fuel</span><span class="p">)</span>
+
+        <span class="c1"># test the calculation of the levelization factor for carbon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">TestNov</span><span class="o">.</span><span class="n">EXPECTED_LF_CARBON</span><span class="p">,</span> <span class="n">econ</span><span class="o">.</span><span class="n">lf_carbon</span><span class="p">)</span>
+
+        <span class="c1"># test NOV</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_equal</span><span class="p">(</span><span class="n">TestNov</span><span class="o">.</span><span class="n">EXPECTED_NOV_NOCARBON_NOLEAP</span><span class="p">,</span> <span class="n">nov_tech_arr</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestNov.test_nocarbon_leap_nov"><a class="viewcode-back" href="../../../cerf.tests.html#cerf.tests.test_nov.TestNov.test_nocarbon_leap_nov">[docs]</a>    <span class="k">def</span> <span class="nf">test_nocarbon_leap_nov</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Test NOV outcome with no carbon and on a leap year.&quot;&quot;&quot;</span>
+
+        <span class="c1"># create a no carbon, leap year run</span>
+        <span class="n">econ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instantiate_nov</span><span class="p">(</span><span class="n">target_year</span><span class="o">=</span><span class="mi">2012</span><span class="p">,</span>  <span class="c1"># four digit year</span>
+                                    <span class="n">carbon_tax</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>  <span class="c1"># $/ton</span>
+                                    <span class="n">fuel_co2_content</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>  <span class="c1"># tons/MWh gets converted to tons/Btu</span>
+                                    <span class="n">carbon_capture_rate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>  <span class="c1"># fraction</span>
+                                    <span class="n">consider_leap_year</span><span class="o">=</span><span class="kc">True</span>
+                                    <span class="p">)</span>
+        <span class="n">nov_tech_arr</span> <span class="o">=</span> <span class="n">econ</span><span class="o">.</span><span class="n">calc_nov</span><span class="p">()</span>
+
+        <span class="c1"># test the calculation of annuity factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">TestNov</span><span class="o">.</span><span class="n">EXPECTED_ANNUITY_FACTOR</span><span class="p">,</span> <span class="n">econ</span><span class="o">.</span><span class="n">annuity_factor</span><span class="p">)</span>
+
+        <span class="c1"># test the calculation of the levelization factor for variable OM</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">TestNov</span><span class="o">.</span><span class="n">EXPECTED_LF_VOM</span><span class="p">,</span> <span class="n">econ</span><span class="o">.</span><span class="n">lf_vom</span><span class="p">)</span>
+
+        <span class="c1"># test the calculation of the levelization factor for fuel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">TestNov</span><span class="o">.</span><span class="n">EXPECTED_LF_FUEL</span><span class="p">,</span> <span class="n">econ</span><span class="o">.</span><span class="n">lf_fuel</span><span class="p">)</span>
+
+        <span class="c1"># test the calculation of the levelization factor for carbon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">TestNov</span><span class="o">.</span><span class="n">EXPECTED_LF_CARBON</span><span class="p">,</span> <span class="n">econ</span><span class="o">.</span><span class="n">lf_carbon</span><span class="p">)</span>
+
+        <span class="c1"># test NOV</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_equal</span><span class="p">(</span><span class="n">TestNov</span><span class="o">.</span><span class="n">EXPECTED_NOV_NOCARBON_LEAP</span><span class="p">,</span> <span class="n">nov_tech_arr</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TestNov.test_with_carbon_noleap_nov"><a class="viewcode-back" href="../../../cerf.tests.html#cerf.tests.test_nov.TestNov.test_with_carbon_noleap_nov">[docs]</a>    <span class="k">def</span> <span class="nf">test_with_carbon_noleap_nov</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Test NOV outcome with carbon and not on a leap year.&quot;&quot;&quot;</span>
+
+        <span class="c1"># create a no carbon, leap year run</span>
+        <span class="n">econ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">instantiate_nov</span><span class="p">(</span><span class="n">target_year</span><span class="o">=</span><span class="mi">2010</span><span class="p">,</span>  <span class="c1"># four digit year</span>
+                                    <span class="n">carbon_tax</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>  <span class="c1"># $/ton</span>
+                                    <span class="n">fuel_co2_content</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span>  <span class="c1"># tons/MWh gets converted to tons/Btu</span>
+                                    <span class="n">carbon_capture_rate</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>  <span class="c1"># fraction</span>
+                                    <span class="n">consider_leap_year</span><span class="o">=</span><span class="kc">False</span>
+                                    <span class="p">)</span>
+        <span class="n">nov_tech_arr</span> <span class="o">=</span> <span class="n">econ</span><span class="o">.</span><span class="n">calc_nov</span><span class="p">()</span>
+
+        <span class="c1"># test the calculation of annuity factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">TestNov</span><span class="o">.</span><span class="n">EXPECTED_ANNUITY_FACTOR</span><span class="p">,</span> <span class="n">econ</span><span class="o">.</span><span class="n">annuity_factor</span><span class="p">)</span>
+
+        <span class="c1"># test the calculation of the levelization factor for variable OM</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">TestNov</span><span class="o">.</span><span class="n">EXPECTED_LF_VOM</span><span class="p">,</span> <span class="n">econ</span><span class="o">.</span><span class="n">lf_vom</span><span class="p">)</span>
+
+        <span class="c1"># test the calculation of the levelization factor for fuel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">TestNov</span><span class="o">.</span><span class="n">EXPECTED_LF_FUEL</span><span class="p">,</span> <span class="n">econ</span><span class="o">.</span><span class="n">lf_fuel</span><span class="p">)</span>
+
+        <span class="c1"># test the calculation of the levelization factor for carbon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">TestNov</span><span class="o">.</span><span class="n">EXPECTED_LF_CARBON</span><span class="p">,</span> <span class="n">econ</span><span class="o">.</span><span class="n">lf_carbon</span><span class="p">)</span>
+
+        <span class="c1"># test NOV</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_equal</span><span class="p">(</span><span class="n">TestNov</span><span class="o">.</span><span class="n">EXPECTED_NOV_WITHCARBON_NOLEAP</span><span class="p">,</span> <span class="n">nov_tech_arr</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Battelle Memorial Institute.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
