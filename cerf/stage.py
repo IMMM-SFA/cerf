@@ -24,7 +24,7 @@ class Stage:
 
     # type hints
     settings_dict: dict
-    utility_dict: dict
+    lmp_zone_dict: dict
     technology_dict: dict
     technology_order: list
 
@@ -34,13 +34,13 @@ class Stage:
                             500: {'low_mw': 501, 'high_mw': 1250},
                             765: {'low_mw': 1251, 'high_mw': 99999999}}
 
-    def __init__(self, settings_dict, utility_dict, technology_dict, technology_order, initialize_site_data):
+    def __init__(self, settings_dict, lmp_zone_dict, technology_dict, technology_order, initialize_site_data):
 
         # dictionary containing project level settings
         self.settings_dict = settings_dict
 
         # dictionary containing utility zone information
-        self.utility_dict = utility_dict
+        self.lmp_zone_dict = lmp_zone_dict
 
         # dictionary containing technology specific information
         self.technology_dict = technology_dict
@@ -92,7 +92,7 @@ class Stage:
         """Load the utility zones raster for the CONUS into a 2D array."""
 
         # raster file containing the utility zone per grid cell
-        zones_raster_file = self.utility_dict.get('utility_zone_raster_file', None)
+        zones_raster_file = self.lmp_zone_dict.get('utility_zone_raster_file', None)
 
         # use default if none passed
         if zones_raster_file is None:
@@ -108,7 +108,7 @@ class Stage:
         """Calculate Locational Marginal Pricing."""
 
         # create technology specific locational marginal price based on capacity factor
-        pricing = LocationalMarginalPricing(self.utility_dict,
+        pricing = LocationalMarginalPricing(self.lmp_zone_dict,
                                             self.technology_dict,
                                             self.technology_order,
                                             self.zones_arr)

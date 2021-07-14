@@ -44,7 +44,6 @@
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-    <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
@@ -68,6 +67,10 @@
 
           
             
+            
+              <div class="version">
+                2.0.0
+              </div>
             
           
 
@@ -95,6 +98,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../footer.html">Sponsorship</a></li>
 </ul>
 
             
@@ -187,7 +193,7 @@
 
     <span class="c1"># type hints</span>
     <span class="n">settings_dict</span><span class="p">:</span> <span class="nb">dict</span>
-    <span class="n">utility_dict</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="n">lmp_zone_dict</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="n">technology_dict</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="n">technology_order</span><span class="p">:</span> <span class="nb">list</span>
 
@@ -197,13 +203,13 @@
                             <span class="mi">500</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;low_mw&#39;</span><span class="p">:</span> <span class="mi">501</span><span class="p">,</span> <span class="s1">&#39;high_mw&#39;</span><span class="p">:</span> <span class="mi">1250</span><span class="p">},</span>
                             <span class="mi">765</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;low_mw&#39;</span><span class="p">:</span> <span class="mi">1251</span><span class="p">,</span> <span class="s1">&#39;high_mw&#39;</span><span class="p">:</span> <span class="mi">99999999</span><span class="p">}}</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings_dict</span><span class="p">,</span> <span class="n">utility_dict</span><span class="p">,</span> <span class="n">technology_dict</span><span class="p">,</span> <span class="n">technology_order</span><span class="p">,</span> <span class="n">initialize_site_data</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings_dict</span><span class="p">,</span> <span class="n">lmp_zone_dict</span><span class="p">,</span> <span class="n">technology_dict</span><span class="p">,</span> <span class="n">technology_order</span><span class="p">,</span> <span class="n">initialize_site_data</span><span class="p">):</span>
 
         <span class="c1"># dictionary containing project level settings</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span> <span class="o">=</span> <span class="n">settings_dict</span>
 
         <span class="c1"># dictionary containing utility zone information</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">utility_dict</span> <span class="o">=</span> <span class="n">utility_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lmp_zone_dict</span> <span class="o">=</span> <span class="n">lmp_zone_dict</span>
 
         <span class="c1"># dictionary containing technology specific information</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span> <span class="o">=</span> <span class="n">technology_dict</span>
@@ -232,33 +238,33 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">zones_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_utility_raster</span><span class="p">()</span>
 
         <span class="c1"># get LMP array per tech [tech_order, x, y]</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Processing locational marginal pricing (LMP)&#39;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Processing locational marginal pricing (LMP)&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lmp_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_lmp</span><span class="p">()</span>
 
         <span class="c1"># get interconnection cost per tech [tech_order, x, y]</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Calculating interconnection costs (IC)&#39;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Calculating interconnection costs (IC)&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ic_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_ic</span><span class="p">()</span>
 
         <span class="c1"># get NOV array per tech [tech_order, x, y]</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Calculating net operational cost (NOV)&#39;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Calculating net operational cost (NOV)&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nov_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_nov</span><span class="p">()</span>
 
         <span class="c1"># get NLC array per tech [tech_order, x, y]</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Calculating net locational cost (NLC)&#39;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Calculating net locational cost (NLC)&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nlc_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_nlc</span><span class="p">()</span>
 
         <span class="c1"># combine all suitability rasters into an array</span>
-        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Building suitability array&#39;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Building suitability array&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">suitability_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_suitability_array</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Stage.load_utility_raster"><a class="viewcode-back" href="../../cerf.html#cerf.stage.Stage.load_utility_raster">[docs]</a>    <span class="k">def</span> <span class="nf">load_utility_raster</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load the utility zones raster for the CONUS into a 2D array.&quot;&quot;&quot;</span>
 
         <span class="c1"># raster file containing the utility zone per grid cell</span>
-        <span class="n">zones_raster_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">utility_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;utility_zone_raster_file&#39;</span><span class="p">)</span>
+        <span class="n">zones_raster_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmp_zone_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;utility_zone_raster_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># use default if none passed</span>
-        <span class="k">if</span> <span class="n">zones_raster_file</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">zones_raster_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">zones_raster_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/utility_zones_1km.img&#39;</span><span class="p">)</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using &#39;zones_raster_file&#39;:  </span><span class="si">{</span><span class="n">zones_raster_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -271,7 +277,7 @@
         <span class="sd">&quot;&quot;&quot;Calculate Locational Marginal Pricing.&quot;&quot;&quot;</span>
 
         <span class="c1"># create technology specific locational marginal price based on capacity factor</span>
-        <span class="n">pricing</span> <span class="o">=</span> <span class="n">LocationalMarginalPricing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">utility_dict</span><span class="p">,</span>
+        <span class="n">pricing</span> <span class="o">=</span> <span class="n">LocationalMarginalPricing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lmp_zone_dict</span><span class="p">,</span>
                                             <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">,</span>
                                             <span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">,</span>
                                             <span class="bp">self</span><span class="o">.</span><span class="n">zones_arr</span><span class="p">)</span>
@@ -296,7 +302,7 @@
                              <span class="n">output_alloc_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                              <span class="n">output_cost_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                              <span class="n">transmission_gdf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                             <span class="n">output_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                             <span class="n">output_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;output_directory&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 
         <span class="n">ic_arr</span> <span class="o">=</span> <span class="n">ic</span><span class="o">.</span><span class="n">generate_interconnection_costs_array</span><span class="p">()</span>
 
@@ -346,7 +352,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">initialize_site_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 
             <span class="c1"># load siting data into a 2D array for the full grid space</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Initializing previous siting data&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Initializing previous siting data&quot;</span><span class="p">)</span>
             <span class="n">init_arr</span><span class="p">,</span> <span class="n">init_df</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">ingest_sited_data</span><span class="p">(</span><span class="n">run_year</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">[</span><span class="s1">&#39;run_year&#39;</span><span class="p">],</span>
                                                        <span class="n">x_array</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">xcoords</span><span class="p">,</span>
                                                        <span class="n">siting_data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">initialize_site_data</span><span class="p">)</span>
@@ -368,7 +374,7 @@
             <span class="c1"># path to the input raster</span>
             <span class="n">tech_suitability_raster_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;suitability_raster_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">tech_suitability_raster_file</span> <span class="o">==</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tech_suitability_raster_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">tech_suitability_raster_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;data/suitability_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tech_name_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">.sdat&#39;</span><span class="p">)</span>
 
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using suitability file for &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;tech_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;:  </span><span class="si">{</span><span class="n">tech_suitability_raster_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>

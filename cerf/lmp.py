@@ -7,7 +7,7 @@ import pkg_resources
 
 
 def generate_random_lmp_dataframe(n_zones=57, low_value=10, mid_value=300, high_value=500, n_samples=5000):
-    """Generate a random dataframe of hourly 8760 LMP values per utility zone.  Let high value LMPs only be used
+    """Generate a random dataframe of hourly 8760 LMP values per lmp zone.  Let high value LMPs only be used
     for 15 percent of the data.
     :param n_zones:                     Number of zones to process
     :param low_value:                   Desired minimum value of MWh
@@ -56,7 +56,7 @@ class LocationalMarginalPricing:
     """Create a 3D array of locational marginal pricing per technology by capacity factor.
 
     LMPs ($/MWh) are provided per capacity factor quantile as represented in the `zones_xml_file`.
-    Each technologies capacity factor is matched to the corresponding LMP per utility zone
+    Each technologies capacity factor is matched to the corresponding LMP per lmp zone
     and is thus used to create a 2D array that establishes the appropriate LMP per grid cell
     per technology.
 
@@ -74,10 +74,10 @@ class LocationalMarginalPricing:
 
     """
 
-    def __init__(self, utility_dict, technology_dict, technology_order, zones_arr):
+    def __init__(self, lmp_zone_dict, technology_dict, technology_order, zones_arr):
 
         # dictionary containing utility zone information
-        self.utility_dict = utility_dict
+        self.lmp_zone_dict = lmp_zone_dict
 
         # dictionary containing technology specific information
         self.technology_dict = technology_dict
@@ -123,7 +123,7 @@ class LocationalMarginalPricing:
         lmp_arr = np.zeros(shape=(n_technologies, self.zones_arr.shape[0], self.zones_arr.shape[1]))
 
         # get the LMP file for the technology from the configuration file
-        lmp_file = self.utility_dict.get('utility_zone_lmp_file', None)
+        lmp_file = self.lmp_zone_dict.get('utility_zone_lmp_file', None)
 
         # use illustrative default if none provided
         if lmp_file is None:
@@ -154,7 +154,7 @@ class LocationalMarginalPricing:
             lmp_dict = {int(k): lmp_dict[k] for k in lmp_dict.keys()}
 
             # add in no data
-            lmp_dict[self.utility_dict['utility_zone_raster_nodata_value']] = np.nan
+            lmp_dict[self.lmp_zone_dict['utility_zone_raster_nodata_value']] = np.nan
 
             # create LMP array for the current technology
             lmp_arr[index, :, :] = np.vectorize(lmp_dict.get)(self.zones_arr)

@@ -44,7 +44,6 @@
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
     
-    <link rel="author" title="About these documents" href="../../../about.html" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
@@ -68,6 +67,10 @@
 
           
             
+            
+              <div class="version">
+                2.0.0
+              </div>
             
           
 
@@ -95,6 +98,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../user_guide.html">User guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../cerf.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../footer.html">Sponsorship</a></li>
 </ul>
 
             
@@ -185,13 +191,13 @@
         <span class="k">return</span> <span class="n">arr</span><span class="p">[:,</span> <span class="mi">1500</span><span class="p">:</span><span class="mi">2000</span><span class="p">,</span> <span class="mi">3000</span><span class="p">:</span><span class="mi">4000</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TestLmp.load_utility_raster"><a class="viewcode-back" href="../../../cerf.tests.html#cerf.tests.test_lmp.TestLmp.load_utility_raster">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">load_utility_raster</span><span class="p">(</span><span class="n">utility_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">load_utility_raster</span><span class="p">(</span><span class="n">lmp_zone_dict</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Load the utility zones raster for the CONUS into a 2D array.&quot;&quot;&quot;</span>
 
         <span class="c1"># raster file containing the utility zone per grid cell</span>
-        <span class="n">zones_raster_file</span> <span class="o">=</span> <span class="n">utility_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;utility_zone_raster_file&#39;</span><span class="p">)</span>
+        <span class="n">zones_raster_file</span> <span class="o">=</span> <span class="n">lmp_zone_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;utility_zone_raster_file&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">zones_raster_file</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">zones_raster_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">zones_raster_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/utility_zones_1km.img&#39;</span><span class="p">)</span>
 
         <span class="c1"># read in utility zones raster as a 2D numpy array</span>
@@ -209,10 +215,10 @@
         <span class="n">cfg</span> <span class="o">=</span> <span class="n">ReadConfig</span><span class="p">(</span><span class="n">cfg_file</span><span class="p">)</span>
 
         <span class="c1"># read in zones array</span>
-        <span class="n">zones_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_utility_raster</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">utility_dict</span><span class="p">)</span>
+        <span class="n">zones_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_utility_raster</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">lmp_zone_dict</span><span class="p">)</span>
 
         <span class="c1"># create technology specific locational marginal price based on capacity factor</span>
-        <span class="n">pricing</span> <span class="o">=</span> <span class="n">LocationalMarginalPricing</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">utility_dict</span><span class="p">,</span>
+        <span class="n">pricing</span> <span class="o">=</span> <span class="n">LocationalMarginalPricing</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">lmp_zone_dict</span><span class="p">,</span>
                                             <span class="n">cfg</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">,</span>
                                             <span class="n">cfg</span><span class="o">.</span><span class="n">technology_order</span><span class="p">,</span>
                                             <span class="n">zones_arr</span><span class="p">)</span>

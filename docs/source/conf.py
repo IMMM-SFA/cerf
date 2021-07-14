@@ -44,6 +44,7 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon',
     'sphinx.ext.mathjax',
+    'sphinx.ext.autosectionlabel',
     'sphinx_rtd_theme',
     'sphinx_panels',
     'sphinx-mathjax-offline'
@@ -77,8 +78,6 @@ html_css_files = [
     "css/cerf.css",
     "css/getting_started.css",
 ]
-
-
 
 import cerf
 version = str(cerf.__version__)

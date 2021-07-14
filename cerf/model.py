@@ -71,7 +71,7 @@ class Model(ReadConfig):
 
         # prepare all data for state level run
         data = Stage(self.settings_dict,
-                     self.utility_dict,
+                     self.lmp_zone_dict,
                      self.technology_dict,
                      self.technology_order,
                      self.initialize_site_data)

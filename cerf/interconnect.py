@@ -279,7 +279,7 @@ class Interconnection:
 
             with rasterio.open(out_costs, 'w', **metadata) as out:
 
-                # distance in km * the cost of the nearest substation; outputs $2015/km
+                # distance in km * the cost of the nearest substation; outputs $/km
                 cost_arr = (dist_arr * m_to_km_factor) * alloc_arr
 
                 out.write(cost_arr, 1)

@@ -44,7 +44,6 @@
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-    <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
@@ -68,6 +67,10 @@
 
           
             
+            
+              <div class="version">
+                2.0.0
+              </div>
             
           
 
@@ -95,6 +98,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../footer.html">Sponsorship</a></li>
 </ul>
 
             
@@ -182,11 +188,14 @@
 <span class="kn">from</span> <span class="nn">cerf.process_state</span> <span class="kn">import</span> <span class="n">process_state</span>
 
 
-<div class="viewcode-block" id="generate_model"><a class="viewcode-back" href="../../cerf.html#cerf.process.generate_model">[docs]</a><span class="k">def</span> <span class="nf">generate_model</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">initialize_site_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="generate_model"><a class="viewcode-back" href="../../cerf.html#cerf.process.generate_model">[docs]</a><span class="k">def</span> <span class="nf">generate_model</span><span class="p">(</span><span class="n">config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initialize_site_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Generate model instance for use in parallel applications.</span>
 
 <span class="sd">    :param config_file:                 Full path with file name and extension to the input config.yml file</span>
 <span class="sd">    :type config_file:                  str</span>
+
+<span class="sd">    :param config_dict:                 Optional instead of config_file. Configuration dictionary.</span>
+<span class="sd">    :type config_dict:                  dict</span>
 
 <span class="sd">    :param   initialize_site_data:      None if no initialization is required, otherwise either a CSV file or</span>
 <span class="sd">                                        Pandas DataFrame of siting data bearing the following required fields:</span>
@@ -207,7 +216,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">return</span> <span class="n">Model</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">initialize_site_data</span><span class="p">,</span> <span class="n">log_level</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">Model</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">config_dict</span><span class="p">,</span> <span class="n">initialize_site_data</span><span class="p">,</span> <span class="n">log_level</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="cerf_parallel"><a class="viewcode-back" href="../../cerf.html#cerf.process.cerf_parallel">[docs]</a><span class="k">def</span> <span class="nf">cerf_parallel</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;sequential&#39;</span><span class="p">):</span>
@@ -262,8 +271,8 @@
                                                                              <span class="n">verbose</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
                                                                              <span class="n">write_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">states_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
-    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All states processed in </span><span class="si">{</span><span class="nb">round</span><span class="p">((</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">),</span> <span class="mi">7</span><span class="p">)</span><span class="si">}</span><span class="s2"> seconds.&quot;</span><span class="p">)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Aggregating outputs...&quot;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All states processed in </span><span class="si">{</span><span class="nb">round</span><span class="p">((</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">),</span> <span class="mi">7</span><span class="p">)</span><span class="si">}</span><span class="s2"> seconds.&quot;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Aggregating outputs...&quot;</span><span class="p">)</span>
 
     <span class="c1"># create a data frame to hold the outputs</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">util</span><span class="o">.</span><span class="n">empty_sited_dict</span><span class="p">())</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">util</span><span class="o">.</span><span class="n">sited_dtypes</span><span class="p">())</span>
@@ -288,11 +297,15 @@
     <span class="k">return</span> <span class="n">df</span></div>
 
 
-<div class="viewcode-block" id="execute"><a class="viewcode-back" href="../../cerf.html#cerf.process.execute">[docs]</a><span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;sequential&#39;</span><span class="p">,</span> <span class="n">initialize_site_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="execute"><a class="viewcode-back" href="../../cerf.html#cerf.process.execute">[docs]</a><span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="n">config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;sequential&#39;</span><span class="p">,</span>
+            <span class="n">initialize_site_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Run all CERF states for the CONUS for the target year.</span>
 
 <span class="sd">    :param config_file:                 Full path with file name and extension to the input config.yml file</span>
 <span class="sd">    :type config_file:                  str</span>
+
+<span class="sd">    :param config_dict:                 Optional instead of config_file. Configuration dictionary.</span>
+<span class="sd">    :type config_dict:                  dict</span>
 
 <span class="sd">    :param write_output:                Write output as a raster to the output directory specified in the config file</span>
 <span class="sd">    :type write_output:                 bool</span>
@@ -328,7 +341,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># instantiate CERF model</span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">generate_model</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">initialize_site_data</span><span class="o">=</span><span class="n">initialize_site_data</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="n">log_level</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">generate_model</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span>
+                           <span class="n">config_dict</span><span class="p">,</span>
+                           <span class="n">initialize_site_data</span><span class="o">=</span><span class="n">initialize_site_data</span><span class="p">,</span>
+                           <span class="n">log_level</span><span class="o">=</span><span class="n">log_level</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
 
     <span class="c1"># process supporting data</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stage</span><span class="p">()</span>

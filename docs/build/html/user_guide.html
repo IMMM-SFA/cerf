@@ -109,7 +109,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#preparing-suitability-rasters">Preparing suitability rasters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#locational-marginal-price-lmp">Locational Marginal Price (LMP)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#locational-marginal-price">Locational Marginal Price</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#tutorials">Tutorials</a><ul>
@@ -124,13 +124,14 @@
 <li class="toctree-l4"><a class="reference internal" href="#generation-g">Generation (G)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#levelization-factor-lfi">Levelization factor (LF<sub>i</sub>)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#annuity-factor-af">Annuity factor (AF)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id1">Locational marginal price (LMP)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#locational-marginal-price-lmp">Locational marginal price (LMP)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#operating-cost-oc">Operating cost (OC)</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#interconnection-cost">Interconnection Cost</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#net-locational-cost">Net Locational Cost</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#competetion-algorithm">Competetion algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#key-outputs">Key outputs</a></li>
 </ul>
 </li>
 </ul>
@@ -138,6 +139,7 @@
 <li class="toctree-l1"><a class="reference internal" href="cerf.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to <strong>cerf</strong></a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="footer.html">Sponsorship</a></li>
 </ul>
 
             
@@ -758,9 +760,33 @@
 </tbody>
 </table>
 </div>
-<div class="section" id="locational-marginal-price-lmp">
-<h3>Locational Marginal Price (LMP)<a class="headerlink" href="#locational-marginal-price-lmp" title="Permalink to this headline">¶</a></h3>
-<p>description here.  link in NOV below needs to be updated.</p>
+<div class="section" id="locational-marginal-price">
+<h3>Locational Marginal Price<a class="headerlink" href="#locational-marginal-price" title="Permalink to this headline">¶</a></h3>
+<p>Locational Marginal Pricing (LMP) represents the cost of making and delivering electricity over an interconnected network of service nodes. LMPs are delivered on an hourly basis (8760 hours for the year) and help us to understand aspects of generation and congestion costs relative to the supply and demand of electricity when considering existing transmission infrastructure.  LMPs are a also driven by factors such as the cost of fuel which <strong>cerf</strong> also takes into account when calculating a power plants <a class="reference internal" href="#net-operating-value"><span class="std std-ref">Net Operating Value</span></a>.  When working with a scenario-driven grid operations model to evaluate the future evolution of the electricity system, <strong>cerf</strong> can ingest LMPs, return the sited generation per service area for the time step, and then continue this iteration through all future years to provide a harmonized view how the electricity system may respond to stressors in the future.</p>
+<p><strong>cerf</strong> was designed to ingest a single CSV file of LMPs per service area for each of the 8760 hours in a year where LMPs are in units $/MWh.  Mean LMPs representing annual trends are then calculated over the time period corresponding to each technology’s capacity factor using the following logic:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>FOR each service area AND technology
+
+  SORT LMP <span class="m">8760</span> values descending and rank <span class="m">1</span>..8760 where <span class="m">1</span> is the largest LMP value<span class="p">;</span>
+
+  IF the capacity factor <span class="nv">is</span> <span class="o">==</span> <span class="m">1</span>.0:
+    MEAN of all values<span class="p">;</span>
+
+  ELSE IF the capacity factor is &gt;<span class="o">=</span> <span class="m">0</span>.5:
+    MEAN of values starting <span class="k">in</span> the rank position
+    CEILING<span class="o">(</span><span class="m">8760</span> * <span class="o">(</span><span class="m">1</span> - capacity factor<span class="o">))</span> through <span class="m">8760</span><span class="p">;</span>
+
+  ELSE IF the <span class="m">0</span>.0 &lt; capacity factor &lt; <span class="m">0</span>.5:
+    MEAN of values starting <span class="k">in</span> the rank position <span class="m">1</span> through
+    CEILING<span class="o">(</span><span class="m">8760</span> * <span class="o">(</span><span class="m">1</span> - capacity factor<span class="o">))</span><span class="p">;</span>
+
+  ELSE:
+    FAIL<span class="p">;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>cerf</strong> comes with an LMP dataset for illustrative purposes only which can be accessed using the <code class="docutils literal notranslate"><span class="pre">`get_sample_lmp_file()</span></code> function.  The service areas in this file correspond with the sample utility zones raster file in the <strong>cerf</strong> package which defines the service area ID for each grid cell in the CONUS.  This raster file can also be accessed using <code class="docutils literal notranslate"><span class="pre">sample_utility_zones_raster_file()</span></code> function.</p>
+</div>
 </div>
 </div>
 <div class="section" id="tutorials">
@@ -843,11 +869,11 @@
 <p><img src="_images/math/8ff73e9308fe851036cbddd32ed53043fdddb6c9.png" alt="AF = \frac{d(1 + d)^n}{(1 + d)^n - 1}"/></p>
 </div><p>where, <em>d</em> is the real annual discount rate as a fraction and <em>n</em> is the asset lifetime in years.</p>
 </div>
-<div class="section" id="id1">
-<h4>Locational marginal price (LMP)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="locational-marginal-price-lmp">
+<h4>Locational marginal price (LMP)<a class="headerlink" href="#locational-marginal-price-lmp" title="Permalink to this headline">¶</a></h4>
 <div class="math">
 <p><img src="_images/math/834367e23684863bd51bb3642d7095990344eca8.png" alt="LMP_{lev} = LMP * LF_{fuel}"/></p>
-</div><p>where, <em>LMP</em> is the locational marginal price (<em>LMP</em>) in $/MWh and <em>LF</em><sub>fuel</sub> is the levelization factor of fuel.  <em>LMP</em> is also an input to <strong>cerf</strong> and is described in full <a class="reference external" href="www.google.com">here</a>.</p>
+</div><p>where, <em>LMP</em> is the locational marginal price (<em>LMP</em>) in $/MWh and <em>LF</em><sub>fuel</sub> is the levelization factor of fuel.  <em>LMP</em> is also an input to <strong>cerf</strong> and is described in full in the <a class="reference internal" href="#locational-marginal-price"><span class="std std-ref">Locational Marginal Price</span></a> section.</p>
 </div>
 <div class="section" id="operating-cost-oc">
 <h4>Operating cost (OC)<a class="headerlink" href="#operating-cost-oc" title="Permalink to this headline">¶</a></h4>
@@ -879,6 +905,10 @@
 <h3>Competetion algorithm<a class="headerlink" href="#competetion-algorithm" title="Permalink to this headline">¶</a></h3>
 <p>Technology competition algorithm for CERF.</p>
 <p>Grid cell level net locational cost (NLC) per technology and an electricity technology capacity expansion plan are used to compete technologies against each other to see which will win the grid cell. The technology that wins the grid cell is then sited until no further winning cells exist. Once sited, the location of the winning technology’s grid cell, along with its buffer, are no longer available for siting. The competition array is recalculated after all technologies have passed through an iteration. This process is repeated until there are either no cells left to site or there are no more power plants left to satisfy the expansion plan for any technology. For technologies that have the same NLC value in multiple grid cells that win the competition, random selection is available by default. If the user wishes to have the outcomes be repeatable, the randomizer can be set to False and a random seed set.</p>
+</div>
+<div class="section" id="key-outputs">
+<h3>Key outputs<a class="headerlink" href="#key-outputs" title="Permalink to this headline">¶</a></h3>
+<p>The goals of the <strong>cerf</strong> package are to 1) evaluate the feasibility of a future scenario-driven electricity technology capacity expansion plan as generated by a parent model,  2) to site power plants in the least cost configuration when considering regional economics an on-the-ground barriers to siting, and 3) to assist planners and modelers of alternate future realizations of the electricity system to gain an understanding of how siting costs and service area congestion may respond under certain stressors.</p>
 </div>
 </div>
 </div>

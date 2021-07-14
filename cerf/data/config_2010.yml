@@ -25,7 +25,6 @@ technology:
         variable_cost_esc_rate: -0.00398993418629034
         fuel_esc_rate: 0.0
         unit_size: 80
-        interconnection_cost_per_km: 552
         variable_om: 11.68495803744351
         heat_rate: 15117.64999999997
         fuel_price: 0.0
@@ -45,7 +44,6 @@ technology:
         variable_cost_esc_rate: -0.00104311614063357
         fuel_esc_rate: 0.04639000000000001
         unit_size: 1350
-        interconnection_cost_per_km: 1104
         variable_om: 2.098127824402843
         heat_rate: 10246.19999999998
         fuel_price: 0.7128099999999996

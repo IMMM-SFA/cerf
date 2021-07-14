@@ -49,7 +49,7 @@ class ReadConfig(Logger):
         self.expansion_dict = self.config.get('expansion_plan')
 
         # get the utility zone data
-        self.utility_dict = self.config.get('utility_zones')
+        self.lmp_zone_dict = self.config.get('utility_zones')
 
         # get the states dictionary
         self.states_dict = self.get_states_dict()

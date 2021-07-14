@@ -44,7 +44,6 @@
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
     
-    <link rel="author" title="About these documents" href="../../about.html" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
@@ -68,6 +67,10 @@
 
           
             
+            
+              <div class="version">
+                2.0.0
+              </div>
             
           
 
@@ -95,6 +98,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../footer.html">Sponsorship</a></li>
 </ul>
 
             
@@ -442,7 +448,7 @@
 
             <span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">out_costs</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
 
-                <span class="c1"># distance in km * the cost of the nearest substation; outputs $2015/km</span>
+                <span class="c1"># distance in km * the cost of the nearest substation; outputs $/km</span>
                 <span class="n">cost_arr</span> <span class="o">=</span> <span class="p">(</span><span class="n">dist_arr</span> <span class="o">*</span> <span class="n">m_to_km_factor</span><span class="p">)</span> <span class="o">*</span> <span class="n">alloc_arr</span>
 
                 <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cost_arr</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
