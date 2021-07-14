@@ -67,10 +67,10 @@ def list_available_suitability_files():
             (os.path.splitext(i)[-1] == '.sdat')]
 
 
-def sample_utility_zones_raster_file():
-    """Return path for the sample utility zones raster file."""
+def sample_lmp_zones_raster_file():
+    """Return path for the sample lmp zoness raster file."""
 
-    return pkg_resources.resource_filename('cerf', 'data/utility_zones_1km.img')
+    return pkg_resources.resource_filename('cerf', 'data/lmp_zones_1km.img')
 
 
 def get_sample_lmp_data():

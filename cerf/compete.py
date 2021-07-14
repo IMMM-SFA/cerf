@@ -89,7 +89,7 @@ class Competition:
         # interconnection costs
         self.ic_flat_dict = ic_dict
 
-        # utility zones array
+        # lmp zoness array
         self.zones_flat_arr = zones_arr
 
         # flat array of full grid indices value for the target state
@@ -197,7 +197,7 @@ class Competition:
                         self.sited_dict['buffer_in_km'].append(self.technology_dict[tech_id]['buffer_in_km'])
                         self.sited_dict['sited_year'].append(self.settings_dict['run_year'])
                         self.sited_dict['retirement_year'].append(retirement_year)
-                        self.sited_dict['utility_zone'].append(self.zones_flat_arr[target_ix])
+                        self.sited_dict['lmp_zone'].append(self.zones_flat_arr[target_ix])
                         self.sited_dict['locational_marginal_pricing'].append(self.lmp_flat_dict[tech_id][target_ix])
                         self.sited_dict['net_operational_value'].append(self.nov_flat_dict[tech_id][target_ix])
                         self.sited_dict['interconnection_cost'].append(self.ic_flat_dict[tech_id][target_ix])

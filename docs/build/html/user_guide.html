@@ -104,7 +104,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#settings"><code class="docutils literal notranslate"><span class="pre">settings</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#technology"><code class="docutils literal notranslate"><span class="pre">technology</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#expansion-plan"><code class="docutils literal notranslate"><span class="pre">expansion_plan</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#utility-zones"><code class="docutils literal notranslate"><span class="pre">utility_zones</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lmp-zones"><code class="docutils literal notranslate"><span class="pre">lmp_zones</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#infrastructure"><code class="docutils literal notranslate"><span class="pre">infrastructure</span></code></a></li>
 </ul>
 </li>
@@ -139,7 +139,7 @@
 <li class="toctree-l1"><a class="reference internal" href="cerf.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to <strong>cerf</strong></a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="footer.html">Sponsorship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="footer.html">Acknowledgement</a></li>
 </ul>
 
             
@@ -214,7 +214,7 @@
 <p>The following with indroduce you to the input data required by <strong>cerf</strong> and how to set up a configuration file to run <strong>cerf</strong>.</p>
 <div class="section" id="configration-file-setup">
 <h3>Configration file setup<a class="headerlink" href="#configration-file-setup" title="Permalink to this headline">¶</a></h3>
-<p>The <strong>cerf</strong> package utilizes a YAML configuration file customized by the user with project level and technology-specific settings, an electricity technology capacity expansion plan, and utility zone data for each year intended to model. <strong>cerf</strong> comes equipped with prebuilt configuration files for years 2010 through 2050 to provide an illustrative example. Each example configuration file can be viewed using the following:</p>
+<p>The <strong>cerf</strong> package utilizes a YAML configuration file customized by the user with project level and technology-specific settings, an electricity technology capacity expansion plan, and LMP zone data for each year intended to model. <strong>cerf</strong> comes equipped with prebuilt configuration files for years 2010 through 2050 to provide an illustrative example. Each example configuration file can be viewed using the following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cerf</span>
 
 <span class="n">sample_config</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">load_sample_config</span><span class="p">(</span><span class="n">yr</span><span class="o">=</span><span class="mi">2010</span><span class="p">)</span>
@@ -432,21 +432,6 @@
 <td><p>NA</p></td>
 <td><p>str</p></td>
 </tr>
-<tr class="row-even"><td><p>utility_zone_lmp_file</p></td>
-<td><div class="line-block">
-<div class="line">LMP CSV file containing 8760 LMP per zone</div>
-<div class="line">where columns are each zone with a numeric</div>
-<div class="line">zone ID header that corresponds with the</div>
-<div class="line">zones represented in the</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">utility_zone_raster_file</span></code> found in the</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">utility_zones</span></code> section and an</div>
-<div class="line">additional hour column named <code class="docutils literal notranslate"><span class="pre">hour</span></code></div>
-<div class="line">holding the hour of each record</div>
-</div>
-</td>
-<td><p>$/MWh</p></td>
-<td><p>str</p></td>
-</tr>
 </tbody>
 </table>
 <p>The following is an example implementation in the YAML configuration file:</p>
@@ -470,7 +455,6 @@
         <span class="nt">buffer_in_km</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
         <span class="nt">require_pipelines</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">False</span>
         <span class="nt">suitability_raster_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to file&gt;</span>
-        <span class="nt">utility_zone_lmp_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to lmp file&gt;</span>
 </pre></div>
 </div>
 </div>
@@ -536,9 +520,9 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="utility-zones">
-<h4><code class="docutils literal notranslate"><span class="pre">utility_zones</span></code><a class="headerlink" href="#utility-zones" title="Permalink to this headline">¶</a></h4>
-<p>These are the utility zone data representing the linkage between each grid and technology and their locational marginal price (LMP).</p>
+<div class="section" id="lmp-zones">
+<h4><code class="docutils literal notranslate"><span class="pre">lmp_zones</span></code><a class="headerlink" href="#lmp-zones" title="Permalink to this headline">¶</a></h4>
+<p>These are the lmp zones data representing the linkage between each grid and technology and their locational marginal price (LMP).</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 34%" />
@@ -554,34 +538,50 @@
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>utility_zone_raster_file</p></td>
+<tr class="row-even"><td><p>lmp_zone_raster_file</p></td>
 <td><div class="line-block">
 <div class="line">Full path with file name and extension to</div>
-<div class="line">the utility zones raster file</div>
+<div class="line">the lmp zoness raster file</div>
 </div>
 </td>
 <td><p>NA</p></td>
 <td><p>str</p></td>
 </tr>
-<tr class="row-odd"><td><p>utility_zone_raster_nodata_value</p></td>
-<td><p>No data value in the utility zone raster</p></td>
+<tr class="row-odd"><td><p>lmp_zone_raster_nodata_value</p></td>
+<td><p>No data value in the lmp zones raster</p></td>
 <td><p>NA</p></td>
 <td><p>float</p></td>
+</tr>
+<tr class="row-even"><td><p>lmp_hourly_data_file</p></td>
+<td><div class="line-block">
+<div class="line">LMP CSV file containing 8760 LMP per zone</div>
+<div class="line">where columns are each zone with a numeric</div>
+<div class="line">zone ID header that corresponds with the</div>
+<div class="line">zones represented in the</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">lmp_zone_raster_file</span></code> found in the</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">lmp_zones</span></code> section and an</div>
+<div class="line">additional hour column named <code class="docutils literal notranslate"><span class="pre">hour</span></code></div>
+<div class="line">holding the hour of each record</div>
+</div>
+</td>
+<td><p>$/MWh</p></td>
+<td><p>str</p></td>
 </tr>
 </tbody>
 </table>
 <p>The following is an example implementation in the YAML configuration file:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">utility_zones</span><span class="p">:</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">lmp_zones</span><span class="p">:</span>
 
-    <span class="nt">utility_zone_raster_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to zone raster&gt;</span>
-    <span class="nt">utility_zone_raster_nodata_value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">255</span>
+    <span class="nt">lmp_zone_raster_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to zone raster&gt;</span>
+    <span class="nt">lmp_zone_raster_nodata_value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">255</span>
+    <span class="nt">lmp_hourly_data_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to data file&gt;</span>
 </pre></div>
 </div>
-<p>The <cite>cerf</cite> package comes equipped with a sample utility zones raster file and a sample hourly (8760) locational marginal price file for illustrative purposes only.</p>
-<p>You can take a look at the utility zones raster file by running:</p>
+<p>The <cite>cerf</cite> package comes equipped with a sample lmp zoness raster file and a sample hourly (8760) locational marginal price file for illustrative purposes only.</p>
+<p>You can take a look at the lmp zoness raster file by running:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cerf</span>
 
-<span class="n">utility_file</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">sample_utility_zones_raster_file</span><span class="p">()</span>
+<span class="n">lmp_zone_file</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">sample_lmp_zones_raster_file</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>You can also view the sample hourly locational marginal price file as a Pandas DataFrame using:</p>
@@ -785,7 +785,7 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><strong>cerf</strong> comes with an LMP dataset for illustrative purposes only which can be accessed using the <code class="docutils literal notranslate"><span class="pre">`get_sample_lmp_file()</span></code> function.  The service areas in this file correspond with the sample utility zones raster file in the <strong>cerf</strong> package which defines the service area ID for each grid cell in the CONUS.  This raster file can also be accessed using <code class="docutils literal notranslate"><span class="pre">sample_utility_zones_raster_file()</span></code> function.</p>
+<p><strong>cerf</strong> comes with an LMP dataset for illustrative purposes only which can be accessed using the <code class="docutils literal notranslate"><span class="pre">`get_sample_lmp_file()</span></code> function.  The service areas in this file correspond with the sample lmp zoness raster file in the <strong>cerf</strong> package which defines the service area ID for each grid cell in the CONUS.  This raster file can also be accessed using <code class="docutils literal notranslate"><span class="pre">sample_lmp_zones_raster_file()</span></code> function.</p>
 </div>
 </div>
 </div>

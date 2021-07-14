@@ -39,7 +39,7 @@ class Stage:
         # dictionary containing project level settings
         self.settings_dict = settings_dict
 
-        # dictionary containing utility zone information
+        # dictionary containing lmp zones information
         self.lmp_zone_dict = lmp_zone_dict
 
         # dictionary containing technology specific information
@@ -65,8 +65,8 @@ class Stage:
         # initialization data for siting
         self.init_arr, self.init_df = self.get_sited_data()
 
-        # raster file containing the utility zone per grid cell
-        self.zones_arr = self.load_utility_raster()
+        # raster file containing the lmp zones per grid cell
+        self.zones_arr = self.load_lmp_zone_raster()
 
         # get LMP array per tech [tech_order, x, y]
         logging.info('Processing locational marginal pricing (LMP)')
@@ -88,19 +88,19 @@ class Stage:
         logging.info('Building suitability array')
         self.suitability_arr = self.build_suitability_array()
 
-    def load_utility_raster(self):
-        """Load the utility zones raster for the CONUS into a 2D array."""
+    def load_lmp_zone_raster(self):
+        """Load the lmp zoness raster for the CONUS into a 2D array."""
 
-        # raster file containing the utility zone per grid cell
-        zones_raster_file = self.lmp_zone_dict.get('utility_zone_raster_file', None)
+        # raster file containing the lmp zones per grid cell
+        zones_raster_file = self.lmp_zone_dict.get('lmp_zone_raster_file', None)
 
         # use default if none passed
         if zones_raster_file is None:
-            zones_raster_file = pkg_resources.resource_filename('cerf', 'data/utility_zones_1km.img')
+            zones_raster_file = pkg_resources.resource_filename('cerf', 'data/lmp_zones_1km.img')
 
         logging.info(f"Using 'zones_raster_file':  {zones_raster_file}")
 
-        # read in utility zones raster as a 2D numpy array
+        # read in lmp zoness raster as a 2D numpy array
         with rasterio.open(zones_raster_file) as src:
             return src.read(1)
 

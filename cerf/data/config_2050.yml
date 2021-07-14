@@ -503,14 +503,14 @@ expansion_plan:
             n_sites: 2
 
 
-# utility zone specific data
-utility_zones:
+# lmp zones specific data
+lmp_zones:
 
-    # full path with file name and extension to the utility zones raster file
-    utility_zone_raster_file: null
+    # full path with file name and extension to the lmp zoness raster file
+    lmp_zone_raster_file: null
 
-    # no data value in the utility zone raster
-    utility_zone_raster_nodata_value: 255
+    # no data value in the lmp zones raster
+    lmp_zone_raster_nodata_value: 255
 
     # lmp csv file containing 8760 LMP per zone where columns are each zone with a numeric zone id header
-    utility_zone_lmp_file: null
+    lmp_hourly_data_file: null

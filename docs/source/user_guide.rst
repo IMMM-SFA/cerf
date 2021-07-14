@@ -119,15 +119,7 @@ These are technology-specific settings.
     | suitability_raster_file | | Full path with file name and extension to | NA       | str      |
     |                         | | the accompanying suitability raster file  |          |          |
     +-------------------------+---------------------------------------------+----------+----------+
-    | utility_zone_lmp_file   | | LMP CSV file containing 8760 LMP per zone | $/MWh    | str      |
-    |                         | | where columns are each zone with a numeric|          |          |
-    |                         | | zone ID header that corresponds with the  |          |          |
-    |                         | | zones represented in the                  |          |          |
-    |                         | | ``utility_zone_raster_file`` found in the |          |          |
-    |                         | | ``utility_zones`` section and an          |          |          |
-    |                         | | additional hour column named ``hour``     |          |          |
-    |                         | | holding the hour of each record           |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
+
 
 The following is an example implementation in the YAML configuration file:
 
@@ -153,7 +145,6 @@ The following is an example implementation in the YAML configuration file:
             buffer_in_km: 5
             require_pipelines: False
             suitability_raster_file: <path to file>
-            utility_zone_lmp_file: <path to lmp file>
 
 
 ``expansion_plan``
@@ -190,41 +181,51 @@ The following is an example implementation in the YAML configuration file:
                 n_sites: 2
 
 
-``utility_zones``
-^^^^^^^^^^^^^^^^^^
+``lmp_zones``
+^^^^^^^^^^^^^
 
-These are the utility zone data representing the linkage between each grid and technology and their locational marginal price (LMP).
+These are the lmp zones data representing the linkage between each grid and technology and their locational marginal price (LMP).
 
 .. table::
 
     +----------------------------------+---------------------------------------------+----------+----------+
     | Name                             | Description                                 | Unit     | Type     |
     +==================================+=============================================+==========+==========+
-    | utility_zone_raster_file         | | Full path with file name and extension to | NA       | str      |
-    |                                  | | the utility zones raster file             |          |          |
+    | lmp_zone_raster_file             | | Full path with file name and extension to | NA       | str      |
+    |                                  | | the lmp zoness raster file                |          |          |
     +----------------------------------+---------------------------------------------+----------+----------+
-    | utility_zone_raster_nodata_value | No data value in the utility zone raster    | NA       | float    |
+    | lmp_zone_raster_nodata_value     | No data value in the lmp zones raster       | NA       | float    |
+    +----------------------------------+---------------------------------------------+----------+----------+
+    | lmp_hourly_data_file             | | LMP CSV file containing 8760 LMP per zone | $/MWh    | str      |
+    |                                  | | where columns are each zone with a numeric|          |          |
+    |                                  | | zone ID header that corresponds with the  |          |          |
+    |                                  | | zones represented in the                  |          |          |
+    |                                  | | ``lmp_zone_raster_file`` found in the     |          |          |
+    |                                  | | ``lmp_zones`` section and an              |          |          |
+    |                                  | | additional hour column named ``hour``     |          |          |
+    |                                  | | holding the hour of each record           |          |          |
     +----------------------------------+---------------------------------------------+----------+----------+
 
 The following is an example implementation in the YAML configuration file:
 
 .. code-block:: yaml
 
-    utility_zones:
+    lmp_zones:
 
-        utility_zone_raster_file: <path to zone raster>
-        utility_zone_raster_nodata_value: 255
+        lmp_zone_raster_file: <path to zone raster>
+        lmp_zone_raster_nodata_value: 255
+        lmp_hourly_data_file: <path to data file>
 
 
-The `cerf` package comes equipped with a sample utility zones raster file and a sample hourly (8760) locational marginal price file for illustrative purposes only.
+The `cerf` package comes equipped with a sample lmp zoness raster file and a sample hourly (8760) locational marginal price file for illustrative purposes only.
 
-You can take a look at the utility zones raster file by running:
+You can take a look at the lmp zoness raster file by running:
 
 .. code-block:: python
 
     import cerf
 
-    utility_file = cerf.sample_utility_zones_raster_file()
+    lmp_zone_file = cerf.sample_lmp_zones_raster_file()
 
 
 You can also view the sample hourly locational marginal price file as a Pandas DataFrame using:
@@ -382,7 +383,7 @@ Locational Marginal Pricing (LMP) represents the cost of making and delivering e
 
 .. note::
 
-  **cerf** comes with an LMP dataset for illustrative purposes only which can be accessed using the ```get_sample_lmp_file()`` function.  The service areas in this file correspond with the sample utility zones raster file in the **cerf** package which defines the service area ID for each grid cell in the CONUS.  This raster file can also be accessed using ``sample_utility_zones_raster_file()`` function.
+  **cerf** comes with an LMP dataset for illustrative purposes only which can be accessed using the ```get_sample_lmp_file()`` function.  The service areas in this file correspond with the sample lmp zoness raster file in the **cerf** package which defines the service area ID for each grid cell in the CONUS.  This raster file can also be accessed using ``sample_lmp_zones_raster_file()`` function.
 
 
 Tutorials

@@ -247,7 +247,7 @@
         <span class="c1"># NLC data for the CONUS</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nlc_arr</span> <span class="o">=</span> <span class="n">nlc_arr</span>
 
-        <span class="c1"># utility zones for the CONUS</span>
+        <span class="c1"># lmp zoness for the CONUS</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zones_arr</span> <span class="o">=</span> <span class="n">zones_arr</span>
 
         <span class="c1"># coordinates for each index</span>
@@ -282,7 +282,7 @@
 
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracting additional metrics for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lmp_flat_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nov_flat_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ic_flat_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_state_metrics</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">zones_flat_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_utility_zones</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zones_flat_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_lmp_zones</span><span class="p">()</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Competing technologies to site expansion for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">competition</span><span class="p">()</span>
@@ -384,8 +384,8 @@
 
         <span class="k">return</span> <span class="n">lmp_flat_dict</span><span class="p">,</span> <span class="n">nov_flat_dict</span><span class="p">,</span> <span class="n">ic_flat_dict</span></div>
 
-<div class="viewcode-block" id="ProcessState.extract_utility_zones"><a class="viewcode-back" href="../../cerf.html#cerf.process_state.ProcessState.extract_utility_zones">[docs]</a>    <span class="k">def</span> <span class="nf">extract_utility_zones</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Extract the utility zones elements for the target state and return as a flat array.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ProcessState.extract_lmp_zones"><a class="viewcode-back" href="../../cerf.html#cerf.process_state.ProcessState.extract_lmp_zones">[docs]</a>    <span class="k">def</span> <span class="nf">extract_lmp_zones</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Extract the lmp zoness elements for the target state and return as a flat array.&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">zones_arr</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span></div>
 

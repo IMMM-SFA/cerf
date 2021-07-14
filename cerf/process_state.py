@@ -78,7 +78,7 @@ class ProcessState:
         # NLC data for the CONUS
         self.nlc_arr = nlc_arr
 
-        # utility zones for the CONUS
+        # lmp zoness for the CONUS
         self.zones_arr = zones_arr
 
         # coordinates for each index
@@ -113,7 +113,7 @@ class ProcessState:
 
         logging.debug(f"Extracting additional metrics for {self.target_state_name}")
         self.lmp_flat_dict, self.nov_flat_dict, self.ic_flat_dict = self.extract_state_metrics()
-        self.zones_flat_arr = self.extract_utility_zones()
+        self.zones_flat_arr = self.extract_lmp_zones()
 
         logging.debug(f"Competing technologies to site expansion for {self.target_state_name}")
         self.run_data = self.competition()
@@ -215,8 +215,8 @@ class ProcessState:
 
         return lmp_flat_dict, nov_flat_dict, ic_flat_dict
 
-    def extract_utility_zones(self):
-        """Extract the utility zones elements for the target state and return as a flat array."""
+    def extract_lmp_zones(self):
+        """Extract the lmp zoness elements for the target state and return as a flat array."""
 
         return self.zones_arr[self.ymin:self.ymax, self.xmin:self.xmax].flatten()
 

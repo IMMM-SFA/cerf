@@ -176,7 +176,7 @@
 
 
 <div class="viewcode-block" id="generate_random_lmp_dataframe"><a class="viewcode-back" href="../../cerf.html#cerf.lmp.generate_random_lmp_dataframe">[docs]</a><span class="k">def</span> <span class="nf">generate_random_lmp_dataframe</span><span class="p">(</span><span class="n">n_zones</span><span class="o">=</span><span class="mi">57</span><span class="p">,</span> <span class="n">low_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">mid_value</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">high_value</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Generate a random dataframe of hourly 8760 LMP values per utility zone.  Let high value LMPs only be used</span>
+    <span class="sd">&quot;&quot;&quot;Generate a random dataframe of hourly 8760 LMP values per lmp zones.  Let high value LMPs only be used</span>
 <span class="sd">    for 15 percent of the data.</span>
 <span class="sd">    :param n_zones:                     Number of zones to process</span>
 <span class="sd">    :param low_value:                   Desired minimum value of MWh</span>
@@ -225,7 +225,7 @@
     <span class="sd">&quot;&quot;&quot;Create a 3D array of locational marginal pricing per technology by capacity factor.</span>
 
 <span class="sd">    LMPs ($/MWh) are provided per capacity factor quantile as represented in the `zones_xml_file`.</span>
-<span class="sd">    Each technologies capacity factor is matched to the corresponding LMP per utility zone</span>
+<span class="sd">    Each technologies capacity factor is matched to the corresponding LMP per lmp zones</span>
 <span class="sd">    and is thus used to create a 2D array that establishes the appropriate LMP per grid cell</span>
 <span class="sd">    per technology.</span>
 
@@ -245,7 +245,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lmp_zone_dict</span><span class="p">,</span> <span class="n">technology_dict</span><span class="p">,</span> <span class="n">technology_order</span><span class="p">,</span> <span class="n">zones_arr</span><span class="p">):</span>
 
-        <span class="c1"># dictionary containing utility zone information</span>
+        <span class="c1"># dictionary containing lmp zones information</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lmp_zone_dict</span> <span class="o">=</span> <span class="n">lmp_zone_dict</span>
 
         <span class="c1"># dictionary containing technology specific information</span>
@@ -254,7 +254,7 @@
         <span class="c1"># order of technologies to process</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span> <span class="o">=</span> <span class="n">technology_order</span>
 
-        <span class="c1"># array containing the utility zone per grid cell</span>
+        <span class="c1"># array containing the lmp zones per grid cell</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zones_arr</span> <span class="o">=</span> <span class="n">zones_arr</span>
 
 <div class="viewcode-block" id="LocationalMarginalPricing.get_cf_bin"><a class="viewcode-back" href="../../cerf.html#cerf.lmp.LocationalMarginalPricing.get_cf_bin">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -292,7 +292,7 @@
         <span class="n">lmp_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_technologies</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zones_arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">zones_arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
         <span class="c1"># get the LMP file for the technology from the configuration file</span>
-        <span class="n">lmp_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmp_zone_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;utility_zone_lmp_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">lmp_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmp_zone_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lmp_hourly_data_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># use illustrative default if none provided</span>
         <span class="k">if</span> <span class="n">lmp_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -323,7 +323,7 @@
             <span class="n">lmp_dict</span> <span class="o">=</span> <span class="p">{</span><span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">lmp_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">lmp_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
 
             <span class="c1"># add in no data</span>
-            <span class="n">lmp_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lmp_zone_dict</span><span class="p">[</span><span class="s1">&#39;utility_zone_raster_nodata_value&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">lmp_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">lmp_zone_dict</span><span class="p">[</span><span class="s1">&#39;lmp_zone_raster_nodata_value&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 
             <span class="c1"># create LMP array for the current technology</span>
             <span class="n">lmp_arr</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">lmp_dict</span><span class="o">.</span><span class="n">get</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">zones_arr</span><span class="p">)</span>

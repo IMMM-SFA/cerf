@@ -127,7 +127,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to <strong>cerf</strong></a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="footer.html">Sponsorship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="footer.html">Acknowledgement</a></li>
 </ul>
 
             
@@ -436,7 +436,7 @@ designation field as ‘_rval_’</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Create a 3D array of locational marginal pricing per technology by capacity factor.</p>
 <p>LMPs ($/MWh) are provided per capacity factor quantile as represented in the <cite>zones_xml_file</cite>.
-Each technologies capacity factor is matched to the corresponding LMP per utility zone
+Each technologies capacity factor is matched to the corresponding LMP per lmp zone
 and is thus used to create a 2D array that establishes the appropriate LMP per grid cell
 per technology.</p>
 <dl class="field-list simple">
@@ -472,7 +472,7 @@ pricing.lmp_arr</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="cerf.lmp.generate_random_lmp_dataframe">
 <span class="sig-prename descclassname"><span class="pre">cerf.lmp.</span></span><span class="sig-name descname"><span class="pre">generate_random_lmp_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_zones</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">57</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mid_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/lmp.html#generate_random_lmp_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.lmp.generate_random_lmp_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate a random dataframe of hourly 8760 LMP values per utility zone.  Let high value LMPs only be used
+<dd><p>Generate a random dataframe of hourly 8760 LMP values per lmp zone.  Let high value LMPs only be used
 for 15 percent of the data.
 :param n_zones:                     Number of zones to process
 :param low_value:                   Desired minimum value of MWh
@@ -855,9 +855,9 @@ Units:  $/MWh</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="cerf.package_data.sample_utility_zones_raster_file">
-<span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">sample_utility_zones_raster_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#sample_utility_zones_raster_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.sample_utility_zones_raster_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return path for the sample utility zones raster file.</p>
+<dt class="sig sig-object py" id="cerf.package_data.sample_lmp_zones_raster_file">
+<span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">sample_lmp_zones_raster_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#sample_lmp_zones_raster_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.sample_lmp_zones_raster_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return path for the sample lmp zoness raster file.</p>
 </dd></dl>
 
 </div>
@@ -969,6 +969,12 @@ plant is to be decommissioned</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cerf.process_state.ProcessState.extract_lmp_zones">
+<span class="sig-name descname"><span class="pre">extract_lmp_zones</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process_state.html#ProcessState.extract_lmp_zones"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process_state.ProcessState.extract_lmp_zones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the lmp zoness elements for the target state and return as a flat array.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cerf.process_state.ProcessState.extract_state_metrics">
 <span class="sig-name descname"><span class="pre">extract_state_metrics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process_state.html#ProcessState.extract_state_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process_state.ProcessState.extract_state_metrics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the LMP, NOV, and IC arrays for the target state and return them as dictionaries where
@@ -979,12 +985,6 @@ plant is to be decommissioned</p>
 <dt class="sig sig-object py" id="cerf.process_state.ProcessState.extract_state_suitability">
 <span class="sig-name descname"><span class="pre">extract_state_suitability</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process_state.html#ProcessState.extract_state_suitability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process_state.ProcessState.extract_state_suitability" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract a single state from the suitability.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cerf.process_state.ProcessState.extract_utility_zones">
-<span class="sig-name descname"><span class="pre">extract_utility_zones</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process_state.html#ProcessState.extract_utility_zones"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process_state.ProcessState.extract_utility_zones" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract the utility zones elements for the target state and return as a flat array.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1165,10 +1165,15 @@ exists.  Also return a data frame of active sites (not reaching retirement age) 
 output.</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.stage.Stage.lmp_zone_dict">
+<span class="sig-name descname"><span class="pre">lmp_zone_dict</span></span><em class="property"><span class="pre">:</span> <span class="pre">dict</span></em><a class="headerlink" href="#cerf.stage.Stage.lmp_zone_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
-<dt class="sig sig-object py" id="cerf.stage.Stage.load_utility_raster">
-<span class="sig-name descname"><span class="pre">load_utility_raster</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/stage.html#Stage.load_utility_raster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.stage.Stage.load_utility_raster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load the utility zones raster for the CONUS into a 2D array.</p>
+<dt class="sig sig-object py" id="cerf.stage.Stage.load_lmp_zone_raster">
+<span class="sig-name descname"><span class="pre">load_lmp_zone_raster</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/stage.html#Stage.load_lmp_zone_raster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.stage.Stage.load_lmp_zone_raster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the lmp zoness raster for the CONUS into a 2D array.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -1184,11 +1189,6 @@ output.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cerf.stage.Stage.technology_order">
 <span class="sig-name descname"><span class="pre">technology_order</span></span><em class="property"><span class="pre">:</span> <span class="pre">list</span></em><a class="headerlink" href="#cerf.stage.Stage.technology_order" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.stage.Stage.lmp_zone_dict">
-<span class="sig-name descname"><span class="pre">lmp_zone_dict</span></span><em class="property"><span class="pre">:</span> <span class="pre">dict</span></em><a class="headerlink" href="#cerf.stage.Stage.lmp_zone_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

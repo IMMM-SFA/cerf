@@ -55,7 +55,7 @@ class TestCompete(unittest.TestCase):
                        'buffer_in_km': [1, 1, 1],
                        'sited_year': [2010, 2010, 2010],
                        'retirement_year': [2070, 2070, 2070],
-                       'utility_zone': [2, 3, 3],
+                       'lmp_zone': [2, 3, 3],
                        'locational_marginal_pricing': [2.4, 1.0, 3.2],
                        'net_operational_value': [2.4, 1.0, 3.2],
                        'interconnection_cost': [2.4, 1.0, 3.2],

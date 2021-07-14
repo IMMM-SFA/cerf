@@ -100,7 +100,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../footer.html">Sponsorship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../footer.html">Acknowledgement</a></li>
 </ul>
 
             
@@ -208,7 +208,7 @@
         <span class="c1"># dictionary containing project level settings</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span> <span class="o">=</span> <span class="n">settings_dict</span>
 
-        <span class="c1"># dictionary containing utility zone information</span>
+        <span class="c1"># dictionary containing lmp zones information</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lmp_zone_dict</span> <span class="o">=</span> <span class="n">lmp_zone_dict</span>
 
         <span class="c1"># dictionary containing technology specific information</span>
@@ -234,8 +234,8 @@
         <span class="c1"># initialization data for siting</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init_arr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sited_data</span><span class="p">()</span>
 
-        <span class="c1"># raster file containing the utility zone per grid cell</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">zones_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_utility_raster</span><span class="p">()</span>
+        <span class="c1"># raster file containing the lmp zones per grid cell</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zones_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_lmp_zone_raster</span><span class="p">()</span>
 
         <span class="c1"># get LMP array per tech [tech_order, x, y]</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Processing locational marginal pricing (LMP)&#39;</span><span class="p">)</span>
@@ -257,19 +257,19 @@
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Building suitability array&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">suitability_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_suitability_array</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Stage.load_utility_raster"><a class="viewcode-back" href="../../cerf.html#cerf.stage.Stage.load_utility_raster">[docs]</a>    <span class="k">def</span> <span class="nf">load_utility_raster</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Load the utility zones raster for the CONUS into a 2D array.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Stage.load_lmp_zone_raster"><a class="viewcode-back" href="../../cerf.html#cerf.stage.Stage.load_lmp_zone_raster">[docs]</a>    <span class="k">def</span> <span class="nf">load_lmp_zone_raster</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load the lmp zoness raster for the CONUS into a 2D array.&quot;&quot;&quot;</span>
 
-        <span class="c1"># raster file containing the utility zone per grid cell</span>
-        <span class="n">zones_raster_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmp_zone_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;utility_zone_raster_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># raster file containing the lmp zones per grid cell</span>
+        <span class="n">zones_raster_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmp_zone_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lmp_zone_raster_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># use default if none passed</span>
         <span class="k">if</span> <span class="n">zones_raster_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">zones_raster_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/utility_zones_1km.img&#39;</span><span class="p">)</span>
+            <span class="n">zones_raster_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/lmp_zones_1km.img&#39;</span><span class="p">)</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using &#39;zones_raster_file&#39;:  </span><span class="si">{</span><span class="n">zones_raster_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="c1"># read in utility zones raster as a 2D numpy array</span>
+        <span class="c1"># read in lmp zoness raster as a 2D numpy array</span>
         <span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">zones_raster_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">src</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">src</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 

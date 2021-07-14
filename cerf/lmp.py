@@ -76,7 +76,7 @@ class LocationalMarginalPricing:
 
     def __init__(self, lmp_zone_dict, technology_dict, technology_order, zones_arr):
 
-        # dictionary containing utility zone information
+        # dictionary containing lmp zones information
         self.lmp_zone_dict = lmp_zone_dict
 
         # dictionary containing technology specific information
@@ -85,7 +85,7 @@ class LocationalMarginalPricing:
         # order of technologies to process
         self.technology_order = technology_order
 
-        # array containing the utility zone per grid cell
+        # array containing the lmp zones per grid cell
         self.zones_arr = zones_arr
 
     @staticmethod
@@ -123,7 +123,7 @@ class LocationalMarginalPricing:
         lmp_arr = np.zeros(shape=(n_technologies, self.zones_arr.shape[0], self.zones_arr.shape[1]))
 
         # get the LMP file for the technology from the configuration file
-        lmp_file = self.lmp_zone_dict.get('utility_zone_lmp_file', None)
+        lmp_file = self.lmp_zone_dict.get('lmp_hourly_data_file', None)
 
         # use illustrative default if none provided
         if lmp_file is None:
@@ -154,7 +154,7 @@ class LocationalMarginalPricing:
             lmp_dict = {int(k): lmp_dict[k] for k in lmp_dict.keys()}
 
             # add in no data
-            lmp_dict[self.lmp_zone_dict['utility_zone_raster_nodata_value']] = np.nan
+            lmp_dict[self.lmp_zone_dict['lmp_zone_raster_nodata_value']] = np.nan
 
             # create LMP array for the current technology
             lmp_arr[index, :, :] = np.vectorize(lmp_dict.get)(self.zones_arr)
