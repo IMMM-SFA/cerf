@@ -31,10 +31,11 @@ def suppress_callback(value):
 
 
 def empty_sited_dict():
-    """Initialize a sited data frame."""
+    """Initialize a sited dictionary."""
 
     return {'state_name': [],
             'tech_id': [],
+            'tech_name': [],
             'xcoord': [],
             'ycoord': [],
             'index': [],
