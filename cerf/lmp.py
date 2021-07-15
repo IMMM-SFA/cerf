@@ -86,7 +86,7 @@ class LocationalMarginalPricing:
         self.lmp_zone_dict = lmp_zone_dict
 
         # dictionary containing technology specific information
-        self.technology_dict = technology_dfict
+        self.technology_dict = technology_dict
 
         # order of technologies to process
         self.technology_order = technology_order
