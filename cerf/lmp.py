@@ -55,22 +55,28 @@ def generate_random_lmp_dataframe(n_zones=57, low_value=10, mid_value=300, high_
 class LocationalMarginalPricing:
     """Create a 3D array of locational marginal pricing per technology by capacity factor.
 
-    LMPs ($/MWh) are provided per capacity factor quantile as represented in the `zones_xml_file`.
-    Each technologies capacity factor is matched to the corresponding LMP per lmp zone
-    and is thus used to create a 2D array that establishes the appropriate LMP per grid cell
-    per technology.
+    Locational Marginal Pricing (LMP) represents the cost of making and delivering electricity
+    over an interconnected network of service nodes. LMPs are delivered on an hourly basis
+    (8760 hours for the year) and help us to understand aspects of generation and congestion
+    costs relative to the supply and demand of electricity when considering existing transmission
+    infrastructure.  LMPs are a also driven by factors such as the cost of fuel which cerf also
+    takes into account when calculating a power plants :ref:`Net Operating Value`.  When working
+    with a scenario-driven grid operations model to evaluate the future evolution of the electricity
+    system, **cerf** can ingest LMPs, return the sited generation per service area for the time
+    step, and then continue this iteration through all future years to provide a harmonized view
+    how the electricity system may respond to stressors in the future.
 
-    :param config:                      A configuration dictionary.
-    :type config:                       dict
+    :param lmp_zone_dict:                      A dictionary containing lmp related settings from the config file
+    :type lmp_zone_dict:                       dict
 
-    USAGE:
+    :param technology_dict:                    A dictionary containing technology related settings from the config file
+    :type technology_dict:                     dict
 
-    # instantiate the LMP class and create a 3D numpy array with the shape (techid, x, y)
-    #   containing LMP values per 1km grid cell
-    pricing = Lmp(config)
+    :param technology_order:                   A list of technologies in the order by which they should be processed
+    :type lmp_zone_dict:                       list
 
-    # access the LMP array by
-    pricing.lmp_arr
+    :param zones_arr:                          An array containing the lmp zones per grid cell
+    :type lmp_zone_dict:                       dict
 
     """
 
@@ -80,7 +86,7 @@ class LocationalMarginalPricing:
         self.lmp_zone_dict = lmp_zone_dict
 
         # dictionary containing technology specific information
-        self.technology_dict = technology_dict
+        self.technology_dict = technology_dfict
 
         # order of technologies to process
         self.technology_order = technology_order

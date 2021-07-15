@@ -548,7 +548,7 @@ Net Locational Cost (*NLC*) is used to compete power plant technologies per grid
 where, *NLC* is in $/yr; *IC* is interconnection cost in $/yr; and *NOV* is in $/yr.
 
 
-Competetion algorithm
+Competition algorithm
 ~~~~~~~~~~~~~~~~~~~~~
 
 Technology competition algorithm for CERF.

@@ -130,7 +130,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#interconnection-cost">Interconnection Cost</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#net-locational-cost">Net Locational Cost</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#competetion-algorithm">Competetion algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#competition-algorithm">Competition algorithm</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#key-outputs">Key outputs</a></li>
 </ul>
 </li>
@@ -901,8 +901,8 @@
 <p><img src="_images/math/2b07e8f7df08d43239da166fd06794fec7d86d3d.png" alt="NLC = IC - NOV"/></p>
 </div><p>where, <em>NLC</em> is in $/yr; <em>IC</em> is interconnection cost in $/yr; and <em>NOV</em> is in $/yr.</p>
 </div>
-<div class="section" id="competetion-algorithm">
-<h3>Competetion algorithm<a class="headerlink" href="#competetion-algorithm" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="competition-algorithm">
+<h3>Competition algorithm<a class="headerlink" href="#competition-algorithm" title="Permalink to this headline">¶</a></h3>
 <p>Technology competition algorithm for CERF.</p>
 <p>Grid cell level net locational cost (NLC) per technology and an electricity technology capacity expansion plan are used to compete technologies against each other to see which will win the grid cell. The technology that wins the grid cell is then sited until no further winning cells exist. Once sited, the location of the winning technology’s grid cell, along with its buffer, are no longer available for siting. The competition array is recalculated after all technologies have passed through an iteration. This process is repeated until there are either no cells left to site or there are no more power plants left to satisfy the expansion plan for any technology. For technologies that have the same NLC value in multiple grid cells that win the competition, random selection is available by default. If the user wishes to have the outcomes be repeatable, the randomizer can be set to False and a random seed set.</p>
 </div>
