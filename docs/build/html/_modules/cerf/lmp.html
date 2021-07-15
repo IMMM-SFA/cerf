@@ -100,7 +100,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../footer.html">Sponsorship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../footer.html">Acknowledgement</a></li>
 </ul>
 
             
@@ -176,7 +176,7 @@
 
 
 <div class="viewcode-block" id="generate_random_lmp_dataframe"><a class="viewcode-back" href="../../cerf.html#cerf.lmp.generate_random_lmp_dataframe">[docs]</a><span class="k">def</span> <span class="nf">generate_random_lmp_dataframe</span><span class="p">(</span><span class="n">n_zones</span><span class="o">=</span><span class="mi">57</span><span class="p">,</span> <span class="n">low_value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">mid_value</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">high_value</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Generate a random dataframe of hourly 8760 LMP values per lmp zones.  Let high value LMPs only be used</span>
+    <span class="sd">&quot;&quot;&quot;Generate a random dataframe of hourly 8760 LMP values per lmp zone.  Let high value LMPs only be used</span>
 <span class="sd">    for 15 percent of the data.</span>
 <span class="sd">    :param n_zones:                     Number of zones to process</span>
 <span class="sd">    :param low_value:                   Desired minimum value of MWh</span>
@@ -224,22 +224,28 @@
 <div class="viewcode-block" id="LocationalMarginalPricing"><a class="viewcode-back" href="../../cerf.html#cerf.lmp.LocationalMarginalPricing">[docs]</a><span class="k">class</span> <span class="nc">LocationalMarginalPricing</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Create a 3D array of locational marginal pricing per technology by capacity factor.</span>
 
-<span class="sd">    LMPs ($/MWh) are provided per capacity factor quantile as represented in the `zones_xml_file`.</span>
-<span class="sd">    Each technologies capacity factor is matched to the corresponding LMP per lmp zones</span>
-<span class="sd">    and is thus used to create a 2D array that establishes the appropriate LMP per grid cell</span>
-<span class="sd">    per technology.</span>
+<span class="sd">    Locational Marginal Pricing (LMP) represents the cost of making and delivering electricity</span>
+<span class="sd">    over an interconnected network of service nodes. LMPs are delivered on an hourly basis</span>
+<span class="sd">    (8760 hours for the year) and help us to understand aspects of generation and congestion</span>
+<span class="sd">    costs relative to the supply and demand of electricity when considering existing transmission</span>
+<span class="sd">    infrastructure.  LMPs are a also driven by factors such as the cost of fuel which cerf also</span>
+<span class="sd">    takes into account when calculating a power plants :ref:`Net Operating Value`.  When working</span>
+<span class="sd">    with a scenario-driven grid operations model to evaluate the future evolution of the electricity</span>
+<span class="sd">    system, **cerf** can ingest LMPs, return the sited generation per service area for the time</span>
+<span class="sd">    step, and then continue this iteration through all future years to provide a harmonized view</span>
+<span class="sd">    how the electricity system may respond to stressors in the future.</span>
 
-<span class="sd">    :param config:                      A configuration dictionary.</span>
-<span class="sd">    :type config:                       dict</span>
+<span class="sd">    :param lmp_zone_dict:                      A dictionary containing lmp related settings from the config file</span>
+<span class="sd">    :type lmp_zone_dict:                       dict</span>
 
-<span class="sd">    USAGE:</span>
+<span class="sd">    :param technology_dict:                    A dictionary containing technology related settings from the config file</span>
+<span class="sd">    :type technology_dict:                     dict</span>
 
-<span class="sd">    # instantiate the LMP class and create a 3D numpy array with the shape (techid, x, y)</span>
-<span class="sd">    #   containing LMP values per 1km grid cell</span>
-<span class="sd">    pricing = Lmp(config)</span>
+<span class="sd">    :param technology_order:                   A list of technologies in the order by which they should be processed</span>
+<span class="sd">    :type lmp_zone_dict:                       list</span>
 
-<span class="sd">    # access the LMP array by</span>
-<span class="sd">    pricing.lmp_arr</span>
+<span class="sd">    :param zones_arr:                          An array containing the lmp zones per grid cell</span>
+<span class="sd">    :type lmp_zone_dict:                       dict</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 

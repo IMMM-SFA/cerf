@@ -5,6 +5,28 @@ import numpy as np
 import pandas as pd
 import rasterio
 import xarray as xr
+import geopandas as gpd
+from shapely.geometry import Point
+
+from cerf.package_data import cerf_crs
+
+
+def results_to_geodataframe(result_df):
+    """Convert the results from 'cerf.run()' to a GeoDataFrame.
+
+    :param result_df:                       Result data frame from running 'cerf.run()'
+    :type result_df:                        DataFrame
+
+    :return:                                GeoPandas GeoDataFrame of results
+
+    """
+
+    target_crs = cerf_crs()
+
+    # create geometry column from coordinate fields
+    geometry = [Point(xy) for xy in zip(result_df['xcoord'], result_df['ycoord'])]
+
+    return gpd.GeoDataFrame(result_df, crs=target_crs, geometry=geometry)
 
 
 def kilometers_to_miles(input_km_value):

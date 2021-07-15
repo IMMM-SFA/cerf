@@ -68,6 +68,10 @@
           
             
             
+              <div class="version">
+                2.0.0
+              </div>
+            
           
 
           
@@ -96,6 +100,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../footer.html">Acknowledgement</a></li>
 </ul>
 
             
@@ -355,6 +360,7 @@
                         <span class="c1"># add selected index to sited dictionary</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">sited_dict</span><span class="p">[</span><span class="s1">&#39;state_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_state_name</span><span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">sited_dict</span><span class="p">[</span><span class="s1">&#39;tech_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tech_id</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">sited_dict</span><span class="p">[</span><span class="s1">&#39;tech_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">tech_id</span><span class="p">][</span><span class="s1">&#39;tech_name&#39;</span><span class="p">])</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">sited_dict</span><span class="p">[</span><span class="s1">&#39;xcoord&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xcoords</span><span class="p">[</span><span class="n">target_ix</span><span class="p">])</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">sited_dict</span><span class="p">[</span><span class="s1">&#39;ycoord&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ycoords</span><span class="p">[</span><span class="n">target_ix</span><span class="p">])</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">sited_dict</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indices_flat</span><span class="p">[</span><span class="n">target_ix</span><span class="p">])</span>

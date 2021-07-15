@@ -1,9 +1,9 @@
 import os
-import pickle
 import pkg_resources
 
 import yaml
 import pandas as pd
+import geopandas as gpd
 
 
 def config_file(yr):
@@ -19,12 +19,31 @@ def config_file(yr):
     return pkg_resources.resource_filename('cerf', f'data/config_{yr}.yml')
 
 
+def cerf_states_shapefile():
+    """Return the cerf CONUS states shapefile as a Geopandas data frame."""
+
+    f = pkg_resources.resource_filename('cerf', 'data/cerf_conus_states_albers.zip')
+
+    return gpd.read_file(f)
+
+
+def cerf_boundary_shapefile():
+    """Return the cerf CONUS boundary shapefile as a Geopandas data frame."""
+
+    f = pkg_resources.resource_filename('cerf', 'data/cerf_conus_boundary_albers.zip')
+
+    return gpd.read_file(f)
+
+
 def cerf_crs():
-    """Return the CRS object of type 'rasterio.crs.CRS' for USA_Contiguous_Albers_Equal_Area_Conic."""
+    """Return a coordinate reference system (CRS) object of class 'pyproj.crs.crs.CRS'
+     for USA_Contiguous_Albers_Equal_Area_Conic.
 
-    f = pkg_resources.resource_filename('cerf', 'data/crs_usa_contiguous_albers_equal_area_conic.p')
+     """
 
-    return pickle.load(open(f, 'rb'))
+    gdf = cerf_states_shapefile()
+
+    return gdf.crs
 
 
 def costs_per_kv_substation():

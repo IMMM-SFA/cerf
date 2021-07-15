@@ -562,6 +562,7 @@ Key outputs
 The following are the outputs and their descriptions from the Pandas DataFrame that is generated when calling ``run()`` to site power plant for all states in the CONUS for all technologies:
 
 .. list-table::
+    :header-rows: 1
 
     * - Name
       - Description
@@ -576,13 +577,13 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
       - Technology name
       - NA
     * - xcoord
-      - X coordinate in `**cerf**'s default CRS <https://spatialreference.org/ref/esri/usa-contiguous-albers-equal-area-conic/>`_
+      - X coordinate in the default `CRS <https://spatialreference.org/ref/esri/usa-contiguous-albers-equal-area-conic/>`_
       - meters
     * - ycoord
-      - Y coordinate in `**cerf**'s default CRS <https://spatialreference.org/ref/esri/usa-contiguous-albers-equal-area-conic/>`_
+      - Y coordinate in the default `CRS <https://spatialreference.org/ref/esri/usa-contiguous-albers-equal-area-conic/>`_
       - meters
     * - index
-      - Index position in flattend array
+      - Index position in the flattend 2D array
       - NA
     * - buffer_in_km
       - Exclusion buffer around site
@@ -597,14 +598,14 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
       - LMP zone ID
       - NA
     * - locational_marginal_pricing
-      - LMP price (see :ref:`Locational marginal price (LMP)`)
+      - See :ref:`Locational marginal price (LMP)`)
       - $/MWh
     * - net_operational_value
-      - NOV (see :ref:`Net Operating Value`)
+      - See :ref:`Net Operating Value`)
       - $/yr
     * - interconnection_cost
-      - IC (see :ref:`Interconnection Cost`)
+      - See :ref:`Interconnection Cost`)
       - $/yr
     * - net_locational_cost
-      - NLC (see :ref:`Net Locational Cost`)
+      - See :ref:`Net Locational Cost`)
       - $/yr

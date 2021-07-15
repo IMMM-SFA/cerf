@@ -1,15 +1,49 @@
-import matplotlib.image as img
+
 import matplotlib.pyplot as plt
-from pkg_resources import resource_filename
+
+from cerf.package_data import cerf_states_shapefile, cerf_boundary_shapefile
+from cerf.utils import results_to_geodataframe
 
 
-def plot_results():
-    """Plot my dog Ava."""
+def plot_siting(result_df, column='tech_name', markersize=5, cmap='Paired'):
+    """Plot the results of a cerf run on a map where each technology has its own color.
 
-    # get stock image of Ava
-    dog = resource_filename('cerf', 'data/figure_1.png')
+    :param result_df:                       Result data frame from running 'cerf.run()'
+    :type result_df:                        DataFrame
 
-    # read in PNG
-    im = img.imread(dog)
+    :param column:                          Column to plot
+    :type column:                           str
 
-    return plt.imshow(im)
+    :param markersize:                      Size of power plant marker
+    :type markersize:                       int
+
+    :param cmap:                            Custom matplotlib colormap object or name
+
+    """
+
+    # result df to geodataframe
+    gdf = results_to_geodataframe(result_df)
+
+    fig, ax = plt.subplots(figsize=(20, 10))
+
+    # read in boundary data
+    states_gdf = cerf_states_shapefile()
+    boundary_gdf = cerf_boundary_shapefile()
+
+    # add background
+    boundary_gdf.plot(ax=ax, color="#f3f2f2", lw=0.8)
+
+    # add boundaries
+    states_gdf.boundary.plot(ax=ax, edgecolor='gray', lw=0.2)
+    boundary_gdf.boundary.plot(ax=ax, edgecolor='gray', lw=0.8)
+
+    # add data
+    gdf.plot(ax=ax, markersize=markersize, column=column, cmap=cmap, legend=True)
+
+    ax.set_axis_off()
+
+    return ax
+
+
+
+
