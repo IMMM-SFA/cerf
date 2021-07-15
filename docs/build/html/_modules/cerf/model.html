@@ -230,7 +230,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">initialize_site_data</span> <span class="o">=</span> <span class="n">initialize_site_data</span>
 
 <div class="viewcode-block" id="Model.stage"><a class="viewcode-back" href="../../cerf.html#cerf.model.Model.stage">[docs]</a>    <span class="k">def</span> <span class="nf">stage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Execute model.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;run model.&quot;&quot;&quot;</span>
 
         <span class="c1"># prepare data for use in siting an expansion per state for a target year</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Staging data...&#39;</span><span class="p">)</span>
@@ -250,7 +250,7 @@
         <span class="k">return</span> <span class="n">data</span></div>
 
 <div class="viewcode-block" id="Model.run_single_state"><a class="viewcode-back" href="../../cerf.html#cerf.model.Model.run_single_state">[docs]</a>    <span class="k">def</span> <span class="nf">run_single_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_state_name</span><span class="p">,</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Execute a single state.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;run a single state.&quot;&quot;&quot;</span>
 
         <span class="c1"># prepare all data for state level run</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">()</span>

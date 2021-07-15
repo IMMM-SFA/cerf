@@ -128,7 +128,7 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
     return df
 
 
-def execute(config_file=None, config_dict=None, write_output=True, n_jobs=-1, method='sequential',
+def run(config_file=None, config_dict=None, write_output=True, n_jobs=-1, method='sequential',
             initialize_site_data=None, log_level='info'):
     """Run all CERF states for the CONUS for the target year.
 
@@ -171,26 +171,29 @@ def execute(config_file=None, config_dict=None, write_output=True, n_jobs=-1, me
 
     """
 
-    # instantiate CERF model
-    model = generate_model(config_file,
-                           config_dict,
-                           initialize_site_data=initialize_site_data,
-                           log_level=log_level.lower())
+    try:
 
-    # process supporting data
-    data = model.stage()
+        # instantiate CERF model
+        model = generate_model(config_file,
+                               config_dict,
+                               initialize_site_data=initialize_site_data,
+                               log_level=log_level.lower())
 
-    # process all CERF CONUS states in parallel and store the result as a 2D arrays containing sites as
-    #  the technology ID per grid cell.  All non-sited grid cells are given the value of NaN.
-    df = cerf_parallel(model=model,
-                       data=data,
-                       write_output=write_output,
-                       n_jobs=n_jobs,
-                       method=method)
+        # process supporting data
+        data = model.stage()
 
-    logging.info(f"CERF model run completed in {round(time.time() - model.start_time, 7)}")
+        # process all CERF CONUS states in parallel and store the result as a 2D arrays containing sites as
+        #  the technology ID per grid cell.  All non-sited grid cells are given the value of NaN.
+        df = cerf_parallel(model=model,
+                           data=data,
+                           write_output=write_output,
+                           n_jobs=n_jobs,
+                           method=method)
 
-    # clean up logger
-    model.close_logger()
+        logging.info(f"CERF model run completed in {round(time.time() - model.start_time, 7)}")
+
+    finally:
+        # clean up logger
+        model.close_logger()
 
     return df

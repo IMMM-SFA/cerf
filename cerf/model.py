@@ -61,7 +61,7 @@ class Model(ReadConfig):
         self.initialize_site_data = initialize_site_data
 
     def stage(self):
-        """Execute model."""
+        """run model."""
 
         # prepare data for use in siting an expansion per state for a target year
         logging.info('Staging data...')
@@ -81,7 +81,7 @@ class Model(ReadConfig):
         return data
 
     def run_single_state(self, target_state_name, write_output=True):
-        """Execute a single state."""
+        """run a single state."""
 
         # prepare all data for state level run
         data = self.stage()

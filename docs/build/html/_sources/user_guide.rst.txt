@@ -412,7 +412,7 @@ Site power plants for the default illustrative expansion plan for all states in 
     config_file = cerf.config_file(yr)
 
     # run the configuration for the target year and return a data frame
-    result_df = cerf.execute(config_file, write_output=False)
+    result_df = cerf.run(config_file, write_output=False)
 
 
 Site multiple years for the CONUS and inherit sited plants
@@ -434,10 +434,10 @@ Site power plants for the default illustrative expansion plan for all states in 
 
         # do not intialize the run with previously sited data if it is the first time step
         if index == 0:
-            result_df = cerf.execute(config_file, write_output=False)
+            result_df = cerf.run(config_file, write_output=False)
 
         else:
-            result_df = cerf.execute(config_file,
+            result_df = cerf.run(config_file,
                                      write_output=False,
                                      initialize_site_data=result_df)
 
