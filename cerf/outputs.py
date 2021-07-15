@@ -5,7 +5,7 @@ from cerf.package_data import cerf_states_shapefile, cerf_boundary_shapefile
 from cerf.utils import results_to_geodataframe
 
 
-def plot_siting(result_df, column='tech_name', markersize=5, cmap='Paired'):
+def plot_siting(result_df, column='tech_name', markersize=5, cmap='Paired', save_figure=False, output_file=None):
     """Plot the results of a cerf run on a map where each technology has its own color.
 
     :param result_df:                       Result data frame from running 'cerf.run()'
@@ -18,6 +18,12 @@ def plot_siting(result_df, column='tech_name', markersize=5, cmap='Paired'):
     :type markersize:                       int
 
     :param cmap:                            Custom matplotlib colormap object or name
+
+    :param save_figure:                     If True, figure is saved to file and 'output_file' must be set
+    :type save_figure:                      bool
+
+    :param output_file:                     If 'save_figure' is True, specify full path with file name and extension
+                                            for the file to be saved to
 
     """
 
@@ -42,8 +48,8 @@ def plot_siting(result_df, column='tech_name', markersize=5, cmap='Paired'):
 
     ax.set_axis_off()
 
-    return ax
+    if save_figure is True and output_file is None:
+        raise ValueError(f"'output_file' must be set if 'save_figure' is True.")
 
-
-
-
+    if save_figure:
+        plt.savefig(output_file)
