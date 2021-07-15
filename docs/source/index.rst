@@ -62,7 +62,8 @@ cerf documentation
     ^^^^^^^^^^^^^
 
     The reference guide contains a detailed description of
-    the **cerf** API. The reference describes how the methods work and which parameters can be used.
+    the **cerf** API. The reference describes how the methods
+    work and which parameters can be used.
 
     +++
 
