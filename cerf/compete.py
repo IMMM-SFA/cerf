@@ -191,6 +191,7 @@ class Competition:
                         # add selected index to sited dictionary
                         self.sited_dict['state_name'].append(self.target_state_name)
                         self.sited_dict['tech_id'].append(tech_id)
+                        self.sited_dict['tech_name'].append(self.technology_dict[tech_id]['tech_name'])
                         self.sited_dict['xcoord'].append(self.xcoords[target_ix])
                         self.sited_dict['ycoord'].append(self.ycoords[target_ix])
                         self.sited_dict['index'].append(self.indices_flat[target_ix])
