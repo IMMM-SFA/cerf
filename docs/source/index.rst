@@ -66,7 +66,7 @@ cerf documentation
 
     +++
 
-    .. link-button:: modules
+    .. link-button:: cerf
             :type: ref
             :text: To the reference guide
             :classes: btn-block btn-secondary stretched-link
