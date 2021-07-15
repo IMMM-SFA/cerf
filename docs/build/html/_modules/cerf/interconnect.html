@@ -100,7 +100,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../footer.html">Sponsorship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../footer.html">Acknowledgement</a></li>
 </ul>
 
             
@@ -182,7 +182,7 @@
 <span class="kn">from</span> <span class="nn">rasterio</span> <span class="kn">import</span> <span class="n">features</span>
 
 <span class="kn">from</span> <span class="nn">cerf.utils</span> <span class="kn">import</span> <span class="n">suppress_callback</span>
-<span class="kn">from</span> <span class="nn">cerf.package_data</span> <span class="kn">import</span> <span class="n">cerf_crs</span><span class="p">,</span> <span class="n">costs_per_kv_substation</span>
+<span class="kn">from</span> <span class="nn">cerf.package_data</span> <span class="kn">import</span> <span class="n">cerf_crs</span><span class="p">,</span> <span class="n">costs_per_kv_substation</span><span class="p">,</span> <span class="n">get_state_abbrev_to_name</span>
 
 
 <div class="viewcode-block" id="Interconnection"><a class="viewcode-back" href="../../cerf.html#cerf.interconnect.Interconnection">[docs]</a><span class="k">class</span> <span class="nc">Interconnection</span><span class="p">:</span>
@@ -304,11 +304,7 @@
         <span class="k">else</span><span class="p">:</span>
 
             <span class="c1"># get state abbreviations file from cerf package data</span>
-            <span class="n">states_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/state-abbrev_to_state-name.yml&#39;</span><span class="p">)</span>
-
-            <span class="c1"># get state abbreviations to search for in HIFLD data</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">states_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
-                <span class="n">states</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yml</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+            <span class="n">states</span> <span class="o">=</span> <span class="n">get_state_abbrev_to_name</span><span class="p">()</span>
 
             <span class="c1"># load cerf&#39;s default coordinate reference system object</span>
             <span class="n">target_crs</span> <span class="o">=</span> <span class="n">cerf_crs</span><span class="p">()</span>

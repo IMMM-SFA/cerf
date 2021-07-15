@@ -799,18 +799,44 @@ Units:  $/MWh</p></li>
 <div class="section" id="module-cerf.outputs">
 <span id="cerf-outputs-module"></span><h2>cerf.outputs module<a class="headerlink" href="#module-cerf.outputs" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="cerf.outputs.plot_results">
-<span class="sig-prename descclassname"><span class="pre">cerf.outputs.</span></span><span class="sig-name descname"><span class="pre">plot_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/outputs.html#plot_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.outputs.plot_results" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot my dog Ava.</p>
+<dt class="sig sig-object py" id="cerf.outputs.plot_siting">
+<span class="sig-prename descclassname"><span class="pre">cerf.outputs.</span></span><span class="sig-name descname"><span class="pre">plot_siting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tech_name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markersize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Paired'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_figure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/outputs.html#plot_siting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.outputs.plot_siting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the results of a cerf run on a map where each technology has its own color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>result_df</strong> (<em>DataFrame</em>) – Result data frame from running ‘cerf.run()’</p></li>
+<li><p><strong>column</strong> (<em>str</em>) – Column to plot</p></li>
+<li><p><strong>markersize</strong> (<em>int</em>) – Size of power plant marker</p></li>
+<li><p><strong>cmap</strong> – Custom matplotlib colormap object or name</p></li>
+<li><p><strong>save_figure</strong> (<em>bool</em>) – If True, figure is saved to file and ‘output_file’ must be set</p></li>
+<li><p><strong>output_file</strong> – If ‘save_figure’ is True, specify full path with file name and extension
+for the file to be saved to</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
 <div class="section" id="module-cerf.package_data">
 <span id="cerf-package-data-module"></span><h2>cerf.package_data module<a class="headerlink" href="#module-cerf.package_data" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
+<dt class="sig sig-object py" id="cerf.package_data.cerf_boundary_shapefile">
+<span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">cerf_boundary_shapefile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#cerf_boundary_shapefile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.cerf_boundary_shapefile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the cerf CONUS boundary shapefile as a Geopandas data frame.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="cerf.package_data.cerf_crs">
 <span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">cerf_crs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#cerf_crs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.cerf_crs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the CRS object of type ‘rasterio.crs.CRS’ for USA_Contiguous_Albers_Equal_Area_Conic.</p>
+<dd><p>Return a coordinate reference system (CRS) object of class ‘pyproj.crs.crs.CRS’
+for USA_Contiguous_Albers_Equal_Area_Conic.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cerf.package_data.cerf_states_shapefile">
+<span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">cerf_states_shapefile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#cerf_states_shapefile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.cerf_states_shapefile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the cerf CONUS states shapefile as a Geopandas data frame.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -837,6 +863,12 @@ Units:  $/MWh</p></li>
 <dt class="sig sig-object py" id="cerf.package_data.get_sample_lmp_data">
 <span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">get_sample_lmp_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#get_sample_lmp_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.get_sample_lmp_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the sample 8760 hourly locational marginal price data as a Pandas DataFrame.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cerf.package_data.get_state_abbrev_to_name">
+<span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">get_state_abbrev_to_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#get_state_abbrev_to_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.get_state_abbrev_to_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary of state abbreviation to state name.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1292,6 +1324,20 @@ and their buffers of active power plants</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>[0] 2D array of X coordinates
 [1] 2D array of Y coordinates</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cerf.utils.results_to_geodataframe">
+<span class="sig-prename descclassname"><span class="pre">cerf.utils.</span></span><span class="sig-name descname"><span class="pre">results_to_geodataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/utils.html#results_to_geodataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.utils.results_to_geodataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the results from ‘cerf.run()’ to a GeoDataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>result_df</strong> (<em>DataFrame</em>) – Result data frame from running ‘cerf.run()’</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>GeoPandas GeoDataFrame of results</p>
 </dd>
 </dl>
 </dd></dl>

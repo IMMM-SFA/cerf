@@ -174,6 +174,28 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">rasterio</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Point</span>
+
+<span class="kn">from</span> <span class="nn">cerf.package_data</span> <span class="kn">import</span> <span class="n">cerf_crs</span>
+
+
+<div class="viewcode-block" id="results_to_geodataframe"><a class="viewcode-back" href="../../cerf.html#cerf.utils.results_to_geodataframe">[docs]</a><span class="k">def</span> <span class="nf">results_to_geodataframe</span><span class="p">(</span><span class="n">result_df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Convert the results from &#39;cerf.run()&#39; to a GeoDataFrame.</span>
+
+<span class="sd">    :param result_df:                       Result data frame from running &#39;cerf.run()&#39;</span>
+<span class="sd">    :type result_df:                        DataFrame</span>
+
+<span class="sd">    :return:                                GeoPandas GeoDataFrame of results</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">target_crs</span> <span class="o">=</span> <span class="n">cerf_crs</span><span class="p">()</span>
+
+    <span class="c1"># create geometry column from coordinate fields</span>
+    <span class="n">geometry</span> <span class="o">=</span> <span class="p">[</span><span class="n">Point</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span> <span class="k">for</span> <span class="n">xy</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;xcoord&#39;</span><span class="p">],</span> <span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;ycoord&#39;</span><span class="p">])]</span>
+
+    <span class="k">return</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">result_df</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">target_crs</span><span class="p">,</span> <span class="n">geometry</span><span class="o">=</span><span class="n">geometry</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="kilometers_to_miles"><a class="viewcode-back" href="../../cerf.html#cerf.utils.kilometers_to_miles">[docs]</a><span class="k">def</span> <span class="nf">kilometers_to_miles</span><span class="p">(</span><span class="n">input_km_value</span><span class="p">):</span>

@@ -98,3 +98,14 @@ def get_sample_lmp_data():
     f = pkg_resources.resource_filename('cerf', 'data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
 
     return pd.read_csv(f)
+
+
+def get_state_abbrev_to_name():
+    """Return a dictionary of state abbreviation to state name."""
+
+    # get state abbreviations file from cerf package data
+    states_file = pkg_resources.resource_filename('cerf', 'data/state-abbrev_to_state-name.yml')
+
+    # get state abbreviations to search for in HIFLD data
+    with open(states_file, 'r') as yml:
+        return yaml.load(yml, Loader=yaml.FullLoader)

@@ -13,7 +13,7 @@ import geopandas as gpd
 from rasterio import features
 
 from cerf.utils import suppress_callback
-from cerf.package_data import cerf_crs, costs_per_kv_substation
+from cerf.package_data import cerf_crs, costs_per_kv_substation, get_state_abbrev_to_name
 
 
 class Interconnection:
@@ -135,11 +135,7 @@ class Interconnection:
         else:
 
             # get state abbreviations file from cerf package data
-            states_file = pkg_resources.resource_filename('cerf', 'data/state-abbrev_to_state-name.yml')
-
-            # get state abbreviations to search for in HIFLD data
-            with open(states_file, 'r') as yml:
-                states = yaml.load(yml, Loader=yaml.FullLoader)
+            states = get_state_abbrev_to_name()
 
             # load cerf's default coordinate reference system object
             target_crs = cerf_crs()

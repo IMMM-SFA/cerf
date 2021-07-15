@@ -168,11 +168,11 @@
             
   <h1>Source code for cerf.package_data</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">pkg_resources</span>
 
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
 
 
 <div class="viewcode-block" id="config_file"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.config_file">[docs]</a><span class="k">def</span> <span class="nf">config_file</span><span class="p">(</span><span class="n">yr</span><span class="p">):</span>
@@ -188,12 +188,31 @@
     <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;data/config_</span><span class="si">{</span><span class="n">yr</span><span class="si">}</span><span class="s1">.yml&#39;</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="cerf_states_shapefile"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.cerf_states_shapefile">[docs]</a><span class="k">def</span> <span class="nf">cerf_states_shapefile</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the cerf CONUS states shapefile as a Geopandas data frame.&quot;&quot;&quot;</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/cerf_conus_states_albers.zip&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cerf_boundary_shapefile"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.cerf_boundary_shapefile">[docs]</a><span class="k">def</span> <span class="nf">cerf_boundary_shapefile</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the cerf CONUS boundary shapefile as a Geopandas data frame.&quot;&quot;&quot;</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/cerf_conus_boundary_albers.zip&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="cerf_crs"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.cerf_crs">[docs]</a><span class="k">def</span> <span class="nf">cerf_crs</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Return the CRS object of type &#39;rasterio.crs.CRS&#39; for USA_Contiguous_Albers_Equal_Area_Conic.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a coordinate reference system (CRS) object of class &#39;pyproj.crs.crs.CRS&#39;</span>
+<span class="sd">     for USA_Contiguous_Albers_Equal_Area_Conic.</span>
 
-    <span class="n">f</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/crs_usa_contiguous_albers_equal_area_conic.p&#39;</span><span class="p">)</span>
+<span class="sd">     &quot;&quot;&quot;</span>
 
-    <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">))</span></div>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">cerf_states_shapefile</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">gdf</span><span class="o">.</span><span class="n">crs</span></div>
 
 
 <div class="viewcode-block" id="costs_per_kv_substation"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.costs_per_kv_substation">[docs]</a><span class="k">def</span> <span class="nf">costs_per_kv_substation</span><span class="p">():</span>
@@ -248,6 +267,17 @@
     <span class="n">f</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_state_abbrev_to_name"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_state_abbrev_to_name">[docs]</a><span class="k">def</span> <span class="nf">get_state_abbrev_to_name</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return a dictionary of state abbreviation to state name.&quot;&quot;&quot;</span>
+
+    <span class="c1"># get state abbreviations file from cerf package data</span>
+    <span class="n">states_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/state-abbrev_to_state-name.yml&#39;</span><span class="p">)</span>
+
+    <span class="c1"># get state abbreviations to search for in HIFLD data</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">states_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yml</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
