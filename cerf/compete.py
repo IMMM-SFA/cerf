@@ -89,7 +89,7 @@ class Competition:
         # interconnection costs
         self.ic_flat_dict = ic_dict
 
-        # lmp zoness array
+        # lmp zones array
         self.zones_flat_arr = zones_arr
 
         # flat array of full grid indices value for the target state
@@ -158,6 +158,8 @@ class Competition:
             # evaluate by technology
             for index, tech_id in enumerate(self.technology_order):
 
+                print(f"tech_id:  {tech_id}")
+
                 # assign an index as it appears in the n-dim array to the order in which it is being processed
                 #  index of 0 is the default array and does not represent a technology
                 tech_index = index + 1
@@ -171,8 +173,23 @@ class Competition:
                 # calculate the year of retirement
                 retirement_year = self.settings_dict['run_year'] + int(self.technology_dict[tech_id]['lifetime'])
 
+                # ensure all nlc values associated with winning grid cells are within the bounds of the state
+                #  this ensures that that any boundary differences between the state and lmp zone boundaries are
+                #  in agreement
+                nlc_valid = np.all(~np.isnan(self.nlc_flat_dict[tech_id][tech]))
+
+                # TODO:  start here by eliminating the invalid NLC from the mask suitability so it will not be recognized as a valid cell
+
                 # if there are more power plants to site and there are grids available to site them...
-                if self.avail_grids > 0 and tech.shape[0] > 0 and required_sites > 0:
+                if self.avail_grids > 0 and tech.shape[0] > 0 and required_sites > 0 and nlc_valid:
+
+                    if self.target_state_name == 'california':
+                        print(f"self.avail_grids:  {self.avail_grids}")
+                        print(f"tech.shape[0]:  {tech.shape[0]}")
+                        print(f"required_sites:  {required_sites}")
+                        print(f"tech_id:  {tech_id}")
+                        print(f"tech:  {tech}")
+                        print(tech_nlc)
 
                     # site with buffer and exclude buffered area from further siting
                     still_siting = True
@@ -238,8 +255,8 @@ class Competition:
                     self.sited_arr_1d[rdx] = tech_id
 
                     if self.verbose:
-                        logging.debug('\nUpdate expansion plan to represent siting requirements:')
-                        logging.debug(self.expansion_dict)
+                        logging.info('\nUpdate expansion plan to represent siting requirements:')
+                        logging.info(self.expansion_dict)
 
                     # update original array with excluded area where siting occurred
                     # if target technology has no more sites to be sited
@@ -283,11 +300,28 @@ class Competition:
                         keep_siting = False
 
                     if self.verbose:
-                        logging.debug(f'\nAvailable grid cells:  {self.avail_grids}')
+                        logging.info(f'\nAvailable grid cells:  {self.avail_grids}')
 
                 # there are no more suitable grid cells
                 elif self.avail_grids == 0:
                     keep_siting = False
+
+                # if there are available grids but n
+                elif self.avail_grids > 0 and tech.shape[0] > 0 and required_sites == 0:
+
+                    # if there are no required sites, then mask the rest of the techs suitable area so
+                    #  other technologies can now compete for the grid cells it previously won but now no longer needs
+                    self.nlc_mask[tech_index, :, :] = np.ma.masked_array(self.nlc_mask[tech_index, :, :],
+                                                                         np.ones_like(self.nlc_mask[tech_index, :, :]))
+
+                    # show cheapest option, add 1 to the index to represent the technology number
+                    self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
+
+                    # flatten cheapest array to be able to use random
+                    self.cheapest_arr_1d = self.cheapest_arr.flatten()
+
+                    # check for any available grids to site in
+                    self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
 
                 # create sited data frame
                 df = pd.DataFrame(self.sited_dict).astype(util.sited_dtypes())

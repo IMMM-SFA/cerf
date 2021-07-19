@@ -28,11 +28,26 @@ class Stage:
     technology_dict: dict
     technology_order: list
 
-    # dictionary of size kV line needed to connect to power plant unit size in MW
-    KV_TO_MW_REQUIREMENT = {230: {'low_mw': 1, 'high_mw': 250},
-                            345: {'low_mw': 251, 'high_mw': 500},
-                            500: {'low_mw': 501, 'high_mw': 1250},
-                            765: {'low_mw': 1251, 'high_mw': 99999999}}
+    # default cerf technology name to suitability file dictionary
+    DEFAULT_SUITABILITY = {'biomass_conv_wo_ccs': 'suitability_biomass.sdat',
+                             'biomass_conv_w_ccs': 'suitability_biomass.sdat',
+                             'biomass_igcc_wo_ccs': 'suitability_biomass_igcc.sdat',
+                             'biomass_igcc_w_ccs': 'suitability_biomass_igcc_ccs.sdat',
+                             'coal_conv_pul_wo_ccs': 'suitability_coal.sdat',
+                             'coal_conv_pul_w_ccs': 'suitability_coal.sdat',
+                             'coal_igcc_wo_ccs': 'suitability_coal_igcc.sdat',
+                             'coal_igcc_w_ccs': 'suitability_coal_igcc_ccs.sdat',
+                             'gas_cc_wo_ccs': 'suitability_gas_cc.sdat',
+                             'gas_cc_w_ccs': 'suitability_gas_cc_ccs.sdat',
+                             'gas_ct_wo_ccs': 'suitability_gas_cc.sdat',
+                             'geothermal': None,
+                             'hydro': None,
+                             'nuclear_gen_ii': 'suitability_nuclear.sdat',
+                             'nuclear_gen_iii': 'suitability_nuclear.sdat',
+                             'oil_ct_wo_ccs': 'suitability_oil_baseload.sdat',
+                             'solar_csp': 'suitability_solar.sdat',
+                             'solar_pv_non_dist': 'suitability_solar.sdat',
+                             'wind_onshore': 'suitability_wind.sdat'}
 
     def __init__(self, settings_dict, lmp_zone_dict, technology_dict, technology_order, initialize_site_data):
 
@@ -122,20 +137,25 @@ class Stage:
 
         # instantiate class
         # TODO:  add options to parameterize this from the config file
-        ic = Interconnection(template_array=self.lmp_arr,
-                             technology_dict=self.technology_dict,
-                             technology_order=self.technology_order,
-                             substation_file=None,
-                             costs_to_connect_dict=None,
-                             pipeline_file=None,
-                             output_rasterized_file=False,
-                             output_dist_file=False,
-                             output_alloc_file=False,
-                             output_cost_file=False,
-                             transmission_gdf=None,
-                             output_dir=self.settings_dict.get('output_directory', None))
+        # ic = Interconnection(template_array=self.lmp_arr,
+        #                      technology_dict=self.technology_dict,
+        #                      technology_order=self.technology_order,
+        #                      substation_file=None,
+        #                      costs_to_connect_dict=None,
+        #                      pipeline_file=None,
+        #                      output_rasterized_file=False,
+        #                      output_dist_file=False,
+        #                      output_alloc_file=False,
+        #                      output_cost_file=False,
+        #                      transmission_gdf=None,
+        #                      output_dir=self.settings_dict.get('output_directory', None))
+        #
+        # ic_arr = ic.generate_interconnection_costs_array()
 
-        ic_arr = ic.generate_interconnection_costs_array()
+        #TODO: remove
+        # np.save('/Users/d3y010/Desktop/ic_arr.npy', ic_arr)
+
+        ic_arr = np.load('/Users/d3y010/Desktop/ic_arr.npy')
 
         return ic_arr
 
@@ -206,7 +226,8 @@ class Stage:
             tech_suitability_raster_file = self.technology_dict[i].get('suitability_raster_file', None)
 
             if tech_suitability_raster_file is None:
-                tech_suitability_raster_file = pkg_resources.resource_filename('cerf', f'data/suitability_{self.tech_name_dict[i]}.sdat')
+                default_raster = self.DEFAULT_SUITABILITY[self.tech_name_dict[i]]
+                tech_suitability_raster_file = pkg_resources.resource_filename('cerf', f'data/{default_raster}')
 
             logging.info(f"Using suitability file for '{self.technology_dict[i]['tech_name']}':  {tech_suitability_raster_file}")
 
