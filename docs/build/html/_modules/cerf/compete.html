@@ -340,11 +340,6 @@
                 <span class="c1"># calculate the year of retirement</span>
                 <span class="n">retirement_year</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">[</span><span class="s1">&#39;run_year&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">tech_id</span><span class="p">][</span><span class="s1">&#39;lifetime&#39;</span><span class="p">])</span>
 
-                <span class="c1"># # ensure all nlc values associated with winning grid cells are within the bounds of the state</span>
-                <span class="c1"># #  this ensures that that any boundary differences between the state and lmp zone boundaries are</span>
-                <span class="c1"># #  in agreement</span>
-                <span class="c1"># nlc_valid = np.all(~np.isnan(self.nlc_flat_dict[tech_id][tech]))</span>
-
                 <span class="c1"># if there are more power plants to site and there are grids available to site them...</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">avail_grids</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">tech</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">required_sites</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 

@@ -596,8 +596,8 @@
 <p>These are the electricity transmission and gas pipeline infrastructure data.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 28%" />
-<col style="width: 50%" />
+<col style="width: 30%" />
+<col style="width: 48%" />
 <col style="width: 11%" />
 <col style="width: 11%" />
 </colgroup>
@@ -612,31 +612,18 @@
 <tr class="row-even"><td><p>substation_file</p></td>
 <td><div class="line-block">
 <div class="line">Full path with file name and extension to</div>
-<div class="line">he input substations shapefile. If None</div>
-<div class="line"><cite>cerf</cite> will use the default data stored in</div>
-<div class="line">the package.</div>
+<div class="line">he input substations shapefile. If</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">null</span></code> <strong>cerf</strong> will use the default</div>
+<div class="line">data stored in the package.</div>
 </div>
 </td>
 <td><p>NA</p></td>
 <td><p>str</p></td>
 </tr>
-<tr class="row-odd"><td><p>transmission_costs_file</p></td>
-<td><div class="line-block">
-<div class="line">A YAML file containing the cost of</div>
-<div class="line">connection per km to a substation having a</div>
-<div class="line">certain minimum voltage range.  Default is</div>
-<div class="line">to load from the CERF data file</div>
-<div class="line">‘costs_per_kv_substation.yml’ by</div>
-<div class="line">specifying ‘None’</div>
-</div>
-</td>
-<td><p>NA</p></td>
-<td><p>dict</p></td>
-</tr>
-<tr class="row-even"><td><p>pipeline_file</p></td>
+<tr class="row-odd"><td><p>pipeline_file</p></td>
 <td><div class="line-block">
 <div class="line">Full path with file name and extension to</div>
-<div class="line">he input pipelines shapefile. If None</div>
+<div class="line">he input pipelines shapefile. If <code class="docutils literal notranslate"><span class="pre">null</span></code></div>
 <div class="line">CERF will use the default data stored in</div>
 <div class="line">the package.</div>
 </div>
@@ -644,38 +631,67 @@
 <td><p>NA</p></td>
 <td><p>str</p></td>
 </tr>
-<tr class="row-odd"><td><p>output_rasterized_file</p></td>
+<tr class="row-even"><td><p>transmission_costs_file</p></td>
+<td><div class="line-block">
+<div class="line">A YAML file containing the costs of</div>
+<div class="line">connection per km to a substation having</div>
+<div class="line">a certain minimum voltage range. Default</div>
+<div class="line">is to load from the defualt</div>
+<div class="line">‘costs_per_kv_substation.yml’ file</div>
+<div class="line">by specifying <code class="docutils literal notranslate"><span class="pre">null</span></code></div>
+</div>
+</td>
+<td><p>NA</p></td>
+<td><p>str</p></td>
+</tr>
+<tr class="row-odd"><td><p>pipeline_costs_file</p></td>
+<td><div class="line-block">
+<div class="line">A YAML file containing the costs of</div>
+<div class="line">connection per km to a gas pipeline.</div>
+<div class="line">Default is to load from the default</div>
+<div class="line">‘costs_gas_pipeline.yml’ file</div>
+<div class="line">by specifying <code class="docutils literal notranslate"><span class="pre">null</span></code></div>
+</div>
+</td>
+<td><p>NA</p></td>
+<td><p>str</p></td>
+</tr>
+<tr class="row-even"><td><p>output_rasterized_file</p></td>
 <td><p>Write distance raster</p></td>
 <td><p>NA</p></td>
 <td><p>bool</p></td>
 </tr>
-<tr class="row-even"><td><p>output_dist_file</p></td>
+<tr class="row-odd"><td><p>output_dist_file</p></td>
 <td><p>Write distance raster</p></td>
 <td><p>NA</p></td>
 <td><p>bool</p></td>
 </tr>
-<tr class="row-odd"><td><p>output_alloc_file</p></td>
+<tr class="row-even"><td><p>output_alloc_file</p></td>
 <td><p>Write allocation file</p></td>
 <td><p>NA</p></td>
 <td><p>bool</p></td>
 </tr>
-<tr class="row-even"><td><p>output_cost_file</p></td>
+<tr class="row-odd"><td><p>output_cost_file</p></td>
 <td><p>Write cost file</p></td>
 <td><p>NA</p></td>
 <td><p>bool</p></td>
 </tr>
-<tr class="row-odd"><td><p>transmission_gdf</p></td>
+<tr class="row-even"><td><p>output_dir</p></td>
+<td><p>If writing files, specify an out directory</p></td>
+<td><p>NA</p></td>
+<td><p>bool</p></td>
+</tr>
+<tr class="row-odd"><td><p>interconnection_cost_file</p></td>
 <td><div class="line-block">
-<div class="line">GeoDataFrame of transmission</div>
-<div class="line">infrastructure to be rasterized.</div>
-<div class="line">‘process_hifld_substations’ method</div>
-<div class="line">will generate the data either based off</div>
-<div class="line">of the ‘substation_file’ or using the</div>
-<div class="line">default data</div>
+<div class="line">Full path with the file name and extension</div>
+<div class="line">to a preprocessed interconnection cost</div>
+<div class="line">NPY file that has been previously written.</div>
+<div class="line">If <code class="docutils literal notranslate"><span class="pre">null</span></code>, interconnection costs will be</div>
+<div class="line">calculated.</div>
 </div>
 </td>
 <td><p>NA</p></td>
-<td><p>GDF</p></td>
+<td><p>str</p></td>
 </tr>
 </tbody>
 </table>
@@ -685,10 +701,10 @@
     <span class="nt">substation_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to substation shapefile&gt;</span>
     <span class="nt">transmission_costs_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to the yaml file&gt;</span>
     <span class="nt">pipeline_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to the pipeline file&gt;</span>
-    <span class="nt">output_rasterized_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">False</span>
-    <span class="nt">output_dist_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">False</span>
-    <span class="nt">output_alloc_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">False</span>
-    <span class="nt">output_cost_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">False</span>
+    <span class="nt">output_rasterized_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+    <span class="nt">output_dist_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+    <span class="nt">output_alloc_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+    <span class="nt">output_cost_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
 </pre></div>
 </div>
 <p>You can view the built-in costs per kV to connect to a substation using:</p>
