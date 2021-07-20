@@ -140,22 +140,28 @@ class Stage:
 
         # unpack configuration and assign defaults
         substation_file = self.infrastructure_dict.get('substation_file', None)
-        costs_to_connect_dict = self.infrastructure_dict.get('costs_to_connect_dict', None)
-
+        transmission_costs_file = self.infrastructure_dict.get('transmission_costs_file', None)
+        pipeline_costs_file = self.infrastructure_dict.get('pipeline_costs_file', None)
+        pipeline_file = self.infrastructure_dict.get('pipeline_file', None)
+        output_rasterized_file = self.infrastructure_dict.get('output_rasterized_file', False)
+        output_alloc_file = self.infrastructure_dict.get('output_alloc_file', False)
+        output_cost_file = self.infrastructure_dict.get('output_cost_file', False)
+        output_dist_file = self.infrastructure_dict.get('output_dist_file', False)
+        interconnection_cost_file = self.infrastructure_dict.get('interconnection_cost_file', None)
 
         # instantiate class
-        # TODO:  add options to parameterize this from the config file
         ic = Interconnection(template_array=self.lmp_arr,
                              technology_dict=self.technology_dict,
                              technology_order=self.technology_order,
                              substation_file=substation_file,
-                             costs_to_connect_dict=costs_to_connect_dict,
-                             pipeline_file=None,
-                             output_rasterized_file=False,
-                             output_dist_file=False,
-                             output_alloc_file=False,
-                             output_cost_file=False,
-                             transmission_gdf=None,
+                             transmission_costs_file=transmission_costs_file,
+                             pipeline_costs_file=pipeline_costs_file,
+                             pipeline_file=pipeline_file,
+                             output_rasterized_file=output_rasterized_file,
+                             output_dist_file=output_dist_file,
+                             output_alloc_file=output_alloc_file,
+                             output_cost_file=output_cost_file,
+                             interconnection_cost_file=interconnection_cost_file,
                              output_dir=self.settings_dict.get('output_directory', None))
 
         ic_arr = ic.generate_interconnection_costs_array()

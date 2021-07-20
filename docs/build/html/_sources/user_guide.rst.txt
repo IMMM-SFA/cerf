@@ -252,7 +252,7 @@ These are the electricity transmission and gas pipeline infrastructure data.
     |                         | | `cerf` will use the default data stored in|          |          |
     |                         | | the package.                              |          |          |
     +-------------------------+---------------------------------------------+----------+----------+
-    | costs_to_connect_file   | | A YAML file containing the cost of        | NA       | dict     |
+    | transmission_costs_file   | | A YAML file containing the cost of        | NA       | dict     |
     |                         | | connection per km to a substation having a|          |          |
     |                         | | certain minimum voltage range.  Default is|          |          |
     |                         | | to load from the CERF data file           |          |          |
@@ -287,7 +287,7 @@ The following is an example implementation in the YAML configuration file:
     infrastructure:
 
         substation_file: <path to substation shapefile>
-        costs_to_connect_file: <path to the yaml file>
+        transmission_costs_file: <path to the yaml file>
         pipeline_file: <path to the pipeline file>
         output_rasterized_file: False
         output_dist_file: False

@@ -2,7 +2,7 @@
 settings:
     run_year: 2010
     output_directory: null
-    radomize: True
+    radomize: true
     seed_value: 0
 
 technology:
@@ -22,7 +22,7 @@ technology:
         carbon_esc_rate: 0.0
         carbon_tax: 0.0
         buffer_in_km: 5
-        require_pipelines: False
+        require_pipelines: false
         suitability_raster_file: null
     4:
         capacity_factor: 0.733
@@ -40,7 +40,7 @@ technology:
         carbon_esc_rate: 0.0
         carbon_tax: 0.0
         buffer_in_km: 5
-        require_pipelines: False
+        require_pipelines: false
         suitability_raster_file: null
     9:
         capacity_factor: 0.410
@@ -58,7 +58,7 @@ technology:
         carbon_esc_rate: 0.0
         carbon_tax: 0.0
         buffer_in_km: 5
-        require_pipelines: True
+        require_pipelines: true
         suitability_raster_file: null
     8:
         capacity_factor: 0.272
@@ -76,7 +76,7 @@ technology:
         carbon_esc_rate: 0.0
         carbon_tax: 0.0
         buffer_in_km: 5
-        require_pipelines: True
+        require_pipelines: true
         suitability_raster_file: null
     13:
         capacity_factor: 0.9
@@ -94,7 +94,7 @@ technology:
         carbon_esc_rate: 0.0
         carbon_tax: 0.0
         buffer_in_km: 5
-        require_pipelines: False
+        require_pipelines: false
         suitability_raster_file: null
     15:
         capacity_factor: 0.115
@@ -112,7 +112,7 @@ technology:
         carbon_esc_rate: 0.0
         carbon_tax: 0.0
         buffer_in_km: 5
-        require_pipelines: False
+        require_pipelines: false
         suitability_raster_file: null
     16:
         capacity_factor: 0.4145
@@ -130,7 +130,7 @@ technology:
         carbon_esc_rate: 0.0
         carbon_tax: 0.0
         buffer_in_km: 5
-        require_pipelines: False
+        require_pipelines: false
         suitability_raster_file: null
     17:
         capacity_factor: 0.219
@@ -148,7 +148,7 @@ technology:
         carbon_esc_rate: 0.0
         carbon_tax: 0.0
         buffer_in_km: 5
-        require_pipelines: False
+        require_pipelines: false
         suitability_raster_file: null
     18:
         capacity_factor: 0.464
@@ -166,7 +166,7 @@ technology:
         carbon_esc_rate: 0.0
         carbon_tax: 0.0
         buffer_in_km: 5
-        require_pipelines: False
+        require_pipelines: false
         suitability_raster_file: null
 
 expansion_plan:
@@ -1550,9 +1550,11 @@ lmp_zones:
 
 infrastructure:
     substation_file: null
-    costs_to_connect_file: null
     pipeline_file: null
-    output_rasterized_file: False
-    output_dist_file: False
-    output_alloc_file: False
-    output_cost_file: False
+    transmission_costs_file: null
+    pipeline_costs_file: null
+    output_rasterized_file: false
+    output_dist_file: false
+    output_alloc_file: false
+    output_cost_file: false
+    interconnection_cost_file: null

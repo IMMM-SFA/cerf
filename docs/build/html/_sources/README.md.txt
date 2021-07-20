@@ -186,7 +186,7 @@ These are the electricity transmission and gas pipeline infrastructure data.
 | Name | Description | Unit | Type |
 | --- | --- | --- | --- |
 | substation_file | Full path with file name and extension to the input substations shapefile. If None, `cerf` will use the default data stored in the package. | NA | str |
-| costs_to_connect_file | A YAML file containing the cost of connection per km to a substation having a certain minimum voltage range.  Default is to load from the CERF data file 'costs_per_kv_substation.yml' by specifying 'None' | NA | dict |
+| transmission_costs_file | A YAML file containing the cost of connection per km to a substation having a certain minimum voltage range.  Default is to load from the CERF data file 'costs_per_kv_substation.yml' by specifying 'None' | NA | dict |
 | pipeline_file | Full path with file name and extension to the input pipelines shapefile. If None, CERF will use the default data stored in the package. | NA | str |
 | output_rasterized_file | Write distance raster | NA | bool |
 | output_dist_file | Write distance raster | NA | bool |
@@ -199,7 +199,7 @@ The following is an example implementation in the YAML configuration file:
 infrastructure:
 
     substation_file: <path to substation shapefile>
-    costs_to_connect_file: <path to the yaml file>
+    transmission_costs_file: <path to the yaml file>
     pipeline_file: <path to the pipeline file>
     output_rasterized_file: False
     output_dist_file: False

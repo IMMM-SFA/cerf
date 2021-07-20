@@ -74,6 +74,7 @@ class Model(ReadConfig):
                      self.lmp_zone_dict,
                      self.technology_dict,
                      self.technology_order,
+                     self.infrastructure_dict,
                      self.initialize_site_data)
 
         logging.info(f'Staged data in {round((time.time() - staging_t0), 7)} seconds')

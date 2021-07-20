@@ -210,17 +210,17 @@
 
 <span class="sd">    :type substation_file:                  str</span>
 
-<span class="sd">    :param costs_to_connect_dict:           A dictionary containing the cost of connection per km to a substation</span>
+<span class="sd">    :param transmission_costs_dict:           A dictionary containing the cost of connection per km to a substation</span>
 <span class="sd">                                            having a certain minimum voltage range.  Default is to load from the</span>
 <span class="sd">                                            CERF data file &#39;costs_per_kv_substation.yml&#39; by specifying &#39;None&#39;</span>
 
-<span class="sd">    :type costs_to_connect_dict:            dict</span>
+<span class="sd">    :type transmission_costs_dict:            dict</span>
 
-<span class="sd">    :param costs_to_connect_file:           A YAML file containing the cost of connection per km to a substation</span>
+<span class="sd">    :param transmission_costs_file:           A YAML file containing the cost of connection per km to a substation</span>
 <span class="sd">                                            having a certain minimum voltage range.  Default is to load from the</span>
 <span class="sd">                                            CERF data file &#39;costs_per_kv_substation.yml&#39; by specifying &#39;None&#39;</span>
 
-<span class="sd">    :type costs_to_connect_file:            str</span>
+<span class="sd">    :type transmission_costs_file:            str</span>
 
 <span class="sd">    :param pipeline_file:                   Full path with file name and extension to the input pipelines shapefile.</span>
 <span class="sd">                                            If None, CERF will use the default data stored in the package.</span>
@@ -253,7 +253,7 @@
     <span class="n">GAS_PIPE_COST</span> <span class="o">=</span> <span class="mi">737000</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_array</span><span class="p">,</span> <span class="n">technology_dict</span><span class="p">,</span> <span class="n">technology_order</span><span class="p">,</span> <span class="n">substation_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">costs_to_connect_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">costs_to_connect_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pipeline_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">transmission_costs_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transmission_costs_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pipeline_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">output_rasterized_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output_dist_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output_alloc_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output_cost_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">transmission_gdf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
@@ -261,8 +261,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span> <span class="o">=</span> <span class="n">technology_dict</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span> <span class="o">=</span> <span class="n">technology_order</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">substation_file</span> <span class="o">=</span> <span class="n">substation_file</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span> <span class="o">=</span> <span class="n">costs_to_connect_dict</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_file</span> <span class="o">=</span> <span class="n">costs_to_connect_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span> <span class="o">=</span> <span class="n">transmission_costs_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_file</span> <span class="o">=</span> <span class="n">transmission_costs_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_file</span> <span class="o">=</span> <span class="n">pipeline_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_rasterized_file</span> <span class="o">=</span> <span class="n">output_rasterized_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_dist_file</span> <span class="o">=</span> <span class="n">output_dist_file</span>
@@ -291,12 +291,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># load cost dictionary from package data if none passed</span>
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span> <span class="o">=</span> <span class="n">costs_per_kv_substation</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span> <span class="o">=</span> <span class="n">costs_per_kv_substation</span><span class="p">()</span>
 
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yml</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yml</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">substation_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/hifld_substations_conus_albers.zip&#39;</span><span class="p">))</span>
@@ -320,10 +320,10 @@
             <span class="c1"># assign a field to rasterize by containing the cost of transmission per km</span>
             <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;MIN_VOLT&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;min_voltage&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
-                                         <span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;MIN_VOLT&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;max_voltage&#39;</span><span class="p">]),</span>
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">costs_to_connect_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;dollar_per_km&#39;</span><span class="p">],</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;MIN_VOLT&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;min_voltage&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
+                                         <span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;MIN_VOLT&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;max_voltage&#39;</span><span class="p">]),</span>
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;dollar_per_km&#39;</span><span class="p">],</span>
                                          <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">])</span>
 
             <span class="k">return</span> <span class="n">gdf</span></div>

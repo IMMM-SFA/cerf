@@ -1,6 +1,8 @@
 # see https://immm-sfa.atlassian.net/wiki/spaces/IP/pages/1880489985/Interconnection+Cost+Updates+Findings for details
 
 # the following are in $2015/km
+
+# key is the arbitrary category of each voltage range
 0:
 
   # the minimum voltage (MIN_VOLT) minimum

@@ -244,41 +244,49 @@ These are the electricity transmission and gas pipeline infrastructure data.
 
 .. table::
 
-    +-------------------------+---------------------------------------------+----------+----------+
-    | Name                    | Description                                 | Unit     | Type     |
-    +=========================+=============================================+==========+==========+
-    | substation_file         | | Full path with file name and extension to | NA       | str      |
-    |                         | | he input substations shapefile. If None   |          |          |
-    |                         | | `cerf` will use the default data stored in|          |          |
-    |                         | | the package.                              |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | costs_to_connect_file   | | A YAML file containing the cost of        | NA       | dict     |
-    |                         | | connection per km to a substation having a|          |          |
-    |                         | | certain minimum voltage range.  Default is|          |          |
-    |                         | | to load from the CERF data file           |          |          |
-    |                         | | 'costs_per_kv_substation.yml' by          |          |          |
-    |                         | | specifying 'None'                         |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | pipeline_file           | | Full path with file name and extension to | NA       | str      |
-    |                         | | he input pipelines shapefile. If None     |          |          |
-    |                         | | CERF will use the default data stored in  |          |          |
-    |                         | | the package.                              |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | output_rasterized_file  | Write distance raster                       | NA       | bool     |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | output_dist_file        | Write distance raster                       | NA       | bool     |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | output_alloc_file       | Write allocation file                       | NA       | bool     |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | output_cost_file        | Write cost file                             | NA       | bool     |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | transmission_gdf        | | GeoDataFrame of transmission              | NA       | GDF      |
-    |                         | | infrastructure to be rasterized.          |          |          |
-    |                         | | 'process_hifld_substations' method        |          |          |
-    |                         | | will generate the data either based off   |          |          |
-    |                         | | of the 'substation_file' or using the     |          |          |
-    |                         | | default data                              |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
+    +----------------------------+---------------------------------------------+----------+----------+
+    | Name                       | Description                                 | Unit     | Type     |
+    +============================+=============================================+==========+==========+
+    | substation_file            | | Full path with file name and extension to | NA       | str      |
+    |                            | | he input substations shapefile. If        |          |          |
+    |                            | | ``null`` **cerf** will use the default    |          |          |
+    |                            | | data stored in the package.               |          |          |
+    +----------------------------+---------------------------------------------+----------+----------+
+    | pipeline_file              | | Full path with file name and extension to | NA       | str      |
+    |                            | | he input pipelines shapefile. If ``null`` |          |          |
+    |                            | | CERF will use the default data stored in  |          |          |
+    |                            | | the package.                              |          |          |
+    +----------------------------+---------------------------------------------+----------+----------+
+    | transmission_costs_file    | | A YAML file containing the costs of       | NA       | str      |
+    |                            | | connection per km to a substation having  |          |          |
+    |                            | | a certain minimum voltage range. Default  |          |          |
+    |                            | | is to load from the defualt               |          |          |
+    |                            | | 'costs_per_kv_substation.yml' file        |          |          |
+    |                            | | by specifying ``null``                    |          |          |
+    +----------------------------+---------------------------------------------+----------+----------+
+    | pipeline_costs_file        | | A YAML file containing the costs of       | NA       | str      |
+    |                            | | connection per km to a gas pipeline.      |          |          |
+    |                            | | Default is to load from the default       |          |          |
+    |                            | | 'costs_gas_pipeline.yml' file             |          |          |
+    |                            | | by specifying ``null``                    |          |          |
+    +----------------------------+---------------------------------------------+----------+----------+
+    | output_rasterized_file     | Write distance raster                       | NA       | bool     |
+    +----------------------------+---------------------------------------------+----------+----------+
+    | output_dist_file           | Write distance raster                       | NA       | bool     |
+    +----------------------------+---------------------------------------------+----------+----------+
+    | output_alloc_file          | Write allocation file                       | NA       | bool     |
+    +----------------------------+---------------------------------------------+----------+----------+
+    | output_cost_file           | Write cost file                             | NA       | bool     |
+    +----------------------------+---------------------------------------------+----------+----------+
+    | output_dir                 | If writing files, specify an out directory  | NA       | bool     |
+    +----------------------------+---------------------------------------------+----------+----------+
+    | interconnection_cost_file  | | Full path with the file name and extension| NA       | str      |
+    |                            | | to a preprocessed interconnection cost    |          |          |
+    |                            | | NPY file that has been previously written.|          |          |
+    |                            | | If ``null``, interconnection costs will be|          |          |
+    |                            | | calculated.                               |          |          |
+    +----------------------------+---------------------------------------------+----------+----------+
+
 
 The following is an example implementation in the YAML configuration file:
 
@@ -287,12 +295,12 @@ The following is an example implementation in the YAML configuration file:
     infrastructure:
 
         substation_file: <path to substation shapefile>
-        costs_to_connect_file: <path to the yaml file>
+        transmission_costs_file: <path to the yaml file>
         pipeline_file: <path to the pipeline file>
-        output_rasterized_file: False
-        output_dist_file: False
-        output_alloc_file: False
-        output_cost_file: False
+        output_rasterized_file: false
+        output_dist_file: false
+        output_alloc_file: false
+        output_cost_file: false
 
 
 You can view the built-in costs per kV to connect to a substation using:
