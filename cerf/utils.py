@@ -5,20 +5,66 @@ import numpy as np
 import pandas as pd
 import rasterio
 import xarray as xr
+import geopandas as gpd
+from shapely.geometry import Point
+
+from cerf.package_data import cerf_crs
+
+
+def results_to_geodataframe(result_df):
+    """Convert the results from 'cerf.run()' to a GeoDataFrame.
+
+    :param result_df:                       Result data frame from running 'cerf.run()'
+    :type result_df:                        DataFrame
+
+    :return:                                GeoPandas GeoDataFrame of results
+
+    """
+
+    target_crs = cerf_crs()
+
+    # create geometry column from coordinate fields
+    geometry = [Point(xy) for xy in zip(result_df['xcoord'], result_df['ycoord'])]
+
+    return gpd.GeoDataFrame(result_df, crs=target_crs, geometry=geometry)
+
+
+def kilometers_to_miles(input_km_value):
+    """Convert kilometers to miles.
+
+    :param input_km_value:          Kilometer value to convert to miles
+    :type input_km_value:           float, int
+
+    :return:                        Miles
+
+    """
+
+    return input_km_value * 0.621371
+
+
+def suppress_callback(value):
+    """Do not log callback output for whitebox functions.
+
+    :param value:                   Value of callback
+
+    """
+
+    pass
 
 
 def empty_sited_dict():
-    """Initialize a sited data frame."""
+    """Initialize a sited dictionary."""
 
     return {'state_name': [],
             'tech_id': [],
+            'tech_name': [],
             'xcoord': [],
             'ycoord': [],
             'index': [],
             'buffer_in_km': [],
             'sited_year': [],
             'retirement_year': [],
-            'utility_zone': [],
+            'lmp_zone': [],
             'locational_marginal_pricing': [],
             'net_operational_value': [],
             'interconnection_cost': [],
@@ -32,7 +78,7 @@ def sited_dtypes():
             'tech_id': np.int64,
             'xcoord': np.float64,
             'ycoord': np.float64,
-            'utility_zone': np.int64,
+            'lmp_zone': np.int64,
             'locational_marginal_pricing': np.float64,
             'net_operational_value': np.float64,
             'interconnection_cost': np.float64,
@@ -181,10 +227,10 @@ def ingest_sited_data(run_year, x_array, siting_data):
 
     Required fields are the following and they can appear anywhere in the CSV or data frame:
 
-    `xcoord`:  the X coordinate of the site in meters in USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
-    `ycoord`:  the Y coordinate of the site in meters in USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
-    `retirement_year`:  the year (int four digit, e.g., 2050) that the power plant is to be decommissioned
-    `buffer_in_km':  the buffer around the site to apply in kilometers
+    xcoord:  the X coordinate of the site in meters in USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
+    ycoord:  the Y coordinate of the site in meters in USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
+    retirement_year:  the year (int four digit, e.g., 2050) that the power plant is to be decommissioned
+    buffer_in_km:  the buffer around the site to apply in kilometers
 
     :param run_year:                        Four-digit year of the current run (e.g., 2050)
     :type run_year:                         int
@@ -212,7 +258,7 @@ def ingest_sited_data(run_year, x_array, siting_data):
     elif isinstance(siting_data, str):
         df = pd.read_csv(siting_data, dtype=sited_dtypes())
     else:
-        msg = "The user must pass either a CSV file path to `sited_csv` or a Pandas DataFrame to `sited_df`"
+        msg = "The user must pass either a CSV file path to 'sited_csv' or a Pandas DataFrame to 'sited_df'"
         logging.error(msg)
         raise TypeError()
 

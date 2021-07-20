@@ -1,0 +1,1888 @@
+
+settings:
+    run_year: 2030
+    output_directory: null
+    randomize: True
+    seed_value: 0
+
+technology:
+    0:
+        capacity_factor: 0.5714999999999999
+        variable_om: 9.65138799225307
+        heat_rate: 11449.7
+        fuel_price: 0.0
+        fuel_esc_rate: 0.0
+        fuel_co2_content: 0.3036
+        tech_name: biomass_conv_wo_ccs
+        lifetime: 60.0
+        carbon_capture_rate: 0.0
+        unit_size: 80
+        variable_cost_esc_rate: -0.00398993418629034
+        discount_rate: 0.05
+        carbon_esc_rate: 0.0
+        carbon_tax: 0.0
+        buffer_in_km: 5
+        require_pipelines: false
+        suitability_raster_file: null
+    2:
+        capacity_factor: 0.592
+        variable_om: 13.3634602969658
+        heat_rate: 9297.0
+        fuel_price: 0.0
+        fuel_esc_rate: 0.0
+        fuel_co2_content: 0.3036
+        tech_name: biomass_igcc_wo_ccs
+        lifetime: 60.0
+        carbon_capture_rate: 0.0
+        unit_size: 400
+        variable_cost_esc_rate: -0.00443288530388608
+        discount_rate: 0.05
+        carbon_esc_rate: 0.0
+        carbon_tax: 0.0
+        buffer_in_km: 5
+        require_pipelines: false
+        suitability_raster_file: null
+    4:
+        capacity_factor: 0.733
+        variable_om: 3.87346675274371
+        heat_rate: 7861.8
+        fuel_price: 2.45646
+        fuel_esc_rate: 0.00804
+        fuel_co2_content: 0.36036
+        tech_name: coal_conv_pul_wo_ccs
+        lifetime: 60.0
+        carbon_capture_rate: 0.0
+        unit_size: 600
+        variable_cost_esc_rate: -0.00398993418629034
+        discount_rate: 0.05
+        carbon_esc_rate: 0.0
+        carbon_tax: 0.0
+        buffer_in_km: 5
+        require_pipelines: false
+        suitability_raster_file: null
+    8:
+        capacity_factor: 0.494
+        variable_om: 3.38928340865074
+        heat_rate: 5705.7
+        fuel_price: 6.41327
+        fuel_esc_rate: 0.14715
+        fuel_co2_content: 0.18744
+        tech_name: gas_cc_wo_ccs
+        lifetime: 45.0
+        carbon_capture_rate: 0.0
+        unit_size: 400
+        variable_cost_esc_rate: -0.00398993418629034
+        discount_rate: 0.05
+        carbon_esc_rate: 0.0
+        carbon_tax: 0.0
+        buffer_in_km: 5
+        require_pipelines: true
+        suitability_raster_file: null
+    9:
+        capacity_factor: 0.8
+        variable_om: 6.13298902517753
+        heat_rate: 6114.7
+        fuel_price: 6.41327
+        fuel_esc_rate: 0.14715
+        fuel_co2_content: 0.18744
+        tech_name: gas_cc_w_ccs
+        lifetime: 45.0
+        carbon_capture_rate: 0.0
+        unit_size: 400
+        variable_cost_esc_rate: -0.00398993418629034
+        discount_rate: 0.05
+        carbon_esc_rate: 0.0
+        carbon_tax: 0.0
+        buffer_in_km: 5
+        require_pipelines: true
+        suitability_raster_file: null
+    13:
+        capacity_factor: 0.9
+        variable_om: 2.19496449322143
+        heat_rate: 10246.2
+        fuel_price: 0.83605
+        fuel_esc_rate: 0.03427
+        fuel_co2_content: 0.0
+        tech_name: nuclear_gen_ii
+        lifetime: 60
+        carbon_capture_rate: 0.0
+        unit_size: 1350
+        variable_cost_esc_rate: -0.00104311614063357
+        discount_rate: 0.05
+        carbon_esc_rate: 0.0
+        carbon_tax: 0.0
+        buffer_in_km: 5
+        require_pipelines: false
+        suitability_raster_file: null
+    14:
+        capacity_factor: 0.9
+        variable_om: 1.93673337637185
+        heat_rate: 10246.2
+        fuel_price: 0.83605
+        fuel_esc_rate: 0.03427
+        fuel_co2_content: 0.0
+        tech_name: nuclear_gen_iii
+        lifetime: 60.0
+        carbon_capture_rate: 0.0
+        unit_size: 1350
+        variable_cost_esc_rate: -0.00104311614063357
+        discount_rate: 0.05
+        carbon_esc_rate: 0.0
+        carbon_tax: 0.0
+        buffer_in_km: 5
+        require_pipelines: false
+        suitability_raster_file: null
+    15:
+        capacity_factor: 0.114
+        variable_om: 9.65138799225307
+        heat_rate: 8793.8
+        fuel_price: 16.01611
+        fuel_esc_rate: 0.02216
+        fuel_co2_content: 0.25872
+        tech_name: oil_ct_wo_ccs
+        lifetime: 45.0
+        carbon_capture_rate: 0.0
+        unit_size: 400
+        variable_cost_esc_rate: -0.00398993418629034
+        discount_rate: 0.05
+        carbon_esc_rate: 0.0
+        carbon_tax: 0.0
+        buffer_in_km: 5
+        require_pipelines: false
+        suitability_raster_file: null
+    16:
+        capacity_factor: 0.448
+        variable_om: 0.0
+        heat_rate: 3412.0
+        fuel_price: 0.0
+        fuel_esc_rate: 0.0
+        fuel_co2_content: 0.0
+        tech_name: solar_csp
+        lifetime: 30.0
+        carbon_capture_rate: 0.0
+        unit_size: 100
+        variable_cost_esc_rate: 1
+        discount_rate: 0.05
+        carbon_esc_rate: 0.0
+        carbon_tax: 0.0
+        buffer_in_km: 5
+        require_pipelines: false
+        suitability_raster_file: null
+    17:
+        capacity_factor: 0.201
+        variable_om: 0.0
+        heat_rate: 3412.0
+        fuel_price: 0.0
+        fuel_esc_rate: 0.0
+        fuel_co2_content: 0.0
+        tech_name: solar_pv_non_dist
+        lifetime: 30.0
+        carbon_capture_rate: 0.0
+        unit_size: 80
+        variable_cost_esc_rate: 1
+        discount_rate: 0.05
+        carbon_esc_rate: 0.0
+        carbon_tax: 0.0
+        buffer_in_km: 5
+        require_pipelines: false
+        suitability_raster_file: null
+    18:
+        capacity_factor: 0.458
+        variable_om: 0.0
+        heat_rate: 3412.0
+        fuel_price: 0.0
+        fuel_esc_rate: 0.0
+        fuel_co2_content: 0.0
+        tech_name: wind_onshore
+        lifetime: 30.0
+        carbon_capture_rate: 0.0
+        unit_size: 251
+        variable_cost_esc_rate: -0.00249607760279447
+        discount_rate: 0.05
+        carbon_esc_rate: 0.0
+        carbon_tax: 0.0
+        buffer_in_km: 5
+        require_pipelines: false
+        suitability_raster_file: null
+
+expansion_plan:
+    alabama:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 9
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 41
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 15
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 3
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 17
+        18:
+            tech_name: wind_onshore
+            n_sites: 1
+    arkansas:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 5
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 15
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 5
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 1
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 5
+        18:
+            tech_name: wind_onshore
+            n_sites: 1
+    arizona:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 10
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 22
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 2
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 3
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 3
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 18
+        18:
+            tech_name: wind_onshore
+            n_sites: 2
+    california:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 7
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 50
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 7
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 1
+        16:
+            tech_name: solar_csp
+            n_sites: 8
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 83
+        18:
+            tech_name: wind_onshore
+            n_sites: 15
+    colorado:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 8
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 9
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 1
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 1
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 6
+        18:
+            tech_name: wind_onshore
+            n_sites: 7
+    connecticut:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 1
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 9
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 2
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 1
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 4
+        18:
+            tech_name: wind_onshore
+            n_sites: 1
+    district_of_columbia:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 0
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 0
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 2
+        18:
+            tech_name: wind_onshore
+            n_sites: 0
+    delaware:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 2
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 1
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 2
+        18:
+            tech_name: wind_onshore
+            n_sites: 0
+    florida:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 4
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 9
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 75
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 12
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 1
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 16
+        16:
+            tech_name: solar_csp
+            n_sites: 9
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 17
+        18:
+            tech_name: wind_onshore
+            n_sites: 3
+    georgia:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 9
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 34
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 9
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 3
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 10
+        18:
+            tech_name: wind_onshore
+            n_sites: 0
+    iowa:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 9
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 6
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 1
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 2
+        18:
+            tech_name: wind_onshore
+            n_sites: 18
+    idaho:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 1
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 0
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 0
+        18:
+            tech_name: wind_onshore
+            n_sites: 2
+    illinois:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 19
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 34
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 3
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 6
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 11
+        18:
+            tech_name: wind_onshore
+            n_sites: 24
+    indiana:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 22
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 23
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 2
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 6
+        18:
+            tech_name: wind_onshore
+            n_sites: 7
+    kansas:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 6
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 3
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 0
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 1
+        18:
+            tech_name: wind_onshore
+            n_sites: 9
+    kentucky:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 17
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 18
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 2
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 4
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 7
+        18:
+            tech_name: wind_onshore
+            n_sites: 1
+    louisiana:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 4
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 33
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 17
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 1
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 5
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 22
+        18:
+            tech_name: wind_onshore
+            n_sites: 0
+    massachusetts:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 2
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 13
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 4
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 14
+        18:
+            tech_name: wind_onshore
+            n_sites: 1
+    maryland:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 2
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 7
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 1
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 1
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 1
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 8
+        18:
+            tech_name: wind_onshore
+            n_sites: 1
+    maine:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 3
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 2
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 1
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 1
+        18:
+            tech_name: wind_onshore
+            n_sites: 1
+    michigan:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 12
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 26
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 4
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 2
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 5
+        18:
+            tech_name: wind_onshore
+            n_sites: 7
+    minnesota:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 7
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 7
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 2
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 1
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 2
+        18:
+            tech_name: wind_onshore
+            n_sites: 10
+    missouri:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 20
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 16
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 2
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 10
+        18:
+            tech_name: wind_onshore
+            n_sites: 3
+    mississippi:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 1
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 25
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 12
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 9
+        18:
+            tech_name: wind_onshore
+            n_sites: 0
+    montana:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 4
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 3
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 0
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 1
+        16:
+            tech_name: solar_csp
+            n_sites: 1
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 2
+        18:
+            tech_name: wind_onshore
+            n_sites: 2
+    north_carolina:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 9
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 27
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 4
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 3
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 19
+        18:
+            tech_name: wind_onshore
+            n_sites: 1
+    north_dakota:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 9
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 3
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 0
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 0
+        18:
+            tech_name: wind_onshore
+            n_sites: 6
+    nebraska:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 7
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 3
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 0
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 0
+        18:
+            tech_name: wind_onshore
+            n_sites: 3
+    new_hampshire:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 1
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 5
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 0
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 1
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 1
+        18:
+            tech_name: wind_onshore
+            n_sites: 1
+    new_jersey:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 23
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 11
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 2
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 26
+        18:
+            tech_name: wind_onshore
+            n_sites: 0
+    new_mexico:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 2
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 7
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 0
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 1
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 3
+        18:
+            tech_name: wind_onshore
+            n_sites: 2
+    nevada:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 17
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 9
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 4
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 15
+        18:
+            tech_name: wind_onshore
+            n_sites: 0
+    new_york:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 2
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 38
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 11
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 2
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 3
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 20
+        18:
+            tech_name: wind_onshore
+            n_sites: 9
+    ohio:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 20
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 29
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 3
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 1
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 2
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 8
+        18:
+            tech_name: wind_onshore
+            n_sites: 4
+    oklahoma:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 6
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 20
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 2
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 1
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 3
+        18:
+            tech_name: wind_onshore
+            n_sites: 12
+    oregon:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 10
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 5
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 1
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 3
+        18:
+            tech_name: wind_onshore
+            n_sites: 6
+    pennsylvania:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 1
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 17
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 45
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 14
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 7
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 1
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 17
+        18:
+            tech_name: wind_onshore
+            n_sites: 7
+    rhode_island:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 3
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 1
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 1
+        18:
+            tech_name: wind_onshore
+            n_sites: 0
+    south_carolina:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 5
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 24
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 4
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 4
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 9
+        18:
+            tech_name: wind_onshore
+            n_sites: 1
+    south_dakota:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 0
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 0
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 0
+        18:
+            tech_name: wind_onshore
+            n_sites: 2
+    tennessee:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 5
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 15
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 1
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 2
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 5
+        18:
+            tech_name: wind_onshore
+            n_sites: 1
+    texas:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 32
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 132
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 40
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 4
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 1
+        16:
+            tech_name: solar_csp
+            n_sites: 14
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 31
+        18:
+            tech_name: wind_onshore
+            n_sites: 52
+    utah:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 8
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 9
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 2
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 3
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 4
+        18:
+            tech_name: wind_onshore
+            n_sites: 1
+    virginia:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 4
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 22
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 8
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 2
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 2
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 11
+        18:
+            tech_name: wind_onshore
+            n_sites: 0
+    vermont:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 1
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 0
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 1
+        18:
+            tech_name: wind_onshore
+            n_sites: 0
+    washington:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 0
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 9
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 4
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 1
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 3
+        18:
+            tech_name: wind_onshore
+            n_sites: 8
+    wisconsin:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 10
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 12
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 3
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 1
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 7
+        18:
+            tech_name: wind_onshore
+            n_sites: 3
+    west_virginia:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 18
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 13
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 0
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 0
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 3
+        18:
+            tech_name: wind_onshore
+            n_sites: 2
+    wyoming:
+        0:
+            tech_name: biomass_conv_wo_ccs
+            n_sites: 0
+        2:
+            tech_name: biomass_igcc_wo_ccs
+            n_sites: 0
+        4:
+            tech_name: coal_conv_pul_wo_ccs
+            n_sites: 13
+        9:
+            tech_name: gas_cc_w_ccs
+            n_sites: 5
+        8:
+            tech_name: gas_cc_wo_ccs
+            n_sites: 0
+        13:
+            tech_name: nuclear_gen_ii
+            n_sites: 0
+        14:
+            tech_name: nuclear_gen_iii
+            n_sites: 0
+        15:
+            tech_name: oil_ct_wo_ccs
+            n_sites: 0
+        16:
+            tech_name: solar_csp
+            n_sites: 1
+        17:
+            tech_name: solar_pv_non_dist
+            n_sites: 1
+        18:
+            tech_name: wind_onshore
+            n_sites: 4
+
+lmp_zones:
+    lmp_zone_raster_file: null
+    lmp_zone_raster_nodata_value: 255
+    lmp_hourly_data_file: null
+
+infrastructure:
+    substation_file: null
+    transmission_costs_file: null
+    pipeline_file: null
+    output_rasterized_file: False
+    output_dist_file: False
+    output_alloc_file: False
+    output_cost_file: False

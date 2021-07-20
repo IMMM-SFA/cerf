@@ -1,0 +1,53 @@
+# see https://immm-sfa.atlassian.net/wiki/spaces/IP/pages/1880489985/Interconnection+Cost+Updates+Findings for details
+
+# the following are in $2015/km
+
+# key is the arbitrary category of each voltage range
+0:
+
+  # the minimum voltage (MIN_VOLT) minimum
+  min_voltage: -99999999999999999
+
+  # the minimum voltage (MIN_VOLT) max limit; NOT to be confused with 'MAX_VOLT' in the data
+  max_voltage: 99
+
+  # cost per km to nearest substation meeting the voltage rating
+  dollar_per_km: 678000
+
+1:
+  min_voltage: 100
+  max_voltage: 119
+  dollar_per_km: 756000
+
+2:
+  min_voltage: 120
+  max_voltage: 149
+  dollar_per_km: 791000
+
+3:
+  min_voltage: 150
+  max_voltage: 169
+  dollar_per_km: 808000
+
+4:
+  min_voltage: 170
+  max_voltage: 299
+  dollar_per_km: 863000
+
+5:
+  min_voltage: 300
+  max_voltage: 399
+  dollar_per_km: 1380000
+
+6:
+  min_voltage: 400
+  max_voltage: 99999999999999999
+  dollar_per_km: 1458000
+
+
+
+
+
+
+
+

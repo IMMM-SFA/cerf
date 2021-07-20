@@ -6,10 +6,7 @@
 License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 
 """
-import pkg_resources
 import unittest
-
-#from cerf.read_config import ReadConfig
 
 
 class TestReadConfig(unittest.TestCase):
@@ -19,11 +16,6 @@ class TestReadConfig(unittest.TestCase):
 
     def test_config_reader(self):
         """Tests for configuration reader."""
-
-        # cfg = ReadConfig(config_file=TestReadConfig.CONFIG_FILE)
-        #
-        # print(cfg.biomass_directory)
-        # print(cfg.nuclear_directory)
 
         self.assertEqual(2, 2)
         pass

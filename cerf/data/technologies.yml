@@ -1,0 +1,40 @@
+# technology specific information
+technology:
+
+    9:
+        tech_name: biomass
+        lifetime: 60.0
+        capacity_factor: 0.6090000000000005
+        variable_cost_esc_rate: -0.00398993418629034
+        fuel_esc_rate: 0.0
+        unit_size: 80
+        interconnection_cost_per_km: 552
+        variable_om: 11.68495803744351
+        heat_rate: 15117.64999999997
+        fuel_price: 0.0
+        carbon_capture_rate: 0.0
+        fuel_co2_content: 0.3035999999999996
+        discount_rate: 0.05
+        carbon_esc_rate: 0.0
+        carbon_tax: 0.0
+        buffer_in_km: 5
+        interconnection_distance_raster_file: /Users/d3y010/projects/cerf/data/gis/rast/platts_substations_500kv_up_distance.img
+
+    11:
+        tech_name: nuclear
+        lifetime: 60.0
+        capacity_factor: 0.8999999999999995
+        variable_cost_esc_rate: -0.00104311614063357
+        fuel_esc_rate: 0.04639000000000001
+        unit_size: 1350
+        interconnection_cost_per_km: 1104
+        variable_om: 2.098127824402843
+        heat_rate: 10246.19999999998
+        fuel_price: 0.7128099999999996
+        carbon_capture_rate: 0.0
+        fuel_co2_content: 0.0
+        discount_rate: 0.05
+        carbon_esc_rate: 0.0
+        carbon_tax: 0.0
+        buffer_in_km: 5
+        interconnection_distance_raster_file: /Users/d3y010/projects/cerf/data/gis/rast/platts_substations_500kv_up_distance.img

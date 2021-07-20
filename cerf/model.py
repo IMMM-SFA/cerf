@@ -22,43 +22,46 @@ class Model(ReadConfig):
     :param config_file:                 Full path with file name and extension to the input config.yml file
     :type config_file:                  str
 
-    :param   initialize_site_data:      None if no initialization is required, otherwise either a CSV file or
+    :param config_dict:                 Optional instead of config_file. Configuration dictionary.
+    :type config_dict:                  dict
+
+    :param initialize_site_data:        None if no initialization is required, otherwise either a CSV file or
                                         Pandas DataFrame of siting data bearing the following required fields:
 
-                                        `xcoord`:  the X coordinate of the site in meters in
+                                        xcoord:  the X coordinate of the site in meters in
                                         USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
 
-                                        `ycoord`:  the Y coordinate of the site in meters in
+                                        ycoord:  the Y coordinate of the site in meters in
                                         USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
 
-                                        `retirement_year`:  the year (int four digit, e.g., 2050) that the power
+                                        retirement_year:  the year (int four digit, e.g., 2050) that the power
                                         plant is to be decommissioned
 
-                                        `buffer_in_km':  the buffer around the site to apply in kilometers
+                                        buffer_in_km:  the buffer around the site to apply in kilometers
+
+    :param log_level:                   Log level.  Options are 'info' and 'debug'.  Default 'info'
+    :type log_level:                    str
 
     """
 
-    # type hints
-    config_file: str
-
-    def __init__(self, config_file, initialize_site_data=None):
+    def __init__(self, config_file=None, config_dict={}, initialize_site_data=None, log_level='info'):
 
         # start time for model run
         self.start_time = time.time()
 
         # initialize console handler for logger
-        self.console_handler()
+        self.console_handler(log_level)
 
         logging.info("Starting CERF model")
 
         # inherit the configuration reader class attributes
-        super(Model, self).__init__(config_file)
+        super(Model, self).__init__(config_file, config_dict)
 
         # siting data to use as the initial condition
         self.initialize_site_data = initialize_site_data
 
     def stage(self):
-        """Execute model."""
+        """run model."""
 
         # prepare data for use in siting an expansion per state for a target year
         logging.info('Staging data...')
@@ -68,9 +71,10 @@ class Model(ReadConfig):
 
         # prepare all data for state level run
         data = Stage(self.settings_dict,
-                     self.utility_dict,
+                     self.lmp_zone_dict,
                      self.technology_dict,
                      self.technology_order,
+                     self.infrastructure_dict,
                      self.initialize_site_data)
 
         logging.info(f'Staged data in {round((time.time() - staging_t0), 7)} seconds')
@@ -78,7 +82,7 @@ class Model(ReadConfig):
         return data
 
     def run_single_state(self, target_state_name, write_output=True):
-        """Execute a single state."""
+        """run a single state."""
 
         # prepare all data for state level run
         data = self.stage()
@@ -103,17 +107,8 @@ class Model(ReadConfig):
                                 verbose=self.settings_dict.get('verbose', False),
                                 write_output=write_output)
 
-        logging.info(f"CERF model run completed in {round(time.time() - self.start_time, 7)}")
+        logging.info(f"CERF model run completed in {round(time.time() - self.start_time, 7)} seconds")
 
         self.close_logger()
 
         return process
-
-
-if __name__ == '__main__':
-
-    import pkg_resources
-
-    c = pkg_resources.resource_filename('cerf', 'tests/data/config_2010.yml')
-
-    process = Model(c).run_single_state(target_state_name='virginia')

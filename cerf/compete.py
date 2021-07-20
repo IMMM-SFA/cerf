@@ -9,14 +9,15 @@ import cerf.utils as util
 class Competition:
     """Technology competition algorithm for CERF.
 
-    Grid cell level net locational cost (NLC) per technology and an electricity technology capacity expansion plan
-    are used to compete technologies against each other to see which will win the grid cell. The technology
-    that wins the grid cell is then sited until no further winning cells exist. Once sited, the location of the
-    winning technology's grid cell, along with its buffer, are no longer available for siting. The competition
-    array is recalculated after all technologies have passed through an iteration. This process is completed until
-    there are either no cells left to site in or there are no more sites left to site for any technology. For
-    technologies that have the same NLC value in multiple grid cells, random selection is available by default.  If the
-    user wishes to have the outcomes be repeatable, the randomizer can be set to False.
+    Grid cell level net locational cost (NLC) per technology and an electricity technology capacity expansion plan are
+    used to compete technologies against each other to see which will win the grid cell. The technology that wins the
+    grid cell is then sited until no further winning cells exist. Once sited, the location of the winning technology’s
+    grid cell, along with its buffer, are no longer available for siting. The competition array is recalculated after
+    all technologies have passed through an iteration. This process is repeated until there are either no cells left
+    to site or there are no more power plants left to satisfy the expansion plan for any technology. For technologies
+    that have the same NLC value in multiple grid cells that win the competition, random selection is available by
+    default. If the user wishes to have the outcomes be repeatable, the randomizer can be set to False and a random
+    seed set.
 
     :param expansion_plan:                          Dictionary of {tech_id: number_of_sites, ...}
     :type expansion_plan:                           dict
@@ -88,7 +89,7 @@ class Competition:
         # interconnection costs
         self.ic_flat_dict = ic_dict
 
-        # utility zones array
+        # lmp zones array
         self.zones_flat_arr = zones_arr
 
         # flat array of full grid indices value for the target state
@@ -190,13 +191,14 @@ class Competition:
                         # add selected index to sited dictionary
                         self.sited_dict['state_name'].append(self.target_state_name)
                         self.sited_dict['tech_id'].append(tech_id)
+                        self.sited_dict['tech_name'].append(self.technology_dict[tech_id]['tech_name'])
                         self.sited_dict['xcoord'].append(self.xcoords[target_ix])
                         self.sited_dict['ycoord'].append(self.ycoords[target_ix])
                         self.sited_dict['index'].append(self.indices_flat[target_ix])
                         self.sited_dict['buffer_in_km'].append(self.technology_dict[tech_id]['buffer_in_km'])
                         self.sited_dict['sited_year'].append(self.settings_dict['run_year'])
                         self.sited_dict['retirement_year'].append(retirement_year)
-                        self.sited_dict['utility_zone'].append(self.zones_flat_arr[target_ix])
+                        self.sited_dict['lmp_zone'].append(self.zones_flat_arr[target_ix])
                         self.sited_dict['locational_marginal_pricing'].append(self.lmp_flat_dict[tech_id][target_ix])
                         self.sited_dict['net_operational_value'].append(self.nov_flat_dict[tech_id][target_ix])
                         self.sited_dict['interconnection_cost'].append(self.ic_flat_dict[tech_id][target_ix])
@@ -286,6 +288,23 @@ class Competition:
                 # there are no more suitable grid cells
                 elif self.avail_grids == 0:
                     keep_siting = False
+
+                # if there are available grids but n
+                elif self.avail_grids > 0 and tech.shape[0] > 0 and required_sites == 0:
+
+                    # if there are no required sites, then mask the rest of the techs suitable area so
+                    #  other technologies can now compete for the grid cells it previously won but now no longer needs
+                    self.nlc_mask[tech_index, :, :] = np.ma.masked_array(self.nlc_mask[tech_index, :, :],
+                                                                         np.ones_like(self.nlc_mask[tech_index, :, :]))
+
+                    # show cheapest option, add 1 to the index to represent the technology number
+                    self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
+
+                    # flatten cheapest array to be able to use random
+                    self.cheapest_arr_1d = self.cheapest_arr.flatten()
+
+                    # check for any available grids to site in
+                    self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
 
                 # create sited data frame
                 df = pd.DataFrame(self.sited_dict).astype(util.sited_dtypes())

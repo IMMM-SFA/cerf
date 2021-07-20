@@ -7,13 +7,13 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 
 """
 
-import os
 import logging
-import pkg_resources
+import os
 import time
 
 import numpy as np
 import pandas as pd
+import pkg_resources
 import rasterio
 
 from cerf.compete import Competition
@@ -78,7 +78,7 @@ class ProcessState:
         # NLC data for the CONUS
         self.nlc_arr = nlc_arr
 
-        # utility zones for the CONUS
+        # lmp zoness for the CONUS
         self.zones_arr = zones_arr
 
         # coordinates for each index
@@ -97,25 +97,25 @@ class ProcessState:
         # set write outputs flag
         self.write_outputs = write_output
 
-        logging.info(f"Extracting suitable grids for {self.target_state_name}")
+        logging.debug(f"Extracting suitable grids for {self.target_state_name}")
         self.suitability_array_state, self.ymin, self.ymax, self.xmin, self.xmax = self.extract_state_suitability()
 
-        logging.info(f"Creating a NLC state level array for {self.target_state_name}")
+        logging.debug(f"Creating a NLC state level array for {self.target_state_name}")
         self.suitable_nlc_state = self.mask_nlc()
 
-        logging.info(f"Generating grid indices for {self.target_state_name}")
+        logging.debug(f"Generating grid indices for {self.target_state_name}")
         # grid indices for the entire grid in a 2D array
         self.indices_2d = indices_2d
         self.indices_flat_state = self.get_grid_indices()
 
-        logging.info(f"Get grid coordinates for {self.target_state_name}")
+        logging.debug(f"Get grid coordinates for {self.target_state_name}")
         self.xcoords_state, self.ycoords_state = self.get_grid_coordinates()
 
-        logging.info(f"Extracting additional metrics for {self.target_state_name}")
+        logging.debug(f"Extracting additional metrics for {self.target_state_name}")
         self.lmp_flat_dict, self.nov_flat_dict, self.ic_flat_dict = self.extract_state_metrics()
-        self.zones_flat_arr = self.extract_utility_zones()
+        self.zones_flat_arr = self.extract_lmp_zones()
 
-        logging.info(f"Competing technologies to site expansion for {self.target_state_name}")
+        logging.debug(f"Competing technologies to site expansion for {self.target_state_name}")
         self.run_data = self.competition()
 
     def get_state_id(self):
@@ -178,7 +178,9 @@ class ProcessState:
 
         # insert zero array, mask it as index [0, :, :] so the tech_id 0 will always be min if nothing is left to site
         nlc_arr_state = np.insert(nlc_arr_state, 0, np.zeros_like(nlc_arr_state[0, :, :]), axis=0)
-        nlc_arr_state = np.nan_to_num(nlc_arr_state, nan=np.max(nlc_arr_state) + 1)
+
+        # make any nan grid cells the most expensive option to exclude
+        nlc_arr_state = np.nan_to_num(nlc_arr_state, nan=np.nanmax(nlc_arr_state) + 1)
 
         # apply the mask to NLC data
         return np.ma.masked_array(nlc_arr_state, mask=self.suitability_array_state)
@@ -215,8 +217,8 @@ class ProcessState:
 
         return lmp_flat_dict, nov_flat_dict, ic_flat_dict
 
-    def extract_utility_zones(self):
-        """Extract the utility zones elements for the target state and return as a flat array."""
+    def extract_lmp_zones(self):
+        """Extract the lmp zoness elements for the target state and return as a flat array."""
 
         return self.zones_arr[self.ymin:self.ymax, self.xmin:self.xmax].flatten()
 
@@ -309,7 +311,7 @@ def process_state(target_state_name, settings_dict, technology_dict, technology_
 
     """
 
-    logging.info(f'Processing state:  {target_state_name}')
+    logging.debug(f'Processing state:  {target_state_name}')
 
     # check to see if state has any sites in the expansion
     n_sites = sum([expansion_dict[target_state_name][k]['n_sites'] for k in expansion_dict[target_state_name].keys()])

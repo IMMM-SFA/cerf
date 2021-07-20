@@ -10,9 +10,9 @@ class TestCompete(unittest.TestCase):
     EXPANSION_PLAN = {1: {'n_sites': 1, 'tech_name': 'test1'},
                       2: {'n_sites': 1, 'tech_name': 'test2'},
                       3: {'n_sites': 1, 'tech_name': 'test3'}}  # n sites per tech
-    TECH_DICT = {1: {'buffer_in_km': 1, 'lifetime': 60},
-                 2: {'buffer_in_km': 1, 'lifetime': 60},
-                 3: {'buffer_in_km': 1, 'lifetime': 60}}  # buffer per tech
+    TECH_DICT = {1: {'buffer_in_km': 1, 'lifetime': 60, 'tech_name': 'test1'},
+                 2: {'buffer_in_km': 1, 'lifetime': 60, 'tech_name': 'test2'},
+                 3: {'buffer_in_km': 1, 'lifetime': 60, 'tech_name': 'test3'}}  # buffer per tech
     TECH_ORDER = [1, 2, 3]
 
     # proxy NLC array
@@ -50,12 +50,13 @@ class TestCompete(unittest.TestCase):
     COMP_SITED_DICT = {'state_name': ['test', 'test', 'test'],
                        'index': [2.4, 3.2, 3.2],
                        'tech_id': [1, 2, 3],
+                       'tech_name': ['test1', 'test2', 'test3'],
                        'xcoord': [2.4, 3.2, 3.2],
                        'ycoord': [2.4, 3.2, 3.2],
                        'buffer_in_km': [1, 1, 1],
                        'sited_year': [2010, 2010, 2010],
                        'retirement_year': [2070, 2070, 2070],
-                       'utility_zone': [2, 3, 3],
+                       'lmp_zone': [2, 3, 3],
                        'locational_marginal_pricing': [2.4, 1.0, 3.2],
                        'net_operational_value': [2.4, 1.0, 3.2],
                        'interconnection_cost': [2.4, 1.0, 3.2],

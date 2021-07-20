@@ -6,7 +6,6 @@
 License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 
 """
-import pkg_resources
 import unittest
 
 #import cerf.spatial_reader as sr

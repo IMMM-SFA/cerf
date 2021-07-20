@@ -8,32 +8,54 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 """
 
 import logging
-import pkg_resources
 
 import numpy as np
-import pandas as pd
+import pkg_resources
 import rasterio
 
 import cerf.utils as util
 from cerf.lmp import LocationalMarginalPricing
 from cerf.nov import NetOperationalValue
+from cerf.interconnect import Interconnection
 
 
 class Stage:
 
     # type hints
     settings_dict: dict
-    utility_dict: dict
+    lmp_zone_dict: dict
     technology_dict: dict
     technology_order: list
 
-    def __init__(self, settings_dict, utility_dict, technology_dict, technology_order, initialize_site_data):
+    # default cerf technology name to suitability file dictionary
+    DEFAULT_SUITABILITY = {'biomass_conv_wo_ccs': 'suitability_biomass.sdat',
+                             'biomass_conv_w_ccs': 'suitability_biomass.sdat',
+                             'biomass_igcc_wo_ccs': 'suitability_biomass_igcc.sdat',
+                             'biomass_igcc_w_ccs': 'suitability_biomass_igcc_ccs.sdat',
+                             'coal_conv_pul_wo_ccs': 'suitability_coal.sdat',
+                             'coal_conv_pul_w_ccs': 'suitability_coal.sdat',
+                             'coal_igcc_wo_ccs': 'suitability_coal_igcc.sdat',
+                             'coal_igcc_w_ccs': 'suitability_coal_igcc_ccs.sdat',
+                             'gas_cc_wo_ccs': 'suitability_gas_cc.sdat',
+                             'gas_cc_w_ccs': 'suitability_gas_cc_ccs.sdat',
+                             'gas_ct_wo_ccs': 'suitability_gas_cc.sdat',
+                             'geothermal': None,
+                             'hydro': None,
+                             'nuclear_gen_ii': 'suitability_nuclear.sdat',
+                             'nuclear_gen_iii': 'suitability_nuclear.sdat',
+                             'oil_ct_wo_ccs': 'suitability_oil_baseload.sdat',
+                             'solar_csp': 'suitability_solar.sdat',
+                             'solar_pv_non_dist': 'suitability_solar.sdat',
+                             'wind_onshore': 'suitability_wind.sdat'}
+
+    def __init__(self, settings_dict, lmp_zone_dict, technology_dict, technology_order, infrastructure_dict,
+                 initialize_site_data):
 
         # dictionary containing project level settings
         self.settings_dict = settings_dict
 
-        # dictionary containing utility zone information
-        self.utility_dict = utility_dict
+        # dictionary containing lmp zones information
+        self.lmp_zone_dict = lmp_zone_dict
 
         # dictionary containing technology specific information
         self.technology_dict = technology_dict
@@ -41,8 +63,14 @@ class Stage:
         # order of technologies to process
         self.technology_order = technology_order
 
+        # infrastructure dictionary
+        self.infrastructure_dict = infrastructure_dict
+
         # initialize model with existing site data
         self.initialize_site_data = initialize_site_data
+
+        # tech_id to tech_name dictionary
+        self.tech_name_dict = ({k: self.technology_dict[k].get('tech_name') for k in self.technology_dict.keys()})
 
         # load coordinate data
         self.cerf_stateid_raster_file = pkg_resources.resource_filename('cerf', 'data/cerf_conus_states_albers_1km.tif')
@@ -55,11 +83,8 @@ class Stage:
         # initialization data for siting
         self.init_arr, self.init_df = self.get_sited_data()
 
-        # raster file containing the utility zone per grid cell
-        self.zones_arr = self.load_utility_raster()
-
-        # load the utility zone LMP file to a data frame
-        self.utility_zone_lmp_df = pd.read_csv(self.utility_dict['utility_zone_lmp_file'])
+        # raster file containing the lmp zones per grid cell
+        self.zones_arr = self.load_lmp_zone_raster()
 
         # get LMP array per tech [tech_order, x, y]
         logging.info('Processing locational marginal pricing (LMP)')
@@ -81,13 +106,19 @@ class Stage:
         logging.info('Building suitability array')
         self.suitability_arr = self.build_suitability_array()
 
-    def load_utility_raster(self):
-        """Load the utility zones raster for the CONUS into a 2D array."""
+    def load_lmp_zone_raster(self):
+        """Load the lmp zoness raster for the CONUS into a 2D array."""
 
-        # raster file containing the utility zone per grid cell
-        zones_raster_file = self.utility_dict.get('utility_zone_raster_file')
+        # raster file containing the lmp zones per grid cell
+        zones_raster_file = self.lmp_zone_dict.get('lmp_zone_raster_file', None)
 
-        # read in utility zones raster as a 2D numpy array
+        # use default if none passed
+        if zones_raster_file is None:
+            zones_raster_file = pkg_resources.resource_filename('cerf', 'data/lmp_zones_1km.img')
+
+        logging.info(f"Using 'zones_raster_file':  {zones_raster_file}")
+
+        # read in lmp zoness raster as a 2D numpy array
         with rasterio.open(zones_raster_file) as src:
             return src.read(1)
 
@@ -95,11 +126,10 @@ class Stage:
         """Calculate Locational Marginal Pricing."""
 
         # create technology specific locational marginal price based on capacity factor
-        pricing = LocationalMarginalPricing(self.utility_dict,
+        pricing = LocationalMarginalPricing(self.lmp_zone_dict,
                                             self.technology_dict,
                                             self.technology_order,
-                                            self.zones_arr,
-                                            self.utility_zone_lmp_df)
+                                            self.zones_arr)
         lmp_arr = pricing.get_lmp()
 
         # get lmp array per tech [tech_order, x, y]
@@ -108,17 +138,33 @@ class Stage:
     def calculate_ic(self):
         """Calculate interconnection costs."""
 
-        # set up array to hold interconnection costs
-        ic_arr = np.zeros_like(self.lmp_arr)
+        # unpack configuration and assign defaults
+        substation_file = self.infrastructure_dict.get('substation_file', None)
+        transmission_costs_file = self.infrastructure_dict.get('transmission_costs_file', None)
+        pipeline_costs_file = self.infrastructure_dict.get('pipeline_costs_file', None)
+        pipeline_file = self.infrastructure_dict.get('pipeline_file', None)
+        output_rasterized_file = self.infrastructure_dict.get('output_rasterized_file', False)
+        output_alloc_file = self.infrastructure_dict.get('output_alloc_file', False)
+        output_cost_file = self.infrastructure_dict.get('output_cost_file', False)
+        output_dist_file = self.infrastructure_dict.get('output_dist_file', False)
+        interconnection_cost_file = self.infrastructure_dict.get('interconnection_cost_file', None)
 
-        for index, i in enumerate(self.technology_order):
+        # instantiate class
+        ic = Interconnection(template_array=self.lmp_arr,
+                             technology_dict=self.technology_dict,
+                             technology_order=self.technology_order,
+                             substation_file=substation_file,
+                             transmission_costs_file=transmission_costs_file,
+                             pipeline_costs_file=pipeline_costs_file,
+                             pipeline_file=pipeline_file,
+                             output_rasterized_file=output_rasterized_file,
+                             output_dist_file=output_dist_file,
+                             output_alloc_file=output_alloc_file,
+                             output_cost_file=output_cost_file,
+                             interconnection_cost_file=interconnection_cost_file,
+                             output_dir=self.settings_dict.get('output_directory', None))
 
-            # load distance to suitable transmission infrastructure raster
-            with rasterio.open(self.technology_dict[i].get('interconnection_distance_raster_file')) as src:
-                ic_dist_km_arr = src.read(1) / 1000  # convert meters to km
-
-            # calculate interconnection costs per grid cell
-            ic_arr[index, :, :] = ic_dist_km_arr * self.technology_dict[i]['interconnection_cost_per_km']
+        ic_arr = ic.generate_interconnection_costs_array()
 
         return ic_arr
 
@@ -186,7 +232,13 @@ class Stage:
         for index, i in enumerate(self.technology_order):
 
             # path to the input raster
-            tech_suitability_raster_file = self.technology_dict[i].get('suitability_raster_file')
+            tech_suitability_raster_file = self.technology_dict[i].get('suitability_raster_file', None)
+
+            if tech_suitability_raster_file is None:
+                default_raster = self.DEFAULT_SUITABILITY[self.tech_name_dict[i]]
+                tech_suitability_raster_file = pkg_resources.resource_filename('cerf', f'data/{default_raster}')
+
+            logging.info(f"Using suitability file for '{self.technology_dict[i]['tech_name']}':  {tech_suitability_raster_file}")
 
             # load raster to array
             with rasterio.open(tech_suitability_raster_file) as src:
