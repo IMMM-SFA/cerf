@@ -183,6 +183,7 @@
     <span class="c1"># supporting data</span>
     <span class="n">SLIM_LMP_ARRAY</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;tests/data/comp_data/lmp_arr.npy&#39;</span><span class="p">))</span>
     <span class="n">LMP_FILE</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip&#39;</span><span class="p">)</span>
+    <span class="n">TEST_CONFIG</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;tests/data/test_config_2010.yml&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TestLmp.get_sample"><a class="viewcode-back" href="../../../cerf.tests.html#cerf.tests.test_lmp.TestLmp.get_sample">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">get_sample</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
@@ -211,8 +212,7 @@
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># read in configuration file</span>
-        <span class="n">cfg_file</span> <span class="o">=</span> <span class="n">config_file</span><span class="p">(</span><span class="n">yr</span><span class="o">=</span><span class="mi">2010</span><span class="p">)</span>
-        <span class="n">cfg</span> <span class="o">=</span> <span class="n">ReadConfig</span><span class="p">(</span><span class="n">cfg_file</span><span class="p">)</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">ReadConfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">TEST_CONFIG</span><span class="p">)</span>
 
         <span class="c1"># read in zones array</span>
         <span class="n">zones_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_lmp_zone_raster</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">lmp_zone_dict</span><span class="p">)</span>

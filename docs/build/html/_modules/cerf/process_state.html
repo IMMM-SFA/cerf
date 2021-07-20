@@ -100,7 +100,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../footer.html">Sponsorship</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../footer.html">Acknowledgement</a></li>
 </ul>
 
             
@@ -347,7 +347,9 @@
 
         <span class="c1"># insert zero array, mask it as index [0, :, :] so the tech_id 0 will always be min if nothing is left to site</span>
         <span class="n">nlc_arr_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">nlc_arr_state</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">nlc_arr_state</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">nlc_arr_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">nlc_arr_state</span><span class="p">,</span> <span class="n">nan</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">nlc_arr_state</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># make any nan grid cells the most expensive option to exclude</span>
+        <span class="n">nlc_arr_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">nlc_arr_state</span><span class="p">,</span> <span class="n">nan</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">nlc_arr_state</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
         <span class="c1"># apply the mask to NLC data</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="n">nlc_arr_state</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">suitability_array_state</span><span class="p">)</span></div>

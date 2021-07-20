@@ -10,7 +10,6 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 import logging
 
 import numpy as np
-import pandas as pd
 import pkg_resources
 import rasterio
 
@@ -49,7 +48,8 @@ class Stage:
                              'solar_pv_non_dist': 'suitability_solar.sdat',
                              'wind_onshore': 'suitability_wind.sdat'}
 
-    def __init__(self, settings_dict, lmp_zone_dict, technology_dict, technology_order, initialize_site_data):
+    def __init__(self, settings_dict, lmp_zone_dict, technology_dict, technology_order, infrastructure_dict,
+                 initialize_site_data):
 
         # dictionary containing project level settings
         self.settings_dict = settings_dict
@@ -62,6 +62,9 @@ class Stage:
 
         # order of technologies to process
         self.technology_order = technology_order
+
+        # infrastructure dictionary
+        self.infrastructure_dict = infrastructure_dict
 
         # initialize model with existing site data
         self.initialize_site_data = initialize_site_data
@@ -135,13 +138,18 @@ class Stage:
     def calculate_ic(self):
         """Calculate interconnection costs."""
 
+        # unpack configuration and assign defaults
+        substation_file = self.infrastructure_dict.get('substation_file', None)
+        costs_to_connect_dict = self.infrastructure_dict.get('costs_to_connect_dict', None)
+
+
         # instantiate class
         # TODO:  add options to parameterize this from the config file
         ic = Interconnection(template_array=self.lmp_arr,
                              technology_dict=self.technology_dict,
                              technology_order=self.technology_order,
-                             substation_file=None,
-                             costs_to_connect_dict=None,
+                             substation_file=substation_file,
+                             costs_to_connect_dict=costs_to_connect_dict,
                              pipeline_file=None,
                              output_rasterized_file=False,
                              output_dist_file=False,

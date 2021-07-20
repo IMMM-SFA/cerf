@@ -258,7 +258,7 @@
         <span class="c1"># interconnection costs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ic_flat_dict</span> <span class="o">=</span> <span class="n">ic_dict</span>
 
-        <span class="c1"># lmp zoness array</span>
+        <span class="c1"># lmp zones array</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zones_flat_arr</span> <span class="o">=</span> <span class="n">zones_arr</span>
 
         <span class="c1"># flat array of full grid indices value for the target state</span>
@@ -340,6 +340,11 @@
                 <span class="c1"># calculate the year of retirement</span>
                 <span class="n">retirement_year</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">[</span><span class="s1">&#39;run_year&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">tech_id</span><span class="p">][</span><span class="s1">&#39;lifetime&#39;</span><span class="p">])</span>
 
+                <span class="c1"># # ensure all nlc values associated with winning grid cells are within the bounds of the state</span>
+                <span class="c1"># #  this ensures that that any boundary differences between the state and lmp zone boundaries are</span>
+                <span class="c1"># #  in agreement</span>
+                <span class="c1"># nlc_valid = np.all(~np.isnan(self.nlc_flat_dict[tech_id][tech]))</span>
+
                 <span class="c1"># if there are more power plants to site and there are grids available to site them...</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">avail_grids</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">tech</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">required_sites</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 
@@ -407,8 +412,8 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">sited_arr_1d</span><span class="p">[</span><span class="n">rdx</span><span class="p">]</span> <span class="o">=</span> <span class="n">tech_id</span>
 
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-                        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Update expansion plan to represent siting requirements:&#39;</span><span class="p">)</span>
-                        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">expansion_dict</span><span class="p">)</span>
+                        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Update expansion plan to represent siting requirements:&#39;</span><span class="p">)</span>
+                        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">expansion_dict</span><span class="p">)</span>
 
                     <span class="c1"># update original array with excluded area where siting occurred</span>
                     <span class="c1"># if target technology has no more sites to be sited</span>
@@ -452,11 +457,28 @@
                         <span class="n">keep_siting</span> <span class="o">=</span> <span class="kc">False</span>
 
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-                        <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Available grid cells:  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">avail_grids</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Available grid cells:  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">avail_grids</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
                 <span class="c1"># there are no more suitable grid cells</span>
                 <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">avail_grids</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">keep_siting</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="c1"># if there are available grids but n</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">avail_grids</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">tech</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">required_sites</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+
+                    <span class="c1"># if there are no required sites, then mask the rest of the techs suitable area so</span>
+                    <span class="c1">#  other technologies can now compete for the grid cells it previously won but now no longer needs</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">nlc_mask</span><span class="p">[</span><span class="n">tech_index</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nlc_mask</span><span class="p">[</span><span class="n">tech_index</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span>
+                                                                         <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nlc_mask</span><span class="p">[</span><span class="n">tech_index</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]))</span>
+
+                    <span class="c1"># show cheapest option, add 1 to the index to represent the technology number</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cheapest_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nlc_mask</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+                    <span class="c1"># flatten cheapest array to be able to use random</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cheapest_arr_1d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cheapest_arr</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+                    <span class="c1"># check for any available grids to site in</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">avail_grids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cheapest_arr_1d</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
                 <span class="c1"># create sited data frame</span>
                 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sited_dict</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">util</span><span class="o">.</span><span class="n">sited_dtypes</span><span class="p">())</span>

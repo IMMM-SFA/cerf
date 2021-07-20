@@ -272,6 +272,13 @@ These are the electricity transmission and gas pipeline infrastructure data.
     +-------------------------+---------------------------------------------+----------+----------+
     | output_cost_file        | Write cost file                             | NA       | bool     |
     +-------------------------+---------------------------------------------+----------+----------+
+    | transmission_gdf        | | GeoDataFrame of transmission              | NA       | GDF      |
+    |                         | | infrastructure to be rasterized.          |          |          |
+    |                         | | 'process_hifld_substations' method        |          |          |
+    |                         | | will generate the data either based off   |          |          |
+    |                         | | of the 'substation_file' or using the     |          |          |
+    |                         | | default data                              |          |          |
+    +-------------------------+---------------------------------------------+----------+----------+
 
 The following is an example implementation in the YAML configuration file:
 

@@ -179,7 +179,6 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">pkg_resources</span>
 <span class="kn">import</span> <span class="nn">rasterio</span>
 
@@ -197,13 +196,29 @@
     <span class="n">technology_dict</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="n">technology_order</span><span class="p">:</span> <span class="nb">list</span>
 
-    <span class="c1"># dictionary of size kV line needed to connect to power plant unit size in MW</span>
-    <span class="n">KV_TO_MW_REQUIREMENT</span> <span class="o">=</span> <span class="p">{</span><span class="mi">230</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;low_mw&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;high_mw&#39;</span><span class="p">:</span> <span class="mi">250</span><span class="p">},</span>
-                            <span class="mi">345</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;low_mw&#39;</span><span class="p">:</span> <span class="mi">251</span><span class="p">,</span> <span class="s1">&#39;high_mw&#39;</span><span class="p">:</span> <span class="mi">500</span><span class="p">},</span>
-                            <span class="mi">500</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;low_mw&#39;</span><span class="p">:</span> <span class="mi">501</span><span class="p">,</span> <span class="s1">&#39;high_mw&#39;</span><span class="p">:</span> <span class="mi">1250</span><span class="p">},</span>
-                            <span class="mi">765</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;low_mw&#39;</span><span class="p">:</span> <span class="mi">1251</span><span class="p">,</span> <span class="s1">&#39;high_mw&#39;</span><span class="p">:</span> <span class="mi">99999999</span><span class="p">}}</span>
+    <span class="c1"># default cerf technology name to suitability file dictionary</span>
+    <span class="n">DEFAULT_SUITABILITY</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;biomass_conv_wo_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_biomass.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;biomass_conv_w_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_biomass.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;biomass_igcc_wo_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_biomass_igcc.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;biomass_igcc_w_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_biomass_igcc_ccs.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;coal_conv_pul_wo_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_coal.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;coal_conv_pul_w_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_coal.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;coal_igcc_wo_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_coal_igcc.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;coal_igcc_w_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_coal_igcc_ccs.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;gas_cc_wo_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_gas_cc.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;gas_cc_w_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_gas_cc_ccs.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;gas_ct_wo_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_gas_cc.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;geothermal&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                             <span class="s1">&#39;hydro&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                             <span class="s1">&#39;nuclear_gen_ii&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_nuclear.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;nuclear_gen_iii&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_nuclear.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;oil_ct_wo_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_oil_baseload.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;solar_csp&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_solar.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;solar_pv_non_dist&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_solar.sdat&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;wind_onshore&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_wind.sdat&#39;</span><span class="p">}</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings_dict</span><span class="p">,</span> <span class="n">lmp_zone_dict</span><span class="p">,</span> <span class="n">technology_dict</span><span class="p">,</span> <span class="n">technology_order</span><span class="p">,</span> <span class="n">initialize_site_data</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">settings_dict</span><span class="p">,</span> <span class="n">lmp_zone_dict</span><span class="p">,</span> <span class="n">technology_dict</span><span class="p">,</span> <span class="n">technology_order</span><span class="p">,</span> <span class="n">infrastructure_dict</span><span class="p">,</span>
+                 <span class="n">initialize_site_data</span><span class="p">):</span>
 
         <span class="c1"># dictionary containing project level settings</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span> <span class="o">=</span> <span class="n">settings_dict</span>
@@ -216,6 +231,9 @@
 
         <span class="c1"># order of technologies to process</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span> <span class="o">=</span> <span class="n">technology_order</span>
+
+        <span class="c1"># infrastructure dictionary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_dict</span> <span class="o">=</span> <span class="n">infrastructure_dict</span>
 
         <span class="c1"># initialize model with existing site data</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">initialize_site_data</span> <span class="o">=</span> <span class="n">initialize_site_data</span>
@@ -289,13 +307,18 @@
 <div class="viewcode-block" id="Stage.calculate_ic"><a class="viewcode-back" href="../../cerf.html#cerf.stage.Stage.calculate_ic">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_ic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate interconnection costs.&quot;&quot;&quot;</span>
 
+        <span class="c1"># unpack configuration and assign defaults</span>
+        <span class="n">substation_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;substation_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">costs_to_connect_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;costs_to_connect_dict&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+
         <span class="c1"># instantiate class</span>
         <span class="c1"># TODO:  add options to parameterize this from the config file</span>
         <span class="n">ic</span> <span class="o">=</span> <span class="n">Interconnection</span><span class="p">(</span><span class="n">template_array</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lmp_arr</span><span class="p">,</span>
                              <span class="n">technology_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">,</span>
                              <span class="n">technology_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">,</span>
-                             <span class="n">substation_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                             <span class="n">costs_to_connect_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="n">substation_file</span><span class="o">=</span><span class="n">substation_file</span><span class="p">,</span>
+                             <span class="n">costs_to_connect_dict</span><span class="o">=</span><span class="n">costs_to_connect_dict</span><span class="p">,</span>
                              <span class="n">pipeline_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">output_rasterized_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                              <span class="n">output_dist_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -375,7 +398,8 @@
             <span class="n">tech_suitability_raster_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;suitability_raster_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">tech_suitability_raster_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">tech_suitability_raster_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;data/suitability_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tech_name_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">.sdat&#39;</span><span class="p">)</span>
+                <span class="n">default_raster</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_SUITABILITY</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tech_name_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                <span class="n">tech_suitability_raster_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;data/</span><span class="si">{</span><span class="n">default_raster</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using suitability file for &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;tech_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;:  </span><span class="si">{</span><span class="n">tech_suitability_raster_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
