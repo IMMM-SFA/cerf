@@ -384,6 +384,4 @@ class Interconnection:
             # calculate interconnection costs per grid cell
             ic_arr[index, :, :] = total_interconection_cost_array
 
-            np.save('/Users/d3y010/Desktop/cerf_interconnection_cost_2010.npy', ic_arr)
-
         return ic_arr
