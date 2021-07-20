@@ -297,8 +297,6 @@ class Interconnection:
 
         with tempfile.TemporaryDirectory() as tempdir:
 
-            # tempdir = pkg_resources.resource_filename('cerf', 'data')
-
             # if write desired
             if any((self.output_rasterized_file, self.output_dist_file, self.output_alloc_file, self.output_cost_file)):
 
@@ -385,5 +383,7 @@ class Interconnection:
 
             # calculate interconnection costs per grid cell
             ic_arr[index, :, :] = total_interconection_cost_array
+
+            np.save('/Users/d3y010/Desktop/cerf_interconnection_cost_2010.npy', ic_arr)
 
         return ic_arr
