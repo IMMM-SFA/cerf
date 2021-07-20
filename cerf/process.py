@@ -190,7 +190,7 @@ def run(config_file=None, config_dict=None, write_output=True, n_jobs=-1, method
                            n_jobs=n_jobs,
                            method=method)
 
-        logging.info(f"CERF model run completed in {round(time.time() - model.start_time, 7)}")
+        logging.info(f"CERF model run completed in {round(time.time() - model.start_time, 7)} seconds")
 
     finally:
         # clean up logger

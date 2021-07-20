@@ -14,6 +14,7 @@ class TestLmp(unittest.TestCase):
     # supporting data
     SLIM_LMP_ARRAY = np.load(pkg_resources.resource_filename('cerf', 'tests/data/comp_data/lmp_arr.npy'))
     LMP_FILE = pkg_resources.resource_filename('cerf', 'data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
+    TEST_CONFIG = pkg_resources.resource_filename('cerf', 'tests/data/test_config_2010.yml')
 
     @staticmethod
     def get_sample(arr):
@@ -42,8 +43,7 @@ class TestLmp(unittest.TestCase):
         np.random.seed(0)
 
         # read in configuration file
-        cfg_file = config_file(yr=2010)
-        cfg = ReadConfig(cfg_file)
+        cfg = ReadConfig(self.TEST_CONFIG)
 
         # read in zones array
         zones_arr = self.load_lmp_zone_raster(cfg.lmp_zone_dict)

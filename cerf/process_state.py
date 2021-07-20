@@ -178,7 +178,9 @@ class ProcessState:
 
         # insert zero array, mask it as index [0, :, :] so the tech_id 0 will always be min if nothing is left to site
         nlc_arr_state = np.insert(nlc_arr_state, 0, np.zeros_like(nlc_arr_state[0, :, :]), axis=0)
-        nlc_arr_state = np.nan_to_num(nlc_arr_state, nan=np.max(nlc_arr_state) + 1)
+
+        # make any nan grid cells the most expensive option to exclude
+        nlc_arr_state = np.nan_to_num(nlc_arr_state, nan=np.nanmax(nlc_arr_state) + 1)
 
         # apply the mask to NLC data
         return np.ma.masked_array(nlc_arr_state, mask=self.suitability_array_state)

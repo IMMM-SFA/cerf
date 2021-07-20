@@ -158,8 +158,6 @@ class Competition:
             # evaluate by technology
             for index, tech_id in enumerate(self.technology_order):
 
-                print(f"tech_id:  {tech_id}")
-
                 # assign an index as it appears in the n-dim array to the order in which it is being processed
                 #  index of 0 is the default array and does not represent a technology
                 tech_index = index + 1
@@ -173,23 +171,13 @@ class Competition:
                 # calculate the year of retirement
                 retirement_year = self.settings_dict['run_year'] + int(self.technology_dict[tech_id]['lifetime'])
 
-                # ensure all nlc values associated with winning grid cells are within the bounds of the state
-                #  this ensures that that any boundary differences between the state and lmp zone boundaries are
-                #  in agreement
-                nlc_valid = np.all(~np.isnan(self.nlc_flat_dict[tech_id][tech]))
-
-                # TODO:  start here by eliminating the invalid NLC from the mask suitability so it will not be recognized as a valid cell
+                # # ensure all nlc values associated with winning grid cells are within the bounds of the state
+                # #  this ensures that that any boundary differences between the state and lmp zone boundaries are
+                # #  in agreement
+                # nlc_valid = np.all(~np.isnan(self.nlc_flat_dict[tech_id][tech]))
 
                 # if there are more power plants to site and there are grids available to site them...
-                if self.avail_grids > 0 and tech.shape[0] > 0 and required_sites > 0 and nlc_valid:
-
-                    if self.target_state_name == 'california':
-                        print(f"self.avail_grids:  {self.avail_grids}")
-                        print(f"tech.shape[0]:  {tech.shape[0]}")
-                        print(f"required_sites:  {required_sites}")
-                        print(f"tech_id:  {tech_id}")
-                        print(f"tech:  {tech}")
-                        print(tech_nlc)
+                if self.avail_grids > 0 and tech.shape[0] > 0 and required_sites > 0:
 
                     # site with buffer and exclude buffered area from further siting
                     still_siting = True

@@ -137,25 +137,20 @@ class Stage:
 
         # instantiate class
         # TODO:  add options to parameterize this from the config file
-        # ic = Interconnection(template_array=self.lmp_arr,
-        #                      technology_dict=self.technology_dict,
-        #                      technology_order=self.technology_order,
-        #                      substation_file=None,
-        #                      costs_to_connect_dict=None,
-        #                      pipeline_file=None,
-        #                      output_rasterized_file=False,
-        #                      output_dist_file=False,
-        #                      output_alloc_file=False,
-        #                      output_cost_file=False,
-        #                      transmission_gdf=None,
-        #                      output_dir=self.settings_dict.get('output_directory', None))
-        #
-        # ic_arr = ic.generate_interconnection_costs_array()
+        ic = Interconnection(template_array=self.lmp_arr,
+                             technology_dict=self.technology_dict,
+                             technology_order=self.technology_order,
+                             substation_file=None,
+                             costs_to_connect_dict=None,
+                             pipeline_file=None,
+                             output_rasterized_file=False,
+                             output_dist_file=False,
+                             output_alloc_file=False,
+                             output_cost_file=False,
+                             transmission_gdf=None,
+                             output_dir=self.settings_dict.get('output_directory', None))
 
-        #TODO: remove
-        # np.save('/Users/d3y010/Desktop/ic_arr.npy', ic_arr)
-
-        ic_arr = np.load('/Users/d3y010/Desktop/ic_arr.npy')
+        ic_arr = ic.generate_interconnection_costs_array()
 
         return ic_arr
 

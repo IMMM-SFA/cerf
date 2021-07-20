@@ -106,7 +106,7 @@ class Model(ReadConfig):
                                 verbose=self.settings_dict.get('verbose', False),
                                 write_output=write_output)
 
-        logging.info(f"CERF model run completed in {round(time.time() - self.start_time, 7)}")
+        logging.info(f"CERF model run completed in {round(time.time() - self.start_time, 7)} seconds")
 
         self.close_logger()
 
