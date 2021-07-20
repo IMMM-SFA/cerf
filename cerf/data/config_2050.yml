@@ -2,7 +2,7 @@
 settings:
     run_year: 2050
     output_directory: null
-    radomize: True
+    randomize: True
     seed_value: 0
 
 technology:

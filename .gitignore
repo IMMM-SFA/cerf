@@ -1,4 +1,5 @@
 cerf/data/*_dist_m.tif
+cerf/data/cerf_transmission_*
 
 # pyenv
 .python-version

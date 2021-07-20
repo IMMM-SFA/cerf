@@ -19,7 +19,7 @@ from cerf.model import Model
 from cerf.process_state import process_state
 
 
-def generate_model(config_file=None, config_dict=None, initialize_site_data=None, log_level='info'):
+def generate_model(config_file=None, config_dict={}, initialize_site_data=None, log_level='info'):
     """Generate model instance for use in parallel applications.
 
     :param config_file:                 Full path with file name and extension to the input config.yml file
@@ -128,7 +128,7 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
     return df
 
 
-def run(config_file=None, config_dict=None, write_output=True, n_jobs=-1, method='sequential',
+def run(config_file=None, config_dict={}, write_output=True, n_jobs=-1, method='sequential',
             initialize_site_data=None, log_level='info'):
     """Run all CERF states for the CONUS for the target year.
 

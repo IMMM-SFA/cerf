@@ -297,6 +297,8 @@ class Interconnection:
 
         with tempfile.TemporaryDirectory() as tempdir:
 
+            # tempdir = pkg_resources.resource_filename('cerf', 'data')
+
             # if write desired
             if any((self.output_rasterized_file, self.output_dist_file, self.output_alloc_file, self.output_cost_file)):
 

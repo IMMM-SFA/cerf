@@ -44,7 +44,7 @@ class Model(ReadConfig):
 
     """
 
-    def __init__(self, config_file=None, config_dict=None, initialize_site_data=None, log_level='info'):
+    def __init__(self, config_file=None, config_dict={}, initialize_site_data=None, log_level='info'):
 
         # start time for model run
         self.start_time = time.time()

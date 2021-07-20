@@ -22,12 +22,12 @@ class ReadConfig(Logger):
     # type hints
     config_file: str
 
-    def __init__(self, config_file=None, config_dict=None):
+    def __init__(self, config_file=None, config_dict={}):
 
         # inherit logger class attributes
         super(ReadConfig, self).__init__()
 
-        if config_file is None:
+        if config_file is None and config_dict is not None:
             self.config = config_dict
 
         else:
@@ -40,19 +40,25 @@ class ReadConfig(Logger):
 
         # get project level settings
         self.settings_dict = self.config.get('settings')
+        self.settings_dict.update(config_dict.get('settings', {}))
 
         # generate the technology order that will be use for indexing arrays throughout modeling
         self.technology_dict = self.config.get('technology')
+        self.technology_dict.update(config_dict.get('technology', {}))
+
         self.technology_order = list(self.technology_dict.keys())
 
         # get the expansion plan
         self.expansion_dict = self.config.get('expansion_plan')
+        self.expansion_dict.update(config_dict.get('expansion_plan', {}))
 
         # get the lmp zones settings
         self.lmp_zone_dict = self.config.get('lmp_zones')
+        self.lmp_zone_dict.update(config_dict.get('lmp_zones', {}))
 
         # get the infrastructure settings
         self.infrastructure_dict = self.config.get('infrastructure', {})
+        self.infrastructure_dict.update(config_dict.get('infrastructure', {}))
 
         # get the states dictionary
         self.states_dict = self.get_states_dict()

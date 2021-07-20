@@ -109,3 +109,9 @@ def get_state_abbrev_to_name():
     # get state abbreviations to search for in HIFLD data
     with open(states_file, 'r') as yml:
         return yaml.load(yml, Loader=yaml.FullLoader)
+
+
+def get_data_directory():
+    """Return the directory of where the cerf package data resides."""
+
+    return pkg_resources.resource_filename('cerf', 'data')
