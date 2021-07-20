@@ -171,11 +171,6 @@ class Competition:
                 # calculate the year of retirement
                 retirement_year = self.settings_dict['run_year'] + int(self.technology_dict[tech_id]['lifetime'])
 
-                # # ensure all nlc values associated with winning grid cells are within the bounds of the state
-                # #  this ensures that that any boundary differences between the state and lmp zone boundaries are
-                # #  in agreement
-                # nlc_valid = np.all(~np.isnan(self.nlc_flat_dict[tech_id][tech]))
-
                 # if there are more power plants to site and there are grids available to site them...
                 if self.avail_grids > 0 and tech.shape[0] > 0 and required_sites > 0:
 

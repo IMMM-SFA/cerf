@@ -135,16 +135,16 @@ class Interconnection:
         """Get the costs of gas pipeline interconnection per kilometer."""
 
         if self.pipeline_costs_dict is not None:
-            logging.info(f"Loading gas pipeline costs from user defined dictionary:  {self.pipeline_costs_dict}")
+            logging.info(f"Using gas pipeline costs from user defined dictionary:  {self.pipeline_costs_dict}")
             return self.pipeline_costs_dict.get('gas_pipeline_cost')
 
         if self.pipeline_costs_file is not None:
             f = self.pipeline_costs_file
-            logging.info(f"Loading gas pipeline costs from file:  {f}")
+            logging.info(f"Using gas pipeline costs from file:  {f}")
 
         else:
             f = pkg_resources.resource_filename('cerf', 'data/costs_gas_pipeline.yml')
-            logging.info(f"Loading gas pipeline costs from default file:  {f}")
+            logging.info(f"Using gas pipeline costs from default file:  {f}")
 
         with open(f, 'r') as yml:
             yaml_dict = yaml.load(yml, Loader=yaml.FullLoader)
