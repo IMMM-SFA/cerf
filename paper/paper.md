@@ -14,14 +14,17 @@ authors:
   - name: Nino Zuljevic
     orcid: 0000-0002-3175-9277
     affiliation: 1
-  - name: Kristian Nelson
-    orcid: 0000-0002-6745-167X
-    affiliation: 1
   - name: Kendall Mongird
     orcid: 0000-0003-2807-7088
     affiliation: 1
+  - name: Kristian Nelson
+    orcid: 0000-0002-6745-167X
+    affiliation: 1
   - name: Gokul Iyer
     orcid: 0000-0002-3565-7526
+    affiliation: 2
+  - name: Matthew Binsted
+    orcid: 0000-0002-5177-7253
     affiliation: 2
 affiliations:
  - name: Pacific Northwest National Laboratory, Richland, WA., USA
