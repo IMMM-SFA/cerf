@@ -1,0 +1,332 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cerf.package_data &mdash; cerf 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cerf.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/getting_started.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> cerf
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../footer.html">Acknowledgement</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">cerf</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>cerf.package_data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cerf.package_data</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
+
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+
+
+<div class="viewcode-block" id="config_file"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.config_file">[docs]</a><span class="k">def</span> <span class="nf">config_file</span><span class="p">(</span><span class="n">yr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the sample configuration file for 2010.</span>
+
+<span class="sd">    :param yr:                  Target four-digit year</span>
+<span class="sd">    :type yr:                   int</span>
+
+<span class="sd">    :return:                    Path to the target sample config file</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;data/config_</span><span class="si">{</span><span class="n">yr</span><span class="si">}</span><span class="s1">.yml&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cerf_states_shapefile"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.cerf_states_shapefile">[docs]</a><span class="k">def</span> <span class="nf">cerf_states_shapefile</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the cerf CONUS states shapefile as a Geopandas data frame.&quot;&quot;&quot;</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/cerf_conus_states_albers.zip&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cerf_boundary_shapefile"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.cerf_boundary_shapefile">[docs]</a><span class="k">def</span> <span class="nf">cerf_boundary_shapefile</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the cerf CONUS boundary shapefile as a Geopandas data frame.&quot;&quot;&quot;</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/cerf_conus_boundary_albers.zip&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cerf_crs"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.cerf_crs">[docs]</a><span class="k">def</span> <span class="nf">cerf_crs</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return a coordinate reference system (CRS) object of class &#39;pyproj.crs.crs.CRS&#39;</span>
+<span class="sd">     for USA_Contiguous_Albers_Equal_Area_Conic.</span>
+
+<span class="sd">     &quot;&quot;&quot;</span>
+
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">cerf_states_shapefile</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">gdf</span><span class="o">.</span><span class="n">crs</span></div>
+
+
+<div class="viewcode-block" id="costs_per_kv_substation"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.costs_per_kv_substation">[docs]</a><span class="k">def</span> <span class="nf">costs_per_kv_substation</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return a dictionary of the cost of interconnection to substations of certain KV classes.&quot;&quot;&quot;</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/costs_per_kv_substation.yml&#39;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yml</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_sample_config"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.load_sample_config">[docs]</a><span class="k">def</span> <span class="nf">load_sample_config</span><span class="p">(</span><span class="n">yr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read the config YAML file for illustrative purposes.</span>
+
+<span class="sd">    :param yr:                  Target configuration year in YYYY format.</span>
+<span class="sd">    :type yr:                   int</span>
+
+<span class="sd">    :return:                    dictionary for the configuration</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">available_years</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2055</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">yr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">available_years</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Year &#39;</span><span class="si">{</span><span class="n">yr</span><span class="si">}</span><span class="s2">&#39; not available as a default configuration file.  Must be in </span><span class="si">{</span><span class="n">available_years</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;data/config_</span><span class="si">{</span><span class="n">yr</span><span class="si">}</span><span class="s1">.yml&#39;</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yml</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="list_available_suitability_files"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.list_available_suitability_files">[docs]</a><span class="k">def</span> <span class="nf">list_available_suitability_files</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return a list of available suitability files.&quot;&quot;&quot;</span>
+
+    <span class="n">root_dir</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root_dir</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">root_dir</span><span class="p">)</span> <span class="k">if</span>
+            <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;suitability&#39;</span><span class="p">)</span> <span class="ow">and</span>
+            <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;.sdat&#39;</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="sample_lmp_zones_raster_file"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.sample_lmp_zones_raster_file">[docs]</a><span class="k">def</span> <span class="nf">sample_lmp_zones_raster_file</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return path for the sample lmp zoness raster file.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/lmp_zones_1km.img&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_sample_lmp_data"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_sample_lmp_data">[docs]</a><span class="k">def</span> <span class="nf">get_sample_lmp_data</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the sample 8760 hourly locational marginal price data as a Pandas DataFrame.&quot;&quot;&quot;</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_state_abbrev_to_name"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_state_abbrev_to_name">[docs]</a><span class="k">def</span> <span class="nf">get_state_abbrev_to_name</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return a dictionary of state abbreviation to state name.&quot;&quot;&quot;</span>
+
+    <span class="c1"># get state abbreviations file from cerf package data</span>
+    <span class="n">states_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/state-abbrev_to_state-name.yml&#39;</span><span class="p">)</span>
+
+    <span class="c1"># get state abbreviations to search for in HIFLD data</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">states_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yml</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_data_directory"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_data_directory">[docs]</a><span class="k">def</span> <span class="nf">get_data_directory</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the directory of where the cerf package data resides.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Battelle Memorial Institute.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

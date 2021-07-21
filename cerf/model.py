@@ -1,93 +1,114 @@
-"""
-Model wrapper for CERF C++ executable.
+"""Model interface for CERF
 
-Copyright (c) 2018, Battelle Memorial Institute
+@author Chris R. vernon
+@email chris.vernon@pnnl.gov
 
-Open source under license BSD 2-Clause - see LICENSE and DISCLAIMER
+License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 
-@author:  Chris R. Vernon (chris.vernon@pnnl.gov)
-
-SAGA-CERF C++ core module developed by Nino Zuljevic (nino.zuljevic@pnnl.gov)
 """
 
-import os
-import subprocess
-import shlex
-import logger
 
-from config_reader import ReadConfig
+import logging
+import time
+
+from cerf.process_state import process_state
+from cerf.read_config import ReadConfig
+from cerf.stage import Stage
 
 
-class Cerf:
+class Model(ReadConfig):
+    """Model wrapper for CERF.
 
-    # a list of the first five characters for relevant strings to log
-    CAPTURE = ['libr', 'modu', 'auth', 'set ', 'save',
-               'buff', '4-di', 'suit', 'seco', 'shap', 'outp',
-               'inpu', 'type', 'dire', 'disc', 'carb', 'tx_l', 'inte', 'file',
-               'cell', 'expa', 'curr']
+    :param config_file:                 Full path with file name and extension to the input config.yml file
+    :type config_file:                  str
 
-    def __init__(self, ini):
+    :param config_dict:                 Optional instead of config_file. Configuration dictionary.
+    :type config_dict:                  dict
 
-        self.p = ReadConfig(ini)
-        self.cwd = os.path.dirname(self.p.exe_path)
-        self.log = self.p.log
+    :param initialize_site_data:        None if no initialization is required, otherwise either a CSV file or
+                                        Pandas DataFrame of siting data bearing the following required fields:
 
-        # build arguments for SAGA module
-        s = ['{}'.format(self.p.exe_path),
-             'siting_model 0',
-             '-BUFFER {}'.format(self.p.buffer),
-             '-YEAR {}'.format(self.p.yr),
-             '-NORM {}'.format(self.p.distance_method),
-             '-DIRECTION {}'.format(self.p.direction_method),
-             '-SECONDARYGRID "{}"'.format(self.p.utility_zones),
-             '-SUITABILITYMASK "{}"'.format(self.p.common_exclusion),
-             '-TRANSMISSIONINPUT230 "{}"'.format(self.p.transmission_230kv),
-             '-TRANSMISSIONINPUT345 "{}"'.format(self.p.transmission_345kv),
-             '-TRANSMISSIONINPUT500 "{}"'.format(self.p.transmission_500kv),
-             '-TRANSMISSIONINPUT765 "{}"'.format(self.p.transmission_765kv),
-             '-GASINPUT16 "{}"'.format(self.p.gasline_16in),
-             '-SHAPES "{}"'.format(self.p.primary_zone),
-             '-OUTPUTDIRECTORY "{}"'.format(self.p.out_path),
-             '-IOXMLDIRECTORY "{}"'.format(self.p.xml_path)]
+                                        xcoord:  the X coordinate of the site in meters in
+                                        USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
 
-        # join arguments by space
-        self.command = ' '.join(s)
+                                        ycoord:  the Y coordinate of the site in meters in
+                                        USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)
 
-    def run_saga(self):
-        """
-        Run subprocess call to the C++ SAGA custom executable from the executables
-        root directory. Log the output as it becomes available instead of
-        waiting until completion.
-        """
-        # start process
-        process = subprocess.Popen(shlex.split(self.command), stdout=subprocess.PIPE, cwd=self.cwd)
+                                        retirement_year:  the year (int four digit, e.g., 2050) that the power
+                                        plant is to be decommissioned
 
-        x = 0
-        while True and x < 10:
-            output = process.stdout.readline()
-            if output == '' and process.poll() is not None:
-                x += 1
-                break
-            if output:
-                out_string = output.strip()
+                                        buffer_in_km:  the buffer around the site to apply in kilometers
 
-                # only log relevant info
-                if (len(out_string) > 0) and (out_string[:4].lower() in Cerf.CAPTURE):
-                    self.log.info(out_string)
+    :param log_level:                   Log level.  Options are 'info' and 'debug'.  Default 'info'
+    :type log_level:                    str
 
-        rc = process.poll()
-        return rc
-        
-    def execute(self):
-        """
-        Run CERF based on config file params.
-        """
-        self.log.info('Start siting model...')
-        
-        # run command as subprocess
-        self.run_saga()
+    """
 
-        self.log.info('Siting model completed.')
+    def __init__(self, config_file=None, config_dict={}, initialize_site_data=None, log_level='info'):
 
-        # remove any handlers that may exist
-        logger.kill_log(self.log)
+        # start time for model run
+        self.start_time = time.time()
+
+        # initialize console handler for logger
+        self.console_handler(log_level)
+
+        logging.info("Starting CERF model")
+
+        # inherit the configuration reader class attributes
+        super(Model, self).__init__(config_file, config_dict)
+
+        # siting data to use as the initial condition
+        self.initialize_site_data = initialize_site_data
+
+    def stage(self):
+        """run model."""
+
+        # prepare data for use in siting an expansion per state for a target year
+        logging.info('Staging data...')
+
+        # initial time for staging data
+        staging_t0 = time.time()
+
+        # prepare all data for state level run
+        data = Stage(self.settings_dict,
+                     self.lmp_zone_dict,
+                     self.technology_dict,
+                     self.technology_order,
+                     self.infrastructure_dict,
+                     self.initialize_site_data)
+
+        logging.info(f'Staged data in {round((time.time() - staging_t0), 7)} seconds')
+
+        return data
+
+    def run_single_state(self, target_state_name, write_output=True):
+        """run a single state."""
+
+        # prepare all data for state level run
+        data = self.stage()
+
+        process = process_state(target_state_name=target_state_name,
+                                settings_dict=self.settings_dict,
+                                technology_dict=self.technology_dict,
+                                technology_order=self.technology_order,
+                                expansion_dict=self.expansion_dict,
+                                states_dict=self.states_dict,
+                                suitability_arr=data.suitability_arr,
+                                lmp_arr=data.lmp_arr,
+                                nov_arr=data.nov_arr,
+                                ic_arr=data.ic_arr,
+                                nlc_arr=data.nlc_arr,
+                                zones_arr=data.zones_arr,
+                                xcoords=data.xcoords,
+                                ycoords=data.ycoords,
+                                indices_2d=data.indices_2d,
+                                randomize=self.settings_dict.get('randomize', True),
+                                seed_value=self.settings_dict.get('seed_value', 0),
+                                verbose=self.settings_dict.get('verbose', False),
+                                write_output=write_output)
+
+        logging.info(f"CERF model run completed in {round(time.time() - self.start_time, 7)} seconds")
+
+        self.close_logger()
+
+        return process

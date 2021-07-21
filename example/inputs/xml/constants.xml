@@ -1,7 +1,0 @@
-<constants>
-	<constant name="discount_rate">0.12</constant>
-	<constant name="carbon_tax">0.0</constant>
-	<constant name="carbon_tax_escalation">0.0</constant>
-	<constant name="tx_lifetime">40</constant>
-	<constant name="interconnection_cost_gas">596.5</constant>
-</constants>

@@ -1,71 +1,83 @@
-"""
-Logger for CERF model.
+"""Logger for CERF model.
 
 Copyright (c) 2018, Battelle Memorial Institute
 
 Open source under license BSD 2-Clause - see LICENSE and DISCLAIMER
 
 @author:  Chris R. Vernon (chris.vernon@pnnl.gov)
+
 """
 
-import datetime
 import logging
 import sys
 
 
-loggers = {}
+class Logger:
+    """Initialize project-wide logger. The logger outputs to both stdout and a file."""
 
+    # output format for log string
+    LOG_FORMAT_STRING = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
+    @property
+    def log_format(self):
+        """Generate log formatter."""
 
-def make_log(out_dir):
-    """
-    Create a log file and console log handler.
+        return logging.Formatter(self.LOG_FORMAT_STRING)
 
-    :param:         full path to output dir where the log file is to be saved.
-    """
+    @property
+    def logger(self):
+        """Initialize logger as level info."""
 
-    global loggers
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
 
-    nm = 'cerf_logger'
+        return logger
 
-    if loggers.get(nm):
-        return loggers.get(nm)
+    def initialize_logger(self):
+        """Initialize logger to stdout and file."""
 
-    else:
-        log = logging.getLogger(nm)
-        log.setLevel(logging.INFO)
+        # logger console handler
+        self.console_handler()
 
-        dt = datetime.datetime.now().strftime('%Y-%m-%d_%Hh%Mm%Ss')
+        # logger file handler
+        if self.write_logfile:
+            self.file_handler()
 
-        # file handler
-        fh = logging.FileHandler('{}/cerf_{}.log'.format(out_dir, dt))
+    def console_handler(self, log_level):
+        """Construct console handler."""
 
-        # stream handler
-        cns = logging.StreamHandler(sys.stdout)
+        console_handler = logging.StreamHandler(sys.stdout)
 
-        # logger string format
-        fmt = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        if log_level == 'debug':
+            console_handler.setLevel(logging.DEBUG)
+        else:
+            console_handler.setLevel(logging.INFO)
 
-        # set format
-        fh.setFormatter(fmt)
-        cns.setFormatter(fmt)
+        console_handler.setFormatter(self.log_format)
+        self.logger.addHandler(console_handler)
 
-        log.addHandler(fh)
-        log.addHandler(cns)
+    def file_handler(self, log_level):
+        """Construct file handler."""
 
-        loggers.update(dict(name=log))
+        file_handler = logging.FileHandler(self.logfile)
 
-        return log
+        if log_level == 'debug':
+            file_handler.setLevel(logging.DEBUG)
+        else:
+            file_handler.setLevel(logging.INFO)
 
+        file_handler.setFormatter(self.log_format)
+        self.logger.addHandler(file_handler)
 
-def kill_log(log):
-    """
-    Remove any existing handlers.
+    @staticmethod
+    def close_logger():
+        """Shutdown logger."""
 
-    :param:         log object
-    """        
-    handlers = log.handlers[:]
-    for h in handlers:
-        log.removeHandler(h)
-        h.flush()
-        h.close()
+        # Remove logging handlers
+        logger = logging.getLogger()
+
+        for handler in logger.handlers[:]:
+            handler.close()
+            logger.removeHandler(handler)
+
+        logging.shutdown()

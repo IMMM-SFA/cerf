@@ -1,0 +1,3 @@
+include cerf/data/*
+include cerf/tests/data/*
+include cerf/tests/data/comp_data/*

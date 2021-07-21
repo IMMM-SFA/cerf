@@ -1,0 +1,516 @@
+# project settings
+settings:
+
+    # target year to run
+    run_year: 2010
+
+    # location to store the output data to
+    output_directory: null
+
+    # randomize selection of a site for a technology when NLC values are equal
+    #  the first pass is always random but setting `randomize` to False and
+    #  passing a seed value will ensure that runs are reproducible
+    randomize: True
+
+    # if `randomize` is False, set a seed value for reproducibility; the default is 0
+    seed_value: 0
+
+# technology specific information
+technology:
+
+    9:
+        tech_name: biomass
+        lifetime: 60.0
+        capacity_factor: 0.6090000000000005
+        variable_cost_esc_rate: -0.00398993418629034
+        fuel_esc_rate: 0.0
+        unit_size: 80
+        interconnection_cost_per_km: 552
+        variable_om: 11.68495803744351
+        heat_rate: 15117.64999999997
+        fuel_price: 0.0
+        carbon_capture_rate: 0.0
+        fuel_co2_content: 0.3035999999999996
+        discount_rate: 0.05
+        carbon_esc_rate: 0.0
+        carbon_tax: 0.0
+        buffer_in_km: 5
+        require_pipelines: False
+        suitability_raster_file: null
+
+    11:
+        tech_name: nuclear
+        lifetime: 60.0
+        capacity_factor: 0.8999999999999995
+        variable_cost_esc_rate: -0.00104311614063357
+        fuel_esc_rate: 0.04639000000000001
+        unit_size: 1350
+        interconnection_cost_per_km: 1104
+        variable_om: 2.098127824402843
+        heat_rate: 10246.19999999998
+        fuel_price: 0.7128099999999996
+        carbon_capture_rate: 0.0
+        fuel_co2_content: 0.0
+        discount_rate: 0.05
+        carbon_esc_rate: 0.0
+        carbon_tax: 0.0
+        buffer_in_km: 5
+        require_pipelines: False
+        suitability_raster_file: null
+
+# expansion plan from GCAM
+expansion_plan:
+
+    alabama:
+        9:
+            tech_name: biomass
+            n_sites: 0
+
+        11:
+            tech_name: nuclear
+            n_sites: 4
+
+    arizona:
+        9:
+            tech_name: biomass
+            n_sites: 5
+
+        11:
+            tech_name: nuclear
+            n_sites: 0
+
+    arkansas:
+        9:
+            tech_name: biomass
+            n_sites: 10
+
+        11:
+            tech_name: nuclear
+            n_sites: 3
+
+    california:
+        9:
+            tech_name: biomass
+            n_sites: 1
+
+        11:
+            tech_name: nuclear
+            n_sites: 2
+
+    colorado:
+        9:
+            tech_name: biomass
+            n_sites: 9
+
+        11:
+            tech_name: nuclear
+            n_sites: 1
+
+    connecticut:
+        9:
+            tech_name: biomass
+            n_sites: 2
+
+        11:
+            tech_name: nuclear
+            n_sites: 9
+
+    delaware:
+        9:
+            tech_name: biomass
+            n_sites: 4
+
+        11:
+            tech_name: nuclear
+            n_sites: 9
+
+    district_of_columbia:
+        9:
+            tech_name: biomass
+            n_sites: 9
+
+        11:
+            tech_name: nuclear
+            n_sites: 4
+
+    florida:
+        9:
+            tech_name: biomass
+            n_sites: 8
+
+        11:
+            tech_name: nuclear
+            n_sites: 4
+
+    georgia:
+        9:
+            tech_name: biomass
+            n_sites: 6
+
+        11:
+            tech_name: nuclear
+            n_sites: 3
+
+    idaho:
+        9:
+            tech_name: biomass
+            n_sites: 10
+
+        11:
+            tech_name: nuclear
+            n_sites: 9
+
+    illinois:
+        9:
+            tech_name: biomass
+            n_sites: 1
+
+        11:
+            tech_name: nuclear
+            n_sites: 8
+
+    indiana:
+        9:
+            tech_name: biomass
+            n_sites: 4
+
+        11:
+            tech_name: nuclear
+            n_sites: 6
+
+    iowa:
+        9:
+            tech_name: biomass
+            n_sites: 4
+
+        11:
+            tech_name: nuclear
+            n_sites: 4
+
+    kansas:
+        9:
+            tech_name: biomass
+            n_sites: 5
+
+        11:
+            tech_name: nuclear
+            n_sites: 7
+
+    kentucky:
+        9:
+            tech_name: biomass
+            n_sites: 7
+
+        11:
+            tech_name: nuclear
+            n_sites: 1
+
+    louisiana:
+        9:
+            tech_name: biomass
+            n_sites: 4
+
+        11:
+            tech_name: nuclear
+            n_sites: 4
+
+    maine:
+        9:
+            tech_name: biomass
+            n_sites: 3
+
+        11:
+            tech_name: nuclear
+            n_sites: 4
+
+    maryland:
+        9:
+            tech_name: biomass
+            n_sites: 3
+
+        11:
+            tech_name: nuclear
+            n_sites: 7
+
+    massachusetts:
+        9:
+            tech_name: biomass
+            n_sites: 5
+
+        11:
+            tech_name: nuclear
+            n_sites: 10
+
+    michigan:
+        9:
+            tech_name: biomass
+            n_sites: 1
+
+        11:
+            tech_name: nuclear
+            n_sites: 10
+
+    minnesota:
+        9:
+            tech_name: biomass
+            n_sites: 0
+
+        11:
+            tech_name: nuclear
+            n_sites: 9
+
+    mississippi:
+        9:
+            tech_name: biomass
+            n_sites: 5
+
+        11:
+            tech_name: nuclear
+            n_sites: 2
+
+    missouri:
+        9:
+            tech_name: biomass
+            n_sites: 0
+
+        11:
+            tech_name: nuclear
+            n_sites: 0
+
+    montana:
+        9:
+            tech_name: biomass
+            n_sites: 9
+
+        11:
+            tech_name: nuclear
+            n_sites: 1
+
+    nebraska:
+        9:
+            tech_name: biomass
+            n_sites: 1
+
+        11:
+            tech_name: nuclear
+            n_sites: 9
+
+    nevada:
+        9:
+            tech_name: biomass
+            n_sites: 4
+
+        11:
+            tech_name: nuclear
+            n_sites: 8
+
+    new_hampshire:
+        9:
+            tech_name: biomass
+            n_sites: 3
+
+        11:
+            tech_name: nuclear
+            n_sites: 6
+
+    new_jersey:
+        9:
+            tech_name: biomass
+            n_sites: 4
+
+        11:
+            tech_name: nuclear
+            n_sites: 1
+
+    new_mexico:
+        9:
+            tech_name: biomass
+            n_sites: 0
+
+        11:
+            tech_name: nuclear
+            n_sites: 8
+
+    new_york:
+        9:
+            tech_name: biomass
+            n_sites: 8
+
+        11:
+            tech_name: nuclear
+            n_sites: 6
+
+    north_carolina:
+        9:
+            tech_name: biomass
+            n_sites: 6
+
+        11:
+            tech_name: nuclear
+            n_sites: 9
+
+    north_dakota:
+        9:
+            tech_name: biomass
+            n_sites: 9
+
+        11:
+            tech_name: nuclear
+            n_sites: 10
+
+    ohio:
+        9:
+            tech_name: biomass
+            n_sites: 6
+
+        11:
+            tech_name: nuclear
+            n_sites: 7
+
+    oklahoma:
+        9:
+            tech_name: biomass
+            n_sites: 10
+
+        11:
+            tech_name: nuclear
+            n_sites: 1
+
+    oregon:
+        9:
+            tech_name: biomass
+            n_sites: 1
+
+        11:
+            tech_name: nuclear
+            n_sites: 7
+
+    pennsylvania:
+        9:
+            tech_name: biomass
+            n_sites: 10
+
+        11:
+            tech_name: nuclear
+            n_sites: 4
+
+    rhode_island:
+        9:
+            tech_name: biomass
+            n_sites: 10
+
+        11:
+            tech_name: nuclear
+            n_sites: 7
+
+    south_carolina:
+        9:
+            tech_name: biomass
+            n_sites: 3
+
+        11:
+            tech_name: nuclear
+            n_sites: 5
+
+    south_dakota:
+        9:
+            tech_name: biomass
+            n_sites: 5
+
+        11:
+            tech_name: nuclear
+            n_sites: 8
+
+    tennessee:
+        9:
+            tech_name: biomass
+            n_sites: 1
+
+        11:
+            tech_name: nuclear
+            n_sites: 6
+
+    texas:
+        9:
+            tech_name: biomass
+            n_sites: 1
+
+        11:
+            tech_name: nuclear
+            n_sites: 10
+
+    utah:
+        9:
+            tech_name: biomass
+            n_sites: 3
+
+        11:
+            tech_name: nuclear
+            n_sites: 9
+
+    vermont:
+        9:
+            tech_name: biomass
+            n_sites: 5
+
+        11:
+            tech_name: nuclear
+            n_sites: 2
+
+    virginia:
+        9:
+            tech_name: biomass
+            n_sites: 2
+
+        11:
+            tech_name: nuclear
+            n_sites: 8
+
+    washington:
+        9:
+            tech_name: biomass
+            n_sites: 6
+
+        11:
+            tech_name: nuclear
+            n_sites: 7
+
+    west_virginia:
+        9:
+            tech_name: biomass
+            n_sites: 7
+
+        11:
+            tech_name: nuclear
+            n_sites: 4
+
+    wisconsin:
+        9:
+            tech_name: biomass
+            n_sites: 1
+
+        11:
+            tech_name: nuclear
+            n_sites: 9
+
+    wyoming:
+        9:
+            tech_name: biomass
+            n_sites: 6
+
+        11:
+            tech_name: nuclear
+            n_sites: 2
+
+
+# lmp zones specific data
+lmp_zones:
+
+    # full path with file name and extension to the lmp zoness raster file
+    lmp_zone_raster_file: null
+
+    # no data value in the lmp zones raster
+    lmp_zone_raster_nodata_value: 255
+
+    # lmp csv file containing 8760 LMP per zone where columns are each zone with a numeric zone id header
+    lmp_hourly_data_file: null

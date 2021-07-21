@@ -1,0 +1,414 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>cerf.process &mdash; cerf 2.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/cerf.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/getting_started.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> cerf
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../footer.html">Acknowledgement</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">cerf</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>cerf.process</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for cerf.process</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Processing module for CERF</span>
+
+<span class="sd">@author Chris R. vernon</span>
+<span class="sd">@email chris.vernon@pnnl.gov</span>
+
+<span class="sd">License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+
+<span class="kn">import</span> <span class="nn">cerf.utils</span> <span class="k">as</span> <span class="nn">util</span>
+<span class="kn">from</span> <span class="nn">cerf.model</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">cerf.process_state</span> <span class="kn">import</span> <span class="n">process_state</span>
+
+
+<div class="viewcode-block" id="generate_model"><a class="viewcode-back" href="../../cerf.html#cerf.process.generate_model">[docs]</a><span class="k">def</span> <span class="nf">generate_model</span><span class="p">(</span><span class="n">config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config_dict</span><span class="o">=</span><span class="p">{},</span> <span class="n">initialize_site_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate model instance for use in parallel applications.</span>
+
+<span class="sd">    :param config_file:                 Full path with file name and extension to the input config.yml file</span>
+<span class="sd">    :type config_file:                  str</span>
+
+<span class="sd">    :param config_dict:                 Optional instead of config_file. Configuration dictionary.</span>
+<span class="sd">    :type config_dict:                  dict</span>
+
+<span class="sd">    :param   initialize_site_data:      None if no initialization is required, otherwise either a CSV file or</span>
+<span class="sd">                                        Pandas DataFrame of siting data bearing the following required fields:</span>
+
+<span class="sd">                                        xcoord:  the X coordinate of the site in meters in</span>
+<span class="sd">                                        USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</span>
+
+<span class="sd">                                        ycoord:  the Y coordinate of the site in meters in</span>
+<span class="sd">                                        USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</span>
+
+<span class="sd">                                        retirement_year:  the year (int four digit, e.g., 2050) that the power</span>
+<span class="sd">                                        plant is to be decommissioned</span>
+
+<span class="sd">                                        buffer_in_km:  the buffer around the site to apply in kilometers</span>
+
+<span class="sd">    :param log_level:                   Log level.  Options are &#39;info&#39; and &#39;debug&#39;.  Default &#39;info&#39;</span>
+<span class="sd">    :type log_level:                    str</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">Model</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">config_dict</span><span class="p">,</span> <span class="n">initialize_site_data</span><span class="p">,</span> <span class="n">log_level</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cerf_parallel"><a class="viewcode-back" href="../../cerf.html#cerf.process.cerf_parallel">[docs]</a><span class="k">def</span> <span class="nf">cerf_parallel</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;sequential&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run all CONUS states in parallel.</span>
+
+<span class="sd">    :param model:                       Instantiated CERF model class containing configuration options</span>
+<span class="sd">    :type model:                        class</span>
+
+<span class="sd">    :param data:                        Data from cerf.stage.Stage containing NLC and suitability arrays</span>
+
+<span class="sd">    :param config_file:                 Full path with file name and extension to the input config.yml file</span>
+<span class="sd">    :type config_file:                  str</span>
+
+<span class="sd">    :param write_output:                Write output as a raster to the output directory specified in the config file</span>
+<span class="sd">    :type write_output:                 bool</span>
+
+<span class="sd">    :param n_jobs:                      The number of processors to utilize.  Default is -1 which is all but 1.</span>
+<span class="sd">    :type n_jobs:                       int</span>
+
+<span class="sd">    :param method:                      Backend parallelization method used in Joblib.  Default is `sequential` to</span>
+<span class="sd">                                        manage overhead for local runs.  Options for advanced configurations are:</span>
+<span class="sd">                                        `loky`, `threading`, and `multiprocessing`.</span>
+<span class="sd">                                        See https://joblib.readthedocs.io/en/latest/parallel.html for details.</span>
+<span class="sd">    :type method:                       str</span>
+
+<span class="sd">    :return:                            A 2D arrays containing sites as the technology ID per grid cell.  All</span>
+<span class="sd">                                        non-sited grid cells are given the value of NaN.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># start time for parallel run</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="c1"># run all states in parallel</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">method</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">process_state</span><span class="p">)(</span><span class="n">target_state_name</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
+                                                                             <span class="n">settings_dict</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">,</span>
+                                                                             <span class="n">technology_dict</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">,</span>
+                                                                             <span class="n">technology_order</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">technology_order</span><span class="p">,</span>
+                                                                             <span class="n">expansion_dict</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">expansion_dict</span><span class="p">,</span>
+                                                                             <span class="n">states_dict</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">states_dict</span><span class="p">,</span>
+                                                                             <span class="n">suitability_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">suitability_arr</span><span class="p">,</span>
+                                                                             <span class="n">lmp_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">lmp_arr</span><span class="p">,</span>
+                                                                             <span class="n">nov_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">nov_arr</span><span class="p">,</span>
+                                                                             <span class="n">ic_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">ic_arr</span><span class="p">,</span>
+                                                                             <span class="n">nlc_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">nlc_arr</span><span class="p">,</span>
+                                                                             <span class="n">zones_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">zones_arr</span><span class="p">,</span>
+                                                                             <span class="n">xcoords</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">xcoords</span><span class="p">,</span>
+                                                                             <span class="n">ycoords</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">ycoords</span><span class="p">,</span>
+                                                                             <span class="n">indices_2d</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">indices_2d</span><span class="p">,</span>
+                                                                             <span class="n">randomize</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;randomize&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+                                                                             <span class="n">seed_value</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;seed_value&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                                                                             <span class="n">verbose</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+                                                                             <span class="n">write_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">states_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All states processed in </span><span class="si">{</span><span class="nb">round</span><span class="p">((</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">),</span> <span class="mi">7</span><span class="p">)</span><span class="si">}</span><span class="s2"> seconds.&quot;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Aggregating outputs...&quot;</span><span class="p">)</span>
+
+    <span class="c1"># create a data frame to hold the outputs</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">util</span><span class="o">.</span><span class="n">empty_sited_dict</span><span class="p">())</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">util</span><span class="o">.</span><span class="n">sited_dtypes</span><span class="p">())</span>
+
+    <span class="c1"># add in the initialized siting data from a previous years run if so desired</span>
+    <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">initialize_site_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">init_df</span><span class="p">])</span>
+
+    <span class="c1"># combine the outputs for all states</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+
+        <span class="c1"># ensure some sites were able to be sited for the target state</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">run_data</span><span class="o">.</span><span class="n">sited_df</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">write_output</span><span class="p">:</span>
+
+        <span class="c1"># write output CSV</span>
+        <span class="n">out_csv</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;output_directory&#39;</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;cerf_sited_</span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;run_year&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">_conus.csv&quot;</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">out_csv</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="run"><a class="viewcode-back" href="../../cerf.html#cerf.process.run">[docs]</a><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">config_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config_dict</span><span class="o">=</span><span class="p">{},</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;sequential&#39;</span><span class="p">,</span>
+            <span class="n">initialize_site_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run all CERF states for the CONUS for the target year.</span>
+
+<span class="sd">    :param config_file:                 Full path with file name and extension to the input config.yml file</span>
+<span class="sd">    :type config_file:                  str</span>
+
+<span class="sd">    :param config_dict:                 Optional instead of config_file. Configuration dictionary.</span>
+<span class="sd">    :type config_dict:                  dict</span>
+
+<span class="sd">    :param write_output:                Write output as a raster to the output directory specified in the config file</span>
+<span class="sd">    :type write_output:                 bool</span>
+
+<span class="sd">    :param n_jobs:                      The number of processors to utilize.  Default is -1 which is all but 1.</span>
+<span class="sd">    :type n_jobs:                       int</span>
+
+<span class="sd">    :param method:                      Backend parallelization method used in Joblib.  Default is sequential to</span>
+<span class="sd">                                        manage overhead for local runs.  Options for advanced configurations are:</span>
+<span class="sd">                                        loky, threading, and multiprocessing.</span>
+<span class="sd">                                        See https://joblib.readthedocs.io/en/latest/parallel.html for details.</span>
+<span class="sd">    :type method:                       str</span>
+
+<span class="sd">    :param initialize_site_data:        None if no initialization is required, otherwise either a CSV file or</span>
+<span class="sd">                                        Pandas DataFrame of siting data bearing the following required fields:</span>
+
+<span class="sd">                                        xcoord:  the X coordinate of the site in meters in</span>
+<span class="sd">                                        USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</span>
+
+<span class="sd">                                        ycoord:  the Y coordinate of the site in meters in</span>
+<span class="sd">                                        USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</span>
+
+<span class="sd">                                        retirement_year:  the year (int four digit, e.g., 2050) that the power</span>
+<span class="sd">                                        plant is to be decommissioned</span>
+
+<span class="sd">                                        buffer_in_km:  the buffer around the site to apply in kilometers</span>
+
+<span class="sd">    :param log_level:                   Log level.  Options are &#39;info&#39; and &#39;debug&#39;.  Default &#39;info&#39;</span>
+<span class="sd">    :type log_level:                    str</span>
+
+<span class="sd">    :return:                            A data frame containing each sited power plant and their attributes</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="c1"># instantiate CERF model</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">generate_model</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span>
+                               <span class="n">config_dict</span><span class="p">,</span>
+                               <span class="n">initialize_site_data</span><span class="o">=</span><span class="n">initialize_site_data</span><span class="p">,</span>
+                               <span class="n">log_level</span><span class="o">=</span><span class="n">log_level</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+
+        <span class="c1"># process supporting data</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stage</span><span class="p">()</span>
+
+        <span class="c1"># process all CERF CONUS states in parallel and store the result as a 2D arrays containing sites as</span>
+        <span class="c1">#  the technology ID per grid cell.  All non-sited grid cells are given the value of NaN.</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">cerf_parallel</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+                           <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                           <span class="n">write_output</span><span class="o">=</span><span class="n">write_output</span><span class="p">,</span>
+                           <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+                           <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CERF model run completed in </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">model</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="c1"># clean up logger</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">close_logger</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Battelle Memorial Institute.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
