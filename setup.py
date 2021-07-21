@@ -21,6 +21,7 @@ setup(
     version=version,
     packages=find_packages(),
     url='https://github.com/IMMM-SFA/cerf',
+    download_url=f'https://github.com/IMMM-SFA/cerf/archive/refs/tags/v{version}.tar.gz',
     license='BSD2-Simplified',
     author='Chris R. Vernon; Nino Zuljevic',
     author_email='chris.vernon@pnnl.gov; nino.zuljevic@pnnl.gov',

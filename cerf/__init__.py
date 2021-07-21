@@ -7,4 +7,4 @@ from .lmp import *
 from .utils import *
 
 
-__version__ = "2.0.0.beta"
+__version__ = "2.0.0-beta.1"
