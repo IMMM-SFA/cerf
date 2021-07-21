@@ -29,5 +29,16 @@ setup(
     long_description_content_type="text/markdown",
     python_requires='>=3.7.*, <4',
     include_package_data=True,
-    install_requires=get_requirements()
+    install_requires=get_requirements(),
+    extras_require={
+        'dev': [
+            'build~=0.5.1',
+            'nbsphinx~=0.8.6',
+            'setuptools~=57.0.0',
+            'sphinx~=4.0.2',
+            'sphinx-panels~=0.6.0',
+            'sphinx-rtd-theme~=0.5.2',
+            'twine~=3.4.1'
+        ]
+    }
 )
