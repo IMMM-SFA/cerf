@@ -23,6 +23,9 @@ authors:
   - name: Gokul Iyer
     orcid: 0000-0002-3565-7526
     affiliation: 2
+  - name: Nathalie Voisin
+    orcid: 0000-0002-6848-449X
+    affiliation: 1
   - name: Matthew Binsted
     orcid: 0000-0002-5177-7253
     affiliation: 2

@@ -8,7 +8,6 @@ Subpackages
    :maxdepth: 4
 
    cerf.data
-   cerf.process_inputs
    cerf.tests
 
 Submodules
@@ -18,14 +17,6 @@ cerf.compete module
 -------------------
 
 .. automodule:: cerf.compete
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-cerf.install\_supplement module
--------------------------------
-
-.. automodule:: cerf.install_supplement
    :members:
    :undoc-members:
    :show-inheritance:
@@ -106,14 +97,6 @@ cerf.read\_config module
 ------------------------
 
 .. automodule:: cerf.read_config
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-cerf.spatial\_reader module
----------------------------
-
-.. automodule:: cerf.spatial_reader
    :members:
    :undoc-members:
    :show-inheritance:
