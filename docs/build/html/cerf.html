@@ -108,7 +108,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.compete">cerf.compete module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-cerf.install_supplement">cerf.install_supplement module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cerf-install-supplement-module">cerf.install_supplement module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.interconnect">cerf.interconnect module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.lmp">cerf.lmp module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.logger">cerf.logger module</a></li>
@@ -119,7 +119,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.process">cerf.process module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.process_state">cerf.process_state module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.read_config">cerf.read_config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-cerf.spatial_reader">cerf.spatial_reader module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cerf-spatial-reader-module">cerf.spatial_reader module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.stage">cerf.stage module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.utils">cerf.utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf">Module contents</a></li>
@@ -209,7 +209,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cerf.process_inputs.html">cerf.process_inputs package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cerf.process_inputs.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cerf.process_inputs.html#module-cerf.process_inputs.process_expansion">cerf.process_inputs.process_expansion module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cerf.process_inputs.html#cerf-process-inputs-process-expansion-module">cerf.process_inputs.process_expansion module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cerf.process_inputs.html#module-cerf.process_inputs">Module contents</a></li>
 </ul>
 </li>
@@ -280,49 +280,8 @@ Default:  True</p></li>
 </dd></dl>
 
 </div>
-<div class="section" id="module-cerf.install_supplement">
-<span id="cerf-install-supplement-module"></span><h2>cerf.install_supplement module<a class="headerlink" href="#module-cerf.install_supplement" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="cerf.install_supplement.InstallSupplement">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.install_supplement.</span></span><span class="sig-name descname"><span class="pre">InstallSupplement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">example_data_directory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/install_supplement.html#InstallSupplement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.install_supplement.InstallSupplement" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Download and unpack example data supplement from Zenodo that matches the current installed
-cerf distribution.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>example_data_directory</strong> – Full path to the directory you wish to install
-the cerf example data to.  Must be write-enabled
-for the user.</p>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.install_supplement.InstallSupplement.DATA_VERSION_URLS">
-<span class="sig-name descname"><span class="pre">DATA_VERSION_URLS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{'1.0.0':</span> <span class="pre">'https://zenodo.org/record/3629645/files/example.zip?download=1',</span> <span class="pre">'2.0.0':</span> <span class="pre">'https://zenodo.org/record/3629645/files/example.zip?download=1'}</span></em><a class="headerlink" href="#cerf.install_supplement.InstallSupplement.DATA_VERSION_URLS" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cerf.install_supplement.InstallSupplement.fetch_zenodo">
-<span class="sig-name descname"><span class="pre">fetch_zenodo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/install_supplement.html#InstallSupplement.fetch_zenodo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.install_supplement.InstallSupplement.fetch_zenodo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Download and unpack the Zenodo example data supplement for the
-current cerf distribution.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cerf.install_supplement.get_package_data">
-<span class="sig-prename descclassname"><span class="pre">cerf.install_supplement.</span></span><span class="sig-name descname"><span class="pre">get_package_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">example_data_directory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/install_supplement.html#get_package_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.install_supplement.get_package_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Download and unpack example data supplement from Zenodo that matches the current installed
-cerf distribution.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>example_data_directory</strong> (<em>str</em>) – Full path to the directory you wish to install
-the cerf example data to.  Must be write-enabled
-for the user.</p>
-</dd>
-</dl>
-</dd></dl>
-
+<div class="section" id="cerf-install-supplement-module">
+<h2>cerf.install_supplement module<a class="headerlink" href="#cerf-install-supplement-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-cerf.interconnect">
 <span id="cerf-interconnect-module"></span><h2>cerf.interconnect module<a class="headerlink" href="#module-cerf.interconnect" title="Permalink to this headline">¶</a></h2>
@@ -1160,8 +1119,8 @@ instead.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-cerf.spatial_reader">
-<span id="cerf-spatial-reader-module"></span><h2>cerf.spatial_reader module<a class="headerlink" href="#module-cerf.spatial_reader" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cerf-spatial-reader-module">
+<h2>cerf.spatial_reader module<a class="headerlink" href="#cerf-spatial-reader-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-cerf.stage">
 <span id="cerf-stage-module"></span><h2>cerf.stage module<a class="headerlink" href="#module-cerf.stage" title="Permalink to this headline">¶</a></h2>
