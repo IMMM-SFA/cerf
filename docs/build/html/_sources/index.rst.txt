@@ -8,7 +8,7 @@ cerf documentation
 **Useful links**:
 `Source Repository <https://github.com/immm-sfa/cerf>`_ |
 `Issues & Ideas <https://github.com/immm-sfa/cerf/issues>`_ |
-`Interactive Quickstarter <https://github.com/immm-sfa/cerf>`_
+`Interactive Quickstarter <https://github.com/IMMM-SFA/cerf/blob/main/notebooks/quickstarter.ipynb>`_
 
 **cerf** is an open-source geospatial Python package for evaluating and analyzing future electricity technology capacity expansion feasibility.  **cerf** was created to:
 

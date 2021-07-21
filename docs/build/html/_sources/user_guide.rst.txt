@@ -409,7 +409,7 @@ Jupyter Notebooks
 **cerf** quickstarter
 ~~~~~~~~~~~~~~~~~~~~~
 
-The following is a link to a Jupyter Notebook to run **cerf** without having to install any software:  `cerf quickstarter <https://github.com/IMMM-SFA/cerf>`
+The following is a link to a Jupyter Notebook to run **cerf**:  `cerf quickstarter <https://github.com/IMMM-SFA/cerf/blob/main/notebooks/quickstarter.ipynb>`_
 
 Site a single year for the CONUS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
