@@ -71,7 +71,7 @@
             
             
               <div class="version">
-                2.0.0
+                2.0.0.beta
               </div>
             
           
@@ -102,13 +102,11 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="cerf.data.html">cerf.data package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cerf.process_inputs.html">cerf.process_inputs package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cerf.tests.html">cerf.tests package</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.compete">cerf.compete module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-cerf.install_supplement">cerf.install_supplement module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.interconnect">cerf.interconnect module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.lmp">cerf.lmp module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.logger">cerf.logger module</a></li>
@@ -119,7 +117,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.process">cerf.process module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.process_state">cerf.process_state module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.read_config">cerf.read_config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-cerf.spatial_reader">cerf.spatial_reader module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.stage">cerf.stage module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.utils">cerf.utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf">Module contents</a></li>
@@ -127,6 +124,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to <strong>cerf</strong></a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="footer.html">Acknowledgement</a></li>
 </ul>
 
             
@@ -206,12 +204,6 @@
 <li class="toctree-l2"><a class="reference internal" href="cerf.data.html#module-cerf.data">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="cerf.process_inputs.html">cerf.process_inputs package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="cerf.process_inputs.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cerf.process_inputs.html#module-cerf.process_inputs.process_expansion">cerf.process_inputs.process_expansion module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cerf.process_inputs.html#module-cerf.process_inputs">Module contents</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="cerf.tests.html">cerf.tests package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#module-cerf.tests.test_compete">cerf.tests.test_compete module</a></li>
@@ -279,55 +271,11 @@ Default:  True</p></li>
 </dd></dl>
 
 </div>
-<div class="section" id="module-cerf.install_supplement">
-<span id="cerf-install-supplement-module"></span><h2>cerf.install_supplement module<a class="headerlink" href="#module-cerf.install_supplement" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="cerf.install_supplement.InstallSupplement">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.install_supplement.</span></span><span class="sig-name descname"><span class="pre">InstallSupplement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">example_data_directory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/install_supplement.html#InstallSupplement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.install_supplement.InstallSupplement" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Download and unpack example data supplement from Zenodo that matches the current installed
-cerf distribution.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>example_data_directory</strong> – Full path to the directory you wish to install
-the cerf example data to.  Must be write-enabled
-for the user.</p>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.install_supplement.InstallSupplement.DATA_VERSION_URLS">
-<span class="sig-name descname"><span class="pre">DATA_VERSION_URLS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{'1.0.0':</span> <span class="pre">'https://zenodo.org/record/3629645/files/example.zip?download=1',</span> <span class="pre">'2.0.0':</span> <span class="pre">'https://zenodo.org/record/3629645/files/example.zip?download=1'}</span></em><a class="headerlink" href="#cerf.install_supplement.InstallSupplement.DATA_VERSION_URLS" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cerf.install_supplement.InstallSupplement.fetch_zenodo">
-<span class="sig-name descname"><span class="pre">fetch_zenodo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/install_supplement.html#InstallSupplement.fetch_zenodo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.install_supplement.InstallSupplement.fetch_zenodo" title="Permalink to this definition">¶</a></dt>
-<dd><p>Download and unpack the Zenodo example data supplement for the
-current cerf distribution.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="cerf.install_supplement.get_package_data">
-<span class="sig-prename descclassname"><span class="pre">cerf.install_supplement.</span></span><span class="sig-name descname"><span class="pre">get_package_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">example_data_directory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/install_supplement.html#get_package_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.install_supplement.get_package_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Download and unpack example data supplement from Zenodo that matches the current installed
-cerf distribution.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>example_data_directory</strong> (<em>str</em>) – Full path to the directory you wish to install
-the cerf example data to.  Must be write-enabled
-for the user.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
 <div class="section" id="module-cerf.interconnect">
 <span id="cerf-interconnect-module"></span><h2>cerf.interconnect module<a class="headerlink" href="#module-cerf.interconnect" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cerf.interconnect.Interconnection">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.interconnect.</span></span><span class="sig-name descname"><span class="pre">Interconnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substation_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">costs_to_connect_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">costs_to_connect_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_rasterized_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dist_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_alloc_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_cost_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transmission_gdf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/interconnect.html#Interconnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.interconnect.Interconnection" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.interconnect.</span></span><span class="sig-name descname"><span class="pre">Interconnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substation_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transmission_costs_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transmission_costs_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline_costs_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline_costs_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_rasterized_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dist_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_alloc_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_cost_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interconnection_cost_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/interconnect.html#Interconnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.interconnect.Interconnection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Calculate interconnection costs per grid cell in $ / yr using:</p>
 <dl>
@@ -349,30 +297,31 @@ where, d = real annual discount rate (%), n = asset lifetime (years)</p>
 <li><p><strong>technology_order</strong> (<em>list</em>) – Order of technologies to process</p></li>
 <li><p><strong>substation_file</strong> (<em>str</em>) – Full path with file name and extension to the input substations shapefile.
 If None, CERF will use the default data stored in the package.</p></li>
-<li><p><strong>costs_to_connect_dict</strong> (<em>dict</em>) – A dictionary containing the cost of connection per km to a substation
+<li><p><strong>transmission_costs_dict</strong> (<em>dict</em>) – A dictionary containing the cost of connection per km to a substation
 having a certain minimum voltage range.  Default is to load from the
 CERF data file ‘costs_per_kv_substation.yml’ by specifying ‘None’</p></li>
-<li><p><strong>costs_to_connect_file</strong> (<em>str</em>) – A YAML file containing the cost of connection per km to a substation
+<li><p><strong>transmission_costs_file</strong> (<em>str</em>) – A YAML file containing the cost of connection per km to a substation
 having a certain minimum voltage range.  Default is to load from the
 CERF data file ‘costs_per_kv_substation.yml’ by specifying ‘None’</p></li>
+<li><p><strong>pipeline_costs_dict</strong> (<em>dict</em>) – A dictionary containing the cost of connection per km to a gas pipeline.
+Default is to load from the CERF data file ‘costs_gas_pipeline.yml’ by
+specifying ‘None’</p></li>
+<li><p><strong>pipeline_costs_file</strong> (<em>str</em>) – A YAML file containing the cost of connection per km to a gas pipeline.
+Default is to load from the CERF data file ‘costs_gas_pipeline.yml’ by
+specifying ‘None’</p></li>
 <li><p><strong>pipeline_file</strong> (<em>str</em>) – Full path with file name and extension to the input pipelines shapefile.
 If None, CERF will use the default data stored in the package.</p></li>
 <li><p><strong>output_rasterized_file</strong> (<em>bool</em>) – Write distance raster; if True, set ‘output_dir’ value</p></li>
 <li><p><strong>output_dist_file</strong> (<em>bool</em>) – Write distance raster; if True, set ‘output_dir’ value</p></li>
 <li><p><strong>output_alloc_file</strong> (<em>bool</em>) – Write allocation file; if True, set ‘output_dir’ value</p></li>
 <li><p><strong>output_cost_file</strong> (<em>bool</em>) – Write cost file; if True, set ‘output_dir’ value</p></li>
-<li><p><strong>transmission_gdf</strong> (<em>GeoDataFrame</em>) – GeoDataFrame of transmission infrastructure to be rasterized. If None
-the ‘process_hifld_substations’ method will generate the data either based
-off of the ‘substation_file’ or using the default CERF data.</p></li>
+<li><p><strong>interconnection_cost_file</strong> (<em>str</em>) – Full path with file name and extension to a preprocessed interconnection
+cost NPY file that has been previously written. If None, IC will be
+calculated.</p></li>
 <li><p><strong>output_dir</strong> (<em>str</em>) – Full path to a directory to write outputs to if desired</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.interconnect.Interconnection.GAS_PIPE_COST">
-<span class="sig-name descname"><span class="pre">GAS_PIPE_COST</span></span><em class="property"> <span class="pre">=</span> <span class="pre">737000</span></em><a class="headerlink" href="#cerf.interconnect.Interconnection.GAS_PIPE_COST" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="cerf.interconnect.Interconnection.calc_annuity_factor">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">calc_annuity_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">discount_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/interconnect.html#Interconnection.calc_annuity_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.interconnect.Interconnection.calc_annuity_factor" title="Permalink to this definition">¶</a></dt>
@@ -382,7 +331,14 @@ off of the ‘substation_file’ or using the default CERF data.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="cerf.interconnect.Interconnection.generate_interconnection_costs_array">
 <span class="sig-name descname"><span class="pre">generate_interconnection_costs_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/interconnect.html#Interconnection.generate_interconnection_costs_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.interconnect.Interconnection.generate_interconnection_costs_array" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Calculate the costs of interconnection for each technology.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cerf.interconnect.Interconnection.get_pipeline_costs">
+<span class="sig-name descname"><span class="pre">get_pipeline_costs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/interconnect.html#Interconnection.get_pipeline_costs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.interconnect.Interconnection.get_pipeline_costs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the costs of gas pipeline interconnection per kilometer.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cerf.interconnect.Interconnection.process_eia_natural_gas_pipelines">
@@ -416,7 +372,7 @@ connection in $/km for each substation.</p>
 designation field as ‘_rval_’</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>setting</strong> – Either ‘substations’ or ‘pipelines’</p>
+<dd class="field-odd"><p><strong>setting</strong> (<em>str</em>) – Either ‘substations’ or ‘pipelines’</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Array of transmission interconnection cost per grid cell</p>
@@ -431,24 +387,29 @@ designation field as ‘_rval_’</p>
 <span id="cerf-lmp-module"></span><h2>cerf.lmp module<a class="headerlink" href="#module-cerf.lmp" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cerf.lmp.LocationalMarginalPricing">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.lmp.</span></span><span class="sig-name descname"><span class="pre">LocationalMarginalPricing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">utility_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zones_arr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/lmp.html#LocationalMarginalPricing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.lmp.LocationalMarginalPricing" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.lmp.</span></span><span class="sig-name descname"><span class="pre">LocationalMarginalPricing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lmp_zone_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zones_arr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/lmp.html#LocationalMarginalPricing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.lmp.LocationalMarginalPricing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Create a 3D array of locational marginal pricing per technology by capacity factor.</p>
-<p>LMPs ($/MWh) are provided per capacity factor quantile as represented in the <cite>zones_xml_file</cite>.
-Each technologies capacity factor is matched to the corresponding LMP per utility zone
-and is thus used to create a 2D array that establishes the appropriate LMP per grid cell
-per technology.</p>
+<p>Locational Marginal Pricing (LMP) represents the cost of making and delivering electricity
+over an interconnected network of service nodes. LMPs are delivered on an hourly basis
+(8760 hours for the year) and help us to understand aspects of generation and congestion
+costs relative to the supply and demand of electricity when considering existing transmission
+infrastructure.  LMPs are a also driven by factors such as the cost of fuel which cerf also
+takes into account when calculating a power plants <a class="reference internal" href="user_guide.html#net-operating-value"><span class="std std-ref">Net Operating Value</span></a>.  When working
+with a scenario-driven grid operations model to evaluate the future evolution of the electricity
+system, <strong>cerf</strong> can ingest LMPs, return the sited generation per service area for the time
+step, and then continue this iteration through all future years to provide a harmonized view
+how the electricity system may respond to stressors in the future.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>) – A configuration dictionary.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lmp_zone_dict</strong> (<em>dict</em>) – A dictionary containing lmp related settings from the config file</p></li>
+<li><p><strong>technology_dict</strong> (<em>dict</em>) – A dictionary containing technology related settings from the config file</p></li>
+<li><p><strong>technology_order</strong> – A list of technologies in the order by which they should be processed</p></li>
+<li><p><strong>zones_arr</strong> – An array containing the lmp zones per grid cell</p></li>
+</ul>
 </dd>
 </dl>
-<p>USAGE:</p>
-<p># instantiate the LMP class and create a 3D numpy array with the shape (techid, x, y)
-#   containing LMP values per 1km grid cell
-pricing = Lmp(config)</p>
-<p># access the LMP array by
-pricing.lmp_arr</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cerf.lmp.LocationalMarginalPricing.get_cf_bin">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_cf_bin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity_factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/lmp.html#LocationalMarginalPricing.get_cf_bin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.lmp.LocationalMarginalPricing.get_cf_bin" title="Permalink to this definition">¶</a></dt>
@@ -471,7 +432,7 @@ pricing.lmp_arr</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="cerf.lmp.generate_random_lmp_dataframe">
 <span class="sig-prename descclassname"><span class="pre">cerf.lmp.</span></span><span class="sig-name descname"><span class="pre">generate_random_lmp_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_zones</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">57</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mid_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/lmp.html#generate_random_lmp_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.lmp.generate_random_lmp_dataframe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate a random dataframe of hourly 8760 LMP values per utility zone.  Let high value LMPs only be used
+<dd><p>Generate a random dataframe of hourly 8760 LMP values per lmp zone.  Let high value LMPs only be used
 for 15 percent of the data.
 :param n_zones:                     Number of zones to process
 :param low_value:                   Desired minimum value of MWh
@@ -545,7 +506,7 @@ for 15 percent of the data.
 <p>License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cerf.model.Model">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.model.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_site_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/model.html#Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.model.Model" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.model.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_site_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/model.html#Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.model.Model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cerf.read_config.ReadConfig" title="cerf.read_config.ReadConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">cerf.read_config.ReadConfig</span></code></a></p>
 <p>Model wrapper for CERF.</p>
 <dl class="field-list simple">
@@ -575,13 +536,13 @@ plant is to be decommissioned</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cerf.model.Model.run_single_state">
 <span class="sig-name descname"><span class="pre">run_single_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_state_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/model.html#Model.run_single_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.model.Model.run_single_state" title="Permalink to this definition">¶</a></dt>
-<dd><p>Execute a single state.</p>
+<dd><p>run a single state.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cerf.model.Model.stage">
 <span class="sig-name descname"><span class="pre">stage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/model.html#Model.stage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.model.Model.stage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Execute model.</p>
+<dd><p>run model.</p>
 </dd></dl>
 
 </dd></dl>
@@ -793,18 +754,44 @@ Units:  $/MWh</p></li>
 <div class="section" id="module-cerf.outputs">
 <span id="cerf-outputs-module"></span><h2>cerf.outputs module<a class="headerlink" href="#module-cerf.outputs" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="cerf.outputs.plot_results">
-<span class="sig-prename descclassname"><span class="pre">cerf.outputs.</span></span><span class="sig-name descname"><span class="pre">plot_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/outputs.html#plot_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.outputs.plot_results" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot my dog Ava.</p>
+<dt class="sig sig-object py" id="cerf.outputs.plot_siting">
+<span class="sig-prename descclassname"><span class="pre">cerf.outputs.</span></span><span class="sig-name descname"><span class="pre">plot_siting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tech_name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markersize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Paired'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_figure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/outputs.html#plot_siting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.outputs.plot_siting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the results of a cerf run on a map where each technology has its own color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>result_df</strong> (<em>DataFrame</em>) – Result data frame from running ‘cerf.run()’</p></li>
+<li><p><strong>column</strong> (<em>str</em>) – Column to plot</p></li>
+<li><p><strong>markersize</strong> (<em>int</em>) – Size of power plant marker</p></li>
+<li><p><strong>cmap</strong> – Custom matplotlib colormap object or name</p></li>
+<li><p><strong>save_figure</strong> (<em>bool</em>) – If True, figure is saved to file and ‘output_file’ must be set</p></li>
+<li><p><strong>output_file</strong> – If ‘save_figure’ is True, specify full path with file name and extension
+for the file to be saved to</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
 <div class="section" id="module-cerf.package_data">
 <span id="cerf-package-data-module"></span><h2>cerf.package_data module<a class="headerlink" href="#module-cerf.package_data" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
+<dt class="sig sig-object py" id="cerf.package_data.cerf_boundary_shapefile">
+<span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">cerf_boundary_shapefile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#cerf_boundary_shapefile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.cerf_boundary_shapefile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the cerf CONUS boundary shapefile as a Geopandas data frame.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="cerf.package_data.cerf_crs">
 <span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">cerf_crs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#cerf_crs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.cerf_crs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the CRS object of type ‘rasterio.crs.CRS’ for USA_Contiguous_Albers_Equal_Area_Conic.</p>
+<dd><p>Return a coordinate reference system (CRS) object of class ‘pyproj.crs.crs.CRS’
+for USA_Contiguous_Albers_Equal_Area_Conic.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cerf.package_data.cerf_states_shapefile">
+<span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">cerf_states_shapefile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#cerf_states_shapefile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.cerf_states_shapefile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the cerf CONUS states shapefile as a Geopandas data frame.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -828,9 +815,21 @@ Units:  $/MWh</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="cerf.package_data.get_data_directory">
+<span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">get_data_directory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#get_data_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.get_data_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the directory of where the cerf package data resides.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="cerf.package_data.get_sample_lmp_data">
 <span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">get_sample_lmp_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#get_sample_lmp_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.get_sample_lmp_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the sample 8760 hourly locational marginal price data as a Pandas DataFrame.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cerf.package_data.get_state_abbrev_to_name">
+<span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">get_state_abbrev_to_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#get_state_abbrev_to_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.get_state_abbrev_to_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary of state abbreviation to state name.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -854,9 +853,9 @@ Units:  $/MWh</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="cerf.package_data.sample_utility_zones_raster_file">
-<span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">sample_utility_zones_raster_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#sample_utility_zones_raster_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.sample_utility_zones_raster_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return path for the sample utility zones raster file.</p>
+<dt class="sig sig-object py" id="cerf.package_data.sample_lmp_zones_raster_file">
+<span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">sample_lmp_zones_raster_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#sample_lmp_zones_raster_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.sample_lmp_zones_raster_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return path for the sample lmp zoness raster file.</p>
 </dd></dl>
 
 </div>
@@ -892,8 +891,33 @@ non-sited grid cells are given the value of NaN.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="cerf.process.execute">
-<span class="sig-prename descclassname"><span class="pre">cerf.process.</span></span><span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sequential'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_site_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process.html#execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process.execute" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cerf.process.generate_model">
+<span class="sig-prename descclassname"><span class="pre">cerf.process.</span></span><span class="sig-name descname"><span class="pre">generate_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_site_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process.html#generate_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process.generate_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate model instance for use in parallel applications.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_file</strong> (<em>str</em>) – Full path with file name and extension to the input config.yml file</p></li>
+<li><p><strong>config_dict</strong> (<em>dict</em>) – Optional instead of config_file. Configuration dictionary.</p></li>
+<li><p><strong>initialize_site_data</strong> – <p>None if no initialization is required, otherwise either a CSV file or
+Pandas DataFrame of siting data bearing the following required fields:</p>
+<p>xcoord:  the X coordinate of the site in meters in
+USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</p>
+<p>ycoord:  the Y coordinate of the site in meters in
+USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</p>
+<p>retirement_year:  the year (int four digit, e.g., 2050) that the power
+plant is to be decommissioned</p>
+<p>buffer_in_km:  the buffer around the site to apply in kilometers</p>
+</p></li>
+<li><p><strong>log_level</strong> (<em>str</em>) – Log level.  Options are ‘info’ and ‘debug’.  Default ‘info’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cerf.process.run">
+<span class="sig-prename descclassname"><span class="pre">cerf.process.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sequential'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_site_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process.html#run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run all CERF states for the CONUS for the target year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -925,31 +949,6 @@ plant is to be decommissioned</p>
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="cerf.process.generate_model">
-<span class="sig-prename descclassname"><span class="pre">cerf.process.</span></span><span class="sig-name descname"><span class="pre">generate_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_site_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process.html#generate_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process.generate_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate model instance for use in parallel applications.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>config_file</strong> (<em>str</em>) – Full path with file name and extension to the input config.yml file</p></li>
-<li><p><strong>config_dict</strong> (<em>dict</em>) – Optional instead of config_file. Configuration dictionary.</p></li>
-<li><p><strong>initialize_site_data</strong> – <p>None if no initialization is required, otherwise either a CSV file or
-Pandas DataFrame of siting data bearing the following required fields:</p>
-<p>xcoord:  the X coordinate of the site in meters in
-USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</p>
-<p>ycoord:  the Y coordinate of the site in meters in
-USA_Contiguous_Albers_Equal_Area_Conic (EPSG:  102003)</p>
-<p>retirement_year:  the year (int four digit, e.g., 2050) that the power
-plant is to be decommissioned</p>
-<p>buffer_in_km:  the buffer around the site to apply in kilometers</p>
-</p></li>
-<li><p><strong>log_level</strong> (<em>str</em>) – Log level.  Options are ‘info’ and ‘debug’.  Default ‘info’</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 </div>
 <div class="section" id="module-cerf.process_state">
 <span id="cerf-process-state-module"></span><h2>cerf.process_state module<a class="headerlink" href="#module-cerf.process_state" title="Permalink to this headline">¶</a></h2>
@@ -968,6 +967,12 @@ plant is to be decommissioned</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cerf.process_state.ProcessState.extract_lmp_zones">
+<span class="sig-name descname"><span class="pre">extract_lmp_zones</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process_state.html#ProcessState.extract_lmp_zones"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process_state.ProcessState.extract_lmp_zones" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the lmp zoness elements for the target state and return as a flat array.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cerf.process_state.ProcessState.extract_state_metrics">
 <span class="sig-name descname"><span class="pre">extract_state_metrics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process_state.html#ProcessState.extract_state_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process_state.ProcessState.extract_state_metrics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the LMP, NOV, and IC arrays for the target state and return them as dictionaries where
@@ -978,12 +983,6 @@ plant is to be decommissioned</p>
 <dt class="sig sig-object py" id="cerf.process_state.ProcessState.extract_state_suitability">
 <span class="sig-name descname"><span class="pre">extract_state_suitability</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process_state.html#ProcessState.extract_state_suitability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process_state.ProcessState.extract_state_suitability" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract a single state from the suitability.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cerf.process_state.ProcessState.extract_utility_zones">
-<span class="sig-name descname"><span class="pre">extract_utility_zones</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process_state.html#ProcessState.extract_utility_zones"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process_state.ProcessState.extract_utility_zones" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract the utility zones elements for the target state and return as a flat array.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1057,7 +1056,7 @@ expansion plan</p>
 <span id="cerf-read-config-module"></span><h2>cerf.read_config module<a class="headerlink" href="#module-cerf.read_config" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cerf.read_config.ReadConfig">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.read_config.</span></span><span class="sig-name descname"><span class="pre">ReadConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/read_config.html#ReadConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.read_config.ReadConfig" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.read_config.</span></span><span class="sig-name descname"><span class="pre">ReadConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/read_config.html#ReadConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.read_config.ReadConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cerf.logger.Logger" title="cerf.logger.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">cerf.logger.Logger</span></code></a></p>
 <p>Read the configuration YAML file to a dictionary. Users can optionally pass in a configuration dictionary
 instead.</p>
@@ -1108,9 +1107,6 @@ instead.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-cerf.spatial_reader">
-<span id="cerf-spatial-reader-module"></span><h2>cerf.spatial_reader module<a class="headerlink" href="#module-cerf.spatial_reader" title="Permalink to this headline">¶</a></h2>
-</div>
 <div class="section" id="module-cerf.stage">
 <span id="cerf-stage-module"></span><h2>cerf.stage module<a class="headerlink" href="#module-cerf.stage" title="Permalink to this headline">¶</a></h2>
 <p>Stage data for CERF run.</p>
@@ -1119,11 +1115,11 @@ instead.</p>
 <p>License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cerf.stage.Stage">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.stage.</span></span><span class="sig-name descname"><span class="pre">Stage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">utility_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_site_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/stage.html#Stage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.stage.Stage" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.stage.</span></span><span class="sig-name descname"><span class="pre">Stage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmp_zone_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">infrastructure_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_site_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/stage.html#Stage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.stage.Stage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.stage.Stage.KV_TO_MW_REQUIREMENT">
-<span class="sig-name descname"><span class="pre">KV_TO_MW_REQUIREMENT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{230:</span> <span class="pre">{'high_mw':</span> <span class="pre">250,</span> <span class="pre">'low_mw':</span> <span class="pre">1},</span> <span class="pre">345:</span> <span class="pre">{'high_mw':</span> <span class="pre">500,</span> <span class="pre">'low_mw':</span> <span class="pre">251},</span> <span class="pre">500:</span> <span class="pre">{'high_mw':</span> <span class="pre">1250,</span> <span class="pre">'low_mw':</span> <span class="pre">501},</span> <span class="pre">765:</span> <span class="pre">{'high_mw':</span> <span class="pre">99999999,</span> <span class="pre">'low_mw':</span> <span class="pre">1251}}</span></em><a class="headerlink" href="#cerf.stage.Stage.KV_TO_MW_REQUIREMENT" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cerf.stage.Stage.DEFAULT_SUITABILITY">
+<span class="sig-name descname"><span class="pre">DEFAULT_SUITABILITY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{'biomass_conv_w_ccs':</span> <span class="pre">'suitability_biomass.sdat',</span> <span class="pre">'biomass_conv_wo_ccs':</span> <span class="pre">'suitability_biomass.sdat',</span> <span class="pre">'biomass_igcc_w_ccs':</span> <span class="pre">'suitability_biomass_igcc_ccs.sdat',</span> <span class="pre">'biomass_igcc_wo_ccs':</span> <span class="pre">'suitability_biomass_igcc.sdat',</span> <span class="pre">'coal_conv_pul_w_ccs':</span> <span class="pre">'suitability_coal.sdat',</span> <span class="pre">'coal_conv_pul_wo_ccs':</span> <span class="pre">'suitability_coal.sdat',</span> <span class="pre">'coal_igcc_w_ccs':</span> <span class="pre">'suitability_coal_igcc_ccs.sdat',</span> <span class="pre">'coal_igcc_wo_ccs':</span> <span class="pre">'suitability_coal_igcc.sdat',</span> <span class="pre">'gas_cc_w_ccs':</span> <span class="pre">'suitability_gas_cc_ccs.sdat',</span> <span class="pre">'gas_cc_wo_ccs':</span> <span class="pre">'suitability_gas_cc.sdat',</span> <span class="pre">'gas_ct_wo_ccs':</span> <span class="pre">'suitability_gas_cc.sdat',</span> <span class="pre">'geothermal':</span> <span class="pre">None,</span> <span class="pre">'hydro':</span> <span class="pre">None,</span> <span class="pre">'nuclear_gen_ii':</span> <span class="pre">'suitability_nuclear.sdat',</span> <span class="pre">'nuclear_gen_iii':</span> <span class="pre">'suitability_nuclear.sdat',</span> <span class="pre">'oil_ct_wo_ccs':</span> <span class="pre">'suitability_oil_baseload.sdat',</span> <span class="pre">'solar_csp':</span> <span class="pre">'suitability_solar.sdat',</span> <span class="pre">'solar_pv_non_dist':</span> <span class="pre">'suitability_solar.sdat',</span> <span class="pre">'wind_onshore':</span> <span class="pre">'suitability_wind.sdat'}</span></em><a class="headerlink" href="#cerf.stage.Stage.DEFAULT_SUITABILITY" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1164,10 +1160,15 @@ exists.  Also return a data frame of active sites (not reaching retirement age) 
 output.</p>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cerf.stage.Stage.lmp_zone_dict">
+<span class="sig-name descname"><span class="pre">lmp_zone_dict</span></span><em class="property"><span class="pre">:</span> <span class="pre">dict</span></em><a class="headerlink" href="#cerf.stage.Stage.lmp_zone_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
-<dt class="sig sig-object py" id="cerf.stage.Stage.load_utility_raster">
-<span class="sig-name descname"><span class="pre">load_utility_raster</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/stage.html#Stage.load_utility_raster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.stage.Stage.load_utility_raster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load the utility zones raster for the CONUS into a 2D array.</p>
+<dt class="sig sig-object py" id="cerf.stage.Stage.load_lmp_zone_raster">
+<span class="sig-name descname"><span class="pre">load_lmp_zone_raster</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/stage.html#Stage.load_lmp_zone_raster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.stage.Stage.load_lmp_zone_raster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the lmp zoness raster for the CONUS into a 2D array.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -1183,11 +1184,6 @@ output.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cerf.stage.Stage.technology_order">
 <span class="sig-name descname"><span class="pre">technology_order</span></span><em class="property"><span class="pre">:</span> <span class="pre">list</span></em><a class="headerlink" href="#cerf.stage.Stage.technology_order" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.stage.Stage.utility_dict">
-<span class="sig-name descname"><span class="pre">utility_dict</span></span><em class="property"><span class="pre">:</span> <span class="pre">dict</span></em><a class="headerlink" href="#cerf.stage.Stage.utility_dict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1229,7 +1225,7 @@ if they were in 2D space.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="cerf.utils.empty_sited_dict">
 <span class="sig-prename descclassname"><span class="pre">cerf.utils.</span></span><span class="sig-name descname"><span class="pre">empty_sited_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/utils.html#empty_sited_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.utils.empty_sited_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize a sited data frame.</p>
+<dd><p>Initialize a sited dictionary.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -1286,6 +1282,20 @@ and their buffers of active power plants</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>[0] 2D array of X coordinates
 [1] 2D array of Y coordinates</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cerf.utils.results_to_geodataframe">
+<span class="sig-prename descclassname"><span class="pre">cerf.utils.</span></span><span class="sig-name descname"><span class="pre">results_to_geodataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/utils.html#results_to_geodataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.utils.results_to_geodataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the results from ‘cerf.run()’ to a GeoDataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>result_df</strong> (<em>DataFrame</em>) – Result data frame from running ‘cerf.run()’</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>GeoPandas GeoDataFrame of results</p>
 </dd>
 </dl>
 </dd></dl>

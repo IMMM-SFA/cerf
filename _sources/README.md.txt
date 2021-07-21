@@ -39,7 +39,7 @@ cerf.get_package_data(data_dir)
 
 ### Setting up a `cerf` run
 
-The `cerf` package utilizes a YAML configuration file customized by the user with project level and technology-specific settings, an electricity technology capacity expansion plan, and utility zone data for each year intended to model.  `cerf` comes equipped with prebuilt configuration files for years 2010 through 2050 to provide an illustrative example.  Each example configuration file can be viewed using the following:
+The `cerf` package utilizes a YAML configuration file customized by the user with project level and technology-specific settings, an electricity technology capacity expansion plan, and lmp zones data for each year intended to model.  `cerf` comes equipped with prebuilt configuration files for years 2010 through 2050 to provide an illustrative example.  Each example configuration file can be viewed using the following:
 
 ```python
 import cerf
@@ -94,7 +94,7 @@ These are technology-specific settings.
 | buffer_in_km | Buffer around the site to apply in kilometers which becomes unsuitable for other sites after siting | number of km | int |
 | require_pipelines | If the technology is gas related, pipelines will be used when calculating the interconnection cost | NA | bool |
 | suitability_raster_file | Full path with file name and extension to the accompanying suitability raster file | NA | str |
-| utility_zone_lmp_file | LMP CSV file containing 8760 LMP per zone where columns are each zone with a numeric zone ID header that corresponds with the zones represented in the `utility_zone_raster_file` found in the `utility_zones` section and an additional hour column named `hour` holding the hour of each record | $/MWh for the LMPs in the file | str |
+| lmp_hourly_data_file | LMP CSV file containing 8760 LMP per zone where columns are each zone with a numeric zone ID header that corresponds with the zones represented in the `lmp_zone_raster_file` found in the `lmp_zones` section and an additional hour column named `hour` holding the hour of each record | $/MWh for the LMPs in the file | str |
 
 The following is an example implementation in the YAML configuration file:
 
@@ -119,7 +119,7 @@ technology:
         buffer_in_km: 5
         require_pipelines: False
         suitability_raster_file: <path to file>
-        utility_zone_lmp_file: <path to lmp file>
+        lmp_hourly_data_file: <path to lmp file>
 ```
 
 #### `expansion_plan`
@@ -144,32 +144,32 @@ expansion_plan:
             n_sites: 2
 ```
 
-#### `utility_zones`
-These are the utility zone data representing the linkage between each grid and technology and their locational marginal price (LMP).
+#### `lmp_zones`
+These are the lmp zones data representing the linkage between each grid and technology and their locational marginal price (LMP).
 
 | Name | Description | Unit | Type |
 | --- | --- | --- | --- |
-| utility_zone_raster_file | Full path with file name and extension to the utility zones raster file | NA | str |
-| utility_zone_raster_nodata_value | No data value in the utility zone raster | NA | int; float |
+| lmp_zone_raster_file | Full path with file name and extension to the lmp zoness raster file | NA | str |
+| lmp_zone_raster_nodata_value | No data value in the lmp zones raster | NA | int; float |
 
 
 The following is an example implementation in the YAML configuration file:
 
 ```yaml
-utility_zones:
+lmp_zones:
 
-    utility_zone_raster_file: <path to zone raster>
-    utility_zone_raster_nodata_value: 255
+    lmp_zone_raster_file: <path to zone raster>
+    lmp_zone_raster_nodata_value: 255
 ```
 
-The `cerf` package comes equipped with a sample utility zones raster file and a sample hourly (8760) locational marginal price file for illustrative purposes only.
+The `cerf` package comes equipped with a sample lmp zoness raster file and a sample hourly (8760) locational marginal price file for illustrative purposes only.
 
-You can take a look at the utility zones raster file by running:
+You can take a look at the lmp zoness raster file by running:
 
 ```python
 import cerf
 
-utility_file = cerf.sample_utility_zones_raster_file()
+lmp_zone_file = cerf.sample_lmp_zones_raster_file()
 ```
 
 You can also view the sample hourly locational marginal price file as a Pandas DataFrame using:
@@ -186,7 +186,7 @@ These are the electricity transmission and gas pipeline infrastructure data.
 | Name | Description | Unit | Type |
 | --- | --- | --- | --- |
 | substation_file | Full path with file name and extension to the input substations shapefile. If None, `cerf` will use the default data stored in the package. | NA | str |
-| costs_to_connect_file | A YAML file containing the cost of connection per km to a substation having a certain minimum voltage range.  Default is to load from the CERF data file 'costs_per_kv_substation.yml' by specifying 'None' | NA | dict |
+| transmission_costs_file | A YAML file containing the cost of connection per km to a substation having a certain minimum voltage range.  Default is to load from the CERF data file 'costs_per_kv_substation.yml' by specifying 'None' | NA | dict |
 | pipeline_file | Full path with file name and extension to the input pipelines shapefile. If None, CERF will use the default data stored in the package. | NA | str |
 | output_rasterized_file | Write distance raster | NA | bool |
 | output_dist_file | Write distance raster | NA | bool |
@@ -199,7 +199,7 @@ The following is an example implementation in the YAML configuration file:
 infrastructure:
 
     substation_file: <path to substation shapefile>
-    costs_to_connect_file: <path to the yaml file>
+    transmission_costs_file: <path to the yaml file>
     pipeline_file: <path to the pipeline file>
     output_rasterized_file: False
     output_dist_file: False

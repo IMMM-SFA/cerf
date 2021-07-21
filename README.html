@@ -102,7 +102,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#settings"><code class="docutils literal notranslate"><span class="pre">settings</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#technology"><code class="docutils literal notranslate"><span class="pre">technology</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#expansion-plan"><code class="docutils literal notranslate"><span class="pre">expansion_plan</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#utility-zones"><code class="docutils literal notranslate"><span class="pre">utility_zones</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lmp_zone-zones"><code class="docutils literal notranslate"><span class="pre">lmp_zones</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#infrastructure"><code class="docutils literal notranslate"><span class="pre">infrastructure</span></code></a></li>
 </ul>
 </li>
@@ -217,7 +217,7 @@
 </div>
 <div class="section" id="setting-up-a-cerf-run">
 <h2>Setting up a <code class="docutils literal notranslate"><span class="pre">cerf</span></code> run<a class="headerlink" href="#setting-up-a-cerf-run" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">cerf</span></code> package utilizes a YAML configuration file customized by the user with project level and technology-specific settings, an electricity technology capacity expansion plan, and utility zone data for each year intended to model.  <code class="docutils literal notranslate"><span class="pre">cerf</span></code> comes equipped with prebuilt configuration files for years 2010 through 2050 to provide an illustrative example.  Each example configuration file can be viewed using the following:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">cerf</span></code> package utilizes a YAML configuration file customized by the user with project level and technology-specific settings, an electricity technology capacity expansion plan, and lmp zones data for each year intended to model.  <code class="docutils literal notranslate"><span class="pre">cerf</span></code> comes equipped with prebuilt configuration files for years 2010 through 2050 to provide an illustrative example.  Each example configuration file can be viewed using the following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cerf</span>
 
 <span class="n">sample_config</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">load_sample_config</span><span class="p">(</span><span class="n">yr</span><span class="o">=</span><span class="mi">2010</span><span class="p">)</span>
@@ -266,7 +266,7 @@
 | buffer_in_km | Buffer around the site to apply in kilometers which becomes unsuitable for other sites after siting | number of km | int |
 | require_pipelines | If the technology is gas related, pipelines will be used when calculating the interconnection cost | NA | bool |
 | suitability_raster_file | Full path with file name and extension to the accompanying suitability raster file | NA | str |
-| utility_zone_lmp_file | LMP CSV file containing 8760 LMP per zone where columns are each zone with a numeric zone ID header that corresponds with the zones represented in the <code class="docutils literal notranslate"><span class="pre">utility_zone_raster_file</span></code> found in the <code class="docutils literal notranslate"><span class="pre">utility_zones</span></code> section and an additional hour column named <code class="docutils literal notranslate"><span class="pre">hour</span></code> holding the hour of each record | $/MWh for the LMPs in the file | str |</p>
+| lmp_hourly_data_file | LMP CSV file containing 8760 LMP per zone where columns are each zone with a numeric zone ID header that corresponds with the zones represented in the <code class="docutils literal notranslate"><span class="pre">lmp_zone_raster_file</span></code> found in the <code class="docutils literal notranslate"><span class="pre">lmp_zones</span></code> section and an additional hour column named <code class="docutils literal notranslate"><span class="pre">hour</span></code> holding the hour of each record | $/MWh for the LMPs in the file | str |</p>
 <p>The following is an example implementation in the YAML configuration file:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">technology</span><span class="p">:</span>
 
@@ -288,7 +288,7 @@
         <span class="nt">buffer_in_km</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
         <span class="nt">require_pipelines</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">False</span>
         <span class="nt">suitability_raster_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to file&gt;</span>
-        <span class="nt">utility_zone_lmp_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to lmp file&gt;</span>
+        <span class="nt">lmp_hourly_data_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to lmp file&gt;</span>
 </pre></div>
 </div>
 </div>
@@ -311,25 +311,25 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="utility-zones">
-<h3><code class="docutils literal notranslate"><span class="pre">utility_zones</span></code><a class="headerlink" href="#utility-zones" title="Permalink to this headline">¶</a></h3>
-<p>These are the utility zone data representing the linkage between each grid and technology and their locational marginal price (LMP).</p>
+<div class="section" id="lmp_zone-zones">
+<h3><code class="docutils literal notranslate"><span class="pre">lmp_zones</span></code><a class="headerlink" href="#lmp_zone-zones" title="Permalink to this headline">¶</a></h3>
+<p>These are the lmp zones data representing the linkage between each grid and technology and their locational marginal price (LMP).</p>
 <p>| Name | Description | Unit | Type |
 | — | — | — | — |
-| utility_zone_raster_file | Full path with file name and extension to the utility zones raster file | NA | str |
-| utility_zone_raster_nodata_value | No data value in the utility zone raster | NA | int; float |</p>
+| lmp_zone_raster_file | Full path with file name and extension to the lmp zoness raster file | NA | str |
+| lmp_zone_raster_nodata_value | No data value in the lmp zones raster | NA | int; float |</p>
 <p>The following is an example implementation in the YAML configuration file:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">utility_zones</span><span class="p">:</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">lmp_zones</span><span class="p">:</span>
 
-    <span class="nt">utility_zone_raster_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to zone raster&gt;</span>
-    <span class="nt">utility_zone_raster_nodata_value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">255</span>
+    <span class="nt">lmp_zone_raster_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to zone raster&gt;</span>
+    <span class="nt">lmp_zone_raster_nodata_value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">255</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">cerf</span></code> package comes equipped with a sample utility zones raster file and a sample hourly (8760) locational marginal price file for illustrative purposes only.</p>
-<p>You can take a look at the utility zones raster file by running:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">cerf</span></code> package comes equipped with a sample lmp zoness raster file and a sample hourly (8760) locational marginal price file for illustrative purposes only.</p>
+<p>You can take a look at the lmp zoness raster file by running:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cerf</span>
 
-<span class="n">utility_file</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">sample_utility_zones_raster_file</span><span class="p">()</span>
+<span class="n">lmp_zone_file</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">sample_lmp_zones_raster_file</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>You can also view the sample hourly locational marginal price file as a Pandas DataFrame using:</p>
@@ -345,7 +345,7 @@
 <p>| Name | Description | Unit | Type |
 | — | — | — | — |
 | substation_file | Full path with file name and extension to the input substations shapefile. If None, <code class="docutils literal notranslate"><span class="pre">cerf</span></code> will use the default data stored in the package. | NA | str |
-| costs_to_connect_file | A YAML file containing the cost of connection per km to a substation having a certain minimum voltage range.  Default is to load from the CERF data file ‘costs_per_kv_substation.yml’ by specifying ‘None’ | NA | dict |
+| transmission_costs_file | A YAML file containing the cost of connection per km to a substation having a certain minimum voltage range.  Default is to load from the CERF data file ‘costs_per_kv_substation.yml’ by specifying ‘None’ | NA | dict |
 | pipeline_file | Full path with file name and extension to the input pipelines shapefile. If None, CERF will use the default data stored in the package. | NA | str |
 | output_rasterized_file | Write distance raster | NA | bool |
 | output_dist_file | Write distance raster | NA | bool |
@@ -355,7 +355,7 @@
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">infrastructure</span><span class="p">:</span>
 
     <span class="nt">substation_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to substation shapefile&gt;</span>
-    <span class="nt">costs_to_connect_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to the yaml file&gt;</span>
+    <span class="nt">transmission_costs_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to the yaml file&gt;</span>
     <span class="nt">pipeline_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to the pipeline file&gt;</span>
     <span class="nt">output_rasterized_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">False</span>
     <span class="nt">output_dist_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">False</span>
