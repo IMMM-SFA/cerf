@@ -24,7 +24,7 @@ setup(
     download_url=f'https://github.com/IMMM-SFA/cerf/archive/refs/tags/v{version}.tar.gz',
     license='BSD2-Simplified',
     author='Chris R. Vernon; Nino Zuljevic',
-    author_email='chris.vernon@pnnl.gov; nino.zuljevic@pnnl.gov',
+    author_email='chris.vernon@pnnl.gov',
     description='An open-source geospatial Python package for assessing and analyzing future electricity technology capacity expansion feasibility',
     long_description=readme(),
     long_description_content_type="text/markdown",
