@@ -613,14 +613,14 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
       - LMP zone ID
       - NA
     * - locational_marginal_pricing
-      - See :ref:`Locational marginal price (LMP)`)
+      - See :ref:`Locational marginal price (LMP)`
       - $/MWh
     * - net_operational_value
-      - See :ref:`Net Operating Value`)
+      - See :ref:`Net Operating Value`
       - $/yr
     * - interconnection_cost
-      - See :ref:`Interconnection Cost`)
+      - See :ref:`Interconnection Cost`
       - $/yr
     * - net_locational_cost
-      - See :ref:`Net Locational Cost`)
+      - See :ref:`Net Locational Cost`
       - $/yr

@@ -16,10 +16,9 @@ def get_requirements():
 
 version = re.search(r"__version__ = ['\"]([^'\"]*)['\"]", open('cerf/__init__.py').read(), re.M).group(1)
 
-
 setup(
     name='cerf',
-    version="2.0.0",
+    version=version,
     packages=find_packages(),
     url='https://github.com/IMMM-SFA/cerf',
     license='BSD2-Simplified',
