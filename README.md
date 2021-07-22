@@ -1,5 +1,5 @@
 [![build](https://github.com/IMMM-SFA/cerf/actions/workflows/build.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/build.yml)
-[![codecov](https://codecov.io/gh/IMMM-SFA/cerf/branch/version-two/graph/badge.svg?token=9jbGJv8XCJ)](https://codecov.io/gh/IMMM-SFA/cerf)
+[![codecov](https://codecov.io/gh/IMMM-SFA/cerf/branch/main/graph/badge.svg?token=9jbGJv8XCJ)](https://codecov.io/gh/IMMM-SFA/cerf)
 [![DOI](https://zenodo.org/badge/115649750.svg)](https://zenodo.org/badge/latestdoi/115649750)
 
 ## cerf
