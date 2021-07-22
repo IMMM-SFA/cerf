@@ -1,6 +1,9 @@
 cerf/data/*_dist_m.tif
 cerf/data/cerf_transmission_*
 
+# ignore docs build
+docs/build/
+
 # pyenv
 .python-version
 
