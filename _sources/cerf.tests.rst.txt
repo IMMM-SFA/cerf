@@ -1,8 +1,8 @@
 cerf.tests package
 ==================
 
-Submodules
-----------
+Testing Submodules
+------------------
 
 cerf.tests.test\_compete module
 -------------------------------
@@ -48,14 +48,6 @@ cerf.tests.test\_utils module
 -----------------------------
 
 .. automodule:: cerf.tests.test_utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: cerf.tests
    :members:
    :undoc-members:
    :show-inheritance:
