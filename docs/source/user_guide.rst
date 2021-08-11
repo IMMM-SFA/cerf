@@ -404,57 +404,25 @@ Locational Marginal Pricing (LMP) represents the cost of making and delivering e
 Tutorials
 ---------
 
-Jupyter Notebooks
-
 **cerf** quickstarter
 ~~~~~~~~~~~~~~~~~~~~~
 
-The following is a link to a Jupyter Notebook to run **cerf**:  `cerf quickstarter <https://github.com/IMMM-SFA/cerf/blob/main/notebooks/quickstarter.ipynb>`_
-
-Site a single year for the CONUS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Site power plants for the default illustrative expansion plan for all states in the CONUS for a single year.  Return the results as a Pandas DataFame.
-
-.. code:: python
-
-    import cerf
-
-    # sample year
-    yr = 2010
-
-    # load the sample configuration file path for the target year
-    config_file = cerf.config_file(yr)
-
-    # run the configuration for the target year and return a data frame
-    result_df = cerf.run(config_file, write_output=False)
+.. include:: quickstarter.rst
 
 
-Site multiple years for the CONUS and inherit sited plants
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Running the quickstarter locally
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+You can download the **cerf** quickstarter Jupyter notebook here: `cerf quickstarter <https://github.com/IMMM-SFA/cerf/blob/main/notebooks/quickstarter.ipynb>`_
 
-Site power plants for the default illustrative expansion plan for all states in the CONUS.  Return the results as a Pandas DataFame.  The final ``result_df`` variable will contain any 2010 power plants that have not yet retired and newly sited plants for year 2050 for all technologies and states.
+This will allow you to run the tutorial interactively on your local computer.  Installation instructions for installing Jupyter software can be found `here <https://jupyter.org/install>`_.
 
-.. code:: python
+Once you have Jupyter up-and-running, make sure you install **cerf** by running:
 
-    import cerf
+.. code-block:: bash
 
-    # process year 2010 and 2050
-    for index, yr in enumerate([2010, 2050]):
+  python3 -m pip install cerf
 
-        print(f"Processing year:  {yr}")
-
-        # load the sample configuration file path for the target year
-        config_file = cerf.config_file(yr)
-
-        # do not intialize the run with previously sited data if it is the first time step
-        if index == 0:
-            result_df = cerf.execute(config_file, write_output=False)
-
-        else:
-            result_df = cerf.execute(config_file,
-                                     write_output=False,
-                                     initialize_site_data=result_df)
+where, ``python3`` would be the instance of Python that you installed Jupyter on.  Now you are ready to explore **cerf**!
 
 
 Fundamental equations and concepts

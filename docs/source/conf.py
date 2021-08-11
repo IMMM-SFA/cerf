@@ -15,6 +15,9 @@ import sys
 
 import sphinx_rtd_theme
 
+import cerf
+version = str(cerf.__version__)
+
 
 sys.path.insert(0, os.path.abspath('../../'))
 
@@ -26,7 +29,7 @@ copyright = '2021, Battelle Memorial Institute'
 author = 'Chris R. Vernon'
 
 # The full version, including alpha/beta/rc tags
-release = '2.0.0'
+release = version
 
 
 # -- General configuration ---------------------------------------------------
@@ -47,7 +50,8 @@ extensions = [
     'sphinx.ext.autosectionlabel',
     'sphinx_rtd_theme',
     'sphinx_panels',
-    'sphinx-mathjax-offline'
+    'sphinx-mathjax-offline',
+    'nbsphinx'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -56,7 +60,7 @@ templates_path = ['_templates']
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+exclude_patterns = ['**.ipynb_checkpoints']
 
 # The suffix of source filenames.
 source_suffix = [".rst"]
@@ -78,9 +82,6 @@ html_css_files = [
     "css/cerf.css",
     "css/getting_started.css",
 ]
-
-import cerf
-version = str(cerf.__version__)
 
 
 # -- Extension configuration -------------------------------------------------
