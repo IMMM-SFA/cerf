@@ -7,7 +7,7 @@ Whether you find a typo in the documentation, find a bug, or want to develop fun
 Opening issues
 ______________
 
-If you find a bug or would like to contribute a new feature, please `open an issue <https://github.com/IMMM-SFA/cerf/issues>`_.
+If you find a bug or would like to contribute a new feature, please `open an issue <https://github.com/IMMM-SFA/cerf/issues>`_ and select the template that fits your need.
 
 
 Contribution workflow

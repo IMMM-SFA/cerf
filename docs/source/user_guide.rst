@@ -7,8 +7,8 @@ Setting up a **cerf** run
 
 The following with indroduce you to the input data required by **cerf** and how to set up a configuration file to run **cerf**.
 
-Configration file setup
-~~~~~~~~~~~~~~~~~~~~~~~
+Configuration file setup
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 The **cerf** package utilizes a YAML configuration file customized by the user with project level and technology-specific settings, an electricity technology capacity expansion plan, and LMP zone data for each year intended to model. **cerf** comes equipped with prebuilt configuration files for years 2010 through 2050 to provide an illustrative example. Each example configuration file can be viewed using the following:
 

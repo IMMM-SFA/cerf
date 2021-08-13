@@ -55,6 +55,13 @@ Optional dependencies
 ==================    ================
 Dependency            Minimum Version
 ==================    ================
-sphinx_rtd_theme      0.5.1
-sphinx_panels         0.6.0
+build                 0.5.1
+nbsphinx              0.8.6
+setuptools            57.0.0
+sphinx                4.0.2
+sphinx-panels         0.6.0
+sphinx-rtd-theme      0.5.2
+twine                 3.4.1
+pytest                6.2.4
+pytest-cov            2.12.1
 ==================    ================
