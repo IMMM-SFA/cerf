@@ -55,7 +55,9 @@ setup(
             'sphinx>=4.0.2',
             'sphinx-panels>=0.6.0',
             'sphinx-rtd-theme>=0.5.2',
-            'twine>=3.4.1'
+            'twine>=3.4.1',
+            'pytest>=6.2.4',
+            'pytest-cov>=2.12.1'
         ]
     }
 )
