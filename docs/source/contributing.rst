@@ -34,7 +34,7 @@ The following is the recommended workflow for contributing to **cerf**:
 
 3. Add your recommended changes and ensure all tests pass, then commit your changes:
 
-    Ensure your tests pass locally before pushing to your remote branch where CI will trigger tests.  To do this, ensure that `pytest` has been installed then navigate to the root of your cloned directory (e.g., <my-path>/cerf) and simply execute `pytest`in the terminal.
+    Ensure your tests pass locally before pushing to your remote branch where CI will trigger tests.  To do this, ensure that ``pytest`` has been installed then navigate to the root of your cloned directory (e.g., <my-path>/cerf) and simply execute ``pytest`` in the terminal.
 
   .. code-block:: bash
 
