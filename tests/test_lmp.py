@@ -12,9 +12,9 @@ from cerf.package_data import config_file
 class TestLmp(unittest.TestCase):
 
     # supporting data
-    SLIM_LMP_ARRAY = np.load(pkg_resources.resource_filename('cerf', 'tests/data/comp_data/lmp_arr.npy'))
+    SLIM_LMP_ARRAY = np.load('tests/data/comp_data/lmp_arr.npy')
     LMP_FILE = pkg_resources.resource_filename('cerf', 'data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
-    TEST_CONFIG = pkg_resources.resource_filename('cerf', 'tests/data/test_config_2010.yml')
+    TEST_CONFIG = 'tests/data/test_config_2010.yml'
 
     @staticmethod
     def get_sample(arr):
