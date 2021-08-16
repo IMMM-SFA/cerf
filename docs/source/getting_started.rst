@@ -26,6 +26,12 @@ Installation
 
     pip install cerf
 
+Conda/Miniconda users can utilize the ``environment.yml`` stored in the root of this repository by executing the following from a terminal window::
+
+    conda env create --file environment.yml
+
+It may be favorable to the user to create a virtual environment for the **cerf** package to minimize package version conflicts.  See `creating virtual environments <https://docs.python.org/3/library/venv.html>`_ to learn how these function and can be setup.
+
 
 Dependencies
 ------------
