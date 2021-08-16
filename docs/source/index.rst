@@ -99,6 +99,7 @@ cerf documentation
    modules
    contributing
    publications
+   how_to_cite
    authors
    license
    footer
