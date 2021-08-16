@@ -14,7 +14,7 @@ def get_requirements():
         return f.read().split()
 
 
-version = re.search(r"__version__ = ['\"]([^'\"]*)['\"]", open('cerf/__init__.py').read(), re.M).group(1)
+version = re.search(r"__version__ = ['\"]([^'\"]*)['\"]", open('src/cerf/__init__.py').read(), re.M).group(1)
 
 setup(
     name='cerf',
