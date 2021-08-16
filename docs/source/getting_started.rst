@@ -6,9 +6,11 @@ About
 
 The Capacity Expansion Regional Feasibility model (**cerf**) helps us evaluate the feasibility and structure of future electricity capacity expansion plans by siting power plants in areas that have been deemed the least cost option. We can use **cerf** to gain an understanding of topics such as: 1) whether or not future projected electricity expansion plans from models such as GCAM are possible to achieve, 2) where and which on-the-ground barriers to siting (e.g., protected areas, cooling water availability) may influence our ability to achieve certain expansions, and 3) how power plant infrastructure build outs and value may evolve into the future when considering locational marginal pricing (LMP) based on the supply and demand of electricity from a grid operations model.
 
-**cerf** currently operates at a 1 km\ :superscript:`2` \ resolution over the conterminous United States. Each grid cell is given an initial value of suitable (0) or unsuitable (1) based on a collection of suitability criteria gleaned from the literature. **cerf**'s default suitability layers include both those that are common to all thermal technologies as well as technology-specific suitability criteria. Common suitability layers represent categories such as protected lands, critical habitat areas, and much more. Technology-specific suitability layers are those that satisfy requirements that may not be applicable to all technologies. An example would be minimum mean annual flow requirements for cooling water availability for individual thermal technologies.
+**cerf** currently operates at a 1 km\ :superscript:`2` \ resolution over the conterminous United States (CONUS). Each grid cell is given an initial value of suitable (0) or unsuitable (1) based on a collection of suitability criteria gleaned from the literature. **cerf**'s default suitability layers include both those that are common to all thermal technologies as well as technology-specific suitability criteria. Common suitability layers represent categories such as protected lands, critical habitat areas, and much more. Technology-specific suitability layers are those that satisfy requirements that may not be applicable to all technologies. An example would be minimum mean annual flow requirements for cooling water availability for individual thermal technologies.
 
-We introduce a metric named Net Locational Cost (NLC) that is used compete power plant technologies for each grid cell based on the least cost option to site. NLC is calculated by subtracting the Net Operating Value (NOV) of a proposed power plant from the cost of its interconnection to the grid to represent the potential deployment value. Both the NOV parameter which incorporates many technology-specific values such as variable operations and maintenance costs, carbon price, heat rate, etc. and the interconnection cost parameter used for both electricity transmission and gas pipelines are configurable per time step.  All equations used in **cerf** are described in detail in the `documentation <https://immm-sfa.github.io/cerf/user_guide.html#fundamental-equations-and-concepts>`_.
+Though **cerf** was built to function for the CONUS, it could be extended to function for any country or set of regions that had the following prerequisite data sources:  a spatial representation of substations or electricity transmission infrastructure, a spatial representation of gas pipeline infrastructure if applicable, any regionally applicable spatial data to construct suitability rasters from, access to hourly zonal LMP, and access to technology-specific information and each technologies accompanying electricity capacity expansion plan per region.  The Global Change Analysis Model (`GCAM <https://github.com/JGCRI/gcam-core>`_) is used to build our expansion plans and establish our technology-specific requirements through the end of the century. We derive our LMP from a grid operations model that also is harmonized with GCAM to provide consistent projections of energy system evolution.
+
+We introduce a metric named Net Locational Cost (NLC) that is used compete power plant technologies for each grid cell based on the least cost option to site. NLC is calculated by subtracting the Net Operating Value (NOV) of a proposed power plant from the cost of its interconnection to the grid to represent the potential deployment value. Both the NOV parameter which incorporates many technology-specific values such as variable operations and maintenance costs, carbon price, heat rate, etc. and the interconnection cost parameter used for both electricity transmission and gas pipelines are configurable per time step.  All equations used in **cerf** are described in detail in the `documentation <user_guide.rst#fundamental-equations-and-concepts>`_.
 
 
 Python version support
@@ -23,6 +25,12 @@ Installation
 **cerf** can be installed via pip by running the following from a terminal window::
 
     pip install cerf
+
+Conda/Miniconda users can utilize the ``environment.yml`` stored in the root of this repository by executing the following from a terminal window::
+
+    conda env create --file environment.yml
+
+It may be favorable to the user to create a virtual environment for the **cerf** package to minimize package version conflicts.  See `creating virtual environments <https://docs.python.org/3/library/venv.html>`_ to learn how these function and can be setup.
 
 
 Dependencies
@@ -55,6 +63,13 @@ Optional dependencies
 ==================    ================
 Dependency            Minimum Version
 ==================    ================
-sphinx_rtd_theme      0.5.1
-sphinx_panels         0.6.0
+build                 0.5.1
+nbsphinx              0.8.6
+setuptools            57.0.0
+sphinx                4.0.2
+sphinx-panels         0.6.0
+sphinx-rtd-theme      0.5.2
+twine                 3.4.1
+pytest                6.2.4
+pytest-cov            2.12.1
 ==================    ================
