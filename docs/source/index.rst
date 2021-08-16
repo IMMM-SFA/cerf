@@ -98,5 +98,6 @@ cerf documentation
    user_guide
    modules
    contributing
+   authors
    license
    footer
