@@ -6,7 +6,6 @@ import rasterio
 
 from cerf.lmp import LocationalMarginalPricing
 from cerf.read_config import ReadConfig
-from cerf.package_data import config_file
 
 
 class TestLmp(unittest.TestCase):
