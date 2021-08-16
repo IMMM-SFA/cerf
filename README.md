@@ -25,7 +25,7 @@ pip install cerf
 
 ### Check out a quickstart tutorial to run `cerf`
 
-Run `cerf` using the quicktart tutorial: [`cerf` Quickstarter](https://github.com/IMMM-SFA/cerf/blob/main/notebooks/quickstarter.ipynb)
+Run `cerf` using the quicktart tutorial: [`cerf` Quickstarter](https://immm-sfa.github.io/cerf/user_guide.html#cerf-quickstarter)
 
 ### Getting started
 
