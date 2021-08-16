@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf documentation &mdash; cerf 2.0.0 documentation</title>
+  <title>cerf documentation &mdash; cerf 2.0.1 documentation</title>
   
 
   
@@ -40,6 +40,7 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -98,8 +99,11 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="user_guide.html">User guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cerf.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="how_to_cite.html">How to cite <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="footer.html">Acknowledgement</a></li>
 </ul>
@@ -169,13 +173,37 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="cerf-documentation">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="cerf-documentation">
 <h1>cerf documentation<a class="headerlink" href="#cerf-documentation" title="Permalink to this headline">¶</a></h1>
-<p><strong>Date</strong>: Jul 30, 2021 <strong>Version</strong>: 2.0.1</p>
+<p><strong>Date</strong>: Aug 16, 2021 <strong>Version</strong>: 2.0.1</p>
 <p><strong>Useful links</strong>:
 <a class="reference external" href="https://github.com/immm-sfa/cerf">Source Repository</a> |
 <a class="reference external" href="https://github.com/immm-sfa/cerf/issues">Issues &amp; Ideas</a> |
-<a class="reference external" href="https://github.com/IMMM-SFA/cerf/blob/main/notebooks/quickstarter.ipynb">Interactive Quickstarter</a></p>
+<a class="reference internal" href="quickstarter.html"><span class="doc">Interactive Quickstarter</span></a></p>
 <p><strong>cerf</strong> is an open-source geospatial Python package for evaluating and analyzing future electricity technology capacity expansion feasibility.  <strong>cerf</strong> was created to:</p>
 <blockquote>
 <div><ol class="arabic simple">

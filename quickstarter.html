@@ -1,0 +1,400 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Load packages &mdash; cerf 2.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/cerf.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/getting_started.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> cerf
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.0.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="footer.html">Acknowledgement</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">cerf</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Load packages</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/quickstarter.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="load-packages">
+<h1>Load packages<a class="headerlink" href="#load-packages" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cerf</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="conduct-a-run-with-cerf">
+<h1>Conduct a run with CERF<a class="headerlink" href="#conduct-a-run-with-cerf" title="Permalink to this headline">¶</a></h1>
+<p>We will be exploring the main functionality of the <code class="docutils literal notranslate"><span class="pre">cerf</span></code> package
+using our built-in data which is meant for illustrative purposes only.
+<code class="docutils literal notranslate"><span class="pre">cerf</span></code> runs using a single YAML configuration file that contains
+project and technology-specific settings, an electricity capacity
+expansion plan, and lmp zones pricing data which is described in detail
+in the docs <a class="reference external" href="https://immm-sfa.github.io/cerf/">here</a>. Expansion plans
+and technology data are generally generated by models such as GCAM-USA
+which capture multi-sector dynamics that represent alternate futures
+based on scenario assumptions for socioeconomics, radiative forcing,
+etc. The <code class="docutils literal notranslate"><span class="pre">cerf</span></code> package also utilizes power plant siting suitability
+data at a 1km resolution over the CONUS, publically available data from
+EIA and HIFLD for transmission and pipeline infrastructure, and 8760
+locational marginal pricing from your prefered grid operations model.</p>
+</div>
+<div class="section" id="run-cerf-to-site-power-plants-in-an-expansion-plan-for-a-single-year-for-the-conus">
+<h1>Run <code class="docutils literal notranslate"><span class="pre">cerf</span></code> to site power plants in an expansion plan for a single year for the CONUS<a class="headerlink" href="#run-cerf-to-site-power-plants-in-an-expansion-plan-for-a-single-year-for-the-conus" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sample year</span>
+<span class="n">yr</span> <span class="o">=</span> <span class="mi">2030</span>
+
+<span class="c1"># load the sample configuration file path for the target year</span>
+<span class="n">config_file</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">config_file</span><span class="p">(</span><span class="n">yr</span><span class="p">)</span>
+
+<span class="c1"># run the configuration for the target year and return a data frame</span>
+<span class="n">result_df</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<pre class="literal-block">2021-08-11 16:44:35,907 - root - INFO - Starting CERF model
+2021-08-11 16:44:36,128 - root - INFO - Staging data...
+2021-08-11 16:44:36,348 - root - INFO - Using 'zones_raster_file':  /Users/d3y010/repos/github/cerf/cerf/data/lmp_zones_1km.img
+2021-08-11 16:44:36,386 - root - INFO - Processing locational marginal pricing (LMP)
+2021-08-11 16:44:36,386 - root - INFO - Using LMP from default illustrative package data:  /Users/d3y010/repos/github/cerf/cerf/data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip
+2021-08-11 16:44:46,018 - root - INFO - Calculating interconnection costs (IC)
+2021-08-11 16:44:46,019 - root - INFO - Using default substations costs from file: /Users/d3y010/repos/github/cerf/cerf/data/costs_per_kv_substation.yml
+2021-08-11 16:44:46,022 - root - INFO - Using default substation file: /Users/d3y010/repos/github/cerf/cerf/data/hifld_substations_conus_albers.zip
+2021-08-11 16:44:55,374 - root - INFO - Using default gas pipeline file:  /Users/d3y010/repos/github/cerf/cerf/data/eia_natural_gas_pipelines_conus_albers.zip
+2021-08-11 16:44:56,594 - root - INFO - Using gas pipeline costs from default file:  /Users/d3y010/repos/github/cerf/cerf/data/costs_gas_pipeline.yml
+2021-08-11 16:45:04,450 - root - INFO - Calculating net operational cost (NOV)
+2021-08-11 16:45:05,610 - root - INFO - Calculating net locational cost (NLC)
+2021-08-11 16:45:06,142 - root - INFO - Building suitability array
+2021-08-11 16:45:06,561 - root - INFO - Using suitability file for 'biomass_conv_wo_ccs':  /Users/d3y010/repos/github/cerf/cerf/data/suitability_biomass.sdat
+2021-08-11 16:45:06,597 - root - INFO - Using suitability file for 'biomass_igcc_wo_ccs':  /Users/d3y010/repos/github/cerf/cerf/data/suitability_biomass_igcc.sdat
+2021-08-11 16:45:06,631 - root - INFO - Using suitability file for 'coal_conv_pul_wo_ccs':  /Users/d3y010/repos/github/cerf/cerf/data/suitability_coal.sdat
+2021-08-11 16:45:06,660 - root - INFO - Using suitability file for 'gas_cc_wo_ccs':  /Users/d3y010/repos/github/cerf/cerf/data/suitability_gas_cc.sdat
+2021-08-11 16:45:06,689 - root - INFO - Using suitability file for 'gas_cc_w_ccs':  /Users/d3y010/repos/github/cerf/cerf/data/suitability_gas_cc_ccs.sdat
+2021-08-11 16:45:06,717 - root - INFO - Using suitability file for 'nuclear_gen_ii':  /Users/d3y010/repos/github/cerf/cerf/data/suitability_nuclear.sdat
+2021-08-11 16:45:06,747 - root - INFO - Using suitability file for 'nuclear_gen_iii':  /Users/d3y010/repos/github/cerf/cerf/data/suitability_nuclear.sdat
+2021-08-11 16:45:06,774 - root - INFO - Using suitability file for 'oil_ct_wo_ccs':  /Users/d3y010/repos/github/cerf/cerf/data/suitability_oil_baseload.sdat
+2021-08-11 16:45:06,801 - root - INFO - Using suitability file for 'solar_csp':  /Users/d3y010/repos/github/cerf/cerf/data/suitability_solar.sdat
+2021-08-11 16:45:06,828 - root - INFO - Using suitability file for 'solar_pv_non_dist':  /Users/d3y010/repos/github/cerf/cerf/data/suitability_solar.sdat
+2021-08-11 16:45:06,857 - root - INFO - Using suitability file for 'wind_onshore':  /Users/d3y010/repos/github/cerf/cerf/data/suitability_wind.sdat
+2021-08-11 16:45:06,884 - root - INFO - Staged data in 30.7558887 seconds
+2021-08-11 16:45:07,908 - root - INFO - Processed <cite>alabama</cite> in 1.0231931 seconds
+2021-08-11 16:45:09,228 - root - INFO - Processed <cite>arizona</cite> in 1.3189287 seconds
+2021-08-11 16:45:09,756 - root - INFO - Processed <cite>arkansas</cite> in 0.5270271 seconds
+2021-08-11 16:45:14,008 - root - INFO - Processed <cite>california</cite> in 4.2520022 seconds
+2021-08-11 16:45:14,716 - root - INFO - Processed <cite>colorado</cite> in 0.706486 seconds
+2021-08-11 16:45:14,863 - root - INFO - Processed <cite>connecticut</cite> in 0.1462779 seconds
+2021-08-11 16:45:14,946 - root - INFO - Processed <cite>delaware</cite> in 0.0821531 seconds
+2021-08-11 16:45:15,020 - root - INFO - Processed <cite>district_of_columbia</cite> in 0.073612 seconds
+2021-08-11 16:45:16,680 - root - INFO - Processed <cite>florida</cite> in 1.6592171 seconds
+2021-08-11 16:45:17,598 - root - INFO - Processed <cite>georgia</cite> in 0.9176869 seconds
+2021-08-11 16:45:18,174 - root - INFO - Processed <cite>idaho</cite> in 0.574789 seconds
+2021-08-11 16:45:19,028 - root - INFO - Processed <cite>illinois</cite> in 0.853694 seconds
+2021-08-11 16:45:19,416 - root - INFO - Processed <cite>indiana</cite> in 0.3873949 seconds
+2021-08-11 16:45:20,021 - root - INFO - Processed <cite>iowa</cite> in 0.6044884 seconds
+2021-08-11 16:45:20,541 - root - INFO - Processed <cite>kansas</cite> in 0.5192442 seconds
+2021-08-11 16:45:20,998 - root - INFO - Processed <cite>kentucky</cite> in 0.4557009 seconds
+2021-08-11 16:45:21,804 - root - INFO - Processed <cite>louisiana</cite> in 0.805455 seconds
+2021-08-11 16:45:22,070 - root - INFO - Processed <cite>maine</cite> in 0.2656841 seconds
+2021-08-11 16:45:22,288 - root - INFO - Processed <cite>maryland</cite> in 0.2168839 seconds
+2021-08-11 16:45:22,463 - root - INFO - Processed <cite>massachusetts</cite> in 0.1739771 seconds
+2021-08-11 16:45:23,448 - root - INFO - Processed <cite>michigan</cite> in 0.9846289 seconds
+2021-08-11 16:45:24,232 - root - INFO - Processed <cite>minnesota</cite> in 0.7831929 seconds
+2021-08-11 16:45:24,859 - root - INFO - Processed <cite>mississippi</cite> in 0.6265438 seconds
+2021-08-11 16:45:25,570 - root - INFO - Processed <cite>missouri</cite> in 0.7099049 seconds
+2021-08-11 16:45:26,387 - root - INFO - Processed <cite>montana</cite> in 0.8161809 seconds
+2021-08-11 16:45:26,757 - root - INFO - Processed <cite>nebraska</cite> in 0.3701129 seconds
+2021-08-11 16:45:27,774 - root - INFO - Processed <cite>nevada</cite> in 1.01583 seconds
+2021-08-11 16:45:27,941 - root - INFO - Processed <cite>new_hampshire</cite> in 0.1660187 seconds
+2021-08-11 16:45:28,137 - root - INFO - Processed <cite>new_jersey</cite> in 0.1957922 seconds
+2021-08-11 16:45:28,778 - root - INFO - Processed <cite>new_mexico</cite> in 0.640183 seconds
+2021-08-11 16:45:29,673 - root - INFO - Processed <cite>new_york</cite> in 0.894026 seconds
+2021-08-11 16:45:30,361 - root - INFO - Processed <cite>north_carolina</cite> in 0.6876791 seconds
+2021-08-11 16:45:30,738 - root - INFO - Processed <cite>north_dakota</cite> in 0.3766301 seconds
+2021-08-11 16:45:31,283 - root - INFO - Processed <cite>ohio</cite> in 0.5435967 seconds
+2021-08-11 16:45:32,156 - root - INFO - Processed <cite>oklahoma</cite> in 0.8723531 seconds
+2021-08-11 16:45:32,909 - root - INFO - Processed <cite>oregon</cite> in 0.752351 seconds
+2021-08-11 16:45:33,625 - root - INFO - Processed <cite>pennsylvania</cite> in 0.715596 seconds
+2021-08-11 16:45:33,700 - root - INFO - Processed <cite>rhode_island</cite> in 0.074075 seconds
+2021-08-11 16:45:34,133 - root - INFO - Processed <cite>south_carolina</cite> in 0.432246 seconds
+2021-08-11 16:45:34,477 - root - INFO - Processed <cite>south_dakota</cite> in 0.3435099 seconds
+2021-08-11 16:45:34,891 - root - INFO - Processed <cite>tennessee</cite> in 0.4133101 seconds
+2021-08-11 16:45:46,752 - root - INFO - Processed <cite>texas</cite> in 11.859777 seconds
+2021-08-11 16:45:47,379 - root - INFO - Processed <cite>utah</cite> in 0.6265898 seconds
+2021-08-11 16:45:47,496 - root - INFO - Processed <cite>vermont</cite> in 0.1157219 seconds
+2021-08-11 16:45:48,114 - root - INFO - Processed <cite>virginia</cite> in 0.6173577 seconds
+2021-08-11 16:45:48,587 - root - INFO - Processed <cite>washington</cite> in 0.472501 seconds
+2021-08-11 16:45:48,876 - root - INFO - Processed <cite>west_virginia</cite> in 0.2880208 seconds
+2021-08-11 16:45:49,397 - root - INFO - Processed <cite>wisconsin</cite> in 0.521013 seconds
+2021-08-11 16:45:49,979 - root - INFO - Processed <cite>wyoming</cite> in 0.5813661 seconds
+2021-08-11 16:45:49,980 - root - INFO - All states processed in 43.0950482 seconds.
+2021-08-11 16:45:49,980 - root - INFO - Aggregating outputs...
+2021-08-11 16:45:50,387 - root - INFO - CERF model run completed in 74.4805849 seconds</pre>
+<p><strong>Results are returned as a Pandas DataFrame</strong></p>
+<p>Each record is a sited power plant having a geographic location and
+other siting attributes. Reminder: <code class="docutils literal notranslate"><span class="pre">cerf</span></code> uses the
+USA_Contiguous_Albers_Equal_Area_Conic projected coordinate reference
+system, so the <code class="docutils literal notranslate"><span class="pre">xcoord</span></code> and <code class="docutils literal notranslate"><span class="pre">ycoord</span></code> are relative to that
+projection.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-cerf-to-site-power-plants-in-an-expansion-plan-for-multiple-years-for-the-conus">
+<h1>Run <code class="docutils literal notranslate"><span class="pre">cerf</span></code> to site power plants in an expansion plan for multiple years for the CONUS<a class="headerlink" href="#run-cerf-to-site-power-plants-in-an-expansion-plan-for-multiple-years-for-the-conus" title="Permalink to this headline">¶</a></h1>
+<p>This exercise demonstrates how to inherit sites from a previous year’s
+results and keep them in the mix if they have not yet reached
+retirement. If this is done in <code class="docutils literal notranslate"><span class="pre">cerf</span></code>, users should ensure that their
+expansion plan is only for new vintage each timestep.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cerf</span>
+
+<span class="c1"># process year 2010, 2030, and 2050</span>
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">yr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2030</span><span class="p">,</span> <span class="mi">2050</span><span class="p">]):</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Processing year:  </span><span class="si">{</span><span class="n">yr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># load the sample configuration file path for the target year</span>
+    <span class="n">config_file</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">config_file</span><span class="p">(</span><span class="n">yr</span><span class="p">)</span>
+
+    <span class="c1"># do not intialize the run with previously sited data if it is the first time step</span>
+    <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">result_df</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result_df</span> <span class="o">=</span> <span class="n">cerf</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">initialize_site_data</span><span class="o">=</span><span class="n">result_df</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Explore the results that account for retirement</strong></p>
+<p>Since we inherited the each year, and we are only siting new vintage per
+year, we see power plants from multiple technlogies until they reach
+their retirement age. We can narrow in on <code class="docutils literal notranslate"><span class="pre">biomass</span></code> power plants in
+Virginia to see this:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;state_name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;virginia&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;tech_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">9</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p><strong>Plot the output</strong></p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cerf</span><span class="o">.</span><span class="n">plot_siting</span><span class="p">(</span><span class="n">result_df</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/quickstart_plot.png" src="_images/quickstart_plot.png" />
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Battelle Memorial Institute.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

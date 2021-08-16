@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Acknowledgement &mdash; cerf 2.0.0 documentation</title>
+  <title>Acknowledgement &mdash; cerf 2.0.1 documentation</title>
   
 
   
@@ -40,6 +40,7 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -169,7 +170,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="acknowledgement">
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="acknowledgement">
 <h1>Acknowledgement<a class="headerlink" href="#acknowledgement" title="Permalink to this headline">¶</a></h1>
 <p><strong>cerf</strong> is actively developed as an open-source project as a part of the <a class="reference external" href="https://im3.pnnl.gov/">Integrated Multisector Multiscale Modeling (IM3)</a> project.  IM3 is a multi-institutional effort led by Pacific Northwest National Laboratory and supported by the <a class="reference external" href="https://www.energy.gov/science/office-science">U.S. Department of Energy’s Office of Science</a> as part of research in <a class="reference external" href="https://climatemodeling.science.energy.gov/program/multisector-dynamics">MultiSector Dynamics</a>, Earth and Environmental Systems Modeling Program.</p>
 </div>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>API reference &mdash; cerf 2.0.0 documentation</title>
+  <title>Submodules &mdash; cerf 2.0.1 documentation</title>
   
 
   
@@ -40,14 +40,15 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="cerf.tests package" href="cerf.tests.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="modules.html" /> 
+    <link rel="next" title="Contributing to cerf" href="contributing.html" />
+    <link rel="prev" title="API reference" href="modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -99,12 +100,8 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="user_guide.html">User guide</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">API reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cerf.tests.html">cerf.tests package</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.compete">cerf.compete module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.interconnect">cerf.interconnect module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-cerf.lmp">cerf.lmp module</a></li>
@@ -172,9 +169,9 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="modules.html">&lt;no title&gt;</a> &raquo;</li>
+          <li><a href="modules.html">API reference</a> &raquo;</li>
         
-      <li>API reference</li>
+      <li>Submodules</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -193,30 +190,35 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="api-reference">
-<h1>API reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="cerf.tests.html">cerf.tests package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#testing-submodules">Testing Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#module-cerf.tests.test_compete">cerf.tests.test_compete module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#module-cerf.tests.test_lmp">cerf.tests.test_lmp module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#module-cerf.tests.test_nov">cerf.tests.test_nov module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#module-cerf.tests.test_read_config">cerf.tests.test_read_config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#module-cerf.tests.test_spatial_reader">cerf.tests.test_spatial_reader module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cerf.tests.html#module-cerf.tests.test_utils">cerf.tests.test_utils module</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
 <div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<h1>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h1>
 </div>
 <div class="section" id="module-cerf.compete">
-<span id="cerf-compete-module"></span><h2>cerf.compete module<a class="headerlink" href="#module-cerf.compete" title="Permalink to this headline">¶</a></h2>
+<span id="cerf-compete-module"></span><h1>cerf.compete module<a class="headerlink" href="#module-cerf.compete" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="cerf.compete.Competition">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.compete.</span></span><span class="sig-name descname"><span class="pre">Competition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_state_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expansion_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmp_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nov_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlc_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zones_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xcoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ycoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices_flat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/compete.html#Competition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.compete.Competition" title="Permalink to this definition">¶</a></dt>
@@ -266,7 +268,7 @@ Default:  True</p></li>
 
 </div>
 <div class="section" id="module-cerf.interconnect">
-<span id="cerf-interconnect-module"></span><h2>cerf.interconnect module<a class="headerlink" href="#module-cerf.interconnect" title="Permalink to this headline">¶</a></h2>
+<span id="cerf-interconnect-module"></span><h1>cerf.interconnect module<a class="headerlink" href="#module-cerf.interconnect" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="cerf.interconnect.Interconnection">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.interconnect.</span></span><span class="sig-name descname"><span class="pre">Interconnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substation_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transmission_costs_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transmission_costs_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline_costs_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline_costs_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_rasterized_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dist_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_alloc_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_cost_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interconnection_cost_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/interconnect.html#Interconnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.interconnect.Interconnection" title="Permalink to this definition">¶</a></dt>
@@ -378,7 +380,7 @@ designation field as ‘_rval_’</p>
 
 </div>
 <div class="section" id="module-cerf.lmp">
-<span id="cerf-lmp-module"></span><h2>cerf.lmp module<a class="headerlink" href="#module-cerf.lmp" title="Permalink to this headline">¶</a></h2>
+<span id="cerf-lmp-module"></span><h1>cerf.lmp module<a class="headerlink" href="#module-cerf.lmp" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="cerf.lmp.LocationalMarginalPricing">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.lmp.</span></span><span class="sig-name descname"><span class="pre">LocationalMarginalPricing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lmp_zone_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zones_arr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/lmp.html#LocationalMarginalPricing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.lmp.LocationalMarginalPricing" title="Permalink to this definition">¶</a></dt>
@@ -438,7 +440,7 @@ for 15 percent of the data.
 
 </div>
 <div class="section" id="module-cerf.logger">
-<span id="cerf-logger-module"></span><h2>cerf.logger module<a class="headerlink" href="#module-cerf.logger" title="Permalink to this headline">¶</a></h2>
+<span id="cerf-logger-module"></span><h1>cerf.logger module<a class="headerlink" href="#module-cerf.logger" title="Permalink to this headline">¶</a></h1>
 <p>Logger for CERF model.</p>
 <p>Copyright (c) 2018, Battelle Memorial Institute</p>
 <p>Open source under license BSD 2-Clause - see LICENSE and DISCLAIMER</p>
@@ -493,7 +495,7 @@ for 15 percent of the data.
 
 </div>
 <div class="section" id="module-cerf.model">
-<span id="cerf-model-module"></span><h2>cerf.model module<a class="headerlink" href="#module-cerf.model" title="Permalink to this headline">¶</a></h2>
+<span id="cerf-model-module"></span><h1>cerf.model module<a class="headerlink" href="#module-cerf.model" title="Permalink to this headline">¶</a></h1>
 <p>Model interface for CERF</p>
 <p>&#64;author Chris R. vernon
 &#64;email <a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
@@ -543,7 +545,7 @@ plant is to be decommissioned</p>
 
 </div>
 <div class="section" id="module-cerf.nov">
-<span id="cerf-nov-module"></span><h2>cerf.nov module<a class="headerlink" href="#module-cerf.nov" title="Permalink to this headline">¶</a></h2>
+<span id="cerf-nov-module"></span><h1>cerf.nov module<a class="headerlink" href="#module-cerf.nov" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="cerf.nov.NetOperationalValue">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.nov.</span></span><span class="sig-name descname"><span class="pre">NetOperationalValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">discount_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacity_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_cost_esc_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuel_esc_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carbon_esc_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_om</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heat_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuel_price</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carbon_tax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carbon_capture_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuel_co2_content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmp_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consider_leap_year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/nov.html#NetOperationalValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.nov.NetOperationalValue" title="Permalink to this definition">¶</a></dt>
@@ -746,7 +748,7 @@ Units:  $/MWh</p></li>
 
 </div>
 <div class="section" id="module-cerf.outputs">
-<span id="cerf-outputs-module"></span><h2>cerf.outputs module<a class="headerlink" href="#module-cerf.outputs" title="Permalink to this headline">¶</a></h2>
+<span id="cerf-outputs-module"></span><h1>cerf.outputs module<a class="headerlink" href="#module-cerf.outputs" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="cerf.outputs.plot_siting">
 <span class="sig-prename descclassname"><span class="pre">cerf.outputs.</span></span><span class="sig-name descname"><span class="pre">plot_siting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tech_name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markersize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Paired'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_figure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/outputs.html#plot_siting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.outputs.plot_siting" title="Permalink to this definition">¶</a></dt>
@@ -768,7 +770,7 @@ for the file to be saved to</p></li>
 
 </div>
 <div class="section" id="module-cerf.package_data">
-<span id="cerf-package-data-module"></span><h2>cerf.package_data module<a class="headerlink" href="#module-cerf.package_data" title="Permalink to this headline">¶</a></h2>
+<span id="cerf-package-data-module"></span><h1>cerf.package_data module<a class="headerlink" href="#module-cerf.package_data" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="cerf.package_data.cerf_boundary_shapefile">
 <span class="sig-prename descclassname"><span class="pre">cerf.package_data.</span></span><span class="sig-name descname"><span class="pre">cerf_boundary_shapefile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/package_data.html#cerf_boundary_shapefile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.package_data.cerf_boundary_shapefile" title="Permalink to this definition">¶</a></dt>
@@ -854,7 +856,7 @@ for USA_Contiguous_Albers_Equal_Area_Conic.</p>
 
 </div>
 <div class="section" id="module-cerf.process">
-<span id="cerf-process-module"></span><h2>cerf.process module<a class="headerlink" href="#module-cerf.process" title="Permalink to this headline">¶</a></h2>
+<span id="cerf-process-module"></span><h1>cerf.process module<a class="headerlink" href="#module-cerf.process" title="Permalink to this headline">¶</a></h1>
 <p>Processing module for CERF</p>
 <p>&#64;author Chris R. vernon
 &#64;email <a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
@@ -945,7 +947,7 @@ plant is to be decommissioned</p>
 
 </div>
 <div class="section" id="module-cerf.process_state">
-<span id="cerf-process-state-module"></span><h2>cerf.process_state module<a class="headerlink" href="#module-cerf.process_state" title="Permalink to this headline">¶</a></h2>
+<span id="cerf-process-state-module"></span><h1>cerf.process_state module<a class="headerlink" href="#module-cerf.process_state" title="Permalink to this headline">¶</a></h1>
 <p>Process a state for the target year.</p>
 <p>&#64;author Chris R. vernon
 &#64;email <a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
@@ -1047,7 +1049,7 @@ expansion plan</p>
 
 </div>
 <div class="section" id="module-cerf.read_config">
-<span id="cerf-read-config-module"></span><h2>cerf.read_config module<a class="headerlink" href="#module-cerf.read_config" title="Permalink to this headline">¶</a></h2>
+<span id="cerf-read-config-module"></span><h1>cerf.read_config module<a class="headerlink" href="#module-cerf.read_config" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="cerf.read_config.ReadConfig">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.read_config.</span></span><span class="sig-name descname"><span class="pre">ReadConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/read_config.html#ReadConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.read_config.ReadConfig" title="Permalink to this definition">¶</a></dt>
@@ -1102,7 +1104,7 @@ instead.</p>
 
 </div>
 <div class="section" id="module-cerf.stage">
-<span id="cerf-stage-module"></span><h2>cerf.stage module<a class="headerlink" href="#module-cerf.stage" title="Permalink to this headline">¶</a></h2>
+<span id="cerf-stage-module"></span><h1>cerf.stage module<a class="headerlink" href="#module-cerf.stage" title="Permalink to this headline">¶</a></h1>
 <p>Stage data for CERF run.</p>
 <p>&#64;author Chris R. vernon
 &#64;email <a class="reference external" href="mailto:chris&#46;vernon&#37;&#52;&#48;pnnl&#46;gov">chris<span>&#46;</span>vernon<span>&#64;</span>pnnl<span>&#46;</span>gov</a></p>
@@ -1184,7 +1186,7 @@ output.</p>
 
 </div>
 <div class="section" id="module-cerf.utils">
-<span id="cerf-utils-module"></span><h2>cerf.utils module<a class="headerlink" href="#module-cerf.utils" title="Permalink to this headline">¶</a></h2>
+<span id="cerf-utils-module"></span><h1>cerf.utils module<a class="headerlink" href="#module-cerf.utils" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="cerf.utils.array_to_raster">
 <span class="sig-prename descclassname"><span class="pre">cerf.utils.</span></span><span class="sig-name descname"><span class="pre">array_to_raster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_raster_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_raster_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/utils.html#array_to_raster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.utils.array_to_raster" title="Permalink to this definition">¶</a></dt>
@@ -1313,8 +1315,7 @@ and their buffers of active power plants</p>
 
 </div>
 <div class="section" id="module-cerf">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cerf" title="Permalink to this headline">¶</a></h2>
-</div>
+<span id="module-contents"></span><h1>Module contents<a class="headerlink" href="#module-cerf" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -1323,8 +1324,8 @@ and their buffers of active power plants</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="cerf.tests.html" class="btn btn-neutral float-right" title="cerf.tests package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="modules.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="contributing.html" class="btn btn-neutral float-right" title="Contributing to cerf" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="modules.html" class="btn btn-neutral float-left" title="API reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
