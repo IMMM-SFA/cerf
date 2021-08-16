@@ -1,3 +1,3 @@
 include cerf/data/*
-include cerf/tests/data/*
-include cerf/tests/data/comp_data/*
+include tests/data/*
+include tests/data/comp_data/*

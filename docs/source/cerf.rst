@@ -1,14 +1,3 @@
-API reference
-=============
-
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 4
-
-   cerf.tests
-
 Submodules
 ----------
 

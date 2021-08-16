@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this software in your work, please cite it as below."
+authors:
+- family-names: "Vernon"
+  given-names: "Chris R."
+  orcid: "https://orcid.org/0000-0002-3406-6214"
+- family-names: "Rice"
+  given-names: "Jennie S."
+  orcid: "https://orcid.org/0000-0002-7833-9456"
+- family-names: "Zuljevic"
+  given-names: "Nino"
+  orcid: "https://orcid.org/0000-0002-3175-9277"
+- family-names: "Mongird"
+  given-names: "Kendall"
+  orcid: "https://orcid.org/0000-0003-2807-7088"
+- family-names: "Nelson"
+  given-names: "Kristian"
+  orcid: "https://orcid.org/0000-0002-6745-167X"
+- family-names: "Iyer"
+  given-names: "Gokul"
+  orcid: "https://orcid.org/0000-0002-3565-7526"
+- family-names: "Voisin"
+  given-names: "Nathalie"
+  orcid: "https://orcid.org/0000-0002-6848-449X"
+- family-names: "Binsted"
+  given-names: "Matthew"
+  orcid: "https://orcid.org/0000-0002-5177-7253"
+title: "cerf v2.0.2: an open-source geospatial Python package for evaluating and analyzing future electricity technology capacity expansion feasibility."
+version: 2.0.2
+doi: 10.5281/zenodo.5140077
+date-released: 2021-08-16
+url: "https://github.com/IMMM-SFA/cerf"
