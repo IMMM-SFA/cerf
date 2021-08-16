@@ -58,6 +58,7 @@ def empty_sited_dict():
     return {'state_name': [],
             'tech_id': [],
             'tech_name': [],
+            'unit_size_mw': [],
             'xcoord': [],
             'ycoord': [],
             'index': [],

@@ -559,6 +559,9 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
     * - tech_name
       - Technology name
       - NA
+    * - unit_size_mw
+      - Power plant unit size
+      - MW
     * - xcoord
       - X coordinate in the default `CRS <https://spatialreference.org/ref/esri/usa-contiguous-albers-equal-area-conic/>`_
       - meters
