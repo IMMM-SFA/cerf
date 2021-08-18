@@ -1,5 +1,11 @@
-cerf/data/*_dist_m.tif
-cerf/data/cerf_transmission_*
+cerf/data/*.zip
+cerf/data/*.tif
+cerf/data/*.yml
+cerf/data/*.csv
+cerf/data/*.xml
+cerf/data/*.sdat
+cerf/data/*.sgrd
+cerf/data/*.img
 
 # ignore docs build
 docs/build/
