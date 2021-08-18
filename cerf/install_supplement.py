@@ -1,6 +1,8 @@
 import os
+import tempfile
 import zipfile
 import pkg_resources
+import shutil
 
 import requests
 
@@ -15,11 +17,11 @@ class InstallSupplement:
     """
 
     # URL for DOI minted example data hosted on Zenodo
-    DATA_VERSION_URLS = {'2.0.0': 'https://zenodo.org/record/3856417/files/test.zip?download=1',
-                         '2.0.1': 'https://zenodo.org/record/3856417/files/test.zip?download=1',
-                         '2.0.2': 'https://zenodo.org/record/3856417/files/test.zip?download=1',
-                         '2.0.3': 'https://zenodo.org/record/3856417/files/test.zip?download=1',
-                         '2.0.4': 'https://zenodo.org/record/3856417/files/test.zip?download=1'}
+    DATA_VERSION_URLS = {'2.0.0': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
+                         '2.0.1': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
+                         '2.0.2': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
+                         '2.0.3': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
+                         '2.0.4': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1'}
 
     def fetch_zenodo(self):
         """Download and unpack the Zenodo example data supplement for the
@@ -47,8 +49,26 @@ class InstallSupplement:
 
             # extract each file in the zipped dir to the project
             for f in zipped.namelist():
-                print("Unzipped: {}".format(os.path.join(data_directory, f)))
-                zipped.extract(f, data_directory)
+
+                extension = os.path.splitext(f)[-1]
+
+                if len(extension) > 0:
+
+                    basename = os.path.basename(f)
+                    out_file = os.path.join(data_directory, basename)
+
+                    # extract to a temporary directory to be able to only keep the file out of the dir structure
+                    with tempfile.TemporaryDirectory() as tdir:
+
+                        # extract file to temporary directory
+                        zipped.extract(f, tdir)
+
+                        # construct temporary file full path with name
+                        tfile = os.path.join(tdir, f)
+
+                        print(f"Unzipped: {out_file}")
+                        # transfer only the file sans the parent directory to the data package
+                        shutil.copy(tfile, out_file)
 
 
 def install_package_data():
