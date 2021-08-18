@@ -416,11 +416,13 @@ You can download the **cerf** quickstarter Jupyter notebook here: `cerf quicksta
 
 This will allow you to run the tutorial interactively on your local computer.  Installation instructions for installing Jupyter software can be found `here <https://jupyter.org/install>`_.
 
-Once you have Jupyter up-and-running, make sure you install **cerf** by running:
+Once you have Jupyter up-and-running, make sure you install **cerf** and its package data by running:
 
 .. code-block:: bash
 
   python3 -m pip install cerf
+
+  python3 -c 'import cerf; cerf.install_package_data()'
 
 where, ``python3`` would be the instance of Python that you installed Jupyter on.  Now you are ready to explore **cerf**!
 
