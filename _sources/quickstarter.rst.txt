@@ -8,6 +8,17 @@ Load packages
     import cerf
 
 
+Install package data
+^^^^^^^^^^^^^^^^^^^^
+
+Ensure that you have installed the package data using:
+
+
+.. code:: ipython3
+
+    cerf.install_package_data()
+
+
 Conduct a run with CERF
 ^^^^^^^^^^^^^^^^^^^^^^^
 

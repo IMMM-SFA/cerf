@@ -116,6 +116,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#tutorials">Tutorials</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#cerf-quickstarter"><strong>cerf</strong> quickstarter</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#load-packages">Load packages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#install-package-data">Install package data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#conduct-a-run-with-cerf">Conduct a run with CERF</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#run-cerf-to-site-power-plants-in-an-expansion-plan-for-a-single-year-for-the-conus">Run <code class="docutils literal notranslate"><span class="pre">cerf</span></code> to site power plants in an expansion plan for a single year for the CONUS</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#run-cerf-to-site-power-plants-in-an-expansion-plan-for-multiple-years-for-the-conus">Run <code class="docutils literal notranslate"><span class="pre">cerf</span></code> to site power plants in an expansion plan for multiple years for the CONUS</a></li>
@@ -861,6 +862,13 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="install-package-data">
+<h4>Install package data<a class="headerlink" href="#install-package-data" title="Permalink to this headline">¶</a></h4>
+<p>Ensure that you have installed the package data using:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cerf</span><span class="o">.</span><span class="n">install_package_data</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="conduct-a-run-with-cerf">
 <h4>Conduct a run with CERF<a class="headerlink" href="#conduct-a-run-with-cerf" title="Permalink to this headline">¶</a></h4>
 <p>We will be exploring the main functionality of the <code class="docutils literal notranslate"><span class="pre">cerf</span></code> package
@@ -1018,8 +1026,10 @@ Virginia to see this:</p>
 <h4>Running the quickstarter locally<a class="headerlink" href="#running-the-quickstarter-locally" title="Permalink to this headline">¶</a></h4>
 <p>You can download the <strong>cerf</strong> quickstarter Jupyter notebook here: <a class="reference external" href="https://github.com/IMMM-SFA/cerf/blob/main/notebooks/quickstarter.ipynb">cerf quickstarter</a></p>
 <p>This will allow you to run the tutorial interactively on your local computer.  Installation instructions for installing Jupyter software can be found <a class="reference external" href="https://jupyter.org/install">here</a>.</p>
-<p>Once you have Jupyter up-and-running, make sure you install <strong>cerf</strong> by running:</p>
+<p>Once you have Jupyter up-and-running, make sure you install <strong>cerf</strong> and its package data by running:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m pip install cerf
+
+python3 -c <span class="s1">&#39;import cerf; cerf.install_package_data()&#39;</span>
 </pre></div>
 </div>
 <p>where, <code class="docutils literal notranslate"><span class="pre">python3</span></code> would be the instance of Python that you installed Jupyter on.  Now you are ready to explore <strong>cerf</strong>!</p>
@@ -1124,47 +1134,51 @@ Virginia to see this:</p>
 <td><p>Technology name</p></td>
 <td><p>NA</p></td>
 </tr>
-<tr class="row-odd"><td><p>xcoord</p></td>
+<tr class="row-odd"><td><p>unit_size_mw</p></td>
+<td><p>Power plant unit size</p></td>
+<td><p>MW</p></td>
+</tr>
+<tr class="row-even"><td><p>xcoord</p></td>
 <td><p>X coordinate in the default <a class="reference external" href="https://spatialreference.org/ref/esri/usa-contiguous-albers-equal-area-conic/">CRS</a></p></td>
 <td><p>meters</p></td>
 </tr>
-<tr class="row-even"><td><p>ycoord</p></td>
+<tr class="row-odd"><td><p>ycoord</p></td>
 <td><p>Y coordinate in the default <a class="reference external" href="https://spatialreference.org/ref/esri/usa-contiguous-albers-equal-area-conic/">CRS</a></p></td>
 <td><p>meters</p></td>
 </tr>
-<tr class="row-odd"><td><p>index</p></td>
+<tr class="row-even"><td><p>index</p></td>
 <td><p>Index position in the flattend 2D array</p></td>
 <td><p>NA</p></td>
 </tr>
-<tr class="row-even"><td><p>buffer_in_km</p></td>
+<tr class="row-odd"><td><p>buffer_in_km</p></td>
 <td><p>Exclusion buffer around site</p></td>
 <td><p>km</p></td>
 </tr>
-<tr class="row-odd"><td><p>sited_year</p></td>
+<tr class="row-even"><td><p>sited_year</p></td>
 <td><p>Year of siting</p></td>
 <td><p>year</p></td>
 </tr>
-<tr class="row-even"><td><p>retirement_year</p></td>
+<tr class="row-odd"><td><p>retirement_year</p></td>
 <td><p>Year of retirement</p></td>
 <td><p>year</p></td>
 </tr>
-<tr class="row-odd"><td><p>lmp_zone</p></td>
+<tr class="row-even"><td><p>lmp_zone</p></td>
 <td><p>LMP zone ID</p></td>
 <td><p>NA</p></td>
 </tr>
-<tr class="row-even"><td><p>locational_marginal_pricing</p></td>
+<tr class="row-odd"><td><p>locational_marginal_pricing</p></td>
 <td><p>See <a class="reference internal" href="#locational-marginal-price-lmp"><span class="std std-ref">Locational marginal price (LMP)</span></a></p></td>
 <td><p>$/MWh</p></td>
 </tr>
-<tr class="row-odd"><td><p>net_operational_value</p></td>
+<tr class="row-even"><td><p>net_operational_value</p></td>
 <td><p>See <a class="reference internal" href="#net-operating-value"><span class="std std-ref">Net Operating Value</span></a></p></td>
 <td><p>$/yr</p></td>
 </tr>
-<tr class="row-even"><td><p>interconnection_cost</p></td>
+<tr class="row-odd"><td><p>interconnection_cost</p></td>
 <td><p>See <a class="reference internal" href="#interconnection-cost"><span class="std std-ref">Interconnection Cost</span></a></p></td>
 <td><p>$/yr</p></td>
 </tr>
-<tr class="row-odd"><td><p>net_locational_cost</p></td>
+<tr class="row-even"><td><p>net_locational_cost</p></td>
 <td><p>See <a class="reference internal" href="#net-locational-cost"><span class="std std-ref">Net Locational Cost</span></a></p></td>
 <td><p>$/yr</p></td>
 </tr>
