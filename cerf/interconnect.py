@@ -1,6 +1,5 @@
 import os
 import logging
-import pkg_resources
 import tempfile
 
 import rasterio
@@ -10,10 +9,11 @@ import yaml
 import numpy as np
 import geopandas as gpd
 
+import cerf.package_data as pkg
+
 from rasterio import features
 
 from cerf.utils import suppress_callback
-from cerf.package_data import cerf_crs, costs_per_kv_substation, get_region_abbrev_to_name
 
 # instantiate whitebox toolset
 wbt = whitebox.WhiteboxTools()
@@ -143,7 +143,7 @@ class Interconnection:
             logging.info(f"Using gas pipeline costs from file:  {f}")
 
         else:
-            f = pkg_resources.resource_filename('cerf', 'data/costs_gas_pipeline.yml')
+            f = pkg.get_costs_gas_pipeline()
             logging.info(f"Using gas pipeline costs from default file:  {f}")
 
         with open(f, 'r') as yml:
@@ -151,35 +151,27 @@ class Interconnection:
 
         return yaml_dict.get('gas_pipeline_cost')
 
-    def process_hifld_substations(self):
-        """Select substations from HIFLD data that are within the CONUS and either in service or under construction and
-        having a minimum voltage rating >= 0.  A field used to rasterize ('_rval_') is also added containing the cost of
-        connection in $/km for each substation.
-
-        This data is assumed to have the following fields:  ['TYPE', 'STATE', 'STATUS'].
-
-        :returns:                               A geodataframe containing the target substations
-
-        """
+    def process_substations(self):
+        """Process input substations from shapefile."""
 
         # load cost dictionary from package data if none passed
         if (self.transmission_costs_dict is None) and (self.transmission_costs_file is None):
-            default_kv_file = pkg_resources.resource_filename('cerf', 'data/costs_per_kv_substation.yml')
+            default_kv_file = pkg.get_costs_per_kv_substation_file()
 
-            logging.info(f"Using default substations costs from file: {default_kv_file}")
+            logging.info(f"Using default substation costs from file: {default_kv_file}")
 
-            self.transmission_costs_dict = costs_per_kv_substation()
+            self.transmission_costs_dict = pkg.costs_per_kv_substation()
 
         elif self.transmission_costs_file is not None:
 
-            logging.info(f"Using substations costs from file: {self.transmission_costs_file}")
+            logging.info(f"Using substation costs from file: {self.transmission_costs_file}")
 
             with open(self.transmission_costs_file, 'r') as yml:
                 self.transmission_costs_dict = yaml.load(yml, Loader=yaml.FullLoader)
 
         if self.substation_file is None:
 
-            sub_file = pkg_resources.resource_filename('cerf', 'data/hifld_substations_conus_albers.zip')
+            sub_file = pkg.get_substation_file()
 
             logging.info(f"Using default substation file: {sub_file}")
 
@@ -190,25 +182,20 @@ class Interconnection:
             logging.info(f"Using substation file: {self.substation_file}")
 
             # get region abbreviations file from cerf package data
-            regions = get_region_abbrev_to_name()
-
-            # load cerf's default coordinate reference system object
-            target_crs = cerf_crs()
+            regions = pkg.get_region_abbrev_to_name()
 
             # load and reproject
-            gdf = gpd.read_file(self.substation_file).to_crs(target_crs)
+            gdf = gpd.read_file(self.substation_file)
 
-            # keep only substations in the CONUS that are either in service or under construction
-            gdf = gdf.loc[(gdf['TYPE'] == 'SUBSTATION') &
-                          (gdf['STATE'].isin(states.keys())) &
-                          (gdf['STATUS'].isin(('IN SERVICE', 'UNDER CONST')))].copy()
+            # make all column names lower case
+            gdf.columns = [i.lower() for i in gdf.columns]
 
             # assign a field to rasterize by containing the cost of transmission per km
             gdf['_rval_'] = 0
 
             for i in self.transmission_costs_dict.keys():
-                gdf['_rval_'] = np.where((gdf['MIN_VOLT'] >= self.transmission_costs_dict[i]['min_voltage']) &
-                                         (gdf['MIN_VOLT'] <= self.transmission_costs_dict[i]['max_voltage']),
+                gdf['_rval_'] = np.where((gdf['min_volt'] >= self.transmission_costs_dict[i]['min_voltage']) &
+                                         (gdf['min_volt'] <= self.transmission_costs_dict[i]['max_voltage']),
                                          self.transmission_costs_dict[i]['dollar_per_km'],
                                          gdf['_rval_'])
 
@@ -223,7 +210,7 @@ class Interconnection:
 
         if self.pipeline_file is None:
 
-            f = pkg_resources.resource_filename('cerf', 'data/eia_natural_gas_pipelines_conus_albers.zip')
+            f = pkg.get_default_gas_pipelines()
 
             logging.info(f"Using default gas pipeline file:  {f}")
 
@@ -240,7 +227,7 @@ class Interconnection:
             logging.info(f"Using gas pipeline file:  {self.pipeline_file}")
 
             # load cerf's default coordinate reference system object
-            target_crs = cerf_crs()
+            target_crs = pkg.cerf_crs()
 
             # read in data and reproject
             gdf = gpd.read_file(self.pipeline_file).to_crs(target_crs)
@@ -270,18 +257,19 @@ class Interconnection:
         m_to_km_factor = 0.001
 
         if setting == 'substations':
-            gdf = self.process_hifld_substations()
+            infrastructure_gdf = self.process_substations()
 
         elif setting == 'pipelines':
-            gdf = self.process_eia_natural_gas_pipelines()
+            infrastructure_gdf = self.process_eia_natural_gas_pipelines()
 
         else:
             raise ValueError(f"Incorrect setting '{setting}' for transmission data.  Must be 'substations' or 'pipelines'")
 
         # get the template raster from CERF data
-        template_raster = pkg_resources.resource_filename('cerf', 'data/cerf_conus_regions_albers_1km.tif')
+        template_raster = pkg.cerf_regions_raster()
 
         with rasterio.open(template_raster) as src:
+
             # create 0 where land array
             arr = (src.read(1) * 0).astype(rasterio.float64)
 
@@ -289,8 +277,9 @@ class Interconnection:
             metadata = src.meta.copy()
             metadata.update({'dtype': rasterio.float64})
 
-            # reproject transmission data
-            infrastructure_gdf = gdf.to_crs(src.crs)
+            # reproject transmission data if necessary
+            if infrastructure_gdf.crs != src.crs:
+                infrastructure_gdf = infrastructure_gdf.to_crs(src.crs)
 
             # get shapes
             shapes = ((geom, value) for geom, value in zip(infrastructure_gdf.geometry, infrastructure_gdf['_rval_']))
@@ -385,3 +374,56 @@ class Interconnection:
             ic_arr[index, :, :] = total_interconection_cost_array
 
         return ic_arr
+
+
+def preprocess_hifld_substations(substation_file, output_file=None):
+    """Select substations from HIFLD data that are within the CONUS and either in service or under construction and
+    having a minimum voltage rating >= 0.  A field used to rasterize ('_rval_') is also added containing the cost of
+    connection in $/km for each substation.
+
+    This data is assumed to have the following fields:  ['TYPE', 'STATE', 'STATUS'].
+
+    :param substation_file:                 Full path with filename and extension to the input HIFLD substation
+                                            shapefile
+    :type substation_file:                  str
+
+    :param output_file:                     Full path with filename and extension to the output shapefile
+    :type output_file:                      str
+
+    :returns:                               A geodataframe containing the target substations
+
+    """
+
+    # load the default costs per kv to connect file as a dictionary
+    transmission_costs_dict = pkg.costs_per_kv_substation()
+
+    # get region abbreviations file from cerf package data
+    regions = pkg.get_region_abbrev_to_name()
+
+    # load cerf's default coordinate reference system object
+    target_crs = pkg.cerf_crs()
+
+    # load and reproject
+    gdf = gpd.read_file(substation_file).to_crs(target_crs)
+
+    # make all column names lower case
+    gdf.columns = [i.lower() for i in gdf.columns]
+
+    # keep only substations in the CONUS that are either in service or under construction
+    gdf = gdf.loc[(gdf['type'].isin('SUBSTATION', 'substation')) &
+                  (gdf['state'].isin(regions.keys())) &
+                  (gdf['status'].isin(('IN SERVICE', 'UNDER CONST', 'in service', 'under const')))].copy()
+
+    # assign a field to rasterize by containing the cost of transmission per km
+    gdf['_rval_'] = 0
+
+    for i in transmission_costs_dict.keys():
+        gdf['_rval_'] = np.where((gdf['min_volt'] >= transmission_costs_dict[i]['min_voltage']) &
+                                 (gdf['min_volt'] <= transmission_costs_dict[i]['max_voltage']),
+                                 transmission_costs_dict[i]['dollar_per_km'],
+                                 gdf['_rval_'])
+
+    if output_file is not None:
+        gdf.to_file(output_file)
+
+    return gdf

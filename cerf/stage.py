@@ -10,10 +10,10 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 import logging
 
 import numpy as np
-import pkg_resources
 import rasterio
 
 import cerf.utils as util
+import cerf.package_data as pkg
 from cerf.lmp import LocationalMarginalPricing
 from cerf.nov import NetOperationalValue
 from cerf.interconnect import Interconnection
@@ -73,7 +73,7 @@ class Stage:
         self.tech_name_dict = ({k: self.technology_dict[k].get('tech_name') for k in self.technology_dict.keys()})
 
         # load coordinate data
-        self.cerf_regionid_raster_file = pkg_resources.resource_filename('cerf', 'data/cerf_conus_regions_albers_1km.tif')
+        self.cerf_regionid_raster_file = pkg.cerf_regions_raster()
         self.xcoords, self.ycoords = util.raster_to_coord_arrays(self.cerf_regionid_raster_file)
 
         # generate grid indices in a flat array
@@ -114,7 +114,7 @@ class Stage:
 
         # use default if none passed
         if zones_raster_file is None:
-            zones_raster_file = pkg_resources.resource_filename('cerf', 'data/lmp_zones_1km.img')
+            zones_raster_file = pkg.sample_lmp_zones_raster_file()
 
         logging.info(f"Using 'zones_raster_file':  {zones_raster_file}")
 
@@ -236,7 +236,7 @@ class Stage:
 
             if tech_suitability_raster_file is None:
                 default_raster = self.DEFAULT_SUITABILITY[self.tech_name_dict[i]]
-                tech_suitability_raster_file = pkg_resources.resource_filename('cerf', f'data/{default_raster}')
+                tech_suitability_raster_file = pkg.get_suitability_raster(default_raster)
 
             logging.info(f"Using suitability file for '{self.technology_dict[i]['tech_name']}':  {tech_suitability_raster_file}")
 

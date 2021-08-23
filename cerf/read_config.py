@@ -1,9 +1,9 @@
 import logging
 import os
 
-import pkg_resources
 import yaml
 
+import cerf.package_data as pkg
 from cerf.logger import Logger
 
 
@@ -60,8 +60,8 @@ class ReadConfig(Logger):
         self.infrastructure_dict = self.config.get('infrastructure', {})
         self.infrastructure_dict.update(config_dict.get('infrastructure', {}))
 
-        # get the states dictionary
-        self.states_dict = self.get_states_dict()
+        # get the regions dictionary
+        self.regions_dict = self.get_regions_dict()
 
     @staticmethod
     def read_yaml(yaml_file):
@@ -93,10 +93,10 @@ class ReadConfig(Logger):
             logging.error(msg)
             raise FileNotFoundError(msg)
 
-    def get_states_dict(self):
-        """Get a dictionary of state name to state ID from the YAML file in package data."""
+    def get_regions_dict(self):
+        """Get a dictionary of region name to region ID from the YAML file in package data."""
 
-        # in package data {state_name: state_id}
-        states_lookup_file = pkg_resources.resource_filename('cerf', 'data/region-name_to_region-id.yml')
+        # in package data {region_name: region_id}
+        regions_lookup_file = pkg.get_region_name_to_id()
 
-        return self.read_yaml(states_lookup_file)
+        return self.read_yaml(regions_lookup_file)

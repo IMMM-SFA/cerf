@@ -13,9 +13,9 @@ import time
 
 import numpy as np
 import pandas as pd
-import pkg_resources
 import rasterio
 
+import cerf.package_data as pkg
 from cerf.compete import Competition
 
 
@@ -139,7 +139,7 @@ class ProcessRegion:
         """Extract a single region from the suitability."""
 
         # load the region raster as array
-        region_raster_file = pkg_resources.resource_filename('cerf', 'data/cerf_conus_regions_albers_1km.tif')
+        region_raster_file = pkg.cerf_regions_raster()
         with rasterio.open(region_raster_file) as src:
             regions_arr = src.read(1)
 

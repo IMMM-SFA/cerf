@@ -1,13 +1,14 @@
 import os
 import tempfile
 import zipfile
-import pkg_resources
 import shutil
 
 import requests
 
 from pkg_resources import get_distribution
 from io import BytesIO as BytesIO
+
+import cerf.package_data as pkg
 
 
 class InstallSupplement:
@@ -28,7 +29,7 @@ class InstallSupplement:
         current cerf distribution."""
 
         # full path to the cerf root directory where the example dir will be stored
-        data_directory = pkg_resources.resource_filename('cerf', 'data')
+        data_directory = pkg.get_data_directory()
 
         # get the current version of cerf that is installed
         current_version = get_distribution('cerf').version
