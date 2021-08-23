@@ -193,7 +193,13 @@ def run(config_file=None, config_dict={}, write_output=True, n_jobs=-1, method='
         logging.info(f"CERF model run completed in {round(time.time() - model.start_time, 7)} seconds")
 
     finally:
-        # clean up logger
-        model.close_logger()
+        # remove logging handlers
+        logger = logging.getLogger()
+
+        for handler in logger.handlers[:]:
+            handler.close()
+            logger.removeHandler(handler)
+
+        logging.shutdown()
 
     return df

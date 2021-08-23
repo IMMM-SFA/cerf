@@ -136,11 +136,18 @@ def get_suitability_raster(default_raster):
     return pkg_resources.resource_filename('cerf', f'data/{default_raster}')
 
 
+def get_region_abbrev_to_name_file():
+    """Return the file path for region abbreviation to region name."""
+
+    # get region abbreviations file from cerf package data
+    return pkg_resources.resource_filename('cerf', 'data/region-abbrev_to_region-name.yml')
+
+
 def get_region_abbrev_to_name():
     """Return a dictionary of region abbreviation to region name."""
 
     # get region abbreviations file from cerf package data
-    regions_file = pkg_resources.resource_filename('cerf', 'data/region-abbrev_to_region-name.yml')
+    regions_file = get_region_abbrev_to_name_file()
 
     # get region abbreviations to search for in HIFLD data
     with open(regions_file, 'r') as yml:

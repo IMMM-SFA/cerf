@@ -27,27 +27,6 @@ class Stage:
     technology_dict: dict
     technology_order: list
 
-    # default cerf technology name to suitability file dictionary
-    DEFAULT_SUITABILITY = {'biomass_conv_wo_ccs': 'suitability_biomass.sdat',
-                             'biomass_conv_w_ccs': 'suitability_biomass.sdat',
-                             'biomass_igcc_wo_ccs': 'suitability_biomass_igcc.sdat',
-                             'biomass_igcc_w_ccs': 'suitability_biomass_igcc_ccs.sdat',
-                             'coal_conv_pul_wo_ccs': 'suitability_coal.sdat',
-                             'coal_conv_pul_w_ccs': 'suitability_coal.sdat',
-                             'coal_igcc_wo_ccs': 'suitability_coal_igcc.sdat',
-                             'coal_igcc_w_ccs': 'suitability_coal_igcc_ccs.sdat',
-                             'gas_cc_wo_ccs': 'suitability_gas_cc.sdat',
-                             'gas_cc_w_ccs': 'suitability_gas_cc_ccs.sdat',
-                             'gas_ct_wo_ccs': 'suitability_gas_cc.sdat',
-                             'geothermal': None,
-                             'hydro': None,
-                             'nuclear_gen_ii': 'suitability_nuclear.sdat',
-                             'nuclear_gen_iii': 'suitability_nuclear.sdat',
-                             'oil_ct_wo_ccs': 'suitability_oil_baseload.sdat',
-                             'solar_csp': 'suitability_solar.sdat',
-                             'solar_pv_non_dist': 'suitability_solar.sdat',
-                             'wind_onshore': 'suitability_wind.sdat'}
-
     def __init__(self, settings_dict, lmp_zone_dict, technology_dict, technology_order, infrastructure_dict,
                  initialize_site_data):
 
@@ -236,7 +215,7 @@ class Stage:
             tech_suitability_raster_file = self.technology_dict[i].get('suitability_raster_file', None)
 
             if tech_suitability_raster_file is None:
-                default_raster = self.DEFAULT_SUITABILITY[self.tech_name_dict[i]]
+                default_raster = util.default_suitabiity_files[self.tech_name_dict[i]]
                 tech_suitability_raster_file = pkg.get_suitability_raster(default_raster)
 
             logging.info(f"Using suitability file for '{self.technology_dict[i]['tech_name']}':  {tech_suitability_raster_file}")

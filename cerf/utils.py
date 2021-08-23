@@ -90,6 +90,30 @@ def sited_dtypes():
             'buffer_in_km': np.int64}
 
 
+def default_suitabiity_files():
+    """Return a dictionary of default suitability file names."""
+
+    return {'biomass_conv_wo_ccs': 'suitability_biomass.sdat',
+            'biomass_conv_w_ccs': 'suitability_biomass.sdat',
+            'biomass_igcc_wo_ccs': 'suitability_biomass_igcc.sdat',
+            'biomass_igcc_w_ccs': 'suitability_biomass_igcc_ccs.sdat',
+            'coal_conv_pul_wo_ccs': 'suitability_coal.sdat',
+            'coal_conv_pul_w_ccs': 'suitability_coal.sdat',
+            'coal_igcc_wo_ccs': 'suitability_coal_igcc.sdat',
+            'coal_igcc_w_ccs': 'suitability_coal_igcc_ccs.sdat',
+            'gas_cc_wo_ccs': 'suitability_gas_cc.sdat',
+            'gas_cc_w_ccs': 'suitability_gas_cc_ccs.sdat',
+            'gas_ct_wo_ccs': 'suitability_gas_cc.sdat',
+            'geothermal': None,
+            'hydro': None,
+            'nuclear_gen_ii': 'suitability_nuclear.sdat',
+            'nuclear_gen_iii': 'suitability_nuclear.sdat',
+            'oil_ct_wo_ccs': 'suitability_oil_baseload.sdat',
+            'solar_csp': 'suitability_solar.sdat',
+            'solar_pv_non_dist': 'suitability_solar.sdat',
+            'wind_onshore': 'suitability_wind.sdat'}
+
+
 def buffer_flat_array(target_index, arr, nrows, ncols, ncells, set_value):
     """Assign a value to the neighboring elements of a 1D array as if they
     were in 2D space. The number of neighbors are based on the `ncells` argument
