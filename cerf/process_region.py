@@ -139,7 +139,7 @@ class ProcessRegion:
         """Extract a single region from the suitability."""
 
         # load the region raster as array
-        region_raster_file = pkg.cerf_regions_raster()
+        region_raster_file = self.settings_dict.get('region_raster_file')
         with rasterio.open(region_raster_file) as src:
             regions_arr = src.read(1)
 

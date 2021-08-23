@@ -73,7 +73,7 @@ class Stage:
         self.tech_name_dict = ({k: self.technology_dict[k].get('tech_name') for k in self.technology_dict.keys()})
 
         # load coordinate data
-        self.cerf_regionid_raster_file = pkg.cerf_regions_raster()
+        self.cerf_regionid_raster_file = self.settings_dict.get('region_raster_file')
         self.xcoords, self.ycoords = util.raster_to_coord_arrays(self.cerf_regionid_raster_file)
 
         # generate grid indices in a flat array
@@ -153,6 +153,7 @@ class Stage:
         ic = Interconnection(template_array=self.lmp_arr,
                              technology_dict=self.technology_dict,
                              technology_order=self.technology_order,
+                             region_raster_file=self.settings_dict.get('region_raster_file'),
                              substation_file=substation_file,
                              transmission_costs_file=transmission_costs_file,
                              pipeline_costs_file=pipeline_costs_file,

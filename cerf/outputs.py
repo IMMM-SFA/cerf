@@ -36,9 +36,6 @@ def plot_siting(result_df, boundary_shp=None, regions_shp=None, column='tech_nam
 
     """
 
-    # result df to geodataframe
-    gdf = results_to_geodataframe(result_df)
-
     fig, ax = plt.subplots(figsize=(20, 10))
 
     # read in boundary data
@@ -51,6 +48,9 @@ def plot_siting(result_df, boundary_shp=None, regions_shp=None, column='tech_nam
         regions_gdf = cerf_regions_shapefile()
     else:
         regions_gdf = gpd.read_file(regions_shp)
+
+    # result df to geodataframe
+    gdf = results_to_geodataframe(result_df, regions_gdf.crs)
 
     # add background
     boundary_gdf.plot(ax=ax, color="#f3f2f2", lw=0.8)

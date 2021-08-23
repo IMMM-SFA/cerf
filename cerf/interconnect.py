@@ -39,6 +39,18 @@ class Interconnection:
     :param technology_order:                Order of technologies to process
     :type technology_order:                 list
 
+    :param region_raster_file:              Full path with file name and extension to the region raster file that
+                                            assigns a region ID to each raster grid cell
+    :type region_raster_file:               str
+
+    :param region_abbrev_to_name_file:      Full path with file name and extension to the region abbreviation to name
+                                            YAML reference file
+    :type region_abbrev_to_name_file:       str
+
+    :param region_name_to_id_file:          Full path with file name and extension to the region name to ID YAML
+                                            reference file
+    :type region_name_to_id_file:           str
+
     :param substation_file:                 Full path with file name and extension to the input substations shapefile.
                                             If None, CERF will use the default data stored in the package.
 
@@ -96,7 +108,8 @@ class Interconnection:
 
     """
 
-    def __init__(self, template_array, technology_dict, technology_order, substation_file=None,
+    def __init__(self, template_array, technology_dict, technology_order, region_raster_file,
+                 region_abbrev_to_name_file, region_name_to_id_file, substation_file=None,
                  transmission_costs_dict=None, transmission_costs_file=None, pipeline_costs_dict=None, 
                  pipeline_costs_file=None,pipeline_file=None, output_rasterized_file=False, output_dist_file=False, 
                  output_alloc_file=False, output_cost_file=False, interconnection_cost_file=None, output_dir=None):
@@ -104,6 +117,9 @@ class Interconnection:
         self.template_array = template_array
         self.technology_dict = technology_dict
         self.technology_order = technology_order
+        self.region_raster_file = region_raster_file
+        self.region_abbrev_to_name_file = region_abbrev_to_name_file
+        self.region_name_to_id_file = region_name_to_id_file
         self.substation_file = substation_file
         self.transmission_costs_dict = transmission_costs_dict
         self.transmission_costs_file = transmission_costs_file
@@ -181,9 +197,6 @@ class Interconnection:
 
             logging.info(f"Using substation file: {self.substation_file}")
 
-            # get region abbreviations file from cerf package data
-            regions = pkg.get_region_abbrev_to_name()
-
             # load and reproject
             gdf = gpd.read_file(self.substation_file)
 
@@ -201,8 +214,8 @@ class Interconnection:
 
             return gdf
 
-    def process_eia_natural_gas_pipelines(self):
-        """Select natural gas pipelines from EIA data that have a status of operating and a length greater than 0.
+    def process_pipelines(self):
+        """Select natural gas pipelines data that have a length greater than 0.
 
         :returns:                               A geodataframe containing the target pipelines
 
@@ -226,17 +239,11 @@ class Interconnection:
 
             logging.info(f"Using gas pipeline file:  {self.pipeline_file}")
 
-            # load cerf's default coordinate reference system object
-            target_crs = pkg.cerf_crs()
-
             # read in data and reproject
-            gdf = gpd.read_file(self.pipeline_file).to_crs(target_crs)
+            gdf = gpd.read_file(self.pipeline_file)
 
             # only keep features with a length > 0
             gdf = gdf.loc[gdf.geometry.length > 0].copy()
-
-            # only keep operational pipelines
-            gdf = gdf.loc[gdf['Status'] == 'Operating'].copy()
 
             # set field for rasterize
             gdf['_rval_'] = self.get_pipeline_costs()
@@ -260,15 +267,12 @@ class Interconnection:
             infrastructure_gdf = self.process_substations()
 
         elif setting == 'pipelines':
-            infrastructure_gdf = self.process_eia_natural_gas_pipelines()
+            infrastructure_gdf = self.process_pipelines()
 
         else:
             raise ValueError(f"Incorrect setting '{setting}' for transmission data.  Must be 'substations' or 'pipelines'")
 
-        # get the template raster from CERF data
-        template_raster = pkg.cerf_regions_raster()
-
-        with rasterio.open(template_raster) as src:
+        with rasterio.open(self.region_raster_file) as src:
 
             # create 0 where land array
             arr = (src.read(1) * 0).astype(rasterio.float64)
@@ -422,6 +426,47 @@ def preprocess_hifld_substations(substation_file, output_file=None):
                                  (gdf['min_volt'] <= transmission_costs_dict[i]['max_voltage']),
                                  transmission_costs_dict[i]['dollar_per_km'],
                                  gdf['_rval_'])
+
+    if output_file is not None:
+        gdf.to_file(output_file)
+
+    return gdf
+
+
+def preprocess_eia_natural_gas_pipelines(pipeline_file, output_file):
+    """Select natural gas pipelines from EIA data that have a status of operating and a length greater than 0.
+
+    :param pipeline_file:                   Full path with filename and extension to the input EIA pipeline
+                                            shapefile
+    :type pipeline_file:                    str
+
+    :param output_file:                     Full path with filename and extension to the output shapefile
+    :type output_file:                      str
+
+    :returns:                               A geodataframe containing the target pipelines
+
+    """
+
+    # load cerf's default coordinate reference system object
+    target_crs = pkg.cerf_crs()
+
+    # read in data and reproject
+    gdf = gpd.read_file(pipeline_file).to_crs(target_crs)
+
+    # only keep features with a length > 0
+    gdf = gdf.loc[gdf.geometry.length > 0].copy()
+
+    # only keep operational pipelines
+    gdf = gdf.loc[gdf['Status'] == 'Operating'].copy()
+
+    # use default costs file
+    f = pkg.get_costs_gas_pipeline()
+
+    with open(f, 'r') as yml:
+        yaml_dict = yaml.load(yml, Loader=yaml.FullLoader)
+
+    # set field for rasterize
+    gdf['_rval_'] = yaml_dict.get('gas_pipeline_cost')
 
     if output_file is not None:
         gdf.to_file(output_file)

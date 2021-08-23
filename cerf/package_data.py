@@ -45,7 +45,7 @@ def cerf_crs():
     """Return a coordinate reference system (CRS) object of class 'pyproj.crs.crs.CRS'
      for USA_Contiguous_Albers_Equal_Area_Conic.
 
-     """
+    """
 
     gdf = cerf_regions_shapefile()
 

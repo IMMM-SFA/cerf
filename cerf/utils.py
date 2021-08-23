@@ -8,20 +8,18 @@ import xarray as xr
 import geopandas as gpd
 from shapely.geometry import Point
 
-from cerf.package_data import cerf_crs
 
-
-def results_to_geodataframe(result_df):
+def results_to_geodataframe(result_df, target_crs):
     """Convert the results from 'cerf.run()' to a GeoDataFrame.
 
     :param result_df:                       Result data frame from running 'cerf.run()'
     :type result_df:                        DataFrame
 
+    :param target_crs:                      Coordinate reference system to assign the output.
+
     :return:                                GeoPandas GeoDataFrame of results
 
     """
-
-    target_crs = cerf_crs()
 
     # create geometry column from coordinate fields
     geometry = [Point(xy) for xy in zip(result_df['xcoord'], result_df['ycoord'])]

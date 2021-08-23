@@ -63,6 +63,20 @@ class ReadConfig(Logger):
         # get the regions dictionary
         self.regions_dict = self.get_regions_dict()
 
+        # update the settings paths to the package defaults if settings are not declared
+        region_raster_file = self.settings_dict.get('region_raster_file', None)
+        region_abbrev_to_name_file = self.settings_dict.get('region_abbrev_to_name_file', None)
+        region_name_to_id_file = self.settings_dict.get('region_name_to_id_file', None)
+
+        if region_raster_file is None:
+            self.settings_dict.update({'region_raster_file': pkg.cerf_regions_raster()})
+
+        if region_abbrev_to_name_file is None:
+            self.settings_dict.update({'region_abbrev_to_name_file': pkg.get_region_abbrev_to_name()})
+
+        if region_name_to_id_file is None:
+            self.settings_dict.update({'region_name_to_id_file': pkg.get_region_name_to_id()})
+
     @staticmethod
     def read_yaml(yaml_file):
         """Read a YAML file."""
@@ -100,3 +114,9 @@ class ReadConfig(Logger):
         regions_lookup_file = pkg.get_region_name_to_id()
 
         return self.read_yaml(regions_lookup_file)
+
+    # TODO
+    def validate_file_exists(self):
+        """Ensure that files necessary to run the package exists."""
+
+        pass
