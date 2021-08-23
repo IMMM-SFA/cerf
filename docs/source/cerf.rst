@@ -1,3 +1,6 @@
+cerf package
+============
+
 Submodules
 ----------
 
@@ -5,6 +8,14 @@ cerf.compete module
 -------------------
 
 .. automodule:: cerf.compete
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+cerf.install\_supplement module
+-------------------------------
+
+.. automodule:: cerf.install_supplement
    :members:
    :undoc-members:
    :show-inheritance:
@@ -73,10 +84,10 @@ cerf.process module
    :undoc-members:
    :show-inheritance:
 
-cerf.process\_state module
---------------------------
+cerf.process\_region module
+---------------------------
 
-.. automodule:: cerf.process_state
+.. automodule:: cerf.process_region
    :members:
    :undoc-members:
    :show-inheritance:

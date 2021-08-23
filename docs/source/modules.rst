@@ -1,5 +1,5 @@
-API reference
-=============
+cerf
+====
 
 .. toctree::
    :maxdepth: 4

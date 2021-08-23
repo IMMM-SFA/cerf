@@ -32,9 +32,8 @@ Conda/Miniconda users can utilize the ``environment.yml`` stored in the root of 
 
 It may be favorable to the user to create a virtual environment for the **cerf** package to minimize package version conflicts.  See `creating virtual environments <https://docs.python.org/3/library/venv.html>`_ to learn how these function and can be setup.
 
-
-Install package data
---------------------
+Installing package data
+-----------------------
 
 **cerf** requires package data to be installed from Zenodo to keep the package lightweight.  After **cerf** has been installed, run the following from a Python prompt:
 

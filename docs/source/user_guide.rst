@@ -418,7 +418,7 @@ Locational Marginal Pricing (LMP) represents the cost of making and delivering e
 
 .. note::
 
-  **cerf** comes with an LMP dataset for illustrative purposes only which can be accessed using the ```get_sample_lmp_file()`` function.  The service areas in this file correspond with the sample lmp zoness raster file in the **cerf** package which defines the service area ID for each grid cell in the CONUS.  This raster file can also be accessed using ``sample_lmp_zones_raster_file()`` function.
+  **cerf** comes with an LMP dataset for illustrative purposes only which can be accessed using the ``get_sample_lmp_file()`` function.  The service areas in this file correspond with the sample lmp zoness raster file in the **cerf** package which defines the service area ID for each grid cell in the CONUS.  This raster file can also be accessed using ``sample_lmp_zones_raster_file()`` function.
 
 
 Tutorials
