@@ -22,7 +22,7 @@ class InstallSupplement:
                          '2.0.1': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
                          '2.0.2': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
                          '2.0.3': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
-                         '2.0.4': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1'}
+                         '2.0.4': 'https://zenodo.org/record/5238160/files/cerf_package_data.zip?download=1'}
 
     def fetch_zenodo(self):
         """Download and unpack the Zenodo example data supplement for the
