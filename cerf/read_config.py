@@ -97,6 +97,6 @@ class ReadConfig(Logger):
         """Get a dictionary of state name to state ID from the YAML file in package data."""
 
         # in package data {state_name: state_id}
-        states_lookup_file = pkg_resources.resource_filename('cerf', 'data/state-name_to_state-id.yml')
+        states_lookup_file = pkg_resources.resource_filename('cerf', 'data/region-name_to_region-id.yml')
 
         return self.read_yaml(states_lookup_file)

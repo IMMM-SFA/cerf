@@ -55,7 +55,7 @@ def suppress_callback(value):
 def empty_sited_dict():
     """Initialize a sited dictionary."""
 
-    return {'state_name': [],
+    return {'region_name': [],
             'tech_id': [],
             'tech_name': [],
             'unit_size_mw': [],
@@ -75,8 +75,10 @@ def empty_sited_dict():
 def sited_dtypes():
     """Return data type dictionary for the sited data frame."""
 
-    return {'state_name': str,
+    return {'region_name': str,
             'tech_id': np.int64,
+            'tech_name': str,
+            'unit_size_mw': np.float64,
             'xcoord': np.float64,
             'ycoord': np.float64,
             'lmp_zone': np.int64,

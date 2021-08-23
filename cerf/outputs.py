@@ -1,7 +1,7 @@
 
 import matplotlib.pyplot as plt
 
-from cerf.package_data import cerf_states_shapefile, cerf_boundary_shapefile
+from cerf.package_data import cerf_regions_shapefile, cerf_boundary_shapefile
 from cerf.utils import results_to_geodataframe
 
 
@@ -33,14 +33,14 @@ def plot_siting(result_df, column='tech_name', markersize=5, cmap='Paired', save
     fig, ax = plt.subplots(figsize=(20, 10))
 
     # read in boundary data
-    states_gdf = cerf_states_shapefile()
+    regions_gdf = cerf_regions_shapefile()
     boundary_gdf = cerf_boundary_shapefile()
 
     # add background
     boundary_gdf.plot(ax=ax, color="#f3f2f2", lw=0.8)
 
     # add boundaries
-    states_gdf.boundary.plot(ax=ax, edgecolor='gray', lw=0.2)
+    regions_gdf.boundary.plot(ax=ax, edgecolor='gray', lw=0.2)
     boundary_gdf.boundary.plot(ax=ax, edgecolor='gray', lw=0.8)
 
     # add data

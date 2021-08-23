@@ -48,7 +48,7 @@ class Competition:
     """
 
     def __init__(self,
-                 target_state_name,
+                 target_region_name,
                  settings_dict,
                  technology_dict,
                  technology_order,
@@ -65,8 +65,8 @@ class Competition:
                  seed_value=0,
                  verbose=False):
 
-        # target state
-        self.target_state_name = target_state_name
+        # target region
+        self.target_region_name = target_region_name
 
         # project level settings dictionary
         self.settings_dict = settings_dict
@@ -92,10 +92,10 @@ class Competition:
         # lmp zones array
         self.zones_flat_arr = zones_arr
 
-        # flat array of full grid indices value for the target state
+        # flat array of full grid indices value for the target region
         self.indices_flat = indices_flat
 
-        # net locational costs with suitability mask for the target state
+        # net locational costs with suitability mask for the target region
         self.nlc_mask = nlc_mask
         self.nlc_mask_shape = self.nlc_mask.shape
 
@@ -146,7 +146,7 @@ class Competition:
             remaining_sites = self.expansion_dict[k]['n_sites']
 
             if remaining_sites > 0:
-                logging.warning(f"Unable to achieve full siting for `{tech_name}` in `{self.target_state_name}`:  {remaining_sites} unsited.")
+                logging.warning(f"Unable to achieve full siting for `{tech_name}` in `{self.target_region_name}`:  {remaining_sites} unsited.")
 
     def compete(self):
 
@@ -189,7 +189,7 @@ class Competition:
                         target_ix = np.random.choice(tech_nlc_cheap)
 
                         # add selected index to sited dictionary
-                        self.sited_dict['state_name'].append(self.target_state_name)
+                        self.sited_dict['region_name'].append(self.target_region_name)
                         self.sited_dict['tech_id'].append(tech_id)
                         self.sited_dict['tech_name'].append(self.technology_dict[tech_id]['tech_name'])
                         self.sited_dict['unit_size_mw'].append(self.technology_dict[tech_id]['unit_size'])

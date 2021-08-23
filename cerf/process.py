@@ -16,7 +16,7 @@ from joblib import Parallel, delayed
 
 import cerf.utils as util
 from cerf.model import Model
-from cerf.process_state import process_state
+from cerf.process_region import process_region
 
 
 def generate_model(config_file=None, config_dict={}, initialize_site_data=None, log_level='info'):
@@ -51,7 +51,7 @@ def generate_model(config_file=None, config_dict={}, initialize_site_data=None, 
 
 
 def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'):
-    """Run all CONUS states in parallel.
+    """Run all regions in parallel.
 
     :param model:                       Instantiated CERF model class containing configuration options
     :type model:                        class
@@ -81,13 +81,13 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
     # start time for parallel run
     t0 = time.time()
 
-    # run all states in parallel
-    results = Parallel(n_jobs=n_jobs, backend=method)(delayed(process_state)(target_state_name=i,
+    # run all regions in parallel
+    results = Parallel(n_jobs=n_jobs, backend=method)(delayed(process_region)(target_region_name=i,
                                                                              settings_dict=model.settings_dict,
                                                                              technology_dict=model.technology_dict,
                                                                              technology_order=model.technology_order,
                                                                              expansion_dict=model.expansion_dict,
-                                                                             states_dict=model.states_dict,
+                                                                             regions_dict=model.regions_dict,
                                                                              suitability_arr=data.suitability_arr,
                                                                              lmp_arr=data.lmp_arr,
                                                                              nov_arr=data.nov_arr,
@@ -100,9 +100,9 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
                                                                              randomize=model.settings_dict.get('randomize', True),
                                                                              seed_value=model.settings_dict.get('seed_value', 0),
                                                                              verbose=model.settings_dict.get('verbose', False),
-                                                                             write_output=False) for i in model.states_dict.keys())
+                                                                             write_output=False) for i in model.regions_dict.keys())
 
-    logging.info(f"All states processed in {round((time.time() - t0), 7)} seconds.")
+    logging.info(f"All regions processed in {round((time.time() - t0), 7)} seconds.")
     logging.info("Aggregating outputs...")
 
     # create a data frame to hold the outputs
@@ -112,10 +112,10 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
     if model.initialize_site_data is not None:
         df = pd.concat([df, data.init_df])
 
-    # combine the outputs for all states
+    # combine the outputs for all regions
     for i in results:
 
-        # ensure some sites were able to be sited for the target state
+        # ensure some sites were able to be sited for the target region
         if i is not None:
             df = pd.concat([df, i.run_data.sited_df])
 
@@ -130,7 +130,7 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
 
 def run(config_file=None, config_dict={}, write_output=True, n_jobs=-1, method='sequential',
             initialize_site_data=None, log_level='info'):
-    """Run all CERF states for the CONUS for the target year.
+    """Run all CERF regions for the target year.
 
     :param config_file:                 Full path with file name and extension to the input config.yml file
     :type config_file:                  str
@@ -182,7 +182,7 @@ def run(config_file=None, config_dict={}, write_output=True, n_jobs=-1, method='
         # process supporting data
         data = model.stage()
 
-        # process all CERF CONUS states in parallel and store the result as a 2D arrays containing sites as
+        # process all CERF regions in parallel and store the result as a 2D arrays containing sites as
         #  the technology ID per grid cell.  All non-sited grid cells are given the value of NaN.
         df = cerf_parallel(model=model,
                            data=data,

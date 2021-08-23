@@ -73,8 +73,8 @@ class Stage:
         self.tech_name_dict = ({k: self.technology_dict[k].get('tech_name') for k in self.technology_dict.keys()})
 
         # load coordinate data
-        self.cerf_stateid_raster_file = pkg_resources.resource_filename('cerf', 'data/cerf_conus_states_albers_1km.tif')
-        self.xcoords, self.ycoords = util.raster_to_coord_arrays(self.cerf_stateid_raster_file)
+        self.cerf_regionid_raster_file = pkg_resources.resource_filename('cerf', 'data/cerf_conus_regions_albers_1km.tif')
+        self.xcoords, self.ycoords = util.raster_to_coord_arrays(self.cerf_regionid_raster_file)
 
         # generate grid indices in a flat array
         self.indices_flat = np.array(np.arange(self.xcoords.flatten().shape[0]))

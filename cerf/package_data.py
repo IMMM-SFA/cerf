@@ -19,8 +19,8 @@ def config_file(yr):
     return pkg_resources.resource_filename('cerf', f'data/config_{yr}.yml')
 
 
-def cerf_states_shapefile():
-    """Return the cerf CONUS states shapefile as a Geopandas data frame."""
+def cerf_regions_shapefile():
+    """Return the cerf regions shapefile as a Geopandas data frame."""
 
     f = pkg_resources.resource_filename('cerf', 'data/cerf_conus_states_albers.zip')
 
@@ -28,7 +28,7 @@ def cerf_states_shapefile():
 
 
 def cerf_boundary_shapefile():
-    """Return the cerf CONUS boundary shapefile as a Geopandas data frame."""
+    """Return the cerf boundary shapefile as a Geopandas data frame."""
 
     f = pkg_resources.resource_filename('cerf', 'data/cerf_conus_boundary_albers.zip')
 
@@ -41,7 +41,7 @@ def cerf_crs():
 
      """
 
-    gdf = cerf_states_shapefile()
+    gdf = cerf_regions_shapefile()
 
     return gdf.crs
 
@@ -100,14 +100,14 @@ def get_sample_lmp_data():
     return pd.read_csv(f)
 
 
-def get_state_abbrev_to_name():
-    """Return a dictionary of state abbreviation to state name."""
+def get_region_abbrev_to_name():
+    """Return a dictionary of region abbreviation to region name."""
 
-    # get state abbreviations file from cerf package data
-    states_file = pkg_resources.resource_filename('cerf', 'data/state-abbrev_to_state-name.yml')
+    # get region abbreviations file from cerf package data
+    regions_file = pkg_resources.resource_filename('cerf', 'data/region-abbrev_to_region-name.yml')
 
-    # get state abbreviations to search for in HIFLD data
-    with open(states_file, 'r') as yml:
+    # get region abbreviations to search for in HIFLD data
+    with open(regions_file, 'r') as yml:
         return yaml.load(yml, Loader=yaml.FullLoader)
 
 

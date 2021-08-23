@@ -13,7 +13,7 @@ import geopandas as gpd
 from rasterio import features
 
 from cerf.utils import suppress_callback
-from cerf.package_data import cerf_crs, costs_per_kv_substation, get_state_abbrev_to_name
+from cerf.package_data import cerf_crs, costs_per_kv_substation, get_region_abbrev_to_name
 
 # instantiate whitebox toolset
 wbt = whitebox.WhiteboxTools()
@@ -189,8 +189,8 @@ class Interconnection:
 
             logging.info(f"Using substation file: {self.substation_file}")
 
-            # get state abbreviations file from cerf package data
-            states = get_state_abbrev_to_name()
+            # get region abbreviations file from cerf package data
+            regions = get_region_abbrev_to_name()
 
             # load cerf's default coordinate reference system object
             target_crs = cerf_crs()
@@ -279,7 +279,7 @@ class Interconnection:
             raise ValueError(f"Incorrect setting '{setting}' for transmission data.  Must be 'substations' or 'pipelines'")
 
         # get the template raster from CERF data
-        template_raster = pkg_resources.resource_filename('cerf', 'data/cerf_conus_states_albers_1km.tif')
+        template_raster = pkg_resources.resource_filename('cerf', 'data/cerf_conus_regions_albers_1km.tif')
 
         with rasterio.open(template_raster) as src:
             # create 0 where land array

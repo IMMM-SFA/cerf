@@ -154,20 +154,20 @@ These are technology-specific settings.
 
 .. table::
 
-    +-------------------------+---------------------------------------------+----------+----------+
-    | Name                    | Description                                 | Unit     | Type     |
-    +=========================+=============================================+==========+==========+
-    | <state name>            | | Name key of state in all lower case with  | NA       | str      |
-    |                         | | underscore separation                     |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | <tech id key>           | | Technology ID key matching what is in the | NA       | int      |
-    |                         | | technology section (e.g. 9)               |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | tech_name               | | Name of the technology matching the name  | NA       | str      |
-    |                         | | in the technology section                 |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | n_sites                 | Number of sites desired                     | n_sites  | int      |
-    +-------------------------+---------------------------------------------+----------+----------+
+    +-------------------------+-----------------------------------------------+----------+----------+
+    | Name                    | Description                                   | Unit     | Type     |
+    +=========================+===============================================+==========+==========+
+    | <region name>           | | Name key of region in all lower case with   | NA       | str      |
+    |                         | | underscore separation                       |          |          |
+    +-------------------------+-----------------------------------------------+----------+----------+
+    | <tech id key>           | | Technology ID key matching what is in the   | NA       | int      |
+    |                         | | technology section (e.g. 9)                 |          |          |
+    +-------------------------+-----------------------------------------------+----------+----------+
+    | tech_name               | | Name of the technology matching the name    | NA       | str      |
+    |                         | | in the technology section                   |          |          |
+    +-------------------------+-----------------------------------------------+----------+----------+
+    | n_sites                 | Number of sites desired                       | n_sites  | int      |
+    +-------------------------+-----------------------------------------------+----------+----------+
 
 The following is an example implementation in the YAML configuration file:
 
@@ -544,7 +544,7 @@ Grid cell level net locational cost (NLC) per technology and an electricity tech
 Key outputs
 -----------
 
-The following are the outputs and their descriptions from the Pandas DataFrame that is generated when calling ``run()`` to site power plant for all states in the CONUS for all technologies:
+The following are the outputs and their descriptions from the Pandas DataFrame that is generated when calling ``run()`` to site power plant for all regions in the CONUS for all technologies:
 
 .. list-table::
     :header-rows: 1
@@ -552,8 +552,8 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
     * - Name
       - Description
       - Units
-    * - state_name
-      - Name of state
+    * - region_name
+      - Name of region
       - NA
     * - tech_id
       - Technology ID
