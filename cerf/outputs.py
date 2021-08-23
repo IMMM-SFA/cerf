@@ -1,15 +1,24 @@
-
+import geopandas as gpd
 import matplotlib.pyplot as plt
 
 from cerf.package_data import cerf_regions_shapefile, cerf_boundary_shapefile
 from cerf.utils import results_to_geodataframe
 
 
-def plot_siting(result_df, column='tech_name', markersize=5, cmap='Paired', save_figure=False, output_file=None):
+def plot_siting(result_df, boundary_shp=None, regions_shp=None, column='tech_name', markersize=5, cmap='Paired',
+                save_figure=False, output_file=None):
     """Plot the results of a cerf run on a map where each technology has its own color.
 
     :param result_df:                       Result data frame from running 'cerf.run()'
     :type result_df:                        DataFrame
+
+    :param boundary_shp:                    Full path to a boundary shapefile with file name and extension.  If no file
+                                            provided, the default boundary for the CONUS will be used.
+    :type boundary_shp:                     str
+
+    :param regions_shp:                     Full path to a regions shapefile with file name and extension.  If no file
+                                            provided, the default regions for the CONUS will be used.
+    :type regions_shp:                      str
 
     :param column:                          Column to plot
     :type column:                           str
@@ -33,8 +42,15 @@ def plot_siting(result_df, column='tech_name', markersize=5, cmap='Paired', save
     fig, ax = plt.subplots(figsize=(20, 10))
 
     # read in boundary data
-    regions_gdf = cerf_regions_shapefile()
-    boundary_gdf = cerf_boundary_shapefile()
+    if boundary_shp is None:
+        boundary_gdf = cerf_boundary_shapefile()
+    else:
+        boundary_gdf = gpd.read_file(boundary_shp)
+
+    if regions_shp is None:
+        regions_gdf = cerf_regions_shapefile()
+    else:
+        regions_gdf = gpd.read_file(regions_shp)
 
     # add background
     boundary_gdf.plot(ax=ax, color="#f3f2f2", lw=0.8)
