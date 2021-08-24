@@ -37,6 +37,8 @@ Installing package data
 
 **cerf** requires package data to be installed from Zenodo to keep the package lightweight.  After **cerf** has been installed, run the following from a Python prompt:
 
+**NOTE**:  The package data will require approximately 195 MB of storage.
+
 .. code-block:: python
 
     import cerf

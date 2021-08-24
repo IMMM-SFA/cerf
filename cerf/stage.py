@@ -133,6 +133,8 @@ class Stage:
                              technology_dict=self.technology_dict,
                              technology_order=self.technology_order,
                              region_raster_file=self.settings_dict.get('region_raster_file'),
+                             region_abbrev_to_name_file=self.settings_dict.get('region_abbrev_to_name_file'),
+                             region_name_to_id_file=self.settings_dict.get('region_name_to_id_file'),
                              substation_file=substation_file,
                              transmission_costs_file=transmission_costs_file,
                              pipeline_costs_file=pipeline_costs_file,
@@ -205,6 +207,9 @@ class Stage:
     def build_suitability_array(self):
         """Build suitability array for all technologies."""
 
+        # fetch the default suitability dictionary
+        default_suitability_file_dict = util.default_suitabiity_files()
+
         # set up holder for suitability array
         suitability_array = np.ones_like(self.nlc_arr)
 
@@ -215,7 +220,7 @@ class Stage:
             tech_suitability_raster_file = self.technology_dict[i].get('suitability_raster_file', None)
 
             if tech_suitability_raster_file is None:
-                default_raster = util.default_suitabiity_files[self.tech_name_dict[i]]
+                default_raster = default_suitability_file_dict[self.tech_name_dict[i]]
                 tech_suitability_raster_file = pkg.get_suitability_raster(default_raster)
 
             logging.info(f"Using suitability file for '{self.technology_dict[i]['tech_name']}':  {tech_suitability_raster_file}")
