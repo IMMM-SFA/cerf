@@ -16,7 +16,7 @@ import sys
 import sphinx_rtd_theme
 
 # import cerf
-version = "2.0.3" #str(cerf.__version__)
+version = "2.0.4" #str(cerf.__version__)
 
 
 sys.path.insert(0, os.path.abspath('../../'))

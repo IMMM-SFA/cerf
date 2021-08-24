@@ -47,7 +47,7 @@ class TestCompete(unittest.TestCase):
                      2: {'n_sites': 0, 'tech_name': 'test2'},
                      3: {'n_sites': 0, 'tech_name': 'test3'}}
 
-    COMP_SITED_DICT = {'state_name': ['test', 'test', 'test'],
+    COMP_SITED_DICT = {'region_name': ['test', 'test', 'test'],
                        'index': [2.4, 3.2, 3.2],
                        'tech_id': [1, 2, 3],
                        'tech_name': ['test1', 'test2', 'test3'],
@@ -97,7 +97,7 @@ class TestCompete(unittest.TestCase):
         # proxy dictionary and arrays
         fake_dict, fake_flat_array = self.create_proxy_arrays()
 
-        comp = Competition(target_state_name='test',
+        comp = Competition(target_region_name='test',
                            settings_dict=TestCompete.SETTINGS_DICT,
                            technology_dict=TestCompete.TECH_DICT,
                            technology_order=TestCompete.TECH_ORDER,

@@ -3,7 +3,7 @@ import pandas as pd
 
 import logging
 
-import pkg_resources
+import cerf.package_data as pkg
 
 
 def generate_random_lmp_dataframe(n_zones=57, low_value=10, mid_value=300, high_value=500, n_samples=5000):
@@ -135,7 +135,7 @@ class LocationalMarginalPricing:
         if lmp_file is None:
 
             # default illustrative LMP file
-            lmp_file = pkg_resources.resource_filename('cerf', 'data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
+            lmp_file = pkg.get_sample_lmp_file()
             logging.info(f"Using LMP from default illustrative package data:  {lmp_file}")
 
         else:
