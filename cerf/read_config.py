@@ -172,9 +172,16 @@ class ReadConfig(Logger):
     def validate_lmp_files(self):
         """Ensure that files necessary files exists for LMP zones."""
 
-        # expected files from lmp_zones
-        lmp_files = [self.lmp_zone_dict.get('lmp_zone_raster_file', pkg.sample_lmp_zones_raster_file()),
-                     self.lmp_zone_dict.get('lmp_hourly_data_file', pkg.get_sample_lmp_file())]
+        lmp_zone_raster_file = self.lmp_zone_dict.get('lmp_zone_raster_file', None)
+        lmp_hourly_data_file = self.lmp_zone_dict.get('lmp_hourly_data_file', None)
+
+        if lmp_zone_raster_file is None:
+            lmp_zone_raster_file = pkg.sample_lmp_zones_raster_file()
+
+        if lmp_hourly_data_file is None:
+            lmp_hourly_data_file = pkg.get_sample_lmp_file()
+
+        lmp_files = [lmp_zone_raster_file, lmp_hourly_data_file]
 
         for i in lmp_files:
 
@@ -192,6 +199,25 @@ class ReadConfig(Logger):
                                 self.infrastructure_dict.get('pipeline_file', pkg.get_default_gas_pipelines()),
                                 self.infrastructure_dict.get('transmission_costs_file', pkg.get_costs_per_kv_substation_file()),
                                 self.infrastructure_dict.get('pipeline_costs_file', pkg.get_costs_gas_pipeline())]
+
+        substation_file = self.infrastructure_dict.get('substation_file', None)
+        pipeline_file = self.infrastructure_dict.get('pipeline_file', None)
+        transmission_costs_file = self.infrastructure_dict.get('transmission_costs_file', None)
+        pipeline_costs_file = self.infrastructure_dict.get('pipeline_costs_file', None)
+
+        if substation_file is None:
+            substation_file = pkg.get_substation_file()
+
+        if pipeline_file is None:
+            pipeline_file = pkg.get_default_gas_pipelines()
+
+        if transmission_costs_file is None:
+            transmission_costs_file = pkg.get_costs_per_kv_substation_file()
+
+        if pipeline_costs_file is None:
+            pipeline_costs_file = pkg.get_costs_gas_pipeline()
+
+        infrastructure_files = [substation_file, pipeline_file, transmission_costs_file, pipeline_costs_file]
 
         for i in infrastructure_files:
 
