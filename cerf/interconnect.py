@@ -1,6 +1,7 @@
 import os
 import logging
 import tempfile
+import shutil
 
 import rasterio
 import whitebox
@@ -263,6 +264,9 @@ class Interconnection:
         # conversion factor for meters to km
         m_to_km_factor = 0.001
 
+        # construct tempdir; using this low-level method to create Ubuntu 18 compatibility
+        tempdir = tempfile.mkdtemp()
+
         if setting == 'substations':
             infrastructure_gdf = self.process_substations()
 
@@ -287,8 +291,6 @@ class Interconnection:
 
             # get shapes
             shapes = ((geom, value) for geom, value in zip(infrastructure_gdf.geometry, infrastructure_gdf['_rval_']))
-
-        tempdir = tempfile.gettempdir()
 
         # if write desired
         if any((self.output_rasterized_file, self.output_dist_file, self.output_alloc_file, self.output_cost_file)):
@@ -335,6 +337,10 @@ class Interconnection:
             cost_arr = (dist_arr * m_to_km_factor) * alloc_arr
 
             out.write(cost_arr, 1)
+
+        # delete tempdir if it was created
+        if os.path.isdir(tempdir):
+            shutil.rmtree(tempdir)
 
         return cost_arr
 
