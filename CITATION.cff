@@ -25,8 +25,8 @@ authors:
 - family-names: "Binsted"
   given-names: "Matthew"
   orcid: "https://orcid.org/0000-0002-5177-7253"
-title: "cerf v2.0.2: an open-source geospatial Python package for evaluating and analyzing future electricity technology capacity expansion feasibility."
-version: 2.0.2
+title: "cerf v2.0.4: an open-source geospatial Python package for evaluating and analyzing future electricity technology capacity expansion feasibility."
+version: 2.0.4
 doi: 10.5281/zenodo.5140077
-date-released: 2021-08-16
+date-released: 2021-08-24
 url: "https://github.com/IMMM-SFA/cerf"
