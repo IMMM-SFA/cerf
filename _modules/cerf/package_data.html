@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.package_data &mdash; cerf 2.0.0 documentation</title>
+  <title>cerf.package_data &mdash; cerf 2.0.4 documentation</title>
   
 
   
@@ -40,6 +40,7 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -69,7 +70,7 @@
             
             
               <div class="version">
-                2.0.0
+                2.0.4
               </div>
             
           
@@ -97,8 +98,11 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">cerf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to_cite.html">How to cite <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../footer.html">Acknowledgement</a></li>
 </ul>
@@ -188,8 +192,14 @@
     <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;data/config_</span><span class="si">{</span><span class="n">yr</span><span class="si">}</span><span class="s1">.yml&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="cerf_states_shapefile"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.cerf_states_shapefile">[docs]</a><span class="k">def</span> <span class="nf">cerf_states_shapefile</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Return the cerf CONUS states shapefile as a Geopandas data frame.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="cerf_regions_raster"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.cerf_regions_raster">[docs]</a><span class="k">def</span> <span class="nf">cerf_regions_raster</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the cerf regions raster file.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/cerf_conus_states_albers_1km.tif&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cerf_regions_shapefile"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.cerf_regions_shapefile">[docs]</a><span class="k">def</span> <span class="nf">cerf_regions_shapefile</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the cerf regions shapefile as a Geopandas data frame.  Used in output plot.&quot;&quot;&quot;</span>
 
     <span class="n">f</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/cerf_conus_states_albers.zip&#39;</span><span class="p">)</span>
 
@@ -197,7 +207,7 @@
 
 
 <div class="viewcode-block" id="cerf_boundary_shapefile"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.cerf_boundary_shapefile">[docs]</a><span class="k">def</span> <span class="nf">cerf_boundary_shapefile</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Return the cerf CONUS boundary shapefile as a Geopandas data frame.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return the cerf boundary shapefile as a Geopandas data frame.  Used in output plot.&quot;&quot;&quot;</span>
 
     <span class="n">f</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/cerf_conus_boundary_albers.zip&#39;</span><span class="p">)</span>
 
@@ -208,17 +218,35 @@
     <span class="sd">&quot;&quot;&quot;Return a coordinate reference system (CRS) object of class &#39;pyproj.crs.crs.CRS&#39;</span>
 <span class="sd">     for USA_Contiguous_Albers_Equal_Area_Conic.</span>
 
-<span class="sd">     &quot;&quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">gdf</span> <span class="o">=</span> <span class="n">cerf_states_shapefile</span><span class="p">()</span>
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">cerf_regions_shapefile</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">gdf</span><span class="o">.</span><span class="n">crs</span></div>
+
+
+<div class="viewcode-block" id="get_default_gas_pipelines"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_default_gas_pipelines">[docs]</a><span class="k">def</span> <span class="nf">get_default_gas_pipelines</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the full path with file name and extension to the default gas pipeline shapefile&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/eia_natural_gas_pipelines_conus_albers.zip&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_costs_per_kv_substation_file"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_costs_per_kv_substation_file">[docs]</a><span class="k">def</span> <span class="nf">get_costs_per_kv_substation_file</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the full path with file name and extension to the default costs per km of each kv substation file.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/costs_per_kv_substation.yml&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_costs_gas_pipeline"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_costs_gas_pipeline">[docs]</a><span class="k">def</span> <span class="nf">get_costs_gas_pipeline</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the full path with file name and extension to the default costs per km to gas connect to pipelines.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/costs_gas_pipeline.yml&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="costs_per_kv_substation"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.costs_per_kv_substation">[docs]</a><span class="k">def</span> <span class="nf">costs_per_kv_substation</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Return a dictionary of the cost of interconnection to substations of certain KV classes.&quot;&quot;&quot;</span>
 
-    <span class="n">f</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/costs_per_kv_substation.yml&#39;</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">get_costs_per_kv_substation_file</span><span class="p">()</span>
 
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yml</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span></div>
@@ -261,6 +289,12 @@
     <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/lmp_zones_1km.img&#39;</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="get_sample_lmp_file"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_sample_lmp_file">[docs]</a><span class="k">def</span> <span class="nf">get_sample_lmp_file</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the sample 8760 hourly locational marginal price sample file.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip&#39;</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="get_sample_lmp_data"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_sample_lmp_data">[docs]</a><span class="k">def</span> <span class="nf">get_sample_lmp_data</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Return the sample 8760 hourly locational marginal price data as a Pandas DataFrame.&quot;&quot;&quot;</span>
 
@@ -269,21 +303,46 @@
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_state_abbrev_to_name"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_state_abbrev_to_name">[docs]</a><span class="k">def</span> <span class="nf">get_state_abbrev_to_name</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Return a dictionary of state abbreviation to state name.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="get_suitability_raster"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_suitability_raster">[docs]</a><span class="k">def</span> <span class="nf">get_suitability_raster</span><span class="p">(</span><span class="n">default_raster</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the default suitability raster file associated with the technology being processed.&quot;&quot;&quot;</span>
 
-    <span class="c1"># get state abbreviations file from cerf package data</span>
-    <span class="n">states_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/state-abbrev_to_state-name.yml&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;data/</span><span class="si">{</span><span class="n">default_raster</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
-    <span class="c1"># get state abbreviations to search for in HIFLD data</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">states_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
+
+<div class="viewcode-block" id="get_region_abbrev_to_name_file"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_region_abbrev_to_name_file">[docs]</a><span class="k">def</span> <span class="nf">get_region_abbrev_to_name_file</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the file path for region abbreviation to region name.&quot;&quot;&quot;</span>
+
+    <span class="c1"># get region abbreviations file from cerf package data</span>
+    <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/region-abbrev_to_region-name.yml&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_region_abbrev_to_name"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_region_abbrev_to_name">[docs]</a><span class="k">def</span> <span class="nf">get_region_abbrev_to_name</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return a dictionary of region abbreviation to region name.&quot;&quot;&quot;</span>
+
+    <span class="c1"># get region abbreviations file from cerf package data</span>
+    <span class="n">regions_file</span> <span class="o">=</span> <span class="n">get_region_abbrev_to_name_file</span><span class="p">()</span>
+
+    <span class="c1"># get region abbreviations to search for in HIFLD data</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">regions_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yml</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_region_name_to_id"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_region_name_to_id">[docs]</a><span class="k">def</span> <span class="nf">get_region_name_to_id</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the region name to ID file path.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/region-name_to_region-id.yml&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="get_data_directory"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_data_directory">[docs]</a><span class="k">def</span> <span class="nf">get_data_directory</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Return the directory of where the cerf package data resides.&quot;&quot;&quot;</span>
 
     <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_substation_file"><a class="viewcode-back" href="../../cerf.html#cerf.package_data.get_substation_file">[docs]</a><span class="k">def</span> <span class="nf">get_substation_file</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return the default substation file for the CONUS.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/hifld_substations_conus_albers.zip&#39;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

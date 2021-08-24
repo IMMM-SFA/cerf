@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Getting started &mdash; cerf 2.0.3 documentation</title>
+  <title>Getting started &mdash; cerf 2.0.4 documentation</title>
   
 
   
@@ -72,7 +72,7 @@
             
             
               <div class="version">
-                2.0.3
+                2.0.4
               </div>
             
           
@@ -102,13 +102,13 @@
 <li class="toctree-l2"><a class="reference internal" href="#about">About</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#python-version-support">Python version support</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#install-package-data">Install package data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-package-data">Installing package data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#optional-dependencies">Optional dependencies</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="user_guide.html">User guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">API documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to <strong>cerf</strong></a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how_to_cite.html">How to cite <strong>cerf</strong></a></li>
@@ -211,8 +211,8 @@
 <div class="section" id="about">
 <h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
 <p>The Capacity Expansion Regional Feasibility model (<strong>cerf</strong>) helps us evaluate the feasibility and structure of future electricity capacity expansion plans by siting power plants in areas that have been deemed the least cost option. We can use <strong>cerf</strong> to gain an understanding of topics such as: 1) whether or not future projected electricity expansion plans from models such as GCAM are possible to achieve, 2) where and which on-the-ground barriers to siting (e.g., protected areas, cooling water availability) may influence our ability to achieve certain expansions, and 3) how power plant infrastructure build outs and value may evolve into the future when considering locational marginal pricing (LMP) based on the supply and demand of electricity from a grid operations model.</p>
-<p><strong>cerf</strong> currently operates at a 1 km<sup>2</sup> resolution over the conterminous United States (CONUS). Each grid cell is given an initial value of suitable (0) or unsuitable (1) based on a collection of suitability criteria gleaned from the literature. <strong>cerf</strong>’s default suitability layers include both those that are common to all thermal technologies as well as technology-specific suitability criteria. Common suitability layers represent categories such as protected lands, critical habitat areas, and much more. Technology-specific suitability layers are those that satisfy requirements that may not be applicable to all technologies. An example would be minimum mean annual flow requirements for cooling water availability for individual thermal technologies.</p>
-<p>Though <strong>cerf</strong> was built to function for the CONUS, it could be extended to function for any country or set of regions that had the following prerequisite data sources:  a spatial representation of substations or electricity transmission infrastructure, a spatial representation of gas pipeline infrastructure if applicable, any regionally applicable spatial data to construct suitability rasters from, access to hourly zonal LMP, and access to technology-specific information and each technologies accompanying electricity capacity expansion plan per region.  The Global Change Analysis Model (<a class="reference external" href="https://github.com/JGCRI/gcam-core">GCAM</a>) is used to build our expansion plans and establish our technology-specific requirements through the end of the century. We derive our LMP from a grid operations model that also is harmonized with GCAM to provide consistent projections of energy system evolution.</p>
+<p>Each grid cell in <strong>cerf</strong> is given an initial value of suitable (0) or unsuitable (1) based on a collection of suitability criteria gleaned from the literature. <strong>cerf</strong>’s default suitability layers include both those that are common to all thermal technologies as well as technology-specific suitability criteria. Common suitability layers represent categories such as protected lands, critical habitat areas, and much more. Technology-specific suitability layers are those that satisfy requirements that may not be applicable to all technologies. An example would be minimum mean annual flow requirements for cooling water availability for individual thermal technologies.</p>
+<p>Though <strong>cerf</strong> provides sample data to run the conterminous United States (CONUS), it could be extended to function for any country or set of regions that had the following prerequisite data sources:  a spatial representation of substations or electricity transmission infrastructure, a spatial representation of gas pipeline infrastructure if applicable, any regionally applicable spatial data to construct suitability rasters from, access to hourly zonal LMP, and access to technology-specific information and each technologies accompanying electricity capacity expansion plan per region.  The Global Change Analysis Model (<a class="reference external" href="https://github.com/JGCRI/gcam-core">GCAM</a>) is used to build our expansion plans and establish our technology-specific requirements through the end of the century. We derive our LMP from a grid operations model that also is harmonized with GCAM to provide consistent projections of energy system evolution.  See more about how to generalize <strong>cerf</strong> for your research <a class="reference internal" href="user_guide.html#generalization"><span class="std std-ref">here</span></a>.</p>
 <p>We introduce a metric named Net Locational Cost (NLC) that is used compete power plant technologies for each grid cell based on the least cost option to site. NLC is calculated by subtracting the Net Operating Value (NOV) of a proposed power plant from the cost of its interconnection to the grid to represent the potential deployment value. Both the NOV parameter which incorporates many technology-specific values such as variable operations and maintenance costs, carbon price, heat rate, etc. and the interconnection cost parameter used for both electricity transmission and gas pipelines are configurable per time step.  All equations used in <strong>cerf</strong> are described in detail in the <a class="reference internal" href="user_guide.html#fundamental-equations-and-concepts"><span class="std std-ref">documentation</span></a>.</p>
 </div>
 <div class="section" id="python-version-support">
@@ -231,9 +231,10 @@
 </div>
 <p>It may be favorable to the user to create a virtual environment for the <strong>cerf</strong> package to minimize package version conflicts.  See <a class="reference external" href="https://docs.python.org/3/library/venv.html">creating virtual environments</a> to learn how these function and can be setup.</p>
 </div>
-<div class="section" id="install-package-data">
-<h2>Install package data<a class="headerlink" href="#install-package-data" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="installing-package-data">
+<h2>Installing package data<a class="headerlink" href="#installing-package-data" title="Permalink to this headline">¶</a></h2>
 <p><strong>cerf</strong> requires package data to be installed from Zenodo to keep the package lightweight.  After <strong>cerf</strong> has been installed, run the following from a Python prompt:</p>
+<p><strong>NOTE</strong>:  The package data will require approximately 195 MB of storage.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cerf</span>
 
 <span class="n">cerf</span><span class="o">.</span><span class="n">install_package_data</span><span class="p">()</span>

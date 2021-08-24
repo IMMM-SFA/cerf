@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.read_config &mdash; cerf 2.0.0 documentation</title>
+  <title>cerf.read_config &mdash; cerf 2.0.4 documentation</title>
   
 
   
@@ -40,6 +40,7 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -69,7 +70,7 @@
             
             
               <div class="version">
-                2.0.0
+                2.0.4
               </div>
             
           
@@ -97,8 +98,11 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">cerf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to_cite.html">How to cite <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../footer.html">Acknowledgement</a></li>
 </ul>
@@ -170,9 +174,10 @@
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">pkg_resources</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 
+<span class="kn">import</span> <span class="nn">cerf.utils</span> <span class="k">as</span> <span class="nn">utils</span>
+<span class="kn">import</span> <span class="nn">cerf.package_data</span> <span class="k">as</span> <span class="nn">pkg</span>
 <span class="kn">from</span> <span class="nn">cerf.logger</span> <span class="kn">import</span> <span class="n">Logger</span>
 
 
@@ -229,8 +234,28 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;infrastructure&#39;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">config_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;infrastructure&#39;</span><span class="p">,</span> <span class="p">{}))</span>
 
-        <span class="c1"># get the states dictionary</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">states_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_states_dict</span><span class="p">()</span>
+        <span class="c1"># update the settings paths to the package defaults if settings are not declared</span>
+        <span class="n">region_raster_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region_raster_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">region_abbrev_to_name_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region_abbrev_to_name_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">region_name_to_id_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region_name_to_id_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">region_raster_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;region_raster_file&#39;</span><span class="p">:</span> <span class="n">pkg</span><span class="o">.</span><span class="n">cerf_regions_raster</span><span class="p">()})</span>
+
+        <span class="k">if</span> <span class="n">region_abbrev_to_name_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;region_abbrev_to_name_file&#39;</span><span class="p">:</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_region_abbrev_to_name_file</span><span class="p">()})</span>
+
+        <span class="k">if</span> <span class="n">region_name_to_id_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;region_name_to_id_file&#39;</span><span class="p">:</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_region_name_to_id</span><span class="p">()})</span>
+
+        <span class="c1"># validate file existence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_settings_files</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_lmp_files</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_technology_files</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_infrastructure_files</span><span class="p">()</span>
+
+        <span class="c1"># get the regions dictionary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regions_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_regions_dict</span><span class="p">()</span>
 
 <div class="viewcode-block" id="ReadConfig.read_yaml"><a class="viewcode-back" href="../../cerf.html#cerf.read_config.ReadConfig.read_yaml">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">read_yaml</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">):</span>
@@ -258,17 +283,122 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_yaml</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config_file</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Config file not found for path:  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config_file</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Config file not found for path:  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config_file</span><span class="si">}</span><span class="s2">. If using defaults, please download the package data. </span>
+<span class="s2">            See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data&quot;&quot;&quot;</span>
+
             <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ReadConfig.get_states_dict"><a class="viewcode-back" href="../../cerf.html#cerf.read_config.ReadConfig.get_states_dict">[docs]</a>    <span class="k">def</span> <span class="nf">get_states_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get a dictionary of state name to state ID from the YAML file in package data.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ReadConfig.get_regions_dict"><a class="viewcode-back" href="../../cerf.html#cerf.read_config.ReadConfig.get_regions_dict">[docs]</a>    <span class="k">def</span> <span class="nf">get_regions_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a dictionary of region name to region ID from the YAML file in package data.&quot;&quot;&quot;</span>
 
-        <span class="c1"># in package data {state_name: state_id}</span>
-        <span class="n">states_lookup_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">,</span> <span class="s1">&#39;data/state-name_to_state-id.yml&#39;</span><span class="p">)</span>
+        <span class="c1"># in package data {region_name: region_id}</span>
+        <span class="n">regions_lookup_file</span> <span class="o">=</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_region_name_to_id</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_yaml</span><span class="p">(</span><span class="n">states_lookup_file</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_yaml</span><span class="p">(</span><span class="n">regions_lookup_file</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ReadConfig.validate_settings_files"><a class="viewcode-back" href="../../cerf.html#cerf.read_config.ReadConfig.validate_settings_files">[docs]</a>    <span class="k">def</span> <span class="nf">validate_settings_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Ensure that files necessary files exists for settings.&quot;&quot;&quot;</span>
+
+        <span class="c1"># expected files from settings</span>
+        <span class="n">settings_files</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">[</span><span class="s1">&#39;region_raster_file&#39;</span><span class="p">],</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">[</span><span class="s1">&#39;region_abbrev_to_name_file&#39;</span><span class="p">],</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">[</span><span class="s1">&#39;region_name_to_id_file&#39;</span><span class="p">]]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">settings_files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Cannot find the settings file for: </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.  If using defaults, please download the package data. </span>
+<span class="s2">                See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data&quot;&quot;&quot;</span>
+
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ReadConfig.validate_technology_files"><a class="viewcode-back" href="../../cerf.html#cerf.read_config.ReadConfig.validate_technology_files">[docs]</a>    <span class="k">def</span> <span class="nf">validate_technology_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Ensure that files necessary files exists for technology.&quot;&quot;&quot;</span>
+
+        <span class="c1"># expected files from technology</span>
+        <span class="n">suitability_file_dict</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">default_suitabiity_files</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+
+            <span class="n">suitability_raster</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;suitability_raster_file&#39;</span><span class="p">]</span>
+            <span class="n">tech_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;tech_name&#39;</span><span class="p">]</span>
+
+            <span class="c1"># see if the default suitability file exists in the data directory</span>
+            <span class="k">if</span> <span class="n">suitability_raster</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+                <span class="n">suit_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">pkg</span><span class="o">.</span><span class="n">get_data_directory</span><span class="p">(),</span> <span class="n">suitability_file_dict</span><span class="p">[</span><span class="n">tech_name</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">suit_path</span><span class="p">):</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Cannot find the default suitability raster: </span><span class="si">{</span><span class="n">suit_path</span><span class="si">}</span><span class="s2">.  Please download the package data. </span>
+<span class="s2">                    See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data&quot;&quot;&quot;</span>
+
+                    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+            <span class="c1"># if user provides suitability data, validate</span>
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">suitability_raster</span><span class="p">):</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Cannot find the suitability raster: </span><span class="si">{</span><span class="n">suitability_raster</span><span class="si">}</span><span class="s2">.  Confirm existence and retry.&quot;</span>
+
+                    <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ReadConfig.validate_lmp_files"><a class="viewcode-back" href="../../cerf.html#cerf.read_config.ReadConfig.validate_lmp_files">[docs]</a>    <span class="k">def</span> <span class="nf">validate_lmp_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Ensure that files necessary files exists for LMP zones.&quot;&quot;&quot;</span>
+
+        <span class="n">lmp_zone_raster_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmp_zone_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lmp_zone_raster_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">lmp_hourly_data_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmp_zone_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lmp_hourly_data_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">lmp_zone_raster_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lmp_zone_raster_file</span> <span class="o">=</span> <span class="n">pkg</span><span class="o">.</span><span class="n">sample_lmp_zones_raster_file</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">lmp_hourly_data_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lmp_hourly_data_file</span> <span class="o">=</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_sample_lmp_file</span><span class="p">()</span>
+
+        <span class="n">lmp_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">lmp_zone_raster_file</span><span class="p">,</span> <span class="n">lmp_hourly_data_file</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">lmp_files</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Cannot find the LMP file for: </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.  If using defaults, please download the package data. </span>
+<span class="s2">                See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data&quot;&quot;&quot;</span>
+
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ReadConfig.validate_infrastructure_files"><a class="viewcode-back" href="../../cerf.html#cerf.read_config.ReadConfig.validate_infrastructure_files">[docs]</a>    <span class="k">def</span> <span class="nf">validate_infrastructure_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Ensure that files necessary files exists for infrastructure.&quot;&quot;&quot;</span>
+
+        <span class="c1"># expected files from lmp_zones</span>
+        <span class="n">infrastructure_files</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;substation_file&#39;</span><span class="p">,</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_substation_file</span><span class="p">()),</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeline_file&#39;</span><span class="p">,</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_default_gas_pipelines</span><span class="p">()),</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;transmission_costs_file&#39;</span><span class="p">,</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_costs_per_kv_substation_file</span><span class="p">()),</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeline_costs_file&#39;</span><span class="p">,</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_costs_gas_pipeline</span><span class="p">())]</span>
+
+        <span class="n">substation_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;substation_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">pipeline_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeline_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">transmission_costs_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;transmission_costs_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">pipeline_costs_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">infrastructure_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pipeline_costs_file&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">substation_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">substation_file</span> <span class="o">=</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_substation_file</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">pipeline_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pipeline_file</span> <span class="o">=</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_default_gas_pipelines</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">transmission_costs_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">transmission_costs_file</span> <span class="o">=</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_costs_per_kv_substation_file</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">pipeline_costs_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pipeline_costs_file</span> <span class="o">=</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_costs_gas_pipeline</span><span class="p">()</span>
+
+        <span class="n">infrastructure_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">substation_file</span><span class="p">,</span> <span class="n">pipeline_file</span><span class="p">,</span> <span class="n">transmission_costs_file</span><span class="p">,</span> <span class="n">pipeline_costs_file</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">infrastructure_files</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;Cannot find the infrastructure file for: </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.  If using defaults, please download the package data. </span>
+<span class="s2">                See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data&quot;&quot;&quot;</span>
+
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

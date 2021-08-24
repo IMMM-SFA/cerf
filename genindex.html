@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Index &mdash; cerf 2.0.3 documentation</title>
+  <title>Index &mdash; cerf 2.0.4 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                2.0.3
+                2.0.4
               </div>
             
           
@@ -98,7 +98,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="user_guide.html">User guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">API documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to <strong>cerf</strong></a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how_to_cite.html">How to cite <strong>cerf</strong></a></li>
@@ -269,6 +269,13 @@
 </li>
       </ul></li>
       <li>
+    cerf.install_supplement
+
+      <ul>
+        <li><a href="cerf.html#module-cerf.install_supplement">module</a>
+</li>
+      </ul></li>
+      <li>
     cerf.interconnect
 
       <ul>
@@ -327,10 +334,10 @@
 </li>
       </ul></li>
       <li>
-    cerf.process_state
+    cerf.process_region
 
       <ul>
-        <li><a href="cerf.html#module-cerf.process_state">module</a>
+        <li><a href="cerf.html#module-cerf.process_region">module</a>
 </li>
       </ul></li>
       <li>
@@ -360,7 +367,9 @@
 </li>
       <li><a href="cerf.html#cerf.process.cerf_parallel">cerf_parallel() (in module cerf.process)</a>
 </li>
-      <li><a href="cerf.html#cerf.package_data.cerf_states_shapefile">cerf_states_shapefile() (in module cerf.package_data)</a>
+      <li><a href="cerf.html#cerf.package_data.cerf_regions_raster">cerf_regions_raster() (in module cerf.package_data)</a>
+</li>
+      <li><a href="cerf.html#cerf.package_data.cerf_regions_shapefile">cerf_regions_shapefile() (in module cerf.package_data)</a>
 </li>
       <li><a href="cerf.html#cerf.logger.Logger.close_logger">close_logger() (cerf.logger.Logger static method)</a>
 </li>
@@ -368,7 +377,7 @@
 </li>
       <li><a href="cerf.html#cerf.compete.Competition">Competition (class in cerf.compete)</a>
 </li>
-      <li><a href="cerf.html#cerf.process_state.ProcessState.competition">competition() (cerf.process_state.ProcessState method)</a>
+      <li><a href="cerf.html#cerf.process_region.ProcessRegion.competition">competition() (cerf.process_region.ProcessRegion method)</a>
 </li>
       <li><a href="cerf.html#cerf.model.Model.config_file">config_file (cerf.model.Model attribute)</a>
 
@@ -394,10 +403,12 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cerf.html#cerf.stage.Stage.DEFAULT_SUITABILITY">DEFAULT_SUITABILITY (cerf.stage.Stage attribute)</a>
+      <li><a href="cerf.html#cerf.install_supplement.InstallSupplement.DATA_VERSION_URLS">DATA_VERSION_URLS (cerf.install_supplement.InstallSupplement attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cerf.html#cerf.utils.default_suitabiity_files">default_suitabiity_files() (in module cerf.utils)</a>
+</li>
       <li><a href="cerf.html#cerf.nov.NetOperationalValue.discount_rate">discount_rate (cerf.nov.NetOperationalValue attribute)</a>
 </li>
   </ul></td>
@@ -408,13 +419,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cerf.html#cerf.utils.empty_sited_dict">empty_sited_dict() (in module cerf.utils)</a>
 </li>
-      <li><a href="cerf.html#cerf.process_state.ProcessState.extract_lmp_zones">extract_lmp_zones() (cerf.process_state.ProcessState method)</a>
+      <li><a href="cerf.html#cerf.process_region.ProcessRegion.extract_lmp_zones">extract_lmp_zones() (cerf.process_region.ProcessRegion method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cerf.html#cerf.process_state.ProcessState.extract_state_metrics">extract_state_metrics() (cerf.process_state.ProcessState method)</a>
+      <li><a href="cerf.html#cerf.process_region.ProcessRegion.extract_region_metrics">extract_region_metrics() (cerf.process_region.ProcessRegion method)</a>
 </li>
-      <li><a href="cerf.html#cerf.process_state.ProcessState.extract_state_suitability">extract_state_suitability() (cerf.process_state.ProcessState method)</a>
+      <li><a href="cerf.html#cerf.process_region.ProcessRegion.extract_region_suitability">extract_region_suitability() (cerf.process_region.ProcessRegion method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -422,14 +433,16 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cerf.html#cerf.install_supplement.InstallSupplement.fetch_zenodo">fetch_zenodo() (cerf.install_supplement.InstallSupplement method)</a>
+</li>
       <li><a href="cerf.html#cerf.logger.Logger.file_handler">file_handler() (cerf.logger.Logger method)</a>
 </li>
       <li><a href="cerf.html#cerf.nov.NetOperationalValue.fuel_co2_content">fuel_co2_content (cerf.nov.NetOperationalValue attribute)</a>
 </li>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.FUEL_CO2_CONTENT_CONVERSION_FACTOR">FUEL_CO2_CONTENT_CONVERSION_FACTOR (cerf.nov.NetOperationalValue attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cerf.html#cerf.nov.NetOperationalValue.FUEL_CO2_CONTENT_CONVERSION_FACTOR">FUEL_CO2_CONTENT_CONVERSION_FACTOR (cerf.nov.NetOperationalValue attribute)</a>
+</li>
       <li><a href="cerf.html#cerf.nov.NetOperationalValue.fuel_esc_rate">fuel_esc_rate (cerf.nov.NetOperationalValue attribute)</a>
 </li>
       <li><a href="cerf.html#cerf.nov.NetOperationalValue.fuel_price">fuel_price (cerf.nov.NetOperationalValue attribute)</a>
@@ -450,27 +463,43 @@
 </li>
       <li><a href="cerf.html#cerf.lmp.LocationalMarginalPricing.get_cf_bin">get_cf_bin() (cerf.lmp.LocationalMarginalPricing static method)</a>
 </li>
+      <li><a href="cerf.html#cerf.package_data.get_costs_gas_pipeline">get_costs_gas_pipeline() (in module cerf.package_data)</a>
+</li>
+      <li><a href="cerf.html#cerf.package_data.get_costs_per_kv_substation_file">get_costs_per_kv_substation_file() (in module cerf.package_data)</a>
+</li>
       <li><a href="cerf.html#cerf.package_data.get_data_directory">get_data_directory() (in module cerf.package_data)</a>
 </li>
-      <li><a href="cerf.html#cerf.process_state.ProcessState.get_grid_coordinates">get_grid_coordinates() (cerf.process_state.ProcessState method)</a>
+      <li><a href="cerf.html#cerf.package_data.get_default_gas_pipelines">get_default_gas_pipelines() (in module cerf.package_data)</a>
 </li>
-      <li><a href="cerf.html#cerf.process_state.ProcessState.get_grid_indices">get_grid_indices() (cerf.process_state.ProcessState method)</a>
+      <li><a href="cerf.html#cerf.process_region.ProcessRegion.get_grid_coordinates">get_grid_coordinates() (cerf.process_region.ProcessRegion method)</a>
+</li>
+      <li><a href="cerf.html#cerf.process_region.ProcessRegion.get_grid_indices">get_grid_indices() (cerf.process_region.ProcessRegion method)</a>
+</li>
+      <li><a href="cerf.html#cerf.lmp.LocationalMarginalPricing.get_lmp">get_lmp() (cerf.lmp.LocationalMarginalPricing method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cerf.html#cerf.lmp.LocationalMarginalPricing.get_lmp">get_lmp() (cerf.lmp.LocationalMarginalPricing method)</a>
-</li>
       <li><a href="cerf.html#cerf.interconnect.Interconnection.get_pipeline_costs">get_pipeline_costs() (cerf.interconnect.Interconnection method)</a>
+</li>
+      <li><a href="cerf.html#cerf.package_data.get_region_abbrev_to_name">get_region_abbrev_to_name() (in module cerf.package_data)</a>
+</li>
+      <li><a href="cerf.html#cerf.package_data.get_region_abbrev_to_name_file">get_region_abbrev_to_name_file() (in module cerf.package_data)</a>
+</li>
+      <li><a href="cerf.html#cerf.process_region.ProcessRegion.get_region_id">get_region_id() (cerf.process_region.ProcessRegion method)</a>
+</li>
+      <li><a href="cerf.html#cerf.package_data.get_region_name_to_id">get_region_name_to_id() (in module cerf.package_data)</a>
+</li>
+      <li><a href="cerf.html#cerf.read_config.ReadConfig.get_regions_dict">get_regions_dict() (cerf.read_config.ReadConfig method)</a>
 </li>
       <li><a href="cerf.html#cerf.package_data.get_sample_lmp_data">get_sample_lmp_data() (in module cerf.package_data)</a>
 </li>
+      <li><a href="cerf.html#cerf.package_data.get_sample_lmp_file">get_sample_lmp_file() (in module cerf.package_data)</a>
+</li>
       <li><a href="cerf.html#cerf.stage.Stage.get_sited_data">get_sited_data() (cerf.stage.Stage method)</a>
 </li>
-      <li><a href="cerf.html#cerf.package_data.get_state_abbrev_to_name">get_state_abbrev_to_name() (in module cerf.package_data)</a>
+      <li><a href="cerf.html#cerf.package_data.get_substation_file">get_substation_file() (in module cerf.package_data)</a>
 </li>
-      <li><a href="cerf.html#cerf.process_state.ProcessState.get_state_id">get_state_id() (cerf.process_state.ProcessState method)</a>
-</li>
-      <li><a href="cerf.html#cerf.read_config.ReadConfig.get_states_dict">get_states_dict() (cerf.read_config.ReadConfig method)</a>
+      <li><a href="cerf.html#cerf.package_data.get_suitability_raster">get_suitability_raster() (in module cerf.package_data)</a>
 </li>
       <li><a href="cerf.html#cerf.read_config.ReadConfig.get_yaml">get_yaml() (cerf.read_config.ReadConfig method)</a>
 </li>
@@ -496,9 +525,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cerf.html#cerf.utils.ingest_sited_data">ingest_sited_data() (in module cerf.utils)</a>
 </li>
+      <li><a href="cerf.html#cerf.logger.Logger.initialize_logger">initialize_logger() (cerf.logger.Logger method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cerf.html#cerf.logger.Logger.initialize_logger">initialize_logger() (cerf.logger.Logger method)</a>
+      <li><a href="cerf.html#cerf.install_supplement.install_package_data">install_package_data() (in module cerf.install_supplement)</a>
+</li>
+      <li><a href="cerf.html#cerf.install_supplement.InstallSupplement">InstallSupplement (class in cerf.install_supplement)</a>
 </li>
       <li><a href="cerf.html#cerf.interconnect.Interconnection">Interconnection (class in cerf.interconnect)</a>
 </li>
@@ -548,7 +581,7 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cerf.html#cerf.process_state.ProcessState.mask_nlc">mask_nlc() (cerf.process_state.ProcessState method)</a>
+      <li><a href="cerf.html#cerf.process_region.ProcessRegion.mask_nlc">mask_nlc() (cerf.process_region.ProcessRegion method)</a>
 </li>
       <li><a href="cerf.html#cerf.model.Model">Model (class in cerf.model)</a>
 </li>
@@ -559,6 +592,8 @@
         <li><a href="cerf.html#module-cerf">cerf</a>
 </li>
         <li><a href="cerf.html#module-cerf.compete">cerf.compete</a>
+</li>
+        <li><a href="cerf.html#module-cerf.install_supplement">cerf.install_supplement</a>
 </li>
         <li><a href="cerf.html#module-cerf.interconnect">cerf.interconnect</a>
 </li>
@@ -576,7 +611,7 @@
 </li>
         <li><a href="cerf.html#module-cerf.process">cerf.process</a>
 </li>
-        <li><a href="cerf.html#module-cerf.process_state">cerf.process_state</a>
+        <li><a href="cerf.html#module-cerf.process_region">cerf.process_region</a>
 </li>
         <li><a href="cerf.html#module-cerf.read_config">cerf.read_config</a>
 </li>
@@ -601,15 +636,19 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cerf.html#cerf.outputs.plot_siting">plot_siting() (in module cerf.outputs)</a>
 </li>
-      <li><a href="cerf.html#cerf.interconnect.Interconnection.process_eia_natural_gas_pipelines">process_eia_natural_gas_pipelines() (cerf.interconnect.Interconnection method)</a>
+      <li><a href="cerf.html#cerf.interconnect.preprocess_eia_natural_gas_pipelines">preprocess_eia_natural_gas_pipelines() (in module cerf.interconnect)</a>
+</li>
+      <li><a href="cerf.html#cerf.interconnect.preprocess_hifld_substations">preprocess_hifld_substations() (in module cerf.interconnect)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cerf.html#cerf.interconnect.Interconnection.process_hifld_substations">process_hifld_substations() (cerf.interconnect.Interconnection method)</a>
+      <li><a href="cerf.html#cerf.interconnect.Interconnection.process_pipelines">process_pipelines() (cerf.interconnect.Interconnection method)</a>
 </li>
-      <li><a href="cerf.html#cerf.process_state.process_state">process_state() (in module cerf.process_state)</a>
+      <li><a href="cerf.html#cerf.process_region.process_region">process_region() (in module cerf.process_region)</a>
 </li>
-      <li><a href="cerf.html#cerf.process_state.ProcessState">ProcessState (class in cerf.process_state)</a>
+      <li><a href="cerf.html#cerf.interconnect.Interconnection.process_substations">process_substations() (cerf.interconnect.Interconnection method)</a>
+</li>
+      <li><a href="cerf.html#cerf.process_region.ProcessRegion">ProcessRegion (class in cerf.process_region)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -629,7 +668,7 @@
 </li>
       <li><a href="cerf.html#cerf.process.run">run() (in module cerf.process)</a>
 </li>
-      <li><a href="cerf.html#cerf.model.Model.run_single_state">run_single_state() (cerf.model.Model method)</a>
+      <li><a href="cerf.html#cerf.model.Model.run_single_region">run_single_region() (cerf.model.Model method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -681,10 +720,18 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.variable_cost_esc_rate">variable_cost_esc_rate (cerf.nov.NetOperationalValue attribute)</a>
+      <li><a href="cerf.html#cerf.read_config.ReadConfig.validate_infrastructure_files">validate_infrastructure_files() (cerf.read_config.ReadConfig method)</a>
+</li>
+      <li><a href="cerf.html#cerf.read_config.ReadConfig.validate_lmp_files">validate_lmp_files() (cerf.read_config.ReadConfig method)</a>
+</li>
+      <li><a href="cerf.html#cerf.read_config.ReadConfig.validate_settings_files">validate_settings_files() (cerf.read_config.ReadConfig method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cerf.html#cerf.read_config.ReadConfig.validate_technology_files">validate_technology_files() (cerf.read_config.ReadConfig method)</a>
+</li>
+      <li><a href="cerf.html#cerf.nov.NetOperationalValue.variable_cost_esc_rate">variable_cost_esc_rate (cerf.nov.NetOperationalValue attribute)</a>
+</li>
       <li><a href="cerf.html#cerf.nov.NetOperationalValue.variable_om">variable_om (cerf.nov.NetOperationalValue attribute)</a>
 </li>
   </ul></td>

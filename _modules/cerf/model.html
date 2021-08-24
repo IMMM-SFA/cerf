@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.model &mdash; cerf 2.0.0 documentation</title>
+  <title>cerf.model &mdash; cerf 2.0.4 documentation</title>
   
 
   
@@ -40,6 +40,7 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -69,7 +70,7 @@
             
             
               <div class="version">
-                2.0.0
+                2.0.4
               </div>
             
           
@@ -97,8 +98,11 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">cerf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to_cite.html">How to cite <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../footer.html">Acknowledgement</a></li>
 </ul>
@@ -180,7 +184,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">cerf.process_state</span> <span class="kn">import</span> <span class="n">process_state</span>
+<span class="kn">from</span> <span class="nn">cerf.process_region</span> <span class="kn">import</span> <span class="n">process_region</span>
 <span class="kn">from</span> <span class="nn">cerf.read_config</span> <span class="kn">import</span> <span class="n">ReadConfig</span>
 <span class="kn">from</span> <span class="nn">cerf.stage</span> <span class="kn">import</span> <span class="n">Stage</span>
 
@@ -232,13 +236,13 @@
 <div class="viewcode-block" id="Model.stage"><a class="viewcode-back" href="../../cerf.html#cerf.model.Model.stage">[docs]</a>    <span class="k">def</span> <span class="nf">stage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;run model.&quot;&quot;&quot;</span>
 
-        <span class="c1"># prepare data for use in siting an expansion per state for a target year</span>
+        <span class="c1"># prepare data for use in siting an expansion per region for a target year</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Staging data...&#39;</span><span class="p">)</span>
 
         <span class="c1"># initial time for staging data</span>
         <span class="n">staging_t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
-        <span class="c1"># prepare all data for state level run</span>
+        <span class="c1"># prepare all data for region level run</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">Stage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">,</span>
                      <span class="bp">self</span><span class="o">.</span><span class="n">lmp_zone_dict</span><span class="p">,</span>
                      <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">,</span>
@@ -250,31 +254,31 @@
 
         <span class="k">return</span> <span class="n">data</span></div>
 
-<div class="viewcode-block" id="Model.run_single_state"><a class="viewcode-back" href="../../cerf.html#cerf.model.Model.run_single_state">[docs]</a>    <span class="k">def</span> <span class="nf">run_single_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_state_name</span><span class="p">,</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;run a single state.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Model.run_single_region"><a class="viewcode-back" href="../../cerf.html#cerf.model.Model.run_single_region">[docs]</a>    <span class="k">def</span> <span class="nf">run_single_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_region_name</span><span class="p">,</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;run a single region.&quot;&quot;&quot;</span>
 
-        <span class="c1"># prepare all data for state level run</span>
+        <span class="c1"># prepare all data for region level run</span>
         <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span><span class="p">()</span>
 
-        <span class="n">process</span> <span class="o">=</span> <span class="n">process_state</span><span class="p">(</span><span class="n">target_state_name</span><span class="o">=</span><span class="n">target_state_name</span><span class="p">,</span>
-                                <span class="n">settings_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">,</span>
-                                <span class="n">technology_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">,</span>
-                                <span class="n">technology_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">,</span>
-                                <span class="n">expansion_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">expansion_dict</span><span class="p">,</span>
-                                <span class="n">states_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">states_dict</span><span class="p">,</span>
-                                <span class="n">suitability_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">suitability_arr</span><span class="p">,</span>
-                                <span class="n">lmp_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">lmp_arr</span><span class="p">,</span>
-                                <span class="n">nov_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">nov_arr</span><span class="p">,</span>
-                                <span class="n">ic_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">ic_arr</span><span class="p">,</span>
-                                <span class="n">nlc_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">nlc_arr</span><span class="p">,</span>
-                                <span class="n">zones_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">zones_arr</span><span class="p">,</span>
-                                <span class="n">xcoords</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">xcoords</span><span class="p">,</span>
-                                <span class="n">ycoords</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">ycoords</span><span class="p">,</span>
-                                <span class="n">indices_2d</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">indices_2d</span><span class="p">,</span>
-                                <span class="n">randomize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;randomize&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
-                                <span class="n">seed_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;seed_value&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                                <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-                                <span class="n">write_output</span><span class="o">=</span><span class="n">write_output</span><span class="p">)</span>
+        <span class="n">process</span> <span class="o">=</span> <span class="n">process_region</span><span class="p">(</span><span class="n">target_region_name</span><span class="o">=</span><span class="n">target_region_name</span><span class="p">,</span>
+                                 <span class="n">settings_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">,</span>
+                                 <span class="n">technology_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">,</span>
+                                 <span class="n">technology_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">,</span>
+                                 <span class="n">expansion_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">expansion_dict</span><span class="p">,</span>
+                                 <span class="n">regions_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">regions_dict</span><span class="p">,</span>
+                                 <span class="n">suitability_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">suitability_arr</span><span class="p">,</span>
+                                 <span class="n">lmp_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">lmp_arr</span><span class="p">,</span>
+                                 <span class="n">nov_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">nov_arr</span><span class="p">,</span>
+                                 <span class="n">ic_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">ic_arr</span><span class="p">,</span>
+                                 <span class="n">nlc_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">nlc_arr</span><span class="p">,</span>
+                                 <span class="n">zones_arr</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">zones_arr</span><span class="p">,</span>
+                                 <span class="n">xcoords</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">xcoords</span><span class="p">,</span>
+                                 <span class="n">ycoords</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">ycoords</span><span class="p">,</span>
+                                 <span class="n">indices_2d</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">indices_2d</span><span class="p">,</span>
+                                 <span class="n">randomize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;randomize&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+                                 <span class="n">seed_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;seed_value&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                                 <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+                                 <span class="n">write_output</span><span class="o">=</span><span class="n">write_output</span><span class="p">)</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CERF model run completed in </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
 

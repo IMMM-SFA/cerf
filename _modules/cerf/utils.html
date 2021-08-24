@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.utils &mdash; cerf 2.0.2 documentation</title>
+  <title>cerf.utils &mdash; cerf 2.0.4 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                2.0.2
+                2.0.4
               </div>
             
           
@@ -98,7 +98,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">cerf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../publications.html">Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how_to_cite.html">How to cite <strong>cerf</strong></a></li>
@@ -181,20 +181,18 @@
 <span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
 <span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Point</span>
 
-<span class="kn">from</span> <span class="nn">cerf.package_data</span> <span class="kn">import</span> <span class="n">cerf_crs</span>
 
-
-<div class="viewcode-block" id="results_to_geodataframe"><a class="viewcode-back" href="../../cerf.html#cerf.utils.results_to_geodataframe">[docs]</a><span class="k">def</span> <span class="nf">results_to_geodataframe</span><span class="p">(</span><span class="n">result_df</span><span class="p">):</span>
+<div class="viewcode-block" id="results_to_geodataframe"><a class="viewcode-back" href="../../cerf.html#cerf.utils.results_to_geodataframe">[docs]</a><span class="k">def</span> <span class="nf">results_to_geodataframe</span><span class="p">(</span><span class="n">result_df</span><span class="p">,</span> <span class="n">target_crs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Convert the results from &#39;cerf.run()&#39; to a GeoDataFrame.</span>
 
 <span class="sd">    :param result_df:                       Result data frame from running &#39;cerf.run()&#39;</span>
 <span class="sd">    :type result_df:                        DataFrame</span>
 
+<span class="sd">    :param target_crs:                      Coordinate reference system to assign the output.</span>
+
 <span class="sd">    :return:                                GeoPandas GeoDataFrame of results</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">target_crs</span> <span class="o">=</span> <span class="n">cerf_crs</span><span class="p">()</span>
 
     <span class="c1"># create geometry column from coordinate fields</span>
     <span class="n">geometry</span> <span class="o">=</span> <span class="p">[</span><span class="n">Point</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span> <span class="k">for</span> <span class="n">xy</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;xcoord&#39;</span><span class="p">],</span> <span class="n">result_df</span><span class="p">[</span><span class="s1">&#39;ycoord&#39;</span><span class="p">])]</span>
@@ -228,7 +226,7 @@
 <div class="viewcode-block" id="empty_sited_dict"><a class="viewcode-back" href="../../cerf.html#cerf.utils.empty_sited_dict">[docs]</a><span class="k">def</span> <span class="nf">empty_sited_dict</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Initialize a sited dictionary.&quot;&quot;&quot;</span>
 
-    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;state_name&#39;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;region_name&#39;</span><span class="p">:</span> <span class="p">[],</span>
             <span class="s1">&#39;tech_id&#39;</span><span class="p">:</span> <span class="p">[],</span>
             <span class="s1">&#39;tech_name&#39;</span><span class="p">:</span> <span class="p">[],</span>
             <span class="s1">&#39;unit_size_mw&#39;</span><span class="p">:</span> <span class="p">[],</span>
@@ -248,8 +246,10 @@
 <div class="viewcode-block" id="sited_dtypes"><a class="viewcode-back" href="../../cerf.html#cerf.utils.sited_dtypes">[docs]</a><span class="k">def</span> <span class="nf">sited_dtypes</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Return data type dictionary for the sited data frame.&quot;&quot;&quot;</span>
 
-    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;state_name&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;region_name&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
             <span class="s1">&#39;tech_id&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span>
+            <span class="s1">&#39;tech_name&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+            <span class="s1">&#39;unit_size_mw&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
             <span class="s1">&#39;xcoord&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
             <span class="s1">&#39;ycoord&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
             <span class="s1">&#39;lmp_zone&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span>
@@ -261,6 +261,30 @@
             <span class="s1">&#39;retirement_year&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span>
             <span class="s1">&#39;sited_year&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span>
             <span class="s1">&#39;buffer_in_km&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="default_suitabiity_files"><a class="viewcode-back" href="../../cerf.html#cerf.utils.default_suitabiity_files">[docs]</a><span class="k">def</span> <span class="nf">default_suitabiity_files</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return a dictionary of default suitability file names.&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;biomass_conv_wo_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_biomass.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;biomass_conv_w_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_biomass.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;biomass_igcc_wo_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_biomass_igcc.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;biomass_igcc_w_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_biomass_igcc_ccs.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;coal_conv_pul_wo_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_coal.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;coal_conv_pul_w_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_coal.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;coal_igcc_wo_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_coal_igcc.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;coal_igcc_w_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_coal_igcc_ccs.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;gas_cc_wo_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_gas_cc.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;gas_cc_w_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_gas_cc_ccs.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;gas_ct_wo_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_gas_cc.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;geothermal&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;hydro&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;nuclear_gen_ii&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_nuclear.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;nuclear_gen_iii&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_nuclear.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;oil_ct_wo_ccs&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_oil_baseload.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;solar_csp&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_solar.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;solar_pv_non_dist&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_solar.sdat&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;wind_onshore&#39;</span><span class="p">:</span> <span class="s1">&#39;suitability_wind.sdat&#39;</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="buffer_flat_array"><a class="viewcode-back" href="../../cerf.html#cerf.utils.buffer_flat_array">[docs]</a><span class="k">def</span> <span class="nf">buffer_flat_array</span><span class="p">(</span><span class="n">target_index</span><span class="p">,</span> <span class="n">arr</span><span class="p">,</span> <span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="n">ncells</span><span class="p">,</span> <span class="n">set_value</span><span class="p">):</span>
