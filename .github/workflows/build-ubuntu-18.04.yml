@@ -1,0 +1,35 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+      runs-on: ${{ matrix.os }}
+
+      strategy:
+        matrix:
+          os: [ubuntu-18.04]
+
+      env:
+        OS: ${{ matrix.os }}
+        PYTHON: '3.8'
+
+      steps:
+
+        - uses: actions/checkout@v1
+
+        - name: Set up Python
+          uses: actions/setup-python@master
+          with:
+            python-version: 3.8
+
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            python setup.py install
+            python -c 'import cerf; cerf.install_package_data()'
+
+        - name: Test and generate coverage report on Linux
+          run: |
+            pip install pytest
+            pytest
