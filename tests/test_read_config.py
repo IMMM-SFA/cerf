@@ -1,11 +1,5 @@
-"""Tests to ensure high-level functionality and outputs remain consistent.
 
-@author Chris R. vernon
-@email chris.vernon@pnnl.gov
-
-License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
-
-"""
+import pkg_resources
 import unittest
 
 from cerf.read_config import ReadConfig
@@ -14,7 +8,7 @@ from cerf.read_config import ReadConfig
 class TestReadConfig(unittest.TestCase):
     """Test configuration reader."""
 
-    TEST_CONFIG = 'tests/data/test_config_2010.yml'
+    TEST_CONFIG = pkg_resources.resource_filename('cerf', 'data/test_config_2010.yml')
     EXPECTED_REGDICT = {'alabama': 1, 'arizona': 2, 'arkansas': 3, 'california': 4, 'colorado': 5, 'connecticut': 6,
                         'delaware': 7, 'district_of_columbia': 8, 'florida': 9, 'georgia': 10, 'idaho': 11,
                         'illinois': 12, 'indiana': 13, 'iowa': 14, 'kansas': 15, 'kentucky': 16, 'louisiana': 17,
