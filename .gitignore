@@ -6,6 +6,7 @@ cerf/data/*.xml
 cerf/data/*.sdat
 cerf/data/*.sgrd
 cerf/data/*.img
+cerf/data/*.npy
 
 # ignore docs build
 docs/build/

@@ -7,10 +7,11 @@ from cerf.read_config import ReadConfig
 from cerf.interconnect import Interconnection
 
 
-class TestLmp(unittest.TestCase):
+class TestInterconnection(unittest.TestCase):
 
     # supporting data
     TEST_CONFIG = pkg_resources.resource_filename('cerf', 'data/test_config_2010.yml')
+    EXPECTED_SUBSET = np.load(pkg_resources.resource_filename('cerf', 'data/test_ic_arr.npy'))
 
     @staticmethod
     def get_sample(arr):
@@ -61,6 +62,9 @@ class TestLmp(unittest.TestCase):
         ic_arr = ic.generate_interconnection_costs_array()
 
         ic_arr_subset = self.get_sample(ic_arr)
+
+        np.testing.assert_array_equal(TestInterconnection.EXPECTED_SUBSET, ic_arr_subset)
+
 
 if __name__ == '__main__':
     unittest.main()
