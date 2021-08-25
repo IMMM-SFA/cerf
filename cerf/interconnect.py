@@ -97,11 +97,11 @@ class Interconnection:
 
     :param output_cost_file:                Write cost file; if True, set 'output_dir' value
     :type output_cost_file:                 bool
-    
+
     :param interconnection_cost_file:       Full path with file name and extension to a preprocessed interconnection
-                                            cost NPY file that has been previously written. If None, IC will be 
+                                            cost NPY file that has been previously written. If None, IC will be
                                             calculated.
-    :type interconnection_cost_file:        str 
+    :type interconnection_cost_file:        str
 
     :param output_dir:                      Full path to a directory to write outputs to if desired
     :type output_dir:                       str
@@ -110,8 +110,8 @@ class Interconnection:
 
     def __init__(self, template_array, technology_dict, technology_order, region_raster_file,
                  region_abbrev_to_name_file, region_name_to_id_file, substation_file=None,
-                 transmission_costs_dict=None, transmission_costs_file=None, pipeline_costs_dict=None, 
-                 pipeline_costs_file=None,pipeline_file=None, output_rasterized_file=False, output_dist_file=False, 
+                 transmission_costs_dict=None, transmission_costs_file=None, pipeline_costs_dict=None,
+                 pipeline_costs_file=None, pipeline_file=None, output_rasterized_file=False, output_dist_file=False,
                  output_alloc_file=False, output_cost_file=False, interconnection_cost_file=None, output_dir=None):
 
         self.template_array = template_array
@@ -270,7 +270,8 @@ class Interconnection:
             infrastructure_gdf = self.process_pipelines()
 
         else:
-            raise ValueError(f"Incorrect setting '{setting}' for transmission data.  Must be 'substations' or 'pipelines'")
+            raise ValueError(
+                f"Incorrect setting '{setting}' for transmission data.  Must be 'substations' or 'pipelines'")
 
         with rasterio.open(self.region_raster_file) as src:
 
@@ -340,10 +341,9 @@ class Interconnection:
 
     def generate_interconnection_costs_array(self):
         """Calculate the costs of interconnection for each technology."""
-        
+
         # if a preprocessed file has been provided, load and return it
         if self.interconnection_cost_file is not None:
-
             logging.info(f"Using prebuilt interconnection costs file:  {self.interconnection_cost_file}")
             return np.load(self.interconnection_cost_file)
 
