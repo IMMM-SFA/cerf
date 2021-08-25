@@ -221,6 +221,10 @@
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>cerf</strong> is not officially supported for Ubuntu 18 users due to a system dependency (<code class="docutils literal notranslate"><span class="pre">GLIB_2.29</span></code>) required by the <code class="docutils literal notranslate"><span class="pre">whitebox</span></code> package which <strong>cerf</strong> uses to conduct spatial analysis. Ubuntu 18 natively includes <code class="docutils literal notranslate"><span class="pre">GLIB_2.27</span></code>.  It may be possible for Ubuntu 18 users to upgrade to <code class="docutils literal notranslate"><span class="pre">GLIB_2.29</span></code> but this should be done with careful consideration.  Instead, we officially support <strong>cerf</strong> use for Ubuntu users for versions 20.04.2 LTS and greater.</p>
+</div>
 <p><strong>cerf</strong> can be installed via pip by running the following from a terminal window:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">cerf</span>
 </pre></div>

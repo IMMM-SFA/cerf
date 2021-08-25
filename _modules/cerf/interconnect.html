@@ -98,7 +98,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">cerf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">API documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../publications.html">Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../how_to_cite.html">How to cite <strong>cerf</strong></a></li>
@@ -270,11 +270,11 @@
 
 <span class="sd">    :param output_cost_file:                Write cost file; if True, set &#39;output_dir&#39; value</span>
 <span class="sd">    :type output_cost_file:                 bool</span>
-<span class="sd">    </span>
+
 <span class="sd">    :param interconnection_cost_file:       Full path with file name and extension to a preprocessed interconnection</span>
-<span class="sd">                                            cost NPY file that has been previously written. If None, IC will be </span>
+<span class="sd">                                            cost NPY file that has been previously written. If None, IC will be</span>
 <span class="sd">                                            calculated.</span>
-<span class="sd">    :type interconnection_cost_file:        str </span>
+<span class="sd">    :type interconnection_cost_file:        str</span>
 
 <span class="sd">    :param output_dir:                      Full path to a directory to write outputs to if desired</span>
 <span class="sd">    :type output_dir:                       str</span>
@@ -283,8 +283,8 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_array</span><span class="p">,</span> <span class="n">technology_dict</span><span class="p">,</span> <span class="n">technology_order</span><span class="p">,</span> <span class="n">region_raster_file</span><span class="p">,</span>
                  <span class="n">region_abbrev_to_name_file</span><span class="p">,</span> <span class="n">region_name_to_id_file</span><span class="p">,</span> <span class="n">substation_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">transmission_costs_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transmission_costs_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pipeline_costs_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
-                 <span class="n">pipeline_costs_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">pipeline_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_rasterized_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output_dist_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+                 <span class="n">transmission_costs_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">transmission_costs_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pipeline_costs_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">pipeline_costs_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pipeline_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_rasterized_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output_dist_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">output_alloc_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output_cost_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">interconnection_cost_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">template_array</span> <span class="o">=</span> <span class="n">template_array</span>
@@ -443,7 +443,8 @@
             <span class="n">infrastructure_gdf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_pipelines</span><span class="p">()</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Incorrect setting &#39;</span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s2">&#39; for transmission data.  Must be &#39;substations&#39; or &#39;pipelines&#39;&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Incorrect setting &#39;</span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s2">&#39; for transmission data.  Must be &#39;substations&#39; or &#39;pipelines&#39;&quot;</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region_raster_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">src</span><span class="p">:</span>
 
@@ -513,10 +514,9 @@
 
 <div class="viewcode-block" id="Interconnection.generate_interconnection_costs_array"><a class="viewcode-back" href="../../cerf.html#cerf.interconnect.Interconnection.generate_interconnection_costs_array">[docs]</a>    <span class="k">def</span> <span class="nf">generate_interconnection_costs_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate the costs of interconnection for each technology.&quot;&quot;&quot;</span>
-        
+
         <span class="c1"># if a preprocessed file has been provided, load and return it</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">interconnection_cost_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using prebuilt interconnection costs file:  </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">interconnection_cost_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interconnection_cost_file</span><span class="p">)</span>
 
