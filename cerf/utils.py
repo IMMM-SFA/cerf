@@ -8,20 +8,18 @@ import xarray as xr
 import geopandas as gpd
 from shapely.geometry import Point
 
-from cerf.package_data import cerf_crs
 
-
-def results_to_geodataframe(result_df):
+def results_to_geodataframe(result_df, target_crs):
     """Convert the results from 'cerf.run()' to a GeoDataFrame.
 
     :param result_df:                       Result data frame from running 'cerf.run()'
     :type result_df:                        DataFrame
 
+    :param target_crs:                      Coordinate reference system to assign the output.
+
     :return:                                GeoPandas GeoDataFrame of results
 
     """
-
-    target_crs = cerf_crs()
 
     # create geometry column from coordinate fields
     geometry = [Point(xy) for xy in zip(result_df['xcoord'], result_df['ycoord'])]
@@ -55,7 +53,7 @@ def suppress_callback(value):
 def empty_sited_dict():
     """Initialize a sited dictionary."""
 
-    return {'state_name': [],
+    return {'region_name': [],
             'tech_id': [],
             'tech_name': [],
             'unit_size_mw': [],
@@ -75,8 +73,10 @@ def empty_sited_dict():
 def sited_dtypes():
     """Return data type dictionary for the sited data frame."""
 
-    return {'state_name': str,
+    return {'region_name': str,
             'tech_id': np.int64,
+            'tech_name': str,
+            'unit_size_mw': np.float64,
             'xcoord': np.float64,
             'ycoord': np.float64,
             'lmp_zone': np.int64,
@@ -88,6 +88,30 @@ def sited_dtypes():
             'retirement_year': np.int64,
             'sited_year': np.int64,
             'buffer_in_km': np.int64}
+
+
+def default_suitabiity_files():
+    """Return a dictionary of default suitability file names."""
+
+    return {'biomass_conv_wo_ccs': 'suitability_biomass.sdat',
+            'biomass_conv_w_ccs': 'suitability_biomass.sdat',
+            'biomass_igcc_wo_ccs': 'suitability_biomass_igcc.sdat',
+            'biomass_igcc_w_ccs': 'suitability_biomass_igcc_ccs.sdat',
+            'coal_conv_pul_wo_ccs': 'suitability_coal.sdat',
+            'coal_conv_pul_w_ccs': 'suitability_coal.sdat',
+            'coal_igcc_wo_ccs': 'suitability_coal_igcc.sdat',
+            'coal_igcc_w_ccs': 'suitability_coal_igcc_ccs.sdat',
+            'gas_cc_wo_ccs': 'suitability_gas_cc.sdat',
+            'gas_cc_w_ccs': 'suitability_gas_cc_ccs.sdat',
+            'gas_ct_wo_ccs': 'suitability_gas_cc.sdat',
+            'geothermal': None,
+            'hydro': None,
+            'nuclear_gen_ii': 'suitability_nuclear.sdat',
+            'nuclear_gen_iii': 'suitability_nuclear.sdat',
+            'oil_ct_wo_ccs': 'suitability_oil_baseload.sdat',
+            'solar_csp': 'suitability_solar.sdat',
+            'solar_pv_non_dist': 'suitability_solar.sdat',
+            'wind_onshore': 'suitability_wind.sdat'}
 
 
 def buffer_flat_array(target_index, arr, nrows, ncols, ncells, set_value):

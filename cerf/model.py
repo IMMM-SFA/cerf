@@ -11,7 +11,7 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 import logging
 import time
 
-from cerf.process_state import process_state
+from cerf.process_region import process_region
 from cerf.read_config import ReadConfig
 from cerf.stage import Stage
 
@@ -63,13 +63,13 @@ class Model(ReadConfig):
     def stage(self):
         """run model."""
 
-        # prepare data for use in siting an expansion per state for a target year
+        # prepare data for use in siting an expansion per region for a target year
         logging.info('Staging data...')
 
         # initial time for staging data
         staging_t0 = time.time()
 
-        # prepare all data for state level run
+        # prepare all data for region level run
         data = Stage(self.settings_dict,
                      self.lmp_zone_dict,
                      self.technology_dict,
@@ -81,31 +81,31 @@ class Model(ReadConfig):
 
         return data
 
-    def run_single_state(self, target_state_name, write_output=True):
-        """run a single state."""
+    def run_single_region(self, target_region_name, write_output=True):
+        """run a single region."""
 
-        # prepare all data for state level run
+        # prepare all data for region level run
         data = self.stage()
 
-        process = process_state(target_state_name=target_state_name,
-                                settings_dict=self.settings_dict,
-                                technology_dict=self.technology_dict,
-                                technology_order=self.technology_order,
-                                expansion_dict=self.expansion_dict,
-                                states_dict=self.states_dict,
-                                suitability_arr=data.suitability_arr,
-                                lmp_arr=data.lmp_arr,
-                                nov_arr=data.nov_arr,
-                                ic_arr=data.ic_arr,
-                                nlc_arr=data.nlc_arr,
-                                zones_arr=data.zones_arr,
-                                xcoords=data.xcoords,
-                                ycoords=data.ycoords,
-                                indices_2d=data.indices_2d,
-                                randomize=self.settings_dict.get('randomize', True),
-                                seed_value=self.settings_dict.get('seed_value', 0),
-                                verbose=self.settings_dict.get('verbose', False),
-                                write_output=write_output)
+        process = process_region(target_region_name=target_region_name,
+                                 settings_dict=self.settings_dict,
+                                 technology_dict=self.technology_dict,
+                                 technology_order=self.technology_order,
+                                 expansion_dict=self.expansion_dict,
+                                 regions_dict=self.regions_dict,
+                                 suitability_arr=data.suitability_arr,
+                                 lmp_arr=data.lmp_arr,
+                                 nov_arr=data.nov_arr,
+                                 ic_arr=data.ic_arr,
+                                 nlc_arr=data.nlc_arr,
+                                 zones_arr=data.zones_arr,
+                                 xcoords=data.xcoords,
+                                 ycoords=data.ycoords,
+                                 indices_2d=data.indices_2d,
+                                 randomize=self.settings_dict.get('randomize', True),
+                                 seed_value=self.settings_dict.get('seed_value', 0),
+                                 verbose=self.settings_dict.get('verbose', False),
+                                 write_output=write_output)
 
         logging.info(f"CERF model run completed in {round(time.time() - self.start_time, 7)} seconds")
 

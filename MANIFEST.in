@@ -1,3 +1,1 @@
 include cerf/data/README.md
-include tests/data/*
-include tests/data/comp_data/*

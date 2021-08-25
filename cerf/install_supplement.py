@@ -1,13 +1,14 @@
 import os
 import tempfile
 import zipfile
-import pkg_resources
 import shutil
 
 import requests
 
 from pkg_resources import get_distribution
 from io import BytesIO as BytesIO
+
+import cerf.package_data as pkg
 
 
 class InstallSupplement:
@@ -21,14 +22,14 @@ class InstallSupplement:
                          '2.0.1': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
                          '2.0.2': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
                          '2.0.3': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
-                         '2.0.4': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1'}
+                         '2.0.4': 'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1'}
 
     def fetch_zenodo(self):
         """Download and unpack the Zenodo example data supplement for the
         current cerf distribution."""
 
         # full path to the cerf root directory where the example dir will be stored
-        data_directory = pkg_resources.resource_filename('cerf', 'data')
+        data_directory = pkg.get_data_directory()
 
         # get the current version of cerf that is installed
         current_version = get_distribution('cerf').version

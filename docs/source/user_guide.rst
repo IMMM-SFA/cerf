@@ -2,6 +2,26 @@
 User guide
 ===============
 
+Generalization
+--------------
+
+Though **cerf** is demonstrated for the conterminous United States (CONUS), the package could easily be used in research ranging from regional to global analysis.
+
+**cerf** requires the following inputs to be able to operate:
+
+- A shapefile of substations as points.
+- A shapefile of gas pipelines as polylines if siting gas technologies.
+- A raster containing region IDs.  Each grid cell has the value of its parent region.  Currently, this is demonstrated using US states, though this could be generalized to any region/country/locale identifier matching what the electricity expansion plan provides.
+- A raster containing locational marginal pricing (LMP) zone IDs.  Each grid cell has the ID of its LMP zones.  These zones are representative of the nodal structure of the underlying model or software that produces the LMPs.  Production cost models to generate this value are not US-specific and this could be generated from any number of open-source and/or commercial products.
+- A file of LMPs per zone (corresponding to the aforementioned raster) for each 8760 hour.  Again, the source model or dataset that these are generated from does not have to be US-specific.
+- An electricity capacity expansion plan and its accompanying technology-specific information (e.g., variable O&M, fuel price, etc.).  For the CONUS, we use the 50 US-state version of GCAM.  However, GCAM is a global model and can produce this data for each of its regions.
+- Both the `region-abbrev_to_region-name.yml` and the `region-name_to_region-id.yml` files can be replaced with regional information.
+- Other variable information which is able to be modified per run, are the assumed interconnection costs per km to a substation KV class and the cost per km to connect to a gas pipeline if applicable.
+- Lastly, are the suitability rasters which can be composed of any number of locally-relevant exclusion criteria (e.g., protected area, critical habitat, etc.) per technology being sited in the expansion plan.
+
+Let us know if you are using **cerf** in your research in our `discussion thread <https://github.com/IMMM-SFA/cerf/discussions/61>`_!
+
+
 Setting up a **cerf** run
 -------------------------
 
@@ -154,20 +174,20 @@ These are technology-specific settings.
 
 .. table::
 
-    +-------------------------+---------------------------------------------+----------+----------+
-    | Name                    | Description                                 | Unit     | Type     |
-    +=========================+=============================================+==========+==========+
-    | <state name>            | | Name key of state in all lower case with  | NA       | str      |
-    |                         | | underscore separation                     |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | <tech id key>           | | Technology ID key matching what is in the | NA       | int      |
-    |                         | | technology section (e.g. 9)               |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | tech_name               | | Name of the technology matching the name  | NA       | str      |
-    |                         | | in the technology section                 |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | n_sites                 | Number of sites desired                     | n_sites  | int      |
-    +-------------------------+---------------------------------------------+----------+----------+
+    +-------------------------+-----------------------------------------------+----------+----------+
+    | Name                    | Description                                   | Unit     | Type     |
+    +=========================+===============================================+==========+==========+
+    | <region name>           | | Name key of region in all lower case with   | NA       | str      |
+    |                         | | underscore separation                       |          |          |
+    +-------------------------+-----------------------------------------------+----------+----------+
+    | <tech id key>           | | Technology ID key matching what is in the   | NA       | int      |
+    |                         | | technology section (e.g. 9)                 |          |          |
+    +-------------------------+-----------------------------------------------+----------+----------+
+    | tech_name               | | Name of the technology matching the name    | NA       | str      |
+    |                         | | in the technology section                   |          |          |
+    +-------------------------+-----------------------------------------------+----------+----------+
+    | n_sites                 | Number of sites desired                       | n_sites  | int      |
+    +-------------------------+-----------------------------------------------+----------+----------+
 
 The following is an example implementation in the YAML configuration file:
 
@@ -317,7 +337,7 @@ Preparing suitability rasters
 
 The **cerf** package comes equipped with sample suitability data but you can build your on as well.
 
-You can see which suitability rasters are available in the `cerf` package by running:
+You can see which suitability rasters are available in the `cerf` package by running the following after installing the package data:
 
 .. code-block:: python
 
@@ -326,7 +346,7 @@ You can see which suitability rasters are available in the `cerf` package by run
     cerf.list_available_suitability_files()
 
 
-Rasters for spatial suitability at a resolution of 1km over the CONUS are required to conform to the format referenced in the following table.  Suitability rasters can be prepared using any GIS.
+The sample rasters for spatial suitability at a resolution of 1km over the CONUS use the following format.  Suitability rasters can be prepared using any GIS.
 
 .. table::
 
@@ -398,7 +418,7 @@ Locational Marginal Pricing (LMP) represents the cost of making and delivering e
 
 .. note::
 
-  **cerf** comes with an LMP dataset for illustrative purposes only which can be accessed using the ```get_sample_lmp_file()`` function.  The service areas in this file correspond with the sample lmp zoness raster file in the **cerf** package which defines the service area ID for each grid cell in the CONUS.  This raster file can also be accessed using ``sample_lmp_zones_raster_file()`` function.
+  **cerf** comes with an LMP dataset for illustrative purposes only which can be accessed using the ``get_sample_lmp_file()`` function.  The service areas in this file correspond with the sample lmp zoness raster file in the **cerf** package which defines the service area ID for each grid cell in the CONUS.  This raster file can also be accessed using ``sample_lmp_zones_raster_file()`` function.
 
 
 Tutorials
@@ -544,7 +564,7 @@ Grid cell level net locational cost (NLC) per technology and an electricity tech
 Key outputs
 -----------
 
-The following are the outputs and their descriptions from the Pandas DataFrame that is generated when calling ``run()`` to site power plant for all states in the CONUS for all technologies:
+The following are the outputs and their descriptions from the Pandas DataFrame that is generated when calling ``run()`` to site power plant for all regions in the CONUS for all technologies:
 
 .. list-table::
     :header-rows: 1
@@ -552,8 +572,8 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
     * - Name
       - Description
       - Units
-    * - state_name
-      - Name of state
+    * - region_name
+      - Name of region
       - NA
     * - tech_id
       - Technology ID

@@ -21,11 +21,11 @@ class TestPackageData(unittest.TestCase):
 
         self.assertEqual(comp, val)
 
-    def test_cerf_states_shapefile(self):
+    def test_cerf_regions_shapefile(self):
         """Ensure package data functions do not get modified."""
 
         comp = gpd.read_file(pkg_resources.resource_filename('cerf', 'data/cerf_conus_states_albers.zip'))
-        val = cerf_states_shapefile()
+        val = cerf_regions_shapefile()
 
         pd.testing.assert_frame_equal(comp, val)
 
@@ -40,7 +40,7 @@ class TestPackageData(unittest.TestCase):
     def test_cerf_crs(self):
         """Ensure package data functions do not get modified."""
 
-        comp = cerf_states_shapefile().crs
+        comp = cerf_regions_shapefile().crs
         val = cerf_crs()
 
         self.assertEqual(comp, val)
@@ -105,15 +105,15 @@ class TestPackageData(unittest.TestCase):
 
         pd.testing.assert_frame_equal(comp, val)
 
-    def test_get_state_abbrev_to_name(self):
+    def test_get_region_abbrev_to_name(self):
         """Ensure package data functions do not get modified."""
 
-        states_file = pkg_resources.resource_filename('cerf', 'data/state-abbrev_to_state-name.yml')
+        regions_file = pkg_resources.resource_filename('cerf', 'data/region-abbrev_to_region-name.yml')
 
-        with open(states_file, 'r') as yml:
+        with open(regions_file, 'r') as yml:
             comp = yaml.load(yml, Loader=yaml.FullLoader)
 
-        val = get_state_abbrev_to_name()
+        val = get_region_abbrev_to_name()
 
         self.assertEqual(comp, val)
 

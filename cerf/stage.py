@@ -10,10 +10,10 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 import logging
 
 import numpy as np
-import pkg_resources
 import rasterio
 
 import cerf.utils as util
+import cerf.package_data as pkg
 from cerf.lmp import LocationalMarginalPricing
 from cerf.nov import NetOperationalValue
 from cerf.interconnect import Interconnection
@@ -26,27 +26,6 @@ class Stage:
     lmp_zone_dict: dict
     technology_dict: dict
     technology_order: list
-
-    # default cerf technology name to suitability file dictionary
-    DEFAULT_SUITABILITY = {'biomass_conv_wo_ccs': 'suitability_biomass.sdat',
-                             'biomass_conv_w_ccs': 'suitability_biomass.sdat',
-                             'biomass_igcc_wo_ccs': 'suitability_biomass_igcc.sdat',
-                             'biomass_igcc_w_ccs': 'suitability_biomass_igcc_ccs.sdat',
-                             'coal_conv_pul_wo_ccs': 'suitability_coal.sdat',
-                             'coal_conv_pul_w_ccs': 'suitability_coal.sdat',
-                             'coal_igcc_wo_ccs': 'suitability_coal_igcc.sdat',
-                             'coal_igcc_w_ccs': 'suitability_coal_igcc_ccs.sdat',
-                             'gas_cc_wo_ccs': 'suitability_gas_cc.sdat',
-                             'gas_cc_w_ccs': 'suitability_gas_cc_ccs.sdat',
-                             'gas_ct_wo_ccs': 'suitability_gas_cc.sdat',
-                             'geothermal': None,
-                             'hydro': None,
-                             'nuclear_gen_ii': 'suitability_nuclear.sdat',
-                             'nuclear_gen_iii': 'suitability_nuclear.sdat',
-                             'oil_ct_wo_ccs': 'suitability_oil_baseload.sdat',
-                             'solar_csp': 'suitability_solar.sdat',
-                             'solar_pv_non_dist': 'suitability_solar.sdat',
-                             'wind_onshore': 'suitability_wind.sdat'}
 
     def __init__(self, settings_dict, lmp_zone_dict, technology_dict, technology_order, infrastructure_dict,
                  initialize_site_data):
@@ -73,8 +52,8 @@ class Stage:
         self.tech_name_dict = ({k: self.technology_dict[k].get('tech_name') for k in self.technology_dict.keys()})
 
         # load coordinate data
-        self.cerf_stateid_raster_file = pkg_resources.resource_filename('cerf', 'data/cerf_conus_states_albers_1km.tif')
-        self.xcoords, self.ycoords = util.raster_to_coord_arrays(self.cerf_stateid_raster_file)
+        self.cerf_regionid_raster_file = self.settings_dict.get('region_raster_file')
+        self.xcoords, self.ycoords = util.raster_to_coord_arrays(self.cerf_regionid_raster_file)
 
         # generate grid indices in a flat array
         self.indices_flat = np.array(np.arange(self.xcoords.flatten().shape[0]))
@@ -114,7 +93,7 @@ class Stage:
 
         # use default if none passed
         if zones_raster_file is None:
-            zones_raster_file = pkg_resources.resource_filename('cerf', 'data/lmp_zones_1km.img')
+            zones_raster_file = pkg.sample_lmp_zones_raster_file()
 
         logging.info(f"Using 'zones_raster_file':  {zones_raster_file}")
 
@@ -153,6 +132,9 @@ class Stage:
         ic = Interconnection(template_array=self.lmp_arr,
                              technology_dict=self.technology_dict,
                              technology_order=self.technology_order,
+                             region_raster_file=self.settings_dict.get('region_raster_file'),
+                             region_abbrev_to_name_file=self.settings_dict.get('region_abbrev_to_name_file'),
+                             region_name_to_id_file=self.settings_dict.get('region_name_to_id_file'),
                              substation_file=substation_file,
                              transmission_costs_file=transmission_costs_file,
                              pipeline_costs_file=pipeline_costs_file,
@@ -225,6 +207,9 @@ class Stage:
     def build_suitability_array(self):
         """Build suitability array for all technologies."""
 
+        # fetch the default suitability dictionary
+        default_suitability_file_dict = util.default_suitabiity_files()
+
         # set up holder for suitability array
         suitability_array = np.ones_like(self.nlc_arr)
 
@@ -235,8 +220,8 @@ class Stage:
             tech_suitability_raster_file = self.technology_dict[i].get('suitability_raster_file', None)
 
             if tech_suitability_raster_file is None:
-                default_raster = self.DEFAULT_SUITABILITY[self.tech_name_dict[i]]
-                tech_suitability_raster_file = pkg_resources.resource_filename('cerf', f'data/{default_raster}')
+                default_raster = default_suitability_file_dict[self.tech_name_dict[i]]
+                tech_suitability_raster_file = pkg.get_suitability_raster(default_raster)
 
             logging.info(f"Using suitability file for '{self.technology_dict[i]['tech_name']}':  {tech_suitability_raster_file}")
 
