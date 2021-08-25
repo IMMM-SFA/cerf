@@ -24,7 +24,7 @@ Installation
 
 .. note::
 
-  **cerf** is not officially supported for Ubuntu 18 users due to a system dependency (``GLIB_2.29``) required by the ``whitebox`` package which **cerf** uses to conduct spatial analysis. Ubuntu 18 natively includes ``GLIB_2.27``.  It may be possible for Ubuntu 18 users to upgrade to ``GLIB_2.29`` but this should be done with careful consideration.  Instead, we officially support **cerf** use for Ubuntu users for versions 20.04.2 LTS and greater.
+  **cerf** is not officially supported for Ubuntu 18 users due to a system dependency (``GLIBC_2.29``) required by the ``whitebox`` package which **cerf** uses to conduct spatial analysis. Ubuntu 18 natively includes ``GLIBC_2.27``.  It may be possible for Ubuntu 18 users to upgrade to ``GLIBC_2.29`` but this should be done with careful consideration.  Instead, we officially support **cerf** use for Ubuntu users for versions 20.04.2 LTS and greater.
 
 **cerf** can be installed via pip by running the following from a terminal window::
 
