@@ -1,7 +1,6 @@
 import os
 import logging
 import tempfile
-import shutil
 
 import rasterio
 import whitebox
@@ -98,11 +97,11 @@ class Interconnection:
 
     :param output_cost_file:                Write cost file; if True, set 'output_dir' value
     :type output_cost_file:                 bool
-    
+
     :param interconnection_cost_file:       Full path with file name and extension to a preprocessed interconnection
-                                            cost NPY file that has been previously written. If None, IC will be 
+                                            cost NPY file that has been previously written. If None, IC will be
                                             calculated.
-    :type interconnection_cost_file:        str 
+    :type interconnection_cost_file:        str
 
     :param output_dir:                      Full path to a directory to write outputs to if desired
     :type output_dir:                       str
@@ -111,8 +110,8 @@ class Interconnection:
 
     def __init__(self, template_array, technology_dict, technology_order, region_raster_file,
                  region_abbrev_to_name_file, region_name_to_id_file, substation_file=None,
-                 transmission_costs_dict=None, transmission_costs_file=None, pipeline_costs_dict=None, 
-                 pipeline_costs_file=None,pipeline_file=None, output_rasterized_file=False, output_dist_file=False, 
+                 transmission_costs_dict=None, transmission_costs_file=None, pipeline_costs_dict=None,
+                 pipeline_costs_file=None, pipeline_file=None, output_rasterized_file=False, output_dist_file=False,
                  output_alloc_file=False, output_cost_file=False, interconnection_cost_file=None, output_dir=None):
 
         self.template_array = template_array
@@ -264,9 +263,6 @@ class Interconnection:
         # conversion factor for meters to km
         m_to_km_factor = 0.001
 
-        # construct tempdir; using this low-level method to create Ubuntu 18 compatibility
-        tempdir = tempfile.mkdtemp()
-
         if setting == 'substations':
             infrastructure_gdf = self.process_substations()
 
@@ -274,7 +270,8 @@ class Interconnection:
             infrastructure_gdf = self.process_pipelines()
 
         else:
-            raise ValueError(f"Incorrect setting '{setting}' for transmission data.  Must be 'substations' or 'pipelines'")
+            raise ValueError(
+                f"Incorrect setting '{setting}' for transmission data.  Must be 'substations' or 'pipelines'")
 
         with rasterio.open(self.region_raster_file) as src:
 
@@ -292,64 +289,61 @@ class Interconnection:
             # get shapes
             shapes = ((geom, value) for geom, value in zip(infrastructure_gdf.geometry, infrastructure_gdf['_rval_']))
 
-        # if write desired
-        if any((self.output_rasterized_file, self.output_dist_file, self.output_alloc_file, self.output_cost_file)):
+        with tempfile.TemporaryDirectory() as tempdir:
 
-            if self.output_dir is None:
-                msg = "If writing rasters to file must specify 'output_dir'"
-                logging.error(msg)
-                raise NotADirectoryError(msg)
+            # if write desired
+            if any((self.output_rasterized_file, self.output_dist_file, self.output_alloc_file, self.output_cost_file)):
 
+                if self.output_dir is None:
+                    msg = "If writing rasters to file must specify 'output_dir'"
+                    logging.error(msg)
+                    raise NotADirectoryError(msg)
+
+                else:
+                    out_rast = os.path.join(self.output_dir, f'cerf_transmission_raster_{setting}.tif')
+                    out_dist = os.path.join(self.output_dir, f'cerf_transmission_distance_{setting}.tif')
+                    out_alloc = os.path.join(self.output_dir, f'cerf_transmission_allocation_{setting}.tif')
+                    out_costs = os.path.join(self.output_dir, f'cerf_transmission_costs_{setting}.tif')
             else:
-                out_rast = os.path.join(self.output_dir, f'cerf_transmission_raster_{setting}.tif')
-                out_dist = os.path.join(self.output_dir, f'cerf_transmission_distance_{setting}.tif')
-                out_alloc = os.path.join(self.output_dir, f'cerf_transmission_allocation_{setting}.tif')
-                out_costs = os.path.join(self.output_dir, f'cerf_transmission_costs_{setting}.tif')
-        else:
-            out_rast = os.path.join(tempdir, f'cerf_transmission_raster_{setting}.tif')
-            out_dist = os.path.join(tempdir, f'cerf_transmission_distance_{setting}.tif')
-            out_alloc = os.path.join(tempdir, f'cerf_transmission_allocation_{setting}.tif')
-            out_costs = os.path.join(tempdir, f'cerf_transmission_costs_{setting}.tif')
+                out_rast = os.path.join(tempdir, f'cerf_transmission_raster_{setting}.tif')
+                out_dist = os.path.join(tempdir, f'cerf_transmission_distance_{setting}.tif')
+                out_alloc = os.path.join(tempdir, f'cerf_transmission_allocation_{setting}.tif')
+                out_costs = os.path.join(tempdir, f'cerf_transmission_costs_{setting}.tif')
 
-        # rasterize transmission vector data and write to memory
-        with rasterio.open(out_rast, 'w', **metadata) as dataset:
-            # burn features into raster
-            burned = features.rasterize(shapes=shapes, fill=0, out=arr, transform=dataset.transform)
+            # rasterize transmission vector data and write to memory
+            with rasterio.open(out_rast, 'w', **metadata) as dataset:
+                # burn features into raster
+                burned = features.rasterize(shapes=shapes, fill=0, out=arr, transform=dataset.transform)
 
-            # write the outputs to file
-            dataset.write_band(1, burned)
+                # write the outputs to file
+                dataset.write_band(1, burned)
 
-        # calculate Euclidean distance and write raster; result just stores the return value 0
-        dist_result = wbt.euclidean_distance(out_rast, out_dist) #, callback=suppress_callback)
+            # calculate Euclidean distance and write raster; result just stores the return value 0
+            dist_result = wbt.euclidean_distance(out_rast, out_dist, callback=suppress_callback)
 
-        # calculate Euclidean allocation and write raster
-        alloc_result = wbt.euclidean_allocation(out_rast, out_alloc) #, callback=suppress_callback)
+            # calculate Euclidean allocation and write raster
+            alloc_result = wbt.euclidean_allocation(out_rast, out_alloc, callback=suppress_callback)
 
-        with rasterio.open(out_dist) as dist:
-            dist_arr = dist.read(1)
+            with rasterio.open(out_dist) as dist:
+                dist_arr = dist.read(1)
 
-        with rasterio.open(out_alloc) as alloc:
-            alloc_arr = alloc.read(1)
+            with rasterio.open(out_alloc) as alloc:
+                alloc_arr = alloc.read(1)
 
-        with rasterio.open(out_costs, 'w', **metadata) as out:
+            with rasterio.open(out_costs, 'w', **metadata) as out:
 
-            # distance in km * the cost of the nearest substation; outputs $/km
-            cost_arr = (dist_arr * m_to_km_factor) * alloc_arr
+                # distance in km * the cost of the nearest substation; outputs $/km
+                cost_arr = (dist_arr * m_to_km_factor) * alloc_arr
 
-            out.write(cost_arr, 1)
-
-        # delete tempdir if it was created
-        if os.path.isdir(tempdir):
-            shutil.rmtree(tempdir)
+                out.write(cost_arr, 1)
 
         return cost_arr
 
     def generate_interconnection_costs_array(self):
         """Calculate the costs of interconnection for each technology."""
-        
+
         # if a preprocessed file has been provided, load and return it
         if self.interconnection_cost_file is not None:
-
             logging.info(f"Using prebuilt interconnection costs file:  {self.interconnection_cost_file}")
             return np.load(self.interconnection_cost_file)
 
