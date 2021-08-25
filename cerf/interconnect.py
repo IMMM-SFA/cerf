@@ -320,10 +320,10 @@ class Interconnection:
             dataset.write_band(1, burned)
 
         # calculate Euclidean distance and write raster; result just stores the return value 0
-        dist_result = wbt.euclidean_distance(out_rast, out_dist, callback=suppress_callback)
+        dist_result = wbt.euclidean_distance(out_rast, out_dist) #, callback=suppress_callback)
 
         # calculate Euclidean allocation and write raster
-        alloc_result = wbt.euclidean_allocation(out_rast, out_alloc, callback=suppress_callback)
+        alloc_result = wbt.euclidean_allocation(out_rast, out_alloc) #, callback=suppress_callback)
 
         with rasterio.open(out_dist) as dist:
             dist_arr = dist.read(1)
