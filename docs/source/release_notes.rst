@@ -8,7 +8,7 @@ see the `commit logs <https://github.com/IMMM-SFA/cerf/commits>`_.
 Version 2.0.6
 _____________
 
-Changes made in `PR #65 <https://github.com/IMMM-SFA/cerf/pull/65>`_
+Changes made in `PR #68 <https://github.com/IMMM-SFA/cerf/pull/68>`_
 
 - Added release notes to documentation
 - Added template for pull requests
