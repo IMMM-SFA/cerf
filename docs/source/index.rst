@@ -98,6 +98,7 @@ cerf documentation
    user_guide
    modules
    contributing
+   release_notes
    publications
    how_to_cite
    authors
