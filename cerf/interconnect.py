@@ -200,6 +200,8 @@ class Interconnection:
             # load and reproject
             gdf = gpd.read_file(self.substation_file)
 
+            print(gdf.head())
+
             # make all column names lower case
             gdf.columns = [i.lower() for i in gdf.columns]
 
