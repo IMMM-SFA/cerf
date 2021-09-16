@@ -197,24 +197,32 @@ class Interconnection:
 
             logging.info(f"Using substation file: {self.substation_file}")
 
-            # load and reproject
+            # load file
             gdf = gpd.read_file(self.substation_file)
 
-            print(gdf.head())
+            # detect existing raster value binning for rasterization
+            if '_rval_' in gdf.columns:
 
-            # make all column names lower case
-            gdf.columns = [i.lower() for i in gdf.columns]
+                logging.info("Using current '_rval_' field found in substation file which is used in rasterization.")
+                logging.info("If '_rval_' field was included unintentionally, please remove from file and re-run.")
 
-            # assign a field to rasterize by containing the cost of transmission per km
-            gdf['_rval_'] = 0
+                return gdf
 
-            for i in self.transmission_costs_dict.keys():
-                gdf['_rval_'] = np.where((gdf['min_volt'] >= self.transmission_costs_dict[i]['min_voltage']) &
-                                         (gdf['min_volt'] <= self.transmission_costs_dict[i]['max_voltage']),
-                                         self.transmission_costs_dict[i]['dollar_per_km'],
-                                         gdf['_rval_'])
+            else:
 
-            return gdf
+                # make all column names lower case
+                gdf.columns = [i.lower() for i in gdf.columns]
+
+                # assign a field to rasterize by containing the cost of transmission per km
+                gdf['_rval_'] = 0
+
+                for i in self.transmission_costs_dict.keys():
+                    gdf['_rval_'] = np.where((gdf['min_volt'] >= self.transmission_costs_dict[i]['min_voltage']) &
+                                             (gdf['min_volt'] <= self.transmission_costs_dict[i]['max_voltage']),
+                                             self.transmission_costs_dict[i]['dollar_per_km'],
+                                             gdf['_rval_'])
+
+                return gdf
 
     def process_pipelines(self):
         """Select natural gas pipelines data that have a length greater than 0.
@@ -334,7 +342,7 @@ class Interconnection:
 
             with rasterio.open(out_costs, 'w', **metadata) as out:
 
-                # distance in km * the cost of the nearest substation; outputs $/km
+                # distance in meters * the cost of the nearest substation; outputs $/km
                 cost_arr = (dist_arr * m_to_km_factor) * alloc_arr
 
                 out.write(cost_arr, 1)

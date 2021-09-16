@@ -15,6 +15,11 @@ class InstallSupplement:
     """Download and unpack example data supplement from Zenodo that matches the current installed
     cerf distribution.
 
+    :param data_dir:                    Optional.  Full path to the directory you wish to store the data in.  Default is
+                                        to install it in data directory of the package.
+
+    :type data_dir:                     str
+
     """
 
     # URL for DOI minted example data hosted on Zenodo
