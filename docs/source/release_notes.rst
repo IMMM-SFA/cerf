@@ -4,6 +4,14 @@ Release notes
 This is the list of changes to **cerf** between each release. For full details,
 see the `commit logs <https://github.com/IMMM-SFA/cerf/commits>`_.
 
+Version 2.0.7
+_____________
+
+Changes made in `PR #74 <https://github.com/IMMM-SFA/cerf/pull/74>`_
+
+- Provide option to download illustrative data to a directory of the user's choosing
+- Fix bug in the units of interconnection cost
+
 
 Version 2.0.6
 _____________

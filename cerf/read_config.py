@@ -120,7 +120,7 @@ class ReadConfig(Logger):
         """Get a dictionary of region name to region ID from the YAML file in package data."""
 
         # in package data {region_name: region_id}
-        regions_lookup_file = pkg.get_region_name_to_id()
+        regions_lookup_file = self.settings_dict.get('region_name_to_id_file')
 
         return self.read_yaml(regions_lookup_file)
 

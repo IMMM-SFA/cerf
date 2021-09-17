@@ -1,3 +1,4 @@
+import os
 import unittest
 
 import numpy as np
@@ -11,9 +12,9 @@ from cerf.read_config import ReadConfig
 class TestLmp(unittest.TestCase):
 
     # supporting data
-    SLIM_LMP_ARRAY = np.load(pkg_resources.resource_filename('cerf', 'data/test_lmp_arr.npy'))
-    LMP_FILE = pkg_resources.resource_filename('cerf', 'data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
-    TEST_CONFIG = pkg_resources.resource_filename('cerf', 'data/test_config_2010.yml')
+    SLIM_LMP_ARRAY = np.load(os.path.join(os.path.dirname(__file__), 'data/test_lmp_arr.npy'))
+    LMP_FILE = os.path.join(os.path.dirname(__file__), 'data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
+    TEST_CONFIG = os.path.join(os.path.dirname(__file__), 'data/test_config_2010.yml')
 
     @staticmethod
     def get_sample(arr):
@@ -23,7 +24,7 @@ class TestLmp(unittest.TestCase):
 
     @staticmethod
     def load_lmp_zone_raster(lmp_zone_dict):
-        """Load the lmp zoness raster for the CONUS into a 2D array."""
+        """Load the lmp zones raster for the CONUS into a 2D array."""
 
         # raster file containing the lmp zones per grid cell
         zones_raster_file = lmp_zone_dict.get('lmp_zone_raster_file')

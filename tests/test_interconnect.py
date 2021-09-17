@@ -1,7 +1,7 @@
+import os
 import unittest
 
 import numpy as np
-import pkg_resources
 
 from cerf.read_config import ReadConfig
 from cerf.interconnect import Interconnection
@@ -10,8 +10,8 @@ from cerf.interconnect import Interconnection
 class TestInterconnection(unittest.TestCase):
 
     # supporting data
-    TEST_CONFIG = pkg_resources.resource_filename('cerf', 'data/test_config_2010.yml')
-    EXPECTED_SUBSET = np.load(pkg_resources.resource_filename('cerf', 'data/test_ic_arr.npy'))
+    TEST_CONFIG = os.path.join(os.path.dirname(__file__), 'data/test_config_2010.yml')
+    EXPECTED_SUBSET = np.load(os.path.join(os.path.dirname(__file__), 'data/test_ic_arr.npy'))
 
     @staticmethod
     def get_sample(arr):
@@ -23,7 +23,7 @@ class TestInterconnection(unittest.TestCase):
         """Test to make sure interconnection outputs run."""
 
         # read in configuration file
-        cfg = ReadConfig(self.TEST_CONFIG)
+        cfg = ReadConfig(TestInterconnection.TEST_CONFIG)
 
         # unpack configuration and assign defaults
         substation_file = cfg.infrastructure_dict.get('substation_file', None)
