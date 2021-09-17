@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.install_supplement &mdash; cerf 2.0.6 documentation</title>
+  <title>cerf.install_supplement &mdash; cerf 2.0.7 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                2.0.6
+                2.0.7
               </div>
             
           
@@ -189,6 +189,11 @@
     <span class="sd">&quot;&quot;&quot;Download and unpack example data supplement from Zenodo that matches the current installed</span>
 <span class="sd">    cerf distribution.</span>
 
+<span class="sd">    :param data_dir:                    Optional.  Full path to the directory you wish to store the data in.  Default is</span>
+<span class="sd">                                        to install it in data directory of the package.</span>
+
+<span class="sd">    :type data_dir:                     str</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># URL for DOI minted example data hosted on Zenodo</span>
@@ -197,14 +202,23 @@
                          <span class="s1">&#39;2.0.2&#39;</span><span class="p">:</span> <span class="s1">&#39;https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1&#39;</span><span class="p">,</span>
                          <span class="s1">&#39;2.0.3&#39;</span><span class="p">:</span> <span class="s1">&#39;https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1&#39;</span><span class="p">,</span>
                          <span class="s1">&#39;2.0.4&#39;</span><span class="p">:</span> <span class="s1">&#39;https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;2.0.5&#39;</span><span class="p">:</span> <span class="s1">&#39;https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1&#39;</span><span class="p">}</span>
+                         <span class="s1">&#39;2.0.5&#39;</span><span class="p">:</span> <span class="s1">&#39;https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;2.0.6&#39;</span><span class="p">:</span> <span class="s1">&#39;https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;2.0.7&#39;</span><span class="p">:</span> <span class="s1">&#39;https://zenodo.org/record/5514001/files/cerf_package_data.zip?download=1&#39;</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">=</span> <span class="n">data_dir</span>
 
 <div class="viewcode-block" id="InstallSupplement.fetch_zenodo"><a class="viewcode-back" href="../../cerf.html#cerf.install_supplement.InstallSupplement.fetch_zenodo">[docs]</a>    <span class="k">def</span> <span class="nf">fetch_zenodo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Download and unpack the Zenodo example data supplement for the</span>
 <span class="sd">        current cerf distribution.&quot;&quot;&quot;</span>
 
         <span class="c1"># full path to the cerf root directory where the example dir will be stored</span>
-        <span class="n">data_directory</span> <span class="o">=</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_data_directory</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data_directory</span> <span class="o">=</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_data_directory</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_directory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_dir</span>
 
         <span class="c1"># get the current version of cerf that is installed</span>
         <span class="n">current_version</span> <span class="o">=</span> <span class="n">get_distribution</span><span class="p">(</span><span class="s1">&#39;cerf&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">version</span>
@@ -247,13 +261,18 @@
                         <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">tfile</span><span class="p">,</span> <span class="n">out_file</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="install_package_data"><a class="viewcode-back" href="../../cerf.html#cerf.install_supplement.install_package_data">[docs]</a><span class="k">def</span> <span class="nf">install_package_data</span><span class="p">():</span>
+<div class="viewcode-block" id="install_package_data"><a class="viewcode-back" href="../../cerf.html#cerf.install_supplement.install_package_data">[docs]</a><span class="k">def</span> <span class="nf">install_package_data</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Download and unpack example data supplement from Zenodo that matches the current installed</span>
 <span class="sd">    cerf distribution.</span>
 
+<span class="sd">    :param data_dir:                    Optional.  Full path to the directory you wish to store the data in.  Default is</span>
+<span class="sd">                                        to install it in data directory of the package.</span>
+
+<span class="sd">    :type data_dir:                     str</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">zen</span> <span class="o">=</span> <span class="n">InstallSupplement</span><span class="p">()</span>
+    <span class="n">zen</span> <span class="o">=</span> <span class="n">InstallSupplement</span><span class="p">(</span><span class="n">data_dir</span><span class="o">=</span><span class="n">data_dir</span><span class="p">)</span>
 
     <span class="n">zen</span><span class="o">.</span><span class="n">fetch_zenodo</span><span class="p">()</span></div>
 </pre></div>

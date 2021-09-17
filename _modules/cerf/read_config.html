@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.read_config &mdash; cerf 2.0.6 documentation</title>
+  <title>cerf.read_config &mdash; cerf 2.0.7 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                2.0.6
+                2.0.7
               </div>
             
           
@@ -294,7 +294,7 @@
         <span class="sd">&quot;&quot;&quot;Get a dictionary of region name to region ID from the YAML file in package data.&quot;&quot;&quot;</span>
 
         <span class="c1"># in package data {region_name: region_id}</span>
-        <span class="n">regions_lookup_file</span> <span class="o">=</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_region_name_to_id</span><span class="p">()</span>
+        <span class="n">regions_lookup_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region_name_to_id_file&#39;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_yaml</span><span class="p">(</span><span class="n">regions_lookup_file</span><span class="p">)</span></div>
 

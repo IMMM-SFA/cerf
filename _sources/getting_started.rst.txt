@@ -49,7 +49,7 @@ Installing package data
 
     cerf.install_package_data()
 
-This will automatically download and install the package data necessary to run the examples in accordance with the version of **cerf** you are running.
+This will automatically download and install the package data necessary to run the examples in accordance with the version of **cerf** you are running.  You can pass an alternative directory to install the data into (default is to install it in the package data directory) using ``data_dir``.  When doing so, you must modify the configuration file to point to your custom paths. 
 
 
 Dependencies

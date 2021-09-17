@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.interconnect &mdash; cerf 2.0.6 documentation</title>
+  <title>cerf.interconnect &mdash; cerf 2.0.7 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                2.0.6
+                2.0.7
               </div>
             
           
@@ -371,22 +371,32 @@
 
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using substation file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">substation_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-            <span class="c1"># load and reproject</span>
+            <span class="c1"># load file</span>
             <span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substation_file</span><span class="p">)</span>
 
-            <span class="c1"># make all column names lower case</span>
-            <span class="n">gdf</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">gdf</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+            <span class="c1"># detect existing raster value binning for rasterization</span>
+            <span class="k">if</span> <span class="s1">&#39;_rval_&#39;</span> <span class="ow">in</span> <span class="n">gdf</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
 
-            <span class="c1"># assign a field to rasterize by containing the cost of transmission per km</span>
-            <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Using current &#39;_rval_&#39; field found in substation file which is used in rasterization.&quot;</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;If &#39;_rval_&#39; field was included unintentionally, please remove from file and re-run.&quot;</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;min_volt&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;min_voltage&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
-                                         <span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;min_volt&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;max_voltage&#39;</span><span class="p">]),</span>
-                                         <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;dollar_per_km&#39;</span><span class="p">],</span>
-                                         <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">])</span>
+                <span class="k">return</span> <span class="n">gdf</span>
 
-            <span class="k">return</span> <span class="n">gdf</span></div>
+            <span class="k">else</span><span class="p">:</span>
+
+                <span class="c1"># make all column names lower case</span>
+                <span class="n">gdf</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">gdf</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+
+                <span class="c1"># assign a field to rasterize by containing the cost of transmission per km</span>
+                <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;min_volt&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;min_voltage&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
+                                             <span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;min_volt&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;max_voltage&#39;</span><span class="p">]),</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;thous_dollar_per_km&#39;</span><span class="p">],</span>
+                                             <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">])</span>
+
+                <span class="k">return</span> <span class="n">gdf</span></div>
 
 <div class="viewcode-block" id="Interconnection.process_pipelines"><a class="viewcode-back" href="../../cerf.html#cerf.interconnect.Interconnection.process_pipelines">[docs]</a>    <span class="k">def</span> <span class="nf">process_pipelines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Select natural gas pipelines data that have a length greater than 0.</span>
@@ -506,7 +516,7 @@
 
             <span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">out_costs</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
 
-                <span class="c1"># distance in km * the cost of the nearest substation; outputs $/km</span>
+                <span class="c1"># distance in km * the cost of the nearest substation; outputs thous$/km</span>
                 <span class="n">cost_arr</span> <span class="o">=</span> <span class="p">(</span><span class="n">dist_arr</span> <span class="o">*</span> <span class="n">m_to_km_factor</span><span class="p">)</span> <span class="o">*</span> <span class="n">alloc_arr</span>
 
                 <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cost_arr</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -531,16 +541,16 @@
             <span class="n">discount_rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;discount_rate&#39;</span><span class="p">)</span>
             <span class="n">lifetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lifetime&#39;</span><span class="p">)</span>
 
-            <span class="c1"># calulate annuity factor for technology</span>
+            <span class="c1"># calculate annuity factor for technology</span>
             <span class="n">annuity_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_annuity_factor</span><span class="p">(</span><span class="n">discount_rate</span><span class="o">=</span><span class="n">discount_rate</span><span class="p">,</span> <span class="n">lifetime</span><span class="o">=</span><span class="n">lifetime</span><span class="p">)</span>
 
-            <span class="c1"># get transmission cost array</span>
-            <span class="n">substation_cost_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substation_costs</span> <span class="o">*</span> <span class="n">annuity_factor</span>
+            <span class="c1"># get transmission cost array and convert from thous$/km to $/km</span>
+            <span class="n">substation_cost_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substation_costs</span> <span class="o">*</span> <span class="n">annuity_factor</span> <span class="o">*</span> <span class="mi">1000</span>
 
             <span class="k">if</span> <span class="n">require_pipelines</span><span class="p">:</span>
 
-                <span class="c1"># get pipeline cost array</span>
-                <span class="n">pipeline_cost_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_costs</span> <span class="o">*</span> <span class="n">annuity_factor</span>
+                <span class="c1"># get pipeline cost array and convert from thous$/km to $/km</span>
+                <span class="n">pipeline_cost_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_costs</span> <span class="o">*</span> <span class="n">annuity_factor</span> <span class="o">*</span> <span class="mi">1000</span>
 
                 <span class="c1"># calculate technology specific interconnection cost</span>
                 <span class="n">total_interconection_cost_array</span> <span class="o">=</span> <span class="n">substation_cost_array</span> <span class="o">+</span> <span class="n">pipeline_cost_array</span>
@@ -598,7 +608,7 @@
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">transmission_costs_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;min_volt&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;min_voltage&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
                                  <span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;min_volt&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;max_voltage&#39;</span><span class="p">]),</span>
-                                 <span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;dollar_per_km&#39;</span><span class="p">],</span>
+                                 <span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;thous_dollar_per_km&#39;</span><span class="p">],</span>
                                  <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">output_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf package &mdash; cerf 2.0.6 documentation</title>
+  <title>cerf package &mdash; cerf 2.0.7 documentation</title>
   
 
   
@@ -72,7 +72,7 @@
             
             
               <div class="version">
-                2.0.6
+                2.0.7
               </div>
             
           
@@ -281,13 +281,19 @@ Default:  True</p></li>
 <span id="cerf-install-supplement-module"></span><h2>cerf.install_supplement module<a class="headerlink" href="#module-cerf.install_supplement" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cerf.install_supplement.InstallSupplement">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.install_supplement.</span></span><span class="sig-name descname"><span class="pre">InstallSupplement</span></span><a class="reference internal" href="_modules/cerf/install_supplement.html#InstallSupplement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.install_supplement.InstallSupplement" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.install_supplement.</span></span><span class="sig-name descname"><span class="pre">InstallSupplement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/install_supplement.html#InstallSupplement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.install_supplement.InstallSupplement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Download and unpack example data supplement from Zenodo that matches the current installed
 cerf distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data_dir</strong> (<em>str</em>) – Optional.  Full path to the directory you wish to store the data in.  Default is
+to install it in data directory of the package.</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cerf.install_supplement.InstallSupplement.DATA_VERSION_URLS">
-<span class="sig-name descname"><span class="pre">DATA_VERSION_URLS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{'2.0.0':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.1':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.2':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.3':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.4':</span> <span class="pre">'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.5':</span> <span class="pre">'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1'}</span></em><a class="headerlink" href="#cerf.install_supplement.InstallSupplement.DATA_VERSION_URLS" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">DATA_VERSION_URLS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{'2.0.0':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.1':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.2':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.3':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.4':</span> <span class="pre">'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.5':</span> <span class="pre">'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.6':</span> <span class="pre">'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.7':</span> <span class="pre">'https://zenodo.org/record/5514001/files/cerf_package_data.zip?download=1'}</span></em><a class="headerlink" href="#cerf.install_supplement.InstallSupplement.DATA_VERSION_URLS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -301,9 +307,15 @@ current cerf distribution.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cerf.install_supplement.install_package_data">
-<span class="sig-prename descclassname"><span class="pre">cerf.install_supplement.</span></span><span class="sig-name descname"><span class="pre">install_package_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/install_supplement.html#install_package_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.install_supplement.install_package_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cerf.install_supplement.</span></span><span class="sig-name descname"><span class="pre">install_package_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/install_supplement.html#install_package_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.install_supplement.install_package_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Download and unpack example data supplement from Zenodo that matches the current installed
 cerf distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data_dir</strong> (<em>str</em>) – Optional.  Full path to the directory you wish to store the data in.  Default is
+to install it in data directory of the package.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
