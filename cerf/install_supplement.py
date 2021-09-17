@@ -15,6 +15,11 @@ class InstallSupplement:
     """Download and unpack example data supplement from Zenodo that matches the current installed
     cerf distribution.
 
+    :param data_dir:                    Optional.  Full path to the directory you wish to store the data in.  Default is
+                                        to install it in data directory of the package.
+
+    :type data_dir:                     str
+
     """
 
     # URL for DOI minted example data hosted on Zenodo
@@ -24,14 +29,22 @@ class InstallSupplement:
                          '2.0.3': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
                          '2.0.4': 'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',
                          '2.0.5': 'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',
-                         '2.0.6': 'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1'}
+                         '2.0.6': 'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',
+                         '2.0.7': 'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1'}
+
+    def __init__(self, data_dir=None):
+
+        self.data_dir = data_dir
 
     def fetch_zenodo(self):
         """Download and unpack the Zenodo example data supplement for the
         current cerf distribution."""
 
         # full path to the cerf root directory where the example dir will be stored
-        data_directory = pkg.get_data_directory()
+        if self.data_dir is None:
+            data_directory = pkg.get_data_directory()
+        else:
+            data_directory = self.data_dir
 
         # get the current version of cerf that is installed
         current_version = get_distribution('cerf').version
@@ -74,12 +87,17 @@ class InstallSupplement:
                         shutil.copy(tfile, out_file)
 
 
-def install_package_data():
+def install_package_data(data_dir=None):
     """Download and unpack example data supplement from Zenodo that matches the current installed
     cerf distribution.
 
+    :param data_dir:                    Optional.  Full path to the directory you wish to store the data in.  Default is
+                                        to install it in data directory of the package.
+
+    :type data_dir:                     str
+
     """
 
-    zen = InstallSupplement()
+    zen = InstallSupplement(data_dir=data_dir)
 
     zen.fetch_zenodo()
