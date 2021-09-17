@@ -219,7 +219,7 @@ class Interconnection:
                 for i in self.transmission_costs_dict.keys():
                     gdf['_rval_'] = np.where((gdf['min_volt'] >= self.transmission_costs_dict[i]['min_voltage']) &
                                              (gdf['min_volt'] <= self.transmission_costs_dict[i]['max_voltage']),
-                                             self.transmission_costs_dict[i]['dollar_per_km'],
+                                             self.transmission_costs_dict[i]['thous_dollar_per_km'],
                                              gdf['_rval_'])
 
                 return gdf
@@ -342,7 +342,7 @@ class Interconnection:
 
             with rasterio.open(out_costs, 'w', **metadata) as out:
 
-                # distance in meters * the cost of the nearest substation; outputs $/km
+                # distance in km * the cost of the nearest substation; outputs thous$/km
                 cost_arr = (dist_arr * m_to_km_factor) * alloc_arr
 
                 out.write(cost_arr, 1)
@@ -367,16 +367,16 @@ class Interconnection:
             discount_rate = self.technology_dict[i].get('discount_rate')
             lifetime = self.technology_dict[i].get('lifetime')
 
-            # calulate annuity factor for technology
+            # calculate annuity factor for technology
             annuity_factor = self.calc_annuity_factor(discount_rate=discount_rate, lifetime=lifetime)
 
-            # get transmission cost array
-            substation_cost_array = self.substation_costs * annuity_factor
+            # get transmission cost array and convert from thous$/km to $/km
+            substation_cost_array = self.substation_costs * annuity_factor * 1000
 
             if require_pipelines:
 
-                # get pipeline cost array
-                pipeline_cost_array = self.pipeline_costs * annuity_factor
+                # get pipeline cost array and convert from thous$/km to $/km
+                pipeline_cost_array = self.pipeline_costs * annuity_factor * 1000
 
                 # calculate technology specific interconnection cost
                 total_interconection_cost_array = substation_cost_array + pipeline_cost_array
@@ -434,7 +434,7 @@ def preprocess_hifld_substations(substation_file, output_file=None):
     for i in transmission_costs_dict.keys():
         gdf['_rval_'] = np.where((gdf['min_volt'] >= transmission_costs_dict[i]['min_voltage']) &
                                  (gdf['min_volt'] <= transmission_costs_dict[i]['max_voltage']),
-                                 transmission_costs_dict[i]['dollar_per_km'],
+                                 transmission_costs_dict[i]['thous_dollar_per_km'],
                                  gdf['_rval_'])
 
     if output_file is not None:
