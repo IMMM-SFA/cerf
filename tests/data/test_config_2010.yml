@@ -15,10 +15,9 @@ settings:
     # if `randomize` is False, set a seed value for reproducibility; the default is 0
     seed_value: 0
 
-    region_raster_file: /Users/d3y010/Desktop/cerf_test/cerf_conus_states_albers_1km.tif
-    region_abbrev_to_name_file: /Users/d3y010/Desktop/cerf_test/region-abbrev_to_region-name.yml
-    region_name_to_id_file: /Users/d3y010/Desktop/cerf_test/region-name_to_region-id.yml
-
+    region_raster_file: null
+    region_abbrev_to_name_file: null
+    region_name_to_id_file: null
 
 # technology specific information
 technology:
@@ -41,7 +40,7 @@ technology:
         carbon_tax: 0.0
         buffer_in_km: 5
         require_pipelines: False
-        suitability_raster_file: /Users/d3y010/Desktop/cerf_test/suitability_biomass.sdat
+        suitability_raster_file: null
 
     11:
         tech_name: nuclear_gen_ii
@@ -61,7 +60,7 @@ technology:
         carbon_tax: 0.0
         buffer_in_km: 5
         require_pipelines: False
-        suitability_raster_file: /Users/d3y010/Desktop/cerf_test/suitability_nuclear.sdat
+        suitability_raster_file: null
 
 # expansion plan from GCAM
 expansion_plan:
@@ -509,17 +508,18 @@ expansion_plan:
 
 
 lmp_zones:
-    lmp_zone_raster_file: /Users/d3y010/Desktop/cerf_test/lmp_zones_1km.img
+    lmp_zone_raster_file: null
     lmp_zone_raster_nodata_value: 255
-    lmp_hourly_data_file: /Users/d3y010/Desktop/cerf_test/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip
+    lmp_hourly_data_file: null
 
 infrastructure:
-    substation_file: /Users/d3y010/Desktop/cerf_test/hifld_substations_conus_albers.zip
-    pipeline_file: /Users/d3y010/Desktop/cerf_test/eia_natural_gas_pipelines_conus_albers.zip
-    transmission_costs_file: /Users/d3y010/Desktop/cerf_test/costs_per_kv_substation.yml
-    pipeline_costs_file: /Users/d3y010/Desktop/cerf_test/costs_gas_pipeline.yml
+    substation_file: null
+    pipeline_file: null
+    transmission_costs_file: null
+    pipeline_costs_file: null
     output_rasterized_file: false
     output_dist_file: false
     output_alloc_file: false
     output_cost_file: false
     interconnection_cost_file: null
+
