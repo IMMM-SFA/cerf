@@ -1,5 +1,5 @@
 ---
-title: 'cerf: A Python package to evaluate the feasibility and costs of power plant siting for alternate futures'
+title: 'cerf: A Python package to evaluate the feasibility and costs of power plant siting for alternative futures'
 tags:
   - Python
   - power plant siting
