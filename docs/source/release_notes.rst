@@ -4,6 +4,19 @@ Release notes
 This is the list of changes to **cerf** between each release. For full details,
 see the `commit logs <https://github.com/IMMM-SFA/cerf/commits>`_.
 
+Version 2.0.9
+_____________
+
+- Update data link with new version for JOSS publication
+- Release that accompanies:  https://joss.theoj.org/papers/10.21105/joss.03601
+
+
+Version 2.0.8
+_____________
+
+- Preparation for JOSS publication release
+
+
 Version 2.0.7
 _____________
 
