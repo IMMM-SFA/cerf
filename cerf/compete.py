@@ -116,6 +116,12 @@ class Competition:
         self.xcoords = xcoords
         self.ycoords = ycoords
 
+        # mask any technologies having 0 expected sites in the expansion plan to exclude them from competition
+        for index, i in enumerate(self.technology_order, 1):
+            if expansion_dict[i]["n_sites"] == 0:
+                self.nlc_mask[index, :, :] = np.ma.masked_array(self.nlc_mask[index, :, :],
+                                                                np.ones_like(self.nlc_mask[index, :, :]))
+
         # show cheapest option, add 1 to the index to represent the technology number
         self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
 
@@ -210,11 +216,11 @@ class Competition:
 
                         # apply buffer
                         result = util.buffer_flat_array(target_index=target_ix,
-                                                   arr=self.cheapest_arr_1d,
-                                                   nrows=self.cheapest_arr.shape[0],
-                                                   ncols=self.cheapest_arr.shape[1],
-                                                   ncells=self.technology_dict[tech_id]['buffer_in_km'],
-                                                   set_value=0)
+                                                        arr=self.cheapest_arr_1d,
+                                                        nrows=self.cheapest_arr.shape[0],
+                                                        ncols=self.cheapest_arr.shape[1],
+                                                        ncells=self.technology_dict[tech_id]['buffer_in_km'],
+                                                        set_value=0)
 
                         # unpack values
                         self.cheapest_arr_1d, buffer_indices_list = result
@@ -290,7 +296,7 @@ class Competition:
                 elif self.avail_grids == 0:
                     keep_siting = False
 
-                # if there are available grids but n
+                # if there are available grids and a cheapest option available but no more required sites
                 elif self.avail_grids > 0 and tech.shape[0] > 0 and required_sites == 0:
 
                     # if there are no required sites, then mask the rest of the techs suitable area so
@@ -307,8 +313,12 @@ class Competition:
                     # check for any available grids to site in
                     self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
 
-                # create sited data frame
-                df = pd.DataFrame(self.sited_dict).astype(util.sited_dtypes())
+                # if there are suitable cells AND no winners and some or no sites left to site pass until next round
+                else:
+                    pass
+
+        # create sited data frame
+        df = pd.DataFrame(self.sited_dict).astype(util.sited_dtypes())
 
         # reshape output array to 2D
         return self.sited_arr_1d.reshape(self.cheapest_arr.shape), df
