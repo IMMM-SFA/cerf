@@ -313,6 +313,10 @@ class Competition:
                     # check for any available grids to site in
                     self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
 
+                # if there are suitable cells AND no winners and some or no sites left to site pass until next round
+                else:
+                    pass
+
         # create sited data frame
         df = pd.DataFrame(self.sited_dict).astype(util.sited_dtypes())
 
