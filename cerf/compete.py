@@ -116,6 +116,12 @@ class Competition:
         self.xcoords = xcoords
         self.ycoords = ycoords
 
+        # mask any technologies having 0 expected sites in the expansion plan to exclude them from competition
+        for index, i in enumerate(self.technology_order, 1):
+            if expansion_dict[i]["n_sites"] == 0:
+                self.nlc_mask[index, :, :] = np.ma.masked_array(self.nlc_mask[index, :, :],
+                                                                np.ones_like(self.nlc_mask[index, :, :]))
+
         # show cheapest option, add 1 to the index to represent the technology number
         self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
 
