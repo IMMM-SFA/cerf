@@ -219,7 +219,7 @@ class ProcessRegion:
         return lmp_flat_dict, nov_flat_dict, ic_flat_dict
 
     def extract_lmp_zones(self):
-        """Extract the lmp zoness elements for the target region and return as a flat array."""
+        """Extract the lmp zones elements for the target region and return as a flat array."""
 
         return self.zones_arr[self.ymin:self.ymax, self.xmin:self.xmax].flatten()
 
@@ -329,24 +329,24 @@ def process_region(target_region_name, settings_dict, technology_dict, technolog
 
         # process expansion plan and competition for a single region for the target year
         process = ProcessRegion(settings_dict=settings_dict,
-                               technology_dict=technology_dict,
-                               technology_order=technology_order,
-                               expansion_dict=expansion_dict,
-                               regions_dict=regions_dict,
-                               suitability_arr=suitability_arr,
-                               lmp_arr=lmp_arr,
-                               nov_arr=nov_arr,
-                               ic_arr=ic_arr,
-                               nlc_arr=nlc_arr,
-                               zones_arr=zones_arr,
-                               xcoords=xcoords,
-                               ycoords=ycoords,
-                               indices_2d=indices_2d,
-                               target_region_name=target_region_name,
-                               randomize=randomize,
-                               seed_value=seed_value,
-                               verbose=verbose,
-                               write_output=write_output)
+                                technology_dict=technology_dict,
+                                technology_order=technology_order,
+                                expansion_dict=expansion_dict,
+                                regions_dict=regions_dict,
+                                suitability_arr=suitability_arr,
+                                lmp_arr=lmp_arr,
+                                nov_arr=nov_arr,
+                                ic_arr=ic_arr,
+                                nlc_arr=nlc_arr,
+                                zones_arr=zones_arr,
+                                xcoords=xcoords,
+                                ycoords=ycoords,
+                                indices_2d=indices_2d,
+                                target_region_name=target_region_name,
+                                randomize=randomize,
+                                seed_value=seed_value,
+                                verbose=verbose,
+                                write_output=write_output)
 
         logging.info(f'Processed `{target_region_name}` in {round(time.time() - region_t0, 7)} seconds')
 
