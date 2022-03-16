@@ -210,11 +210,11 @@ class Competition:
 
                         # apply buffer
                         result = util.buffer_flat_array(target_index=target_ix,
-                                                   arr=self.cheapest_arr_1d,
-                                                   nrows=self.cheapest_arr.shape[0],
-                                                   ncols=self.cheapest_arr.shape[1],
-                                                   ncells=self.technology_dict[tech_id]['buffer_in_km'],
-                                                   set_value=0)
+                                                        arr=self.cheapest_arr_1d,
+                                                        nrows=self.cheapest_arr.shape[0],
+                                                        ncols=self.cheapest_arr.shape[1],
+                                                        ncells=self.technology_dict[tech_id]['buffer_in_km'],
+                                                        set_value=0)
 
                         # unpack values
                         self.cheapest_arr_1d, buffer_indices_list = result
@@ -290,7 +290,7 @@ class Competition:
                 elif self.avail_grids == 0:
                     keep_siting = False
 
-                # if there are available grids but n
+                # if there are available grids and a cheapest option available but no more required sites
                 elif self.avail_grids > 0 and tech.shape[0] > 0 and required_sites == 0:
 
                     # if there are no required sites, then mask the rest of the techs suitable area so
