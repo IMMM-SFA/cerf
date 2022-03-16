@@ -313,8 +313,8 @@ class Competition:
                     # check for any available grids to site in
                     self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
 
-                # create sited data frame
-                df = pd.DataFrame(self.sited_dict).astype(util.sited_dtypes())
+        # create sited data frame
+        df = pd.DataFrame(self.sited_dict).astype(util.sited_dtypes())
 
         # reshape output array to 2D
         return self.sited_arr_1d.reshape(self.cheapest_arr.shape), df
