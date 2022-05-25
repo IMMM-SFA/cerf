@@ -646,13 +646,13 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
       - years
     * - variable_om_usd_per_mwh
       - Variable operation and maintenance costs of yearly capacity use
-      - #/mWh
+      - $/mWh
     * - variable_om_esc_rate_fraction
       - Variable operation and maintenance costs escalation rate
       - fraction
     * - carbon_tax_usd_per_ton
       - Carbon tax
-      - $/ton       
+      - $/ton
     * - carbon_tax_esc_rate_fraction
       - Carbon tax escalation rate
       - fraction
