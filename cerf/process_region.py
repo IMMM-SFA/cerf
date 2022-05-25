@@ -29,6 +29,8 @@ class ProcessRegion:
                  regions_dict,
                  suitability_arr,
                  lmp_arr,
+                 generation_arr,
+                 operating_cost_arr,
                  nov_arr,
                  ic_arr,
                  nlc_arr,
@@ -68,6 +70,12 @@ class ProcessRegion:
 
         # LMP array for the CONUS
         self.lmp_arr = lmp_arr
+
+        # generation array for the CONUS
+        self.generation_arr = generation_arr
+
+        # operating cost array for the CONUS
+        self.operating_cost_arr = operating_cost_arr
 
         # NOV array for the CONUS
         self.nov_arr = nov_arr
@@ -112,7 +120,7 @@ class ProcessRegion:
         self.xcoords_region, self.ycoords_region = self.get_grid_coordinates()
 
         logging.debug(f"Extracting additional metrics for {self.target_region_name}")
-        self.lmp_flat_dict, self.nov_flat_dict, self.ic_flat_dict = self.extract_region_metrics()
+        self.lmp_flat_dict, self.generation_flat_dict, self.operating_cost_flat_dict, self.nov_flat_dict, self.ic_flat_dict = self.extract_region_metrics()
         self.zones_flat_arr = self.extract_lmp_zones()
 
         logging.debug(f"Competing technologies to site expansion for {self.target_region_name}")
@@ -208,15 +216,19 @@ class ProcessRegion:
 
         # extract the target region
         lmp_arr_region = self.lmp_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
+        generation_arr_region = self.generation_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
+        operating_cost_arr_region = self.operating_cost_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
         nov_arr_region = self.nov_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
         ic_arr_region = self.ic_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
 
         # create a reference dictionary where {tech_id: flat_region_array, ...}
         lmp_flat_dict = {i: lmp_arr_region[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
+        generation_flat_dict = {i: generation_arr_region[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
+        operating_cost_flat_dict = {i: operating_cost_arr_region[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
         nov_flat_dict = {i: nov_arr_region[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
         ic_flat_dict = {i: ic_arr_region[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
 
-        return lmp_flat_dict, nov_flat_dict, ic_flat_dict
+        return lmp_flat_dict, generation_flat_dict, operating_cost_flat_dict, nov_flat_dict, ic_flat_dict
 
     def extract_lmp_zones(self):
         """Extract the lmp zones elements for the target region and return as a flat array."""
@@ -232,6 +244,8 @@ class ProcessRegion:
                            technology_order=self.technology_order,
                            expansion_dict=self.expansion_dict[self.target_region_name],
                            lmp_dict=self.lmp_flat_dict,
+                           generation_dict=self.generation_flat_dict,
+                           operating_cost_dict=self.operating_cost_flat_dict,
                            nov_dict=self.nov_flat_dict,
                            ic_dict=self.ic_flat_dict,
                            nlc_mask=self.suitable_nlc_region,
@@ -258,9 +272,27 @@ class ProcessRegion:
         return comp
 
 
-def process_region(target_region_name, settings_dict, technology_dict, technology_order, expansion_dict, regions_dict,
-                  suitability_arr, lmp_arr, nov_arr, ic_arr, nlc_arr, zones_arr, xcoords, ycoords, indices_2d,
-                  randomize=True, seed_value=0, verbose=False, write_output=True):
+def process_region(target_region_name,
+                   settings_dict,
+                   technology_dict,
+                   technology_order,
+                   expansion_dict,
+                   regions_dict,
+                   suitability_arr,
+                   lmp_arr,
+                   generation_arr,
+                   operating_cost_arr,
+                   nov_arr,
+                   ic_arr,
+                   nlc_arr,
+                   zones_arr,
+                   xcoords,
+                   ycoords,
+                   indices_2d,
+                   randomize=True,
+                   seed_value=0,
+                   verbose=False,
+                   write_output=True):
     """Convenience wrapper to log time and site an expansion plan for a target region for the target year.
 
     :param target_region_name:                   Name of the target region as it is represented in the region raster.
@@ -335,6 +367,8 @@ def process_region(target_region_name, settings_dict, technology_dict, technolog
                                 regions_dict=regions_dict,
                                 suitability_arr=suitability_arr,
                                 lmp_arr=lmp_arr,
+                                generation_arr=generation_arr,
+                                operating_cost_arr=operating_cost_arr,
                                 nov_arr=nov_arr,
                                 ic_arr=ic_arr,
                                 nlc_arr=nlc_arr,

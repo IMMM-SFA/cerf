@@ -84,61 +84,61 @@ These are technology-specific settings.
 
 .. table::
 
-    +-------------------------+---------------------------------------------+----------+----------+
-    | Name                    | Description                                 | Unit     | Type     |
-    +=========================+=============================================+==========+==========+
-    | <tech id number>        | | This is an integer ID key given to the    | NA       | int      |
-    |                         | | technology for reference purposes.  This  |          |          |
-    |                         | | ID should match the corresponding         |          |          |
-    |                         | | technology in the electricity technology  |          |          |
-    |                         | | expansion plan.                           |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | tech_name               | Name of the technology                      | NA       | str      |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | lifetime                | Asset lifetime                              | n_years  | int      |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | capacity_factor         | | Defined as average annual power generated | fraction | float    |
-    |                         | | divided by the potential output if the    |          |          |
-    |                         | | plant operated at its rated capacity for a|          |          |
-    |                         | | year                                      |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | variable_cost_esc_rate  | Escalation rate of variable cost            | fraction | float    |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | fuel_esc_rate           | Escalation rate of fuel                     | fraction | float    |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | unit_size               | The size of the expected power plant        | MW       | float    |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | variable_om             | | Variable operation and maintenance costs  | $/MWh    | float    |
-    |                         | | of yearly capacity use                    |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | heat_rate               | | Amount of energy used by a power plant to | Btu/kWh  | float    |
-    |                         | | generate one kilowatt-hour of electricity |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | fuel_price              | Cost of fuel per unit                       | $/GJ     | float    |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | carbon_capture_rate     | Rate of carbon capture                      | fraction | float    |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | fuel_co2_content        | | CO2 content of the fuel and the heat rate | tons/MWh | float    |
-    |                         | | of the technology                         |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | discount_rate           | The time value of money in real terms       | fraction | float    |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | carbon_esc_rate         | Escalation rate of carbon                   | fraction | float    |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | carbon_tax              | | The fee imposed on the burning of         | $/ton    | float    |
-    |                         | | carbon-based fuels                        |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | buffer_in_km            | | Buffer around the site to apply in        | n_km     | int      |
-    |                         | | kilometers which becomes unsuitable for   |          |          |
-    |                         | | other sites after siting                  |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | require_pipelines       | | If the technology is gas related pipelines| NA       | bool     |
-    |                         | | will be used when calculating the         |          |          |
-    |                         | | interconnection cost                      |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
-    | suitability_raster_file | | Full path with file name and extension to | NA       | str      |
-    |                         | | the accompanying suitability raster file  |          |          |
-    +-------------------------+---------------------------------------------+----------+----------+
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | Name                            | Description                                 | Unit     | Type     |
+    +=================================+=============================================+==========+==========+
+    | <tech id number>                | | This is an integer ID key given to the    | NA       | int      |
+    |                                 | | technology for reference purposes.  This  |          |          |
+    |                                 | | ID should match the corresponding         |          |          |
+    |                                 | | technology in the electricity technology  |          |          |
+    |                                 | | expansion plan.                           |          |          |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | tech_name                       | Name of the technology                      | NA       | str      |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | lifetime_yrs                    | Asset lifetime                              | n_years  | int      |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | capacity_factor_fraction        | | Defined as average annual power generated | fraction | float    |
+    |                                 | | divided by the potential output if the    |          |          |
+    |                                 | | plant operated at its rated capacity for a|          |          |
+    |                                 | | year                                      |          |          |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | variable_om_esc_rate_fraction   | Escalation rate of variable cost            | fraction | float    |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | fuel_price_esc_rate_fraction    | Escalation rate of fuel                     | fraction | float    |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | unit_size_mw                    | The size of the expected power plant        | MW       | float    |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | variable_om_usd_per_mwh         | | Variable operation and maintenance costs  | $/MWh    | float    |
+    |                                 | | of yearly capacity use                    |          |          |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | heat_rate_btu_per_kWh           | | Amount of energy used by a power plant to | Btu/kWh  | float    |
+    |                                 | | generate one kilowatt-hour of electricity |          |          |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | fuel_price_usd_per_mmbtu        | Cost of fuel per unit                       | $/MMbtu  | float    |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | carbon_capture_rate_fraction    | Rate of carbon capture                      | fraction | float    |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | fuel_co2_content_tons_per_btu   | | CO2 content of the fuel and the heat rate | tons/Btu | float    |
+    |                                 | | of the technology                         |          |          |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | discount_rate                   | The time value of money in real terms       | fraction | float    |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | carbon_tax_esc_rate_fraction    | Escalation rate of carbon                   | fraction | float    |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | carbon_tax_usd_per_ton          | | The fee imposed on the burning of         | $/ton    | float    |
+    |                                 | | carbon-based fuels                        |          |          |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | buffer_in_km                    | | Buffer around the site to apply in        | n_km     | int      |
+    |                                 | | kilometers which becomes unsuitable for   |          |          |
+    |                                 | | other sites after siting                  |          |          |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | require_pipelines               | | If the technology is gas related pipelines| NA       | bool     |
+    |                                 | | will be used when calculating the         |          |          |
+    |                                 | | interconnection cost                      |          |          |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | suitability_raster_file         | | Full path with file name and extension to | NA       | str      |
+    |                                 | | the accompanying suitability raster file  |          |          |
+    +---------------------------------+---------------------------------------------+----------+----------+
 
 
 The following is an example implementation in the YAML configuration file:
@@ -149,19 +149,19 @@ The following is an example implementation in the YAML configuration file:
 
         9:
             tech_name: biomass
-            lifetime: 60
-            capacity_factor: 0.6090000000000005
-            variable_cost_esc_rate: -0.00398993418629034
-            fuel_esc_rate: 0.0
-            unit_size: 80
+            lifetime_yrs: 60
+            capacity_factor_fraction: 0.6090000000000005
+            variable_om_esc_rate_fraction: -0.00398993418629034
+            fuel_price_esc_rate_fraction: 0.0
+            unit_size_mw: 80
             variable_om: 11.68495803744351
-            heat_rate: 15117.64999999997
-            fuel_price: 0.0
-            carbon_capture_rate: 0.0
-            fuel_co2_content: 0.3035999999999996
+            heat_rate_btu_per_kWh: 15117.64999999997
+            fuel_price_usd_per_mmbtu: 0.0
+            carbon_capture_rate_fraction: 0.0
+            fuel_co2_content_tons_per_btu: 0.3035999999999996
             discount_rate: 0.05
-            carbon_esc_rate: 0.0
-            carbon_tax: 0.0
+            carbon_tax_esc_rate_fraction: 0.0
+            carbon_tax_usd_per_ton: 0.0
             buffer_in_km: 5
             require_pipelines: False
             suitability_raster_file: <path to file>
@@ -605,9 +605,15 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
     * - lmp_zone
       - LMP zone ID
       - NA
-    * - locational_marginal_pricing
+    * - locational_marginal_price_usd_per_mwh
       - See :ref:`Locational marginal price (LMP)`
       - $/MWh
+    * - generation_mwh_per_year
+      - See :ref:`Generation (G)`
+      - MWh/yr
+    * - operating_cost_usd_per_year
+      - See :ref:`Operating cost (OC)`
+      - $/yr
     * - net_operational_value
       - See :ref:`Net Operating Value`
       - $/yr
@@ -617,3 +623,36 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
     * - net_locational_cost
       - See :ref:`Net Locational Cost`
       - $/yr
+    * - capacity_factor_fraction
+      - Capacity factor
+      - fraction
+    * - carbon_capture_rate_fraction
+      - Carbon capture rate
+      - fraction
+    * - fuel_co2_content_tons_per_btu
+      - Fuel CO2 content
+      - tons/Btu
+    * - fuel_price_usd_per_mmbtu
+      - Fuel price
+      - $/MMBtu
+    * - fuel_price_esc_rate_fraction
+      - Fuel price escalation rate
+      - fraction
+    * - heat_rate_btu_per_kWh
+      - Heat rate
+      - Btu/kWh
+    * - lifetime_yrs
+      - Technology lifetime
+      - years
+    * - variable_om_usd_per_mwh
+      - Variable operation and maintenance costs of yearly capacity use
+      - $/mWh
+    * - variable_om_esc_rate_fraction
+      - Variable operation and maintenance costs escalation rate
+      - fraction
+    * - carbon_tax_usd_per_ton
+      - Carbon tax
+      - $/ton
+    * - carbon_tax_esc_rate_fraction
+      - Carbon tax escalation rate
+      - fraction

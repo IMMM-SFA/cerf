@@ -24,40 +24,40 @@ technology:
 
     9:
         tech_name: biomass_conv_wo_ccs
-        lifetime: 60.0
-        capacity_factor: 0.6090000000000005
-        variable_cost_esc_rate: -0.00398993418629034
-        fuel_esc_rate: 0.0
-        unit_size: 80
+        lifetime_yrs: 60.0
+        capacity_factor_fraction: 0.6090000000000005
+        variable_om_esc_rate_fraction: -0.00398993418629034
+        fuel_price_esc_rate_fraction: 0.0
+        unit_size_mw: 80
         interconnection_cost_per_km: 552
-        variable_om: 11.68495803744351
-        heat_rate: 15117.64999999997
-        fuel_price: 0.0
-        carbon_capture_rate: 0.0
-        fuel_co2_content: 0.3035999999999996
+        variable_om_usd_per_mwh: 11.68495803744351
+        heat_rate_btu_per_kWh: 15117.64999999997
+        fuel_price_usd_per_mmbtu: 0.0
+        carbon_capture_rate_fraction: 0.0
+        fuel_co2_content_tons_per_btu: 0.3035999999999996
         discount_rate: 0.05
-        carbon_esc_rate: 0.0
-        carbon_tax: 0.0
+        carbon_tax_esc_rate_fraction: 0.0
+        carbon_tax_usd_per_ton: 0.0
         buffer_in_km: 5
         require_pipelines: False
         suitability_raster_file: null
 
     11:
         tech_name: nuclear_gen_ii
-        lifetime: 60.0
-        capacity_factor: 0.8999999999999995
-        variable_cost_esc_rate: -0.00104311614063357
-        fuel_esc_rate: 0.04639000000000001
-        unit_size: 1350
+        lifetime_yrs: 60.0
+        capacity_factor_fraction: 0.8999999999999995
+        variable_om_esc_rate_fraction: -0.00104311614063357
+        fuel_price_esc_rate_fraction: 0.04639000000000001
+        unit_size_mw: 1350
         interconnection_cost_per_km: 1104
-        variable_om: 2.098127824402843
-        heat_rate: 10246.19999999998
-        fuel_price: 0.7128099999999996
-        carbon_capture_rate: 0.0
-        fuel_co2_content: 0.0
+        variable_om_usd_per_mwh: 2.098127824402843
+        heat_rate_btu_per_kWh: 10246.19999999998
+        fuel_price_usd_per_mmbtu: 0.7128099999999996
+        carbon_capture_rate_fraction: 0.0
+        fuel_co2_content_tons_per_btu: 0.0
         discount_rate: 0.05
-        carbon_esc_rate: 0.0
-        carbon_tax: 0.0
+        carbon_tax_esc_rate_fraction: 0.0
+        carbon_tax_usd_per_ton: 0.0
         buffer_in_km: 5
         require_pipelines: False
         suitability_raster_file: null

@@ -95,24 +95,24 @@ class LocationalMarginalPricing:
         self.zones_arr = zones_arr
 
     @staticmethod
-    def get_cf_bin(capacity_factor):
+    def get_cf_bin(capacity_factor_fraction):
         """Get the correct start and through index values to average over for calculating LMP."""
 
-        if capacity_factor == 1.0:
+        if capacity_factor_fraction == 1.0:
             start_index = 0
             through_index = 8760
 
-        elif capacity_factor >= 0.5:
-            start_index = int(np.ceil(8760 * (1 - capacity_factor)))
+        elif capacity_factor_fraction >= 0.5:
+            start_index = int(np.ceil(8760 * (1 - capacity_factor_fraction)))
             through_index = 8760
 
-        elif capacity_factor == 0.0:
-            msg = f"The capacity factor provided `{capacity_factor}` is outside the bounds of 0.0 through 1.0"
+        elif capacity_factor_fraction == 0.0:
+            msg = f"The capacity factor provided `{capacity_factor_fraction}` is outside the bounds of 0.0 through 1.0"
             raise ValueError(msg)
 
         else:
             start_index = 0
-            through_index = int(np.ceil(8760 * capacity_factor))
+            through_index = int(np.ceil(8760 * capacity_factor_fraction))
 
         return start_index, through_index
 
@@ -149,7 +149,7 @@ class LocationalMarginalPricing:
         for index, i in enumerate(self.technology_order):
 
             # assign the correct LMP based on the capacity factor of the technology
-            start_index, through_index = self.get_cf_bin(self.technology_dict[i]['capacity_factor'])
+            start_index, through_index = self.get_cf_bin(self.technology_dict[i]['capacity_factor_fraction'])
 
             # sort by descending lmp for each zone
             for j in lmp_df.columns:

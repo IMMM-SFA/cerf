@@ -75,7 +75,7 @@ class Stage:
 
         # get NOV array per tech [tech_order, x, y]
         logging.info('Calculating net operational cost (NOV)')
-        self.nov_arr = self.calculate_nov()
+        self.generation_arr, self.operating_cost_arr, self.nov_arr = self.calculate_nov()
 
         # get NLC array per tech [tech_order, x, y]
         logging.info('Calculating net locational cost (NLC)')
@@ -154,28 +154,33 @@ class Stage:
         """Calculate Net Operational Value."""
 
         nov_arr = np.zeros_like(self.lmp_arr)
+        generation_arr = np.zeros_like(self.lmp_arr)
+        operating_cost_arr = np.zeros_like(self.lmp_arr)
 
         for index, i in enumerate(self.technology_order):
             econ = NetOperationalValue(discount_rate=self.technology_dict[i]['discount_rate'],
-                                       lifetime=self.technology_dict[i]['lifetime'],
-                                       unit_size=self.technology_dict[i]['unit_size'],
-                                       capacity_factor=self.technology_dict[i]['capacity_factor'],
-                                       variable_cost_esc_rate=self.technology_dict[i]['variable_cost_esc_rate'],
-                                       fuel_esc_rate=self.technology_dict[i]['fuel_esc_rate'],
-                                       carbon_esc_rate=self.technology_dict[i]['carbon_esc_rate'],
-                                       variable_om=self.technology_dict[i]['variable_om'],
-                                       heat_rate=self.technology_dict[i]['heat_rate'],
-                                       fuel_price=self.technology_dict[i]['fuel_price'],
-                                       carbon_tax=self.technology_dict[i]['carbon_tax'],
-                                       carbon_capture_rate=self.technology_dict[i]['carbon_capture_rate'],
-                                       fuel_co2_content=self.technology_dict[i]['fuel_co2_content'],
+                                       lifetime_yrs=self.technology_dict[i]['lifetime_yrs'],
+                                       unit_size_mw=self.technology_dict[i]['unit_size_mw'],
+                                       capacity_factor_fraction=self.technology_dict[i]['capacity_factor_fraction'],
+                                       variable_om_esc_rate_fraction=self.technology_dict[i]['variable_om_esc_rate_fraction'],
+                                       fuel_price_esc_rate_fraction=self.technology_dict[i]['fuel_price_esc_rate_fraction'],
+                                       carbon_tax_esc_rate_fraction=self.technology_dict[i]['carbon_tax_esc_rate_fraction'],
+                                       variable_om_usd_per_mwh=self.technology_dict[i]['variable_om_usd_per_mwh'],
+                                       heat_rate_btu_per_kWh=self.technology_dict[i]['heat_rate_btu_per_kWh'],
+                                       fuel_price_usd_per_mmbtu=self.technology_dict[i]['fuel_price_usd_per_mmbtu'],
+                                       carbon_tax_usd_per_ton=self.technology_dict[i]['carbon_tax_usd_per_ton'],
+                                       carbon_capture_rate_fraction=self.technology_dict[i]['carbon_capture_rate_fraction'],
+                                       fuel_co2_content_tons_per_btu=self.technology_dict[i]['fuel_co2_content_tons_per_btu'],
                                        lmp_arr=self.lmp_arr[index, :, :],
                                        target_year=self.settings_dict.get('run_year'))
 
-            nov_tech_arr = econ.calc_nov()
-            nov_arr[index, :, :] = nov_tech_arr
+            generation_tech_arr, operating_cost_tech_arr, nov_tech_arr = econ.calc_nov()
 
-        return nov_arr
+            nov_arr[index, :, :] = nov_tech_arr
+            generation_arr[index, :, :] = generation_tech_arr
+            operating_cost_arr[index, :, :] = operating_cost_tech_arr
+
+        return generation_arr, operating_cost_arr, nov_arr
 
     def calculate_nlc(self):
         """Calculate Net Locational Costs."""
