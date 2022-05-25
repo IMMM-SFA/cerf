@@ -21,7 +21,7 @@ class TestNov(unittest.TestCase):
     DISCOUNT_RATE = 0.05  # fraction
     LIFETIME = 60  # years
     UNIT_SIZE = 1350  # megawatt
-    CAPACITY_FACTOR = 0.9  # fraction
+    CAPACITY_FACTOR_FRACTION = 0.9  # fraction
     VARIABLE_COST_ESC_RATE = -0.00104311614063357  # fraction
     FUEL_ESC_RATE = 0.04639  # fraction
     CARBON_ESC_RATE = 0.0  # fraction
@@ -52,7 +52,7 @@ class TestNov(unittest.TestCase):
         return NetOperationalValue(discount_rate=cls.DISCOUNT_RATE,
                                    lifetime=cls.LIFETIME,
                                    unit_size=cls.UNIT_SIZE,
-                                   capacity_factor=cls.CAPACITY_FACTOR,
+                                   capacity_factor=cls.CAPACITY_FACTOR_FRACTION,
                                    variable_cost_esc_rate=cls.VARIABLE_COST_ESC_RATE,
                                    fuel_esc_rate=cls.FUEL_ESC_RATE,
                                    carbon_esc_rate=cls.CARBON_ESC_RATE,

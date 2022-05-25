@@ -159,7 +159,7 @@ class Stage:
             econ = NetOperationalValue(discount_rate=self.technology_dict[i]['discount_rate'],
                                        lifetime=self.technology_dict[i]['lifetime'],
                                        unit_size=self.technology_dict[i]['unit_size'],
-                                       capacity_factor=self.technology_dict[i]['capacity_factor'],
+                                       capacity_factor_fraction=self.technology_dict[i]['capacity_factor_fraction'],
                                        variable_cost_esc_rate=self.technology_dict[i]['variable_cost_esc_rate'],
                                        fuel_esc_rate=self.technology_dict[i]['fuel_esc_rate'],
                                        carbon_esc_rate=self.technology_dict[i]['carbon_esc_rate'],

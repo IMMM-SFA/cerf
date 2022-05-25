@@ -25,7 +25,7 @@ technology:
     9:
         tech_name: biomass_conv_wo_ccs
         lifetime: 60.0
-        capacity_factor: 0.6090000000000005
+        capacity_factor_fraction: 0.6090000000000005
         variable_cost_esc_rate: -0.00398993418629034
         fuel_esc_rate: 0.0
         unit_size: 80
@@ -45,7 +45,7 @@ technology:
     11:
         tech_name: nuclear_gen_ii
         lifetime: 60.0
-        capacity_factor: 0.8999999999999995
+        capacity_factor_fraction: 0.8999999999999995
         variable_cost_esc_rate: -0.00104311614063357
         fuel_esc_rate: 0.04639000000000001
         unit_size: 1350
