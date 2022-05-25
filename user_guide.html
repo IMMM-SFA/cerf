@@ -374,7 +374,7 @@
 <td><p>n_years</p></td>
 <td><p>int</p></td>
 </tr>
-<tr class="row-odd"><td><p>capacity_factor</p></td>
+<tr class="row-odd"><td><p>capacity_factor_fraction</p></td>
 <td><div class="line-block">
 <div class="line">Defined as average annual power generated</div>
 <div class="line">divided by the potential output if the</div>
@@ -1191,6 +1191,14 @@ python3 -c <span class="s1">&#39;import cerf; cerf.install_package_data()&#39;</
 <td><p>See <a class="reference internal" href="#locational-marginal-price-lmp"><span class="std std-ref">Locational marginal price (LMP)</span></a></p></td>
 <td><p>$/MWh</p></td>
 </tr>
+<tr class="row-even"><td><p>generation_mwh_per_year</p></td>
+<td><p>See <a class="reference internal" href="#generation-g"><span class="std std-ref">Generation (G)</span></a></p></td>
+<td><p>MWh/yr</p></td>
+</tr>
+<tr class="row-odd"><td><p>operating_cost_usd_per_year</p></td>
+<td><p>See <a class="reference internal" href="#operating-cost-oc"><span class="std std-ref">Operating cost (OC)</span></a></p></td>
+<td><p>$/yr</p></td>
+</tr>
 <tr class="row-even"><td><p>net_operational_value</p></td>
 <td><p>See <a class="reference internal" href="#net-operating-value"><span class="std std-ref">Net Operating Value</span></a></p></td>
 <td><p>$/yr</p></td>
@@ -1202,6 +1210,50 @@ python3 -c <span class="s1">&#39;import cerf; cerf.install_package_data()&#39;</
 <tr class="row-even"><td><p>net_locational_cost</p></td>
 <td><p>See <a class="reference internal" href="#net-locational-cost"><span class="std std-ref">Net Locational Cost</span></a></p></td>
 <td><p>$/yr</p></td>
+</tr>
+<tr class="row-odd"><td><p>capacity_factor_fraction</p></td>
+<td><p>Capacity factor</p></td>
+<td><p>fraction</p></td>
+</tr>
+<tr class="row-even"><td><p>carbon_capture_rate_fraction</p></td>
+<td><p>Carbon capture rate</p></td>
+<td><p>fraction</p></td>
+</tr>
+<tr class="row-odd"><td><p>fuel_co2_content_tons_per_btu</p></td>
+<td><p>Fuel CO2 content</p></td>
+<td><p>tons/Btu</p></td>
+</tr>
+<tr class="row-even"><td><p>fuel_price_usd_per_mmbtu</p></td>
+<td><p>Fuel price</p></td>
+<td><p>$/MMBtu</p></td>
+</tr>
+<tr class="row-odd"><td><p>fuel_price_esc_rate_fraction</p></td>
+<td><p>Fuel price escalation rate</p></td>
+<td><p>fraction</p></td>
+</tr>
+<tr class="row-even"><td><p>heat_rate_btu_per_kWh</p></td>
+<td><p>Heat rate</p></td>
+<td><p>Btu/kWh</p></td>
+</tr>
+<tr class="row-odd"><td><p>lifetime_yrs</p></td>
+<td><p>Technology lifetime</p></td>
+<td><p>years</p></td>
+</tr>
+<tr class="row-even"><td><p>variable_om_usd_per_mwh</p></td>
+<td><p>Variable operation and maintenance costs of yearly capacity use</p></td>
+<td><p>#/mWh</p></td>
+</tr>
+<tr class="row-odd"><td><p>variable_om_esc_rate_fraction</p></td>
+<td><p>Variable operation and maintenance costs escalation rate</p></td>
+<td><p>fraction</p></td>
+</tr>
+<tr class="row-even"><td><p>carbon_tax_usd_per_ton</p></td>
+<td><p>Carbon tax</p></td>
+<td><p>$/ton</p></td>
+</tr>
+<tr class="row-odd"><td><p>carbon_tax_esc_rate_fraction</p></td>
+<td><p>Carbon tax escalation rate</p></td>
+<td><p>fraction</p></td>
 </tr>
 </tbody>
 </table>
