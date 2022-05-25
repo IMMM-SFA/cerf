@@ -24,7 +24,7 @@ class TestNov(unittest.TestCase):
     CAPACITY_FACTOR_FRACTION = 0.9  # fraction
     variable_om_esc_rate_fraction = -0.00104311614063357  # fraction
     fuel_price_esc_rate_fraction = 0.04639  # fraction
-    CARBON_ESC_RATE = 0.0  # fraction
+    carbon_tax_esc_rate_fraction = 0.0  # fraction
     variable_om_usd_per_mwh = 2.09812782440284  # $/MWh
     heat_rate_btu_per_kWh = 10246.19999999998  # Btu/kWh
     fuel_price_usd_per_mmbtu = 0.712809999999999  # $/GJ gets converted to $/MBtu in code
@@ -55,7 +55,7 @@ class TestNov(unittest.TestCase):
                                    capacity_factor_fraction=cls.CAPACITY_FACTOR_FRACTION,
                                    variable_om_esc_rate_fraction=cls.variable_om_esc_rate_fraction,
                                    fuel_price_esc_rate_fraction=cls.fuel_price_esc_rate_fraction,
-                                   carbon_esc_rate=cls.CARBON_ESC_RATE,
+                                   carbon_tax_esc_rate_fraction=cls.carbon_tax_esc_rate_fraction,
                                    variable_om_usd_per_mwh=cls.variable_om_usd_per_mwh,
                                    heat_rate_btu_per_kWh=cls.heat_rate_btu_per_kWh,
                                    fuel_price_usd_per_mmbtu=cls.fuel_price_usd_per_mmbtu,

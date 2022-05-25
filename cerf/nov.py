@@ -31,9 +31,9 @@ class NetOperationalValue:
                                             Units:  fraction
     :type fuel_price_esc_rate_fraction:                    float
 
-    :param carbon_esc_rate:                 Escalation rate of carbon.
+    :param carbon_tax_esc_rate_fraction:                 Escalation rate of carbon.
                                             Units:  fraction
-    :type carbon_esc_rate:                  float
+    :type carbon_tax_esc_rate_fraction:                  float
 
     :param variable_om_usd_per_mwh:                     Variable operation and maintenance costs of yearly capacity use.
                                             Units:  $/MWh
@@ -80,7 +80,7 @@ class NetOperationalValue:
     capacity_factor_fraction: float
     variable_om_esc_rate_fraction: float
     fuel_price_esc_rate_fraction: float
-    carbon_esc_rate: float
+    carbon_tax_esc_rate_fraction: float
     variable_om_usd_per_mwh: float
     heat_rate_btu_per_kWh: float
     fuel_price_usd_per_mmbtu: float
@@ -98,7 +98,7 @@ class NetOperationalValue:
     HOURS_PER_YEAR_LEAP = 8784
 
     def __init__(self, discount_rate, lifetime_yrs, unit_size_mw, capacity_factor_fraction, variable_om_esc_rate_fraction,
-                 fuel_price_esc_rate_fraction, carbon_esc_rate, variable_om_usd_per_mwh, heat_rate_btu_per_kWh, fuel_price_usd_per_mmbtu, carbon_tax_usd_per_ton,
+                 fuel_price_esc_rate_fraction, carbon_tax_esc_rate_fraction, variable_om_usd_per_mwh, heat_rate_btu_per_kWh, fuel_price_usd_per_mmbtu, carbon_tax_usd_per_ton,
                  carbon_capture_rate_fraction, fuel_co2_content_tons_per_btu, lmp_arr, target_year, consider_leap_year=False):
 
         # assign class attributes
@@ -108,7 +108,7 @@ class NetOperationalValue:
         self.capacity_factor_fraction = capacity_factor_fraction
         self.variable_cost_esc = variable_om_esc_rate_fraction
         self.fuel_esc = fuel_price_esc_rate_fraction
-        self.carbon_esc = carbon_esc_rate
+        self.carbon_esc = carbon_tax_esc_rate_fraction
         self.variable_om_usd_per_mwh = variable_om_usd_per_mwh
         self.heat_rate_btu_per_kWh = heat_rate_btu_per_kWh
         self.carbon_tax_usd_per_ton = carbon_tax_usd_per_ton

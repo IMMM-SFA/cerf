@@ -162,7 +162,7 @@ class Stage:
                                        capacity_factor_fraction=self.technology_dict[i]['capacity_factor_fraction'],
                                        variable_om_esc_rate_fraction=self.technology_dict[i]['variable_om_esc_rate_fraction'],
                                        fuel_price_esc_rate_fraction=self.technology_dict[i]['fuel_price_esc_rate_fraction'],
-                                       carbon_esc_rate=self.technology_dict[i]['carbon_esc_rate'],
+                                       carbon_tax_esc_rate_fraction=self.technology_dict[i]['carbon_tax_esc_rate_fraction'],
                                        variable_om_usd_per_mwh=self.technology_dict[i]['variable_om_usd_per_mwh'],
                                        heat_rate_btu_per_kWh=self.technology_dict[i]['heat_rate_btu_per_kWh'],
                                        fuel_price_usd_per_mmbtu=self.technology_dict[i]['fuel_price_usd_per_mmbtu'],

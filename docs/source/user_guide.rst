@@ -123,7 +123,7 @@ These are technology-specific settings.
     +---------------------------------+---------------------------------------------+----------+----------+
     | discount_rate                   | The time value of money in real terms       | fraction | float    |
     +---------------------------------+---------------------------------------------+----------+----------+
-    | carbon_esc_rate                 | Escalation rate of carbon                   | fraction | float    |
+    | carbon_tax_esc_rate_fraction    | Escalation rate of carbon                   | fraction | float    |
     +---------------------------------+---------------------------------------------+----------+----------+
     | carbon_tax_usd_per_ton          | | The fee imposed on the burning of         | $/ton    | float    |
     |                                 | | carbon-based fuels                        |          |          |
@@ -160,7 +160,7 @@ The following is an example implementation in the YAML configuration file:
             carbon_capture_rate_fraction: 0.0
             fuel_co2_content_tons_per_btu: 0.3035999999999996
             discount_rate: 0.05
-            carbon_esc_rate: 0.0
+            carbon_tax_esc_rate_fraction: 0.0
             carbon_tax_usd_per_ton: 0.0
             buffer_in_km: 5
             require_pipelines: False
