@@ -44,9 +44,9 @@ class NetOperationalValue:
                                             Units:  Btu/kWh
     :type heat_rate:                        float
 
-    :param fuel_price:                      Cost of fuel per unit.
+    :param fuel_price_usd_per_mmbtu:                      Cost of fuel per unit.
                                             Units:  from GCAM ($/GJ) gets converted to ($/MBtu)
-    :type fuel_price:                       float
+    :type fuel_price_usd_per_mmbtu:                       float
 
     :param carbon_tax:                      The fee imposed on the burning of carbon-based fuels.
                                             Units:  $/ton
@@ -83,7 +83,7 @@ class NetOperationalValue:
     carbon_esc_rate: float
     variable_om: float
     heat_rate: float
-    fuel_price: float
+    fuel_price_usd_per_mmbtu: float
     carbon_tax: float
     carbon_capture_rate_fraction: float
     fuel_co2_content_tons_per_btu: float
@@ -98,7 +98,7 @@ class NetOperationalValue:
     HOURS_PER_YEAR_LEAP = 8784
 
     def __init__(self, discount_rate, lifetime, unit_size, capacity_factor_fraction, variable_cost_esc_rate,
-                 fuel_esc_rate, carbon_esc_rate, variable_om, heat_rate, fuel_price, carbon_tax,
+                 fuel_esc_rate, carbon_esc_rate, variable_om, heat_rate, fuel_price_usd_per_mmbtu, carbon_tax,
                  carbon_capture_rate_fraction, fuel_co2_content_tons_per_btu, lmp_arr, target_year, consider_leap_year=False):
 
         # assign class attributes
@@ -116,7 +116,7 @@ class NetOperationalValue:
         self.lmp_arr = lmp_arr
 
         # create conversions
-        self.fuel_price = self.convert_fuel_price(fuel_price)
+        self.fuel_price_usd_per_mmbtu = self.convert_fuel_price(fuel_price_usd_per_mmbtu)
         self.fuel_co2_content_tons_per_btu = self.convert_fuel_co2_content(fuel_co2_content_tons_per_btu)
 
         # adjust by leap year if so desired
@@ -135,10 +135,10 @@ class NetOperationalValue:
         self.lf_carbon = self.calc_levelization_factor_carbon()
 
     @staticmethod
-    def convert_fuel_price(fuel_price):
+    def convert_fuel_price(fuel_price_usd_per_mmbtu):
         """Convert fuel price from units $/GJ to $/MBtu"""
 
-        return fuel_price * NetOperationalValue.FUEL_PRICE_CONVERSION_FACTOR
+        return fuel_price_usd_per_mmbtu * NetOperationalValue.FUEL_PRICE_CONVERSION_FACTOR
 
     @staticmethod
     def convert_fuel_co2_content(fuel_co2_content_tons_per_btu):
@@ -190,7 +190,7 @@ class NetOperationalValue:
         generation = self.calc_generation()
         term2 = self.lmp_arr * self.lf_fuel
         term3 = self.variable_om * self.lf_vom
-        term4 = self.heat_rate * (self.fuel_price / 1000) * self.lf_fuel
+        term4 = self.heat_rate * (self.fuel_price_usd_per_mmbtu / 1000) * self.lf_fuel
         term5 = (self.carbon_tax * self.fuel_co2_content_tons_per_btu * self.heat_rate * self.lf_carbon / 1000000) * (1 - self.carbon_capture_rate_fraction)
 
         return generation * (term2 - (term3 + term4 + term5))

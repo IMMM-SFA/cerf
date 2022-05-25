@@ -165,7 +165,7 @@ class Stage:
                                        carbon_esc_rate=self.technology_dict[i]['carbon_esc_rate'],
                                        variable_om=self.technology_dict[i]['variable_om'],
                                        heat_rate=self.technology_dict[i]['heat_rate'],
-                                       fuel_price=self.technology_dict[i]['fuel_price'],
+                                       fuel_price_usd_per_mmbtu=self.technology_dict[i]['fuel_price_usd_per_mmbtu'],
                                        carbon_tax=self.technology_dict[i]['carbon_tax'],
                                        carbon_capture_rate_fraction=self.technology_dict[i]['carbon_capture_rate_fraction'],
                                        fuel_co2_content_tons_per_btu=self.technology_dict[i]['fuel_co2_content_tons_per_btu'],

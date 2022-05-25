@@ -27,7 +27,7 @@ class TestNov(unittest.TestCase):
     CARBON_ESC_RATE = 0.0  # fraction
     VARIABLE_OM = 2.09812782440284  # $/MWh
     HEAT_RATE = 10246.19999999998  # Btu/kWh
-    FUEL_PRICE = 0.712809999999999  # $/GJ gets converted to $/MBtu in code
+    fuel_price_usd_per_mmbtu = 0.712809999999999  # $/GJ gets converted to $/MBtu in code
     CARBON_TAX = 0.0  # $/ton
     CARBON_CAPTURE_RATE_FRACTION = 0.0  # fraction
     fuel_co2_content_tons_per_btu = 0.0  # tons/MWh gets converted to tons/Btu in code
@@ -58,7 +58,7 @@ class TestNov(unittest.TestCase):
                                    carbon_esc_rate=cls.CARBON_ESC_RATE,
                                    variable_om=cls.VARIABLE_OM,
                                    heat_rate=cls.HEAT_RATE,
-                                   fuel_price=cls.FUEL_PRICE,
+                                   fuel_price_usd_per_mmbtu=cls.fuel_price_usd_per_mmbtu,
                                    carbon_tax=carbon_tax,
                                    carbon_capture_rate_fraction=carbon_capture_rate_fraction,
                                    fuel_co2_content_tons_per_btu=fuel_co2_content_tons_per_btu,
