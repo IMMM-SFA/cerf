@@ -40,9 +40,9 @@ class TestNov(unittest.TestCase):
     EXPECTED_LF_CARBON = 0.999999999999999
 
     # difference in expected values when evaluating under different conditions
-    EXPECTED_NOV_NOCARBON_NOLEAP = np.array([1780847345.1014912])
-    EXPECTED_NOV_NOCARBON_LEAP = np.array([1785726378.923687])
-    EXPECTED_NOV_WITHCARBON_NOLEAP = np.array([1780847344.7371392])
+    EXPECTED_NOV_NOCARBON_NOLEAP = np.array([1793081990.25871])
+    EXPECTED_NOV_NOCARBON_LEAP = np.array([1797994543.65668])
+    EXPECTED_NOV_WITHCARBON_NOLEAP = np.array([1791838770.04080])
 
     @classmethod
     def instantiate_nov(cls, target_year, carbon_tax_usd_per_ton, fuel_co2_content_tons_per_btu, carbon_capture_rate_fraction, consider_leap_year):
@@ -77,7 +77,7 @@ class TestNov(unittest.TestCase):
                                     consider_leap_year=False
                                     )
 
-        nov_tech_arr = econ.calc_nov()
+        genenration, operating_cost, nov_tech_arr = econ.calc_nov()
 
         # test the calculation of annuity factor
         self.assertEqual(TestNov.EXPECTED_ANNUITY_FACTOR, econ.annuity_factor)
@@ -92,7 +92,7 @@ class TestNov(unittest.TestCase):
         self.assertEqual(TestNov.EXPECTED_LF_CARBON, econ.lf_carbon)
 
         # test NOV
-        np.testing.assert_array_equal(TestNov.EXPECTED_NOV_NOCARBON_NOLEAP, nov_tech_arr)
+        np.testing.assert_almost_equal(nov_tech_arr, TestNov.EXPECTED_NOV_NOCARBON_NOLEAP, decimal=4)
 
     def test_nocarbon_leap_nov(self):
         """Test NOV outcome with no carbon and on a leap year."""
@@ -104,7 +104,7 @@ class TestNov(unittest.TestCase):
                                     carbon_capture_rate_fraction=0.0,  # fraction
                                     consider_leap_year=True
                                     )
-        nov_tech_arr = econ.calc_nov()
+        genenration, operating_cost, nov_tech_arr = econ.calc_nov()
 
         # test the calculation of annuity factor
         self.assertEqual(TestNov.EXPECTED_ANNUITY_FACTOR, econ.annuity_factor)
@@ -119,7 +119,7 @@ class TestNov(unittest.TestCase):
         self.assertEqual(TestNov.EXPECTED_LF_CARBON, econ.lf_carbon)
 
         # test NOV
-        np.testing.assert_array_equal(TestNov.EXPECTED_NOV_NOCARBON_LEAP, nov_tech_arr)
+        np.testing.assert_almost_equal(nov_tech_arr, TestNov.EXPECTED_NOV_NOCARBON_LEAP, decimal=4)
 
     def test_with_carbon_noleap_nov(self):
         """Test NOV outcome with carbon and not on a leap year."""
@@ -131,7 +131,7 @@ class TestNov(unittest.TestCase):
                                     carbon_capture_rate_fraction=0.05,  # fraction
                                     consider_leap_year=False
                                     )
-        nov_tech_arr = econ.calc_nov()
+        genenration, operating_cost, nov_tech_arr = econ.calc_nov()
 
         # test the calculation of annuity factor
         self.assertEqual(TestNov.EXPECTED_ANNUITY_FACTOR, econ.annuity_factor)
@@ -146,7 +146,7 @@ class TestNov(unittest.TestCase):
         self.assertEqual(TestNov.EXPECTED_LF_CARBON, econ.lf_carbon)
 
         # test NOV
-        np.testing.assert_array_equal(TestNov.EXPECTED_NOV_WITHCARBON_NOLEAP, nov_tech_arr)
+        np.testing.assert_almost_equal(nov_tech_arr, TestNov.EXPECTED_NOV_WITHCARBON_NOLEAP, decimal=4)
 
 
 if __name__ == '__main__':

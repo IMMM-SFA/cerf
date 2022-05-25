@@ -10,55 +10,55 @@ class NetOperationalValue:
                                             Units:  fraction
     :type discount_rate:                    float
 
-    :param lifetime_yrs:                        Years of the expected technology plant lifetime_yrs.
+    :param lifetime_yrs:                    Years of the expected technology plant lifetime_yrs.
                                             Units:  years
-    :type lifetime_yrs:                         int
+    :type lifetime_yrs:                     int
 
-    :param unit_size_mw:                       The size of the expected power plant.
+    :param unit_size_mw:                   The size of the expected power plant.
                                             Units:  megawatt
-    :type unit_size_mw:                        int
+    :type unit_size_mw:                    int
 
-    :param capacity_factor_fraction:                 Capacity factor defined as average annual power generated divided by the
+    :param capacity_factor_fraction:        Capacity factor defined as average annual power generated divided by the
                                             potential output if the plant operated at its rated capacity for a year.
                                             Units:  fraction
-    :type capacity_factor_fraction:                  float
+    :type capacity_factor_fraction:         float
 
-    :param variable_om_esc_rate_fraction:          Escalation rate of variable cost.
+    :param variable_om_esc_rate_fraction:   Escalation rate of variable cost.
                                             Units:  fraction
-    :type variable_om_esc_rate_fraction:           float
+    :type variable_om_esc_rate_fraction:    float
 
-    :param fuel_price_esc_rate_fraction:                   Escalation rate of fuel.
+    :param fuel_price_esc_rate_fraction:    Escalation rate of fuel.
                                             Units:  fraction
-    :type fuel_price_esc_rate_fraction:                    float
+    :type fuel_price_esc_rate_fraction:     float
 
-    :param carbon_tax_esc_rate_fraction:                 Escalation rate of carbon.
+    :param carbon_tax_esc_rate_fraction:    Escalation rate of carbon.
                                             Units:  fraction
-    :type carbon_tax_esc_rate_fraction:                  float
+    :type carbon_tax_esc_rate_fraction:     float
 
-    :param variable_om_usd_per_mwh:                     Variable operation and maintenance costs of yearly capacity use.
+    :param variable_om_usd_per_mwh:         Variable operation and maintenance costs of yearly capacity use.
                                             Units:  $/MWh
-    :type variable_om_usd_per_mwh:                      float
+    :type variable_om_usd_per_mwh:          float
 
-    :param heat_rate_btu_per_kWh:                       Amount of energy used by a power plant to generate one kilowatt-hour of
+    :param heat_rate_btu_per_kWh:           Amount of energy used by a power plant to generate one kilowatt-hour of
                                             electricity.
                                             Units:  Btu/kWh
-    :type heat_rate_btu_per_kWh:                        float
+    :type heat_rate_btu_per_kWh:            float
 
-    :param fuel_price_usd_per_mmbtu:                      Cost of fuel per unit.
-                                            Units:  from GCAM ($/GJ) gets converted to ($/MBtu)
-    :type fuel_price_usd_per_mmbtu:                       float
+    :param fuel_price_usd_per_mmbtu:        Cost of fuel per unit.
+                                            Units:  $/MMBtu
+    :type fuel_price_usd_per_mmbtu:         float
 
-    :param carbon_tax_usd_per_ton:                      The fee imposed on the burning of carbon-based fuels.
+    :param carbon_tax_usd_per_ton:          The fee imposed on the burning of carbon-based fuels.
                                             Units:  $/ton
-    :type carbon_tax_usd_per_ton:                       float
+    :type carbon_tax_usd_per_ton:           float
 
-    :param carbon_capture_rate_fraction:             Rate of carbon capture.
+    :param carbon_capture_rate_fraction:    Rate of carbon capture.
                                             Units:  fraction
-    :type carbon_capture_rate_fraction:              float
+    :type carbon_capture_rate_fraction:     float
 
-    :param fuel_co2_content_tons_per_btu:                CO2 content of the fuel and the heat rate of the technology.
-                                            Units:  from GCAM (tons/MWh) gets converted to (tons/Btu)
-    :type fuel_co2_content_tons_per_btu:                 float
+    :param fuel_co2_content_tons_per_btu:   CO2 content of the fuel and the heat rate of the technology.
+                                            Units:  tons/Btu
+    :type fuel_co2_content_tons_per_btu:    float
 
     :param lmp_arr:                         Locational Marginal Price (LMP) per grid cell for each technology in a
                                             multi-dimensional array where the shape is [tech_id, xcoord, ycoord].
@@ -70,6 +70,10 @@ class NetOperationalValue:
 
     :param consider_leap_year:              Choose to account for leap year in the number of hours per year calculation
     :type consider_leap_year:               bool
+
+    :returns:                               [0] generation_mwh_per_year
+                                            [1] operating cost
+                                            [2] NOV
 
     """
 
@@ -92,14 +96,26 @@ class NetOperationalValue:
     consider_leap_year: bool
 
     # constants for conversion
-    FUEL_CO2_CONTENT_CONVERSION_FACTOR = 0.000000293071
-    FUEL_PRICE_CONVERSION_FACTOR = 1.055056
     HOURS_PER_YEAR_NONLEAP = 8760
     HOURS_PER_YEAR_LEAP = 8784
 
-    def __init__(self, discount_rate, lifetime_yrs, unit_size_mw, capacity_factor_fraction, variable_om_esc_rate_fraction,
-                 fuel_price_esc_rate_fraction, carbon_tax_esc_rate_fraction, variable_om_usd_per_mwh, heat_rate_btu_per_kWh, fuel_price_usd_per_mmbtu, carbon_tax_usd_per_ton,
-                 carbon_capture_rate_fraction, fuel_co2_content_tons_per_btu, lmp_arr, target_year, consider_leap_year=False):
+    def __init__(self,
+                 discount_rate,
+                 lifetime_yrs,
+                 unit_size_mw,
+                 capacity_factor_fraction,
+                 variable_om_esc_rate_fraction,
+                 fuel_price_esc_rate_fraction,
+                 carbon_tax_esc_rate_fraction,
+                 variable_om_usd_per_mwh,
+                 heat_rate_btu_per_kWh,
+                 fuel_price_usd_per_mmbtu,
+                 carbon_tax_usd_per_ton,
+                 carbon_capture_rate_fraction,
+                 fuel_co2_content_tons_per_btu,
+                 lmp_arr,
+                 target_year,
+                 consider_leap_year=False):
 
         # assign class attributes
         self.discount_rate = discount_rate
@@ -113,11 +129,9 @@ class NetOperationalValue:
         self.heat_rate_btu_per_kWh = heat_rate_btu_per_kWh
         self.carbon_tax_usd_per_ton = carbon_tax_usd_per_ton
         self.carbon_capture_rate_fraction = carbon_capture_rate_fraction
+        self.fuel_price_usd_per_mmbtu = fuel_price_usd_per_mmbtu
+        self.fuel_co2_content_tons_per_btu = fuel_co2_content_tons_per_btu
         self.lmp_arr = lmp_arr
-
-        # create conversions
-        self.fuel_price_usd_per_mmbtu = self.convert_fuel_price(fuel_price_usd_per_mmbtu)
-        self.fuel_co2_content_tons_per_btu = self.convert_fuel_co2_content(fuel_co2_content_tons_per_btu)
 
         # adjust by leap year if so desired
         self.hours_per_year = self.assign_hours_per_year(target_year, consider_leap_year)
@@ -133,18 +147,6 @@ class NetOperationalValue:
 
         # calculate levelizing factor for carbon
         self.lf_carbon = self.calc_levelization_factor_carbon()
-
-    @staticmethod
-    def convert_fuel_price(fuel_price_usd_per_mmbtu):
-        """Convert fuel price from units $/GJ to $/MBtu"""
-
-        return fuel_price_usd_per_mmbtu * NetOperationalValue.FUEL_PRICE_CONVERSION_FACTOR
-
-    @staticmethod
-    def convert_fuel_co2_content(fuel_co2_content_tons_per_btu):
-        """Convert fuel CO2 content from units tons/MWh to tons/Btu"""
-
-        return fuel_co2_content_tons_per_btu * NetOperationalValue.FUEL_CO2_CONTENT_CONVERSION_FACTOR
 
     @classmethod
     def assign_hours_per_year(cls, target_year, consider_leap_year):
@@ -192,5 +194,6 @@ class NetOperationalValue:
         term3 = self.variable_om_usd_per_mwh * self.lf_vom
         term4 = self.heat_rate_btu_per_kWh * (self.fuel_price_usd_per_mmbtu / 1000) * self.lf_fuel
         term5 = (self.carbon_tax_usd_per_ton * self.fuel_co2_content_tons_per_btu * self.heat_rate_btu_per_kWh * self.lf_carbon / 1000000) * (1 - self.carbon_capture_rate_fraction)
+        operating_cost = (term2 - (term3 + term4 + term5))
 
-        return generation * (term2 - (term3 + term4 + term5))
+        return generation, operating_cost, generation * operating_cost

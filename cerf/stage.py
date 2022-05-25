@@ -75,7 +75,7 @@ class Stage:
 
         # get NOV array per tech [tech_order, x, y]
         logging.info('Calculating net operational cost (NOV)')
-        self.nov_arr = self.calculate_nov()
+        self.generation_arr, self.operating_cost_arr, self.nov_arr = self.calculate_nov()
 
         # get NLC array per tech [tech_order, x, y]
         logging.info('Calculating net locational cost (NLC)')
@@ -154,6 +154,8 @@ class Stage:
         """Calculate Net Operational Value."""
 
         nov_arr = np.zeros_like(self.lmp_arr)
+        generation_arr = np.zeros_like(self.lmp_arr)
+        operating_cost_arr = np.zeros_like(self.lmp_arr)
 
         for index, i in enumerate(self.technology_order):
             econ = NetOperationalValue(discount_rate=self.technology_dict[i]['discount_rate'],
@@ -172,10 +174,13 @@ class Stage:
                                        lmp_arr=self.lmp_arr[index, :, :],
                                        target_year=self.settings_dict.get('run_year'))
 
-            nov_tech_arr = econ.calc_nov()
-            nov_arr[index, :, :] = nov_tech_arr
+            generation_tech_arr, operating_cost_tech_arr, nov_tech_arr = econ.calc_nov()
 
-        return nov_arr
+            nov_arr[index, :, :] = nov_tech_arr
+            generation_arr[index, :, :] = generation_tech_arr
+            operating_cost_arr[index, :, :] = operating_cost_tech_arr
+
+        return generation_arr, operating_cost_arr, nov_arr
 
     def calculate_nlc(self):
         """Calculate Net Locational Costs."""

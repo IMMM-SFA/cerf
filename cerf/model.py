@@ -95,6 +95,8 @@ class Model(ReadConfig):
                                  regions_dict=self.regions_dict,
                                  suitability_arr=data.suitability_arr,
                                  lmp_arr=data.lmp_arr,
+                                 generation_arr=data.generation_arr,
+                                 operating_cost_arr=data.operating_cost_arr,
                                  nov_arr=data.nov_arr,
                                  ic_arr=data.ic_arr,
                                  nlc_arr=data.nlc_arr,

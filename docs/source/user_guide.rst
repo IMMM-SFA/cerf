@@ -605,7 +605,7 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
     * - lmp_zone
       - LMP zone ID
       - NA
-    * - locational_marginal_pricing
+    * - locational_marginal_price_usd_per_mwh
       - See :ref:`Locational marginal price (LMP)`
       - $/MWh
     * - net_operational_value
