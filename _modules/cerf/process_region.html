@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.process_region &mdash; cerf 2.0.6 documentation</title>
+  <title>cerf.process_region &mdash; cerf 2.0.9 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                2.0.6
+                2.0.9
               </div>
             
           
@@ -203,6 +203,8 @@
                  <span class="n">regions_dict</span><span class="p">,</span>
                  <span class="n">suitability_arr</span><span class="p">,</span>
                  <span class="n">lmp_arr</span><span class="p">,</span>
+                 <span class="n">generation_arr</span><span class="p">,</span>
+                 <span class="n">operating_cost_arr</span><span class="p">,</span>
                  <span class="n">nov_arr</span><span class="p">,</span>
                  <span class="n">ic_arr</span><span class="p">,</span>
                  <span class="n">nlc_arr</span><span class="p">,</span>
@@ -242,6 +244,12 @@
 
         <span class="c1"># LMP array for the CONUS</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lmp_arr</span> <span class="o">=</span> <span class="n">lmp_arr</span>
+
+        <span class="c1"># generation array for the CONUS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generation_arr</span> <span class="o">=</span> <span class="n">generation_arr</span>
+
+        <span class="c1"># operating cost array for the CONUS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">operating_cost_arr</span> <span class="o">=</span> <span class="n">operating_cost_arr</span>
 
         <span class="c1"># NOV array for the CONUS</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nov_arr</span> <span class="o">=</span> <span class="n">nov_arr</span>
@@ -286,7 +294,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">xcoords_region</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ycoords_region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_grid_coordinates</span><span class="p">()</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracting additional metrics for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target_region_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lmp_flat_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nov_flat_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ic_flat_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_region_metrics</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lmp_flat_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">generation_flat_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">operating_cost_flat_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nov_flat_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ic_flat_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_region_metrics</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zones_flat_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_lmp_zones</span><span class="p">()</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Competing technologies to site expansion for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">target_region_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -382,18 +390,22 @@
 
         <span class="c1"># extract the target region</span>
         <span class="n">lmp_arr_region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmp_arr</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">]</span>
+        <span class="n">generation_arr_region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generation_arr</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">]</span>
+        <span class="n">operating_cost_arr_region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">operating_cost_arr</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">]</span>
         <span class="n">nov_arr_region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nov_arr</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">]</span>
         <span class="n">ic_arr_region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ic_arr</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">]</span>
 
         <span class="c1"># create a reference dictionary where {tech_id: flat_region_array, ...}</span>
         <span class="n">lmp_flat_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">lmp_arr_region</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">ix</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">)}</span>
+        <span class="n">generation_flat_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">generation_arr_region</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">ix</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">)}</span>
+        <span class="n">operating_cost_flat_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">operating_cost_arr_region</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">ix</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">)}</span>
         <span class="n">nov_flat_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">nov_arr_region</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">ix</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">)}</span>
         <span class="n">ic_flat_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">ic_arr_region</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="k">for</span> <span class="n">ix</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">)}</span>
 
-        <span class="k">return</span> <span class="n">lmp_flat_dict</span><span class="p">,</span> <span class="n">nov_flat_dict</span><span class="p">,</span> <span class="n">ic_flat_dict</span></div>
+        <span class="k">return</span> <span class="n">lmp_flat_dict</span><span class="p">,</span> <span class="n">generation_flat_dict</span><span class="p">,</span> <span class="n">operating_cost_flat_dict</span><span class="p">,</span> <span class="n">nov_flat_dict</span><span class="p">,</span> <span class="n">ic_flat_dict</span></div>
 
 <div class="viewcode-block" id="ProcessRegion.extract_lmp_zones"><a class="viewcode-back" href="../../cerf.html#cerf.process_region.ProcessRegion.extract_lmp_zones">[docs]</a>    <span class="k">def</span> <span class="nf">extract_lmp_zones</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Extract the lmp zoness elements for the target region and return as a flat array.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Extract the lmp zones elements for the target region and return as a flat array.&quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">zones_arr</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ymin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">ymax</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xmin</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">xmax</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span></div>
 
@@ -406,6 +418,8 @@
                            <span class="n">technology_order</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">,</span>
                            <span class="n">expansion_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">expansion_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">target_region_name</span><span class="p">],</span>
                            <span class="n">lmp_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lmp_flat_dict</span><span class="p">,</span>
+                           <span class="n">generation_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">generation_flat_dict</span><span class="p">,</span>
+                           <span class="n">operating_cost_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">operating_cost_flat_dict</span><span class="p">,</span>
                            <span class="n">nov_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nov_flat_dict</span><span class="p">,</span>
                            <span class="n">ic_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ic_flat_dict</span><span class="p">,</span>
                            <span class="n">nlc_mask</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">suitable_nlc_region</span><span class="p">,</span>
@@ -432,9 +446,27 @@
         <span class="k">return</span> <span class="n">comp</span></div></div>
 
 
-<div class="viewcode-block" id="process_region"><a class="viewcode-back" href="../../cerf.html#cerf.process_region.process_region">[docs]</a><span class="k">def</span> <span class="nf">process_region</span><span class="p">(</span><span class="n">target_region_name</span><span class="p">,</span> <span class="n">settings_dict</span><span class="p">,</span> <span class="n">technology_dict</span><span class="p">,</span> <span class="n">technology_order</span><span class="p">,</span> <span class="n">expansion_dict</span><span class="p">,</span> <span class="n">regions_dict</span><span class="p">,</span>
-                  <span class="n">suitability_arr</span><span class="p">,</span> <span class="n">lmp_arr</span><span class="p">,</span> <span class="n">nov_arr</span><span class="p">,</span> <span class="n">ic_arr</span><span class="p">,</span> <span class="n">nlc_arr</span><span class="p">,</span> <span class="n">zones_arr</span><span class="p">,</span> <span class="n">xcoords</span><span class="p">,</span> <span class="n">ycoords</span><span class="p">,</span> <span class="n">indices_2d</span><span class="p">,</span>
-                  <span class="n">randomize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">seed_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">write_output</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="process_region"><a class="viewcode-back" href="../../cerf.html#cerf.process_region.process_region">[docs]</a><span class="k">def</span> <span class="nf">process_region</span><span class="p">(</span><span class="n">target_region_name</span><span class="p">,</span>
+                   <span class="n">settings_dict</span><span class="p">,</span>
+                   <span class="n">technology_dict</span><span class="p">,</span>
+                   <span class="n">technology_order</span><span class="p">,</span>
+                   <span class="n">expansion_dict</span><span class="p">,</span>
+                   <span class="n">regions_dict</span><span class="p">,</span>
+                   <span class="n">suitability_arr</span><span class="p">,</span>
+                   <span class="n">lmp_arr</span><span class="p">,</span>
+                   <span class="n">generation_arr</span><span class="p">,</span>
+                   <span class="n">operating_cost_arr</span><span class="p">,</span>
+                   <span class="n">nov_arr</span><span class="p">,</span>
+                   <span class="n">ic_arr</span><span class="p">,</span>
+                   <span class="n">nlc_arr</span><span class="p">,</span>
+                   <span class="n">zones_arr</span><span class="p">,</span>
+                   <span class="n">xcoords</span><span class="p">,</span>
+                   <span class="n">ycoords</span><span class="p">,</span>
+                   <span class="n">indices_2d</span><span class="p">,</span>
+                   <span class="n">randomize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="n">seed_value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                   <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                   <span class="n">write_output</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Convenience wrapper to log time and site an expansion plan for a target region for the target year.</span>
 
 <span class="sd">    :param target_region_name:                   Name of the target region as it is represented in the region raster.</span>
@@ -503,24 +535,26 @@
 
         <span class="c1"># process expansion plan and competition for a single region for the target year</span>
         <span class="n">process</span> <span class="o">=</span> <span class="n">ProcessRegion</span><span class="p">(</span><span class="n">settings_dict</span><span class="o">=</span><span class="n">settings_dict</span><span class="p">,</span>
-                               <span class="n">technology_dict</span><span class="o">=</span><span class="n">technology_dict</span><span class="p">,</span>
-                               <span class="n">technology_order</span><span class="o">=</span><span class="n">technology_order</span><span class="p">,</span>
-                               <span class="n">expansion_dict</span><span class="o">=</span><span class="n">expansion_dict</span><span class="p">,</span>
-                               <span class="n">regions_dict</span><span class="o">=</span><span class="n">regions_dict</span><span class="p">,</span>
-                               <span class="n">suitability_arr</span><span class="o">=</span><span class="n">suitability_arr</span><span class="p">,</span>
-                               <span class="n">lmp_arr</span><span class="o">=</span><span class="n">lmp_arr</span><span class="p">,</span>
-                               <span class="n">nov_arr</span><span class="o">=</span><span class="n">nov_arr</span><span class="p">,</span>
-                               <span class="n">ic_arr</span><span class="o">=</span><span class="n">ic_arr</span><span class="p">,</span>
-                               <span class="n">nlc_arr</span><span class="o">=</span><span class="n">nlc_arr</span><span class="p">,</span>
-                               <span class="n">zones_arr</span><span class="o">=</span><span class="n">zones_arr</span><span class="p">,</span>
-                               <span class="n">xcoords</span><span class="o">=</span><span class="n">xcoords</span><span class="p">,</span>
-                               <span class="n">ycoords</span><span class="o">=</span><span class="n">ycoords</span><span class="p">,</span>
-                               <span class="n">indices_2d</span><span class="o">=</span><span class="n">indices_2d</span><span class="p">,</span>
-                               <span class="n">target_region_name</span><span class="o">=</span><span class="n">target_region_name</span><span class="p">,</span>
-                               <span class="n">randomize</span><span class="o">=</span><span class="n">randomize</span><span class="p">,</span>
-                               <span class="n">seed_value</span><span class="o">=</span><span class="n">seed_value</span><span class="p">,</span>
-                               <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
-                               <span class="n">write_output</span><span class="o">=</span><span class="n">write_output</span><span class="p">)</span>
+                                <span class="n">technology_dict</span><span class="o">=</span><span class="n">technology_dict</span><span class="p">,</span>
+                                <span class="n">technology_order</span><span class="o">=</span><span class="n">technology_order</span><span class="p">,</span>
+                                <span class="n">expansion_dict</span><span class="o">=</span><span class="n">expansion_dict</span><span class="p">,</span>
+                                <span class="n">regions_dict</span><span class="o">=</span><span class="n">regions_dict</span><span class="p">,</span>
+                                <span class="n">suitability_arr</span><span class="o">=</span><span class="n">suitability_arr</span><span class="p">,</span>
+                                <span class="n">lmp_arr</span><span class="o">=</span><span class="n">lmp_arr</span><span class="p">,</span>
+                                <span class="n">generation_arr</span><span class="o">=</span><span class="n">generation_arr</span><span class="p">,</span>
+                                <span class="n">operating_cost_arr</span><span class="o">=</span><span class="n">operating_cost_arr</span><span class="p">,</span>
+                                <span class="n">nov_arr</span><span class="o">=</span><span class="n">nov_arr</span><span class="p">,</span>
+                                <span class="n">ic_arr</span><span class="o">=</span><span class="n">ic_arr</span><span class="p">,</span>
+                                <span class="n">nlc_arr</span><span class="o">=</span><span class="n">nlc_arr</span><span class="p">,</span>
+                                <span class="n">zones_arr</span><span class="o">=</span><span class="n">zones_arr</span><span class="p">,</span>
+                                <span class="n">xcoords</span><span class="o">=</span><span class="n">xcoords</span><span class="p">,</span>
+                                <span class="n">ycoords</span><span class="o">=</span><span class="n">ycoords</span><span class="p">,</span>
+                                <span class="n">indices_2d</span><span class="o">=</span><span class="n">indices_2d</span><span class="p">,</span>
+                                <span class="n">target_region_name</span><span class="o">=</span><span class="n">target_region_name</span><span class="p">,</span>
+                                <span class="n">randomize</span><span class="o">=</span><span class="n">randomize</span><span class="p">,</span>
+                                <span class="n">seed_value</span><span class="o">=</span><span class="n">seed_value</span><span class="p">,</span>
+                                <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+                                <span class="n">write_output</span><span class="o">=</span><span class="n">write_output</span><span class="p">)</span>
 
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Processed `</span><span class="si">{</span><span class="n">target_region_name</span><span class="si">}</span><span class="s1">` in </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">region_t0</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span><span class="si">}</span><span class="s1"> seconds&#39;</span><span class="p">)</span>
 

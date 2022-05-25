@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.utils &mdash; cerf 2.0.6 documentation</title>
+  <title>cerf.utils &mdash; cerf 2.0.9 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                2.0.6
+                2.0.9
               </div>
             
           
@@ -238,10 +238,23 @@
             <span class="s1">&#39;sited_year&#39;</span><span class="p">:</span> <span class="p">[],</span>
             <span class="s1">&#39;retirement_year&#39;</span><span class="p">:</span> <span class="p">[],</span>
             <span class="s1">&#39;lmp_zone&#39;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s1">&#39;locational_marginal_pricing&#39;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s1">&#39;net_operational_value&#39;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s1">&#39;interconnection_cost&#39;</span><span class="p">:</span> <span class="p">[],</span>
-            <span class="s1">&#39;net_locational_cost&#39;</span><span class="p">:</span> <span class="p">[]}</span></div>
+            <span class="s1">&#39;locational_marginal_price_usd_per_mwh&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;generation_mwh_per_year&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;operating_cost_usd_per_year&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;net_operational_value_usd_per_year&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;interconnection_cost_usd_per_year&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;net_locational_cost_usd_per_year&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;capacity_factor_fraction&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;carbon_capture_rate_fraction&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;fuel_co2_content_tons_per_btu&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;fuel_price_usd_per_mmbtu&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;fuel_price_esc_rate_fraction&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;heat_rate_btu_per_kWh&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;lifetime_yrs&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;variable_om_usd_per_mwh&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;variable_om_esc_rate_fraction&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;carbon_tax_usd_per_ton&#39;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s1">&#39;carbon_tax_esc_rate_fraction&#39;</span><span class="p">:</span> <span class="p">[]}</span></div>
 
 
 <div class="viewcode-block" id="sited_dtypes"><a class="viewcode-back" href="../../cerf.html#cerf.utils.sited_dtypes">[docs]</a><span class="k">def</span> <span class="nf">sited_dtypes</span><span class="p">():</span>
@@ -254,10 +267,10 @@
             <span class="s1">&#39;xcoord&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
             <span class="s1">&#39;ycoord&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
             <span class="s1">&#39;lmp_zone&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span>
-            <span class="s1">&#39;locational_marginal_pricing&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
-            <span class="s1">&#39;net_operational_value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
-            <span class="s1">&#39;interconnection_cost&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
-            <span class="s1">&#39;net_locational_cost&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+            <span class="s1">&#39;locational_marginal_price_usd_per_mwh&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+            <span class="s1">&#39;net_operational_value_usd_per_year&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+            <span class="s1">&#39;interconnection_cost_usd_per_year&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+            <span class="s1">&#39;net_locational_cost_usd_per_year&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
             <span class="s1">&#39;index&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span>
             <span class="s1">&#39;retirement_year&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span>
             <span class="s1">&#39;sited_year&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span>

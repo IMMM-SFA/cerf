@@ -247,13 +247,13 @@
 </li>
       <li><a href="cerf.html#cerf.stage.Stage.calculate_nov">calculate_nov() (cerf.stage.Stage method)</a>
 </li>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.capacity_factor">capacity_factor (cerf.nov.NetOperationalValue attribute)</a>
+      <li><a href="cerf.html#cerf.nov.NetOperationalValue.capacity_factor_fraction">capacity_factor_fraction (cerf.nov.NetOperationalValue attribute)</a>
 </li>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.carbon_capture_rate">carbon_capture_rate (cerf.nov.NetOperationalValue attribute)</a>
+      <li><a href="cerf.html#cerf.nov.NetOperationalValue.carbon_capture_rate_fraction">carbon_capture_rate_fraction (cerf.nov.NetOperationalValue attribute)</a>
 </li>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.carbon_esc_rate">carbon_esc_rate (cerf.nov.NetOperationalValue attribute)</a>
+      <li><a href="cerf.html#cerf.nov.NetOperationalValue.carbon_tax_esc_rate_fraction">carbon_tax_esc_rate_fraction (cerf.nov.NetOperationalValue attribute)</a>
 </li>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.carbon_tax">carbon_tax (cerf.nov.NetOperationalValue attribute)</a>
+      <li><a href="cerf.html#cerf.nov.NetOperationalValue.carbon_tax_usd_per_ton">carbon_tax_usd_per_ton (cerf.nov.NetOperationalValue attribute)</a>
 </li>
       <li>
     cerf
@@ -392,10 +392,6 @@
 </li>
       <li><a href="cerf.html#cerf.logger.Logger.console_handler">console_handler() (cerf.logger.Logger method)</a>
 </li>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.convert_fuel_co2_content">convert_fuel_co2_content() (cerf.nov.NetOperationalValue static method)</a>
-</li>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.convert_fuel_price">convert_fuel_price() (cerf.nov.NetOperationalValue static method)</a>
-</li>
       <li><a href="cerf.html#cerf.package_data.costs_per_kv_substation">costs_per_kv_substation() (in module cerf.package_data)</a>
 </li>
   </ul></td>
@@ -438,17 +434,13 @@
 </li>
       <li><a href="cerf.html#cerf.logger.Logger.file_handler">file_handler() (cerf.logger.Logger method)</a>
 </li>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.fuel_co2_content">fuel_co2_content (cerf.nov.NetOperationalValue attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.FUEL_CO2_CONTENT_CONVERSION_FACTOR">FUEL_CO2_CONTENT_CONVERSION_FACTOR (cerf.nov.NetOperationalValue attribute)</a>
+      <li><a href="cerf.html#cerf.nov.NetOperationalValue.fuel_co2_content_tons_per_btu">fuel_co2_content_tons_per_btu (cerf.nov.NetOperationalValue attribute)</a>
 </li>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.fuel_esc_rate">fuel_esc_rate (cerf.nov.NetOperationalValue attribute)</a>
+      <li><a href="cerf.html#cerf.nov.NetOperationalValue.fuel_price_esc_rate_fraction">fuel_price_esc_rate_fraction (cerf.nov.NetOperationalValue attribute)</a>
 </li>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.fuel_price">fuel_price (cerf.nov.NetOperationalValue attribute)</a>
-</li>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.FUEL_PRICE_CONVERSION_FACTOR">FUEL_PRICE_CONVERSION_FACTOR (cerf.nov.NetOperationalValue attribute)</a>
+      <li><a href="cerf.html#cerf.nov.NetOperationalValue.fuel_price_usd_per_mmbtu">fuel_price_usd_per_mmbtu (cerf.nov.NetOperationalValue attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -510,7 +502,7 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.heat_rate">heat_rate (cerf.nov.NetOperationalValue attribute)</a>
+      <li><a href="cerf.html#cerf.nov.NetOperationalValue.heat_rate_btu_per_kWh">heat_rate_btu_per_kWh (cerf.nov.NetOperationalValue attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -550,7 +542,7 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.lifetime">lifetime (cerf.nov.NetOperationalValue attribute)</a>
+      <li><a href="cerf.html#cerf.nov.NetOperationalValue.lifetime_yrs">lifetime_yrs (cerf.nov.NetOperationalValue attribute)</a>
 </li>
       <li><a href="cerf.html#cerf.package_data.list_available_suitability_files">list_available_suitability_files() (in module cerf.package_data)</a>
 </li>
@@ -713,7 +705,7 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.unit_size">unit_size (cerf.nov.NetOperationalValue attribute)</a>
+      <li><a href="cerf.html#cerf.nov.NetOperationalValue.unit_size_mw">unit_size_mw (cerf.nov.NetOperationalValue attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -731,9 +723,9 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cerf.html#cerf.read_config.ReadConfig.validate_technology_files">validate_technology_files() (cerf.read_config.ReadConfig method)</a>
 </li>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.variable_cost_esc_rate">variable_cost_esc_rate (cerf.nov.NetOperationalValue attribute)</a>
+      <li><a href="cerf.html#cerf.nov.NetOperationalValue.variable_om_esc_rate_fraction">variable_om_esc_rate_fraction (cerf.nov.NetOperationalValue attribute)</a>
 </li>
-      <li><a href="cerf.html#cerf.nov.NetOperationalValue.variable_om">variable_om (cerf.nov.NetOperationalValue attribute)</a>
+      <li><a href="cerf.html#cerf.nov.NetOperationalValue.variable_om_usd_per_mwh">variable_om_usd_per_mwh (cerf.nov.NetOperationalValue attribute)</a>
 </li>
   </ul></td>
 </tr></table>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.stage &mdash; cerf 2.0.6 documentation</title>
+  <title>cerf.stage &mdash; cerf 2.0.9 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                2.0.6
+                2.0.9
               </div>
             
           
@@ -249,7 +249,7 @@
 
         <span class="c1"># get NOV array per tech [tech_order, x, y]</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Calculating net operational cost (NOV)&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">nov_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_nov</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generation_arr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">operating_cost_arr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nov_arr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_nov</span><span class="p">()</span>
 
         <span class="c1"># get NLC array per tech [tech_order, x, y]</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Calculating net locational cost (NLC)&#39;</span><span class="p">)</span>
@@ -328,28 +328,33 @@
         <span class="sd">&quot;&quot;&quot;Calculate Net Operational Value.&quot;&quot;&quot;</span>
 
         <span class="n">nov_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lmp_arr</span><span class="p">)</span>
+        <span class="n">generation_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lmp_arr</span><span class="p">)</span>
+        <span class="n">operating_cost_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lmp_arr</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_order</span><span class="p">):</span>
             <span class="n">econ</span> <span class="o">=</span> <span class="n">NetOperationalValue</span><span class="p">(</span><span class="n">discount_rate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;discount_rate&#39;</span><span class="p">],</span>
-                                       <span class="n">lifetime</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;lifetime&#39;</span><span class="p">],</span>
-                                       <span class="n">unit_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;unit_size&#39;</span><span class="p">],</span>
-                                       <span class="n">capacity_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;capacity_factor&#39;</span><span class="p">],</span>
-                                       <span class="n">variable_cost_esc_rate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;variable_cost_esc_rate&#39;</span><span class="p">],</span>
-                                       <span class="n">fuel_esc_rate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;fuel_esc_rate&#39;</span><span class="p">],</span>
-                                       <span class="n">carbon_esc_rate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;carbon_esc_rate&#39;</span><span class="p">],</span>
-                                       <span class="n">variable_om</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;variable_om&#39;</span><span class="p">],</span>
-                                       <span class="n">heat_rate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;heat_rate&#39;</span><span class="p">],</span>
-                                       <span class="n">fuel_price</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;fuel_price&#39;</span><span class="p">],</span>
-                                       <span class="n">carbon_tax</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;carbon_tax&#39;</span><span class="p">],</span>
-                                       <span class="n">carbon_capture_rate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;carbon_capture_rate&#39;</span><span class="p">],</span>
-                                       <span class="n">fuel_co2_content</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;fuel_co2_content&#39;</span><span class="p">],</span>
+                                       <span class="n">lifetime_yrs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;lifetime_yrs&#39;</span><span class="p">],</span>
+                                       <span class="n">unit_size_mw</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;unit_size_mw&#39;</span><span class="p">],</span>
+                                       <span class="n">capacity_factor_fraction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;capacity_factor_fraction&#39;</span><span class="p">],</span>
+                                       <span class="n">variable_om_esc_rate_fraction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;variable_om_esc_rate_fraction&#39;</span><span class="p">],</span>
+                                       <span class="n">fuel_price_esc_rate_fraction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;fuel_price_esc_rate_fraction&#39;</span><span class="p">],</span>
+                                       <span class="n">carbon_tax_esc_rate_fraction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;carbon_tax_esc_rate_fraction&#39;</span><span class="p">],</span>
+                                       <span class="n">variable_om_usd_per_mwh</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;variable_om_usd_per_mwh&#39;</span><span class="p">],</span>
+                                       <span class="n">heat_rate_btu_per_kWh</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;heat_rate_btu_per_kWh&#39;</span><span class="p">],</span>
+                                       <span class="n">fuel_price_usd_per_mmbtu</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;fuel_price_usd_per_mmbtu&#39;</span><span class="p">],</span>
+                                       <span class="n">carbon_tax_usd_per_ton</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;carbon_tax_usd_per_ton&#39;</span><span class="p">],</span>
+                                       <span class="n">carbon_capture_rate_fraction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;carbon_capture_rate_fraction&#39;</span><span class="p">],</span>
+                                       <span class="n">fuel_co2_content_tons_per_btu</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;fuel_co2_content_tons_per_btu&#39;</span><span class="p">],</span>
                                        <span class="n">lmp_arr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lmp_arr</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span>
                                        <span class="n">target_year</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;run_year&#39;</span><span class="p">))</span>
 
-            <span class="n">nov_tech_arr</span> <span class="o">=</span> <span class="n">econ</span><span class="o">.</span><span class="n">calc_nov</span><span class="p">()</span>
-            <span class="n">nov_arr</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">nov_tech_arr</span>
+            <span class="n">generation_tech_arr</span><span class="p">,</span> <span class="n">operating_cost_tech_arr</span><span class="p">,</span> <span class="n">nov_tech_arr</span> <span class="o">=</span> <span class="n">econ</span><span class="o">.</span><span class="n">calc_nov</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="n">nov_arr</span></div>
+            <span class="n">nov_arr</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">nov_tech_arr</span>
+            <span class="n">generation_arr</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">generation_tech_arr</span>
+            <span class="n">operating_cost_arr</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">operating_cost_tech_arr</span>
+
+        <span class="k">return</span> <span class="n">generation_arr</span><span class="p">,</span> <span class="n">operating_cost_arr</span><span class="p">,</span> <span class="n">nov_arr</span></div>
 
 <div class="viewcode-block" id="Stage.calculate_nlc"><a class="viewcode-back" href="../../cerf.html#cerf.stage.Stage.calculate_nlc">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_nlc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate Net Locational Costs.&quot;&quot;&quot;</span>

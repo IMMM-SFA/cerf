@@ -339,10 +339,10 @@
 <p>These are technology-specific settings.</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 28%" />
-<col style="width: 50%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
+<col style="width: 34%" />
+<col style="width: 46%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -369,7 +369,7 @@
 <td><p>NA</p></td>
 <td><p>str</p></td>
 </tr>
-<tr class="row-even"><td><p>lifetime</p></td>
+<tr class="row-even"><td><p>lifetime_yrs</p></td>
 <td><p>Asset lifetime</p></td>
 <td><p>n_years</p></td>
 <td><p>int</p></td>
@@ -385,22 +385,22 @@
 <td><p>fraction</p></td>
 <td><p>float</p></td>
 </tr>
-<tr class="row-even"><td><p>variable_cost_esc_rate</p></td>
+<tr class="row-even"><td><p>variable_om_esc_rate_fraction</p></td>
 <td><p>Escalation rate of variable cost</p></td>
 <td><p>fraction</p></td>
 <td><p>float</p></td>
 </tr>
-<tr class="row-odd"><td><p>fuel_esc_rate</p></td>
+<tr class="row-odd"><td><p>fuel_price_esc_rate_fraction</p></td>
 <td><p>Escalation rate of fuel</p></td>
 <td><p>fraction</p></td>
 <td><p>float</p></td>
 </tr>
-<tr class="row-even"><td><p>unit_size</p></td>
+<tr class="row-even"><td><p>unit_size_mw</p></td>
 <td><p>The size of the expected power plant</p></td>
 <td><p>MW</p></td>
 <td><p>float</p></td>
 </tr>
-<tr class="row-odd"><td><p>variable_om</p></td>
+<tr class="row-odd"><td><p>variable_om_usd_per_mwh</p></td>
 <td><div class="line-block">
 <div class="line">Variable operation and maintenance costs</div>
 <div class="line">of yearly capacity use</div>
@@ -409,7 +409,7 @@
 <td><p>$/MWh</p></td>
 <td><p>float</p></td>
 </tr>
-<tr class="row-even"><td><p>heat_rate</p></td>
+<tr class="row-even"><td><p>heat_rate_btu_per_kWh</p></td>
 <td><div class="line-block">
 <div class="line">Amount of energy used by a power plant to</div>
 <div class="line">generate one kilowatt-hour of electricity</div>
@@ -418,17 +418,17 @@
 <td><p>Btu/kWh</p></td>
 <td><p>float</p></td>
 </tr>
-<tr class="row-odd"><td><p>fuel_price</p></td>
+<tr class="row-odd"><td><p>fuel_price_usd_per_mmbtu</p></td>
 <td><p>Cost of fuel per unit</p></td>
 <td><p>$/GJ</p></td>
 <td><p>float</p></td>
 </tr>
-<tr class="row-even"><td><p>carbon_capture_rate</p></td>
+<tr class="row-even"><td><p>carbon_capture_rate_fraction</p></td>
 <td><p>Rate of carbon capture</p></td>
 <td><p>fraction</p></td>
 <td><p>float</p></td>
 </tr>
-<tr class="row-odd"><td><p>fuel_co2_content</p></td>
+<tr class="row-odd"><td><p>fuel_co2_content_tons_per_btu</p></td>
 <td><div class="line-block">
 <div class="line">CO2 content of the fuel and the heat rate</div>
 <div class="line">of the technology</div>
@@ -442,12 +442,12 @@
 <td><p>fraction</p></td>
 <td><p>float</p></td>
 </tr>
-<tr class="row-odd"><td><p>carbon_esc_rate</p></td>
+<tr class="row-odd"><td><p>carbon_tax_esc_rate_fraction</p></td>
 <td><p>Escalation rate of carbon</p></td>
 <td><p>fraction</p></td>
 <td><p>float</p></td>
 </tr>
-<tr class="row-even"><td><p>carbon_tax</p></td>
+<tr class="row-even"><td><p>carbon_tax_usd_per_ton</p></td>
 <td><div class="line-block">
 <div class="line">The fee imposed on the burning of</div>
 <div class="line">carbon-based fuels</div>
@@ -492,19 +492,19 @@
 
     <span class="nt">9</span><span class="p">:</span>
         <span class="nt">tech_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">biomass</span>
-        <span class="nt">lifetime</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">60</span>
-        <span class="nt">capacity_factor</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.6090000000000005</span>
-        <span class="nt">variable_cost_esc_rate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-0.00398993418629034</span>
-        <span class="nt">fuel_esc_rate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-        <span class="nt">unit_size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">80</span>
+        <span class="nt">lifetime_yrs</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">60</span>
+        <span class="nt">capacity_factor_fraction</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.6090000000000005</span>
+        <span class="nt">variable_om_esc_rate_fraction</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-0.00398993418629034</span>
+        <span class="nt">fuel_price_esc_rate_fraction</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">unit_size_mw</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">80</span>
         <span class="nt">variable_om</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">11.68495803744351</span>
-        <span class="nt">heat_rate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">15117.64999999997</span>
-        <span class="nt">fuel_price</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-        <span class="nt">carbon_capture_rate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-        <span class="nt">fuel_co2_content</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.3035999999999996</span>
+        <span class="nt">heat_rate_btu_per_kWh</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">15117.64999999997</span>
+        <span class="nt">fuel_price_usd_per_mmbtu</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">carbon_capture_rate_fraction</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">fuel_co2_content_tons_per_btu</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.3035999999999996</span>
         <span class="nt">discount_rate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.05</span>
-        <span class="nt">carbon_esc_rate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
-        <span class="nt">carbon_tax</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">carbon_tax_esc_rate_fraction</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
+        <span class="nt">carbon_tax_usd_per_ton</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.0</span>
         <span class="nt">buffer_in_km</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
         <span class="nt">require_pipelines</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">False</span>
         <span class="nt">suitability_raster_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;path to file&gt;</span>
@@ -1187,7 +1187,7 @@ python3 -c <span class="s1">&#39;import cerf; cerf.install_package_data()&#39;</
 <td><p>LMP zone ID</p></td>
 <td><p>NA</p></td>
 </tr>
-<tr class="row-odd"><td><p>locational_marginal_pricing</p></td>
+<tr class="row-odd"><td><p>locational_marginal_price_usd_per_mwh</p></td>
 <td><p>See <a class="reference internal" href="#locational-marginal-price-lmp"><span class="std std-ref">Locational marginal price (LMP)</span></a></p></td>
 <td><p>$/MWh</p></td>
 </tr>

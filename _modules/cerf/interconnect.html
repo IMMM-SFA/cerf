@@ -314,10 +314,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_costs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_to_cost_raster</span><span class="p">(</span><span class="n">setting</span><span class="o">=</span><span class="s1">&#39;pipelines&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Interconnection.calc_annuity_factor"><a class="viewcode-back" href="../../cerf.html#cerf.interconnect.Interconnection.calc_annuity_factor">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">calc_annuity_factor</span><span class="p">(</span><span class="n">discount_rate</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">calc_annuity_factor</span><span class="p">(</span><span class="n">discount_rate</span><span class="p">,</span> <span class="n">lifetime_yrs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate annuity factor.&quot;&quot;&quot;</span>
 
-        <span class="n">fx</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">discount_rate</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">)</span>
+        <span class="n">fx</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">discount_rate</span><span class="p">,</span> <span class="n">lifetime_yrs</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">discount_rate</span> <span class="o">*</span> <span class="n">fx</span> <span class="o">/</span> <span class="p">(</span><span class="n">fx</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span></div>
 
@@ -539,10 +539,10 @@
             <span class="c1"># get technology specific information</span>
             <span class="n">require_pipelines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;require_pipelines&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
             <span class="n">discount_rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;discount_rate&#39;</span><span class="p">)</span>
-            <span class="n">lifetime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lifetime&#39;</span><span class="p">)</span>
+            <span class="n">lifetime_yrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">technology_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lifetime_yrs&#39;</span><span class="p">)</span>
 
             <span class="c1"># calculate annuity factor for technology</span>
-            <span class="n">annuity_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_annuity_factor</span><span class="p">(</span><span class="n">discount_rate</span><span class="o">=</span><span class="n">discount_rate</span><span class="p">,</span> <span class="n">lifetime</span><span class="o">=</span><span class="n">lifetime</span><span class="p">)</span>
+            <span class="n">annuity_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_annuity_factor</span><span class="p">(</span><span class="n">discount_rate</span><span class="o">=</span><span class="n">discount_rate</span><span class="p">,</span> <span class="n">lifetime_yrs</span><span class="o">=</span><span class="n">lifetime_yrs</span><span class="p">)</span>
 
             <span class="c1"># get transmission cost array and convert from thous$/km to $/km</span>
             <span class="n">substation_cost_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substation_costs</span> <span class="o">*</span> <span class="n">annuity_factor</span> <span class="o">*</span> <span class="mi">1000</span>

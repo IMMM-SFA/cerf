@@ -231,7 +231,7 @@
 <span id="cerf-compete-module"></span><h2>cerf.compete module<a class="headerlink" href="#module-cerf.compete" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cerf.compete.Competition">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.compete.</span></span><span class="sig-name descname"><span class="pre">Competition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_region_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expansion_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmp_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nov_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlc_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zones_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xcoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ycoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices_flat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/compete.html#Competition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.compete.Competition" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.compete.</span></span><span class="sig-name descname"><span class="pre">Competition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_region_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expansion_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmp_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generation_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operating_cost_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nov_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlc_mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zones_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xcoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ycoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices_flat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/compete.html#Competition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.compete.Competition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Technology competition algorithm for CERF.</p>
 <p>Grid cell level net locational cost (NLC) per technology and an electricity technology capacity expansion plan are
@@ -378,7 +378,7 @@ calculated.</p></li>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="cerf.interconnect.Interconnection.calc_annuity_factor">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">calc_annuity_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">discount_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/interconnect.html#Interconnection.calc_annuity_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.interconnect.Interconnection.calc_annuity_factor" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">calc_annuity_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">discount_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime_yrs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/interconnect.html#Interconnection.calc_annuity_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.interconnect.Interconnection.calc_annuity_factor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculate annuity factor.</p>
 </dd></dl>
 
@@ -497,7 +497,7 @@ how the electricity system may respond to stressors in the future.</p>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="cerf.lmp.LocationalMarginalPricing.get_cf_bin">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_cf_bin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity_factor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/lmp.html#LocationalMarginalPricing.get_cf_bin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.lmp.LocationalMarginalPricing.get_cf_bin" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">get_cf_bin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capacity_factor_fraction</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/lmp.html#LocationalMarginalPricing.get_cf_bin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.lmp.LocationalMarginalPricing.get_cf_bin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the correct start and through index values to average over for calculating LMP.</p>
 </dd></dl>
 
@@ -637,7 +637,7 @@ plant is to be decommissioned</p>
 <span id="cerf-nov-module"></span><h2>cerf.nov module<a class="headerlink" href="#module-cerf.nov" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cerf.nov.NetOperationalValue">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.nov.</span></span><span class="sig-name descname"><span class="pre">NetOperationalValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">discount_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacity_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_cost_esc_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuel_esc_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carbon_esc_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_om</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heat_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuel_price</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carbon_tax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carbon_capture_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuel_co2_content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmp_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consider_leap_year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/nov.html#NetOperationalValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.nov.NetOperationalValue" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.nov.</span></span><span class="sig-name descname"><span class="pre">NetOperationalValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">discount_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lifetime_yrs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_size_mw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacity_factor_fraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_om_esc_rate_fraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuel_price_esc_rate_fraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carbon_tax_esc_rate_fraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_om_usd_per_mwh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">heat_rate_btu_per_kWh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuel_price_usd_per_mmbtu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carbon_tax_usd_per_ton</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">carbon_capture_rate_fraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuel_co2_content_tons_per_btu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmp_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consider_leap_year</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/nov.html#NetOperationalValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.nov.NetOperationalValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Calculate Net Operational Value (NOV) in ($ / yr) per grid cell for all technologies.</p>
 <dl class="field-list simple">
@@ -645,32 +645,32 @@ plant is to be decommissioned</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>discount_rate</strong> (<em>float</em>) – The time value of money in real terms.
 Units:  fraction</p></li>
-<li><p><strong>lifetime</strong> (<em>int</em>) – Years of the expected technology plant lifetime.
+<li><p><strong>lifetime_yrs</strong> (<em>int</em>) – Years of the expected technology plant lifetime_yrs.
 Units:  years</p></li>
-<li><p><strong>unit_size</strong> (<em>int</em>) – The size of the expected power plant.
+<li><p><strong>unit_size_mw</strong> (<em>int</em>) – The size of the expected power plant.
 Units:  megawatt</p></li>
-<li><p><strong>capacity_factor</strong> (<em>float</em>) – Capacity factor defined as average annual power generated divided by the
+<li><p><strong>capacity_factor_fraction</strong> (<em>float</em>) – Capacity factor defined as average annual power generated divided by the
 potential output if the plant operated at its rated capacity for a year.
 Units:  fraction</p></li>
-<li><p><strong>variable_cost_esc_rate</strong> (<em>float</em>) – Escalation rate of variable cost.
+<li><p><strong>variable_om_esc_rate_fraction</strong> (<em>float</em>) – Escalation rate of variable cost.
 Units:  fraction</p></li>
-<li><p><strong>fuel_esc_rate</strong> (<em>float</em>) – Escalation rate of fuel.
+<li><p><strong>fuel_price_esc_rate_fraction</strong> (<em>float</em>) – Escalation rate of fuel.
 Units:  fraction</p></li>
-<li><p><strong>carbon_esc_rate</strong> (<em>float</em>) – Escalation rate of carbon.
+<li><p><strong>carbon_tax_esc_rate_fraction</strong> (<em>float</em>) – Escalation rate of carbon.
 Units:  fraction</p></li>
-<li><p><strong>variable_om</strong> (<em>float</em>) – Variable operation and maintenance costs of yearly capacity use.
+<li><p><strong>variable_om_usd_per_mwh</strong> (<em>float</em>) – Variable operation and maintenance costs of yearly capacity use.
 Units:  $/MWh</p></li>
-<li><p><strong>heat_rate</strong> (<em>float</em>) – Amount of energy used by a power plant to generate one kilowatt-hour of
+<li><p><strong>heat_rate_btu_per_kWh</strong> (<em>float</em>) – Amount of energy used by a power plant to generate one kilowatt-hour of
 electricity.
 Units:  Btu/kWh</p></li>
-<li><p><strong>fuel_price</strong> (<em>float</em>) – Cost of fuel per unit.
-Units:  from GCAM ($/GJ) gets converted to ($/MBtu)</p></li>
-<li><p><strong>carbon_tax</strong> (<em>float</em>) – The fee imposed on the burning of carbon-based fuels.
+<li><p><strong>fuel_price_usd_per_mmbtu</strong> (<em>float</em>) – Cost of fuel per unit.
+Units:  $/MMBtu</p></li>
+<li><p><strong>carbon_tax_usd_per_ton</strong> (<em>float</em>) – The fee imposed on the burning of carbon-based fuels.
 Units:  $/ton</p></li>
-<li><p><strong>carbon_capture_rate</strong> (<em>float</em>) – Rate of carbon capture.
+<li><p><strong>carbon_capture_rate_fraction</strong> (<em>float</em>) – Rate of carbon capture.
 Units:  fraction</p></li>
-<li><p><strong>fuel_co2_content</strong> (<em>float</em>) – CO2 content of the fuel and the heat rate of the technology.
-Units:  from GCAM (tons/MWh) gets converted to (tons/Btu)</p></li>
+<li><p><strong>fuel_co2_content_tons_per_btu</strong> (<em>float</em>) – CO2 content of the fuel and the heat rate of the technology.
+Units:  tons/Btu</p></li>
 <li><p><strong>lmp_arr</strong> (<em>ndarray</em>) – Locational Marginal Price (LMP) per grid cell for each technology in a
 multi-dimensional array where the shape is [tech_id, xcoord, ycoord].
 Units:  $/MWh</p></li>
@@ -678,17 +678,12 @@ Units:  $/MWh</p></li>
 <li><p><strong>consider_leap_year</strong> (<em>bool</em>) – Choose to account for leap year in the number of hours per year calculation</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>[0] generation_mwh_per_year
+[1] operating cost
+[2] NOV</p>
+</dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.FUEL_CO2_CONTENT_CONVERSION_FACTOR">
-<span class="sig-name descname"><span class="pre">FUEL_CO2_CONTENT_CONVERSION_FACTOR</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2.93071e-07</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.FUEL_CO2_CONTENT_CONVERSION_FACTOR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.FUEL_PRICE_CONVERSION_FACTOR">
-<span class="sig-name descname"><span class="pre">FUEL_PRICE_CONVERSION_FACTOR</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.055056</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.FUEL_PRICE_CONVERSION_FACTOR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.HOURS_PER_YEAR_LEAP">
 <span class="sig-name descname"><span class="pre">HOURS_PER_YEAR_LEAP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">8784</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.HOURS_PER_YEAR_LEAP" title="Permalink to this definition">¶</a></dt>
@@ -742,23 +737,23 @@ Units:  $/MWh</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.capacity_factor">
-<span class="sig-name descname"><span class="pre">capacity_factor</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.capacity_factor" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.capacity_factor_fraction">
+<span class="sig-name descname"><span class="pre">capacity_factor_fraction</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.capacity_factor_fraction" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.carbon_capture_rate">
-<span class="sig-name descname"><span class="pre">carbon_capture_rate</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.carbon_capture_rate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.carbon_capture_rate_fraction">
+<span class="sig-name descname"><span class="pre">carbon_capture_rate_fraction</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.carbon_capture_rate_fraction" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.carbon_esc_rate">
-<span class="sig-name descname"><span class="pre">carbon_esc_rate</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.carbon_esc_rate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.carbon_tax_esc_rate_fraction">
+<span class="sig-name descname"><span class="pre">carbon_tax_esc_rate_fraction</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.carbon_tax_esc_rate_fraction" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.carbon_tax">
-<span class="sig-name descname"><span class="pre">carbon_tax</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.carbon_tax" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.carbon_tax_usd_per_ton">
+<span class="sig-name descname"><span class="pre">carbon_tax_usd_per_ton</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.carbon_tax_usd_per_ton" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -766,46 +761,34 @@ Units:  $/MWh</p></li>
 <span class="sig-name descname"><span class="pre">consider_leap_year</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.consider_leap_year" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.convert_fuel_co2_content">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">convert_fuel_co2_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fuel_co2_content</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/nov.html#NetOperationalValue.convert_fuel_co2_content"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.nov.NetOperationalValue.convert_fuel_co2_content" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert fuel CO2 content from units tons/MWh to tons/Btu</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.convert_fuel_price">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">convert_fuel_price</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fuel_price</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/nov.html#NetOperationalValue.convert_fuel_price"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.nov.NetOperationalValue.convert_fuel_price" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert fuel price from units $/GJ to $/MBtu</p>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.discount_rate">
 <span class="sig-name descname"><span class="pre">discount_rate</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.discount_rate" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.fuel_co2_content">
-<span class="sig-name descname"><span class="pre">fuel_co2_content</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.fuel_co2_content" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.fuel_co2_content_tons_per_btu">
+<span class="sig-name descname"><span class="pre">fuel_co2_content_tons_per_btu</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.fuel_co2_content_tons_per_btu" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.fuel_esc_rate">
-<span class="sig-name descname"><span class="pre">fuel_esc_rate</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.fuel_esc_rate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.fuel_price_esc_rate_fraction">
+<span class="sig-name descname"><span class="pre">fuel_price_esc_rate_fraction</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.fuel_price_esc_rate_fraction" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.fuel_price">
-<span class="sig-name descname"><span class="pre">fuel_price</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.fuel_price" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.fuel_price_usd_per_mmbtu">
+<span class="sig-name descname"><span class="pre">fuel_price_usd_per_mmbtu</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.fuel_price_usd_per_mmbtu" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.heat_rate">
-<span class="sig-name descname"><span class="pre">heat_rate</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.heat_rate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.heat_rate_btu_per_kWh">
+<span class="sig-name descname"><span class="pre">heat_rate_btu_per_kWh</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.heat_rate_btu_per_kWh" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.lifetime">
-<span class="sig-name descname"><span class="pre">lifetime</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.lifetime" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.lifetime_yrs">
+<span class="sig-name descname"><span class="pre">lifetime_yrs</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.lifetime_yrs" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -819,18 +802,18 @@ Units:  $/MWh</p></li>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.unit_size">
-<span class="sig-name descname"><span class="pre">unit_size</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.unit_size" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.unit_size_mw">
+<span class="sig-name descname"><span class="pre">unit_size_mw</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.unit_size_mw" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.variable_cost_esc_rate">
-<span class="sig-name descname"><span class="pre">variable_cost_esc_rate</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.variable_cost_esc_rate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.variable_om_esc_rate_fraction">
+<span class="sig-name descname"><span class="pre">variable_om_esc_rate_fraction</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.variable_om_esc_rate_fraction" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.variable_om">
-<span class="sig-name descname"><span class="pre">variable_om</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.variable_om" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cerf.nov.NetOperationalValue.variable_om_usd_per_mwh">
+<span class="sig-name descname"><span class="pre">variable_om_usd_per_mwh</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#cerf.nov.NetOperationalValue.variable_om_usd_per_mwh" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1101,7 +1084,7 @@ plant is to be decommissioned</p>
 <p>License:  BSD 2-Clause, see LICENSE and DISCLAIMER files</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cerf.process_region.ProcessRegion">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.process_region.</span></span><span class="sig-name descname"><span class="pre">ProcessRegion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expansion_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regions_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suitability_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmp_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nov_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlc_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zones_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xcoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ycoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices_2d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_region_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process_region.html#ProcessRegion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process_region.ProcessRegion" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cerf.process_region.</span></span><span class="sig-name descname"><span class="pre">ProcessRegion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expansion_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regions_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suitability_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmp_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generation_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operating_cost_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nov_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlc_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zones_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xcoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ycoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices_2d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_region_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process_region.html#ProcessRegion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process_region.ProcessRegion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cerf.process_region.ProcessRegion.competition">
@@ -1112,7 +1095,7 @@ plant is to be decommissioned</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cerf.process_region.ProcessRegion.extract_lmp_zones">
 <span class="sig-name descname"><span class="pre">extract_lmp_zones</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process_region.html#ProcessRegion.extract_lmp_zones"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process_region.ProcessRegion.extract_lmp_zones" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract the lmp zoness elements for the target region and return as a flat array.</p>
+<dd><p>Extract the lmp zones elements for the target region and return as a flat array.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1162,7 +1145,7 @@ full grid space.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="cerf.process_region.process_region">
-<span class="sig-prename descclassname"><span class="pre">cerf.process_region.</span></span><span class="sig-name descname"><span class="pre">process_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_region_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expansion_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regions_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suitability_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmp_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nov_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlc_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zones_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xcoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ycoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices_2d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process_region.html#process_region"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process_region.process_region" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">cerf.process_region.</span></span><span class="sig-name descname"><span class="pre">process_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_region_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">technology_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expansion_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regions_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suitability_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lmp_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generation_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operating_cost_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nov_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ic_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlc_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zones_arr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xcoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ycoords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices_2d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">randomize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/process_region.html#process_region"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.process_region.process_region" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convenience wrapper to log time and site an expansion plan for a target region for the target year.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

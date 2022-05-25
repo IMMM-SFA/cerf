@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.nov &mdash; cerf 2.0.0 documentation</title>
+  <title>cerf.nov &mdash; cerf 2.0.9 documentation</title>
   
 
   
@@ -40,6 +40,7 @@
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -69,7 +70,7 @@
             
             
               <div class="version">
-                2.0.0
+                2.0.9
               </div>
             
           
@@ -97,8 +98,12 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../user_guide.html">User guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../cerf.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">API documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing to <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../release_notes.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../how_to_cite.html">How to cite <strong>cerf</strong></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../footer.html">Acknowledgement</a></li>
 </ul>
@@ -179,55 +184,55 @@
 <span class="sd">                                            Units:  fraction</span>
 <span class="sd">    :type discount_rate:                    float</span>
 
-<span class="sd">    :param lifetime:                        Years of the expected technology plant lifetime.</span>
+<span class="sd">    :param lifetime_yrs:                    Years of the expected technology plant lifetime_yrs.</span>
 <span class="sd">                                            Units:  years</span>
-<span class="sd">    :type lifetime:                         int</span>
+<span class="sd">    :type lifetime_yrs:                     int</span>
 
-<span class="sd">    :param unit_size:                       The size of the expected power plant.</span>
+<span class="sd">    :param unit_size_mw:                   The size of the expected power plant.</span>
 <span class="sd">                                            Units:  megawatt</span>
-<span class="sd">    :type unit_size:                        int</span>
+<span class="sd">    :type unit_size_mw:                    int</span>
 
-<span class="sd">    :param capacity_factor:                 Capacity factor defined as average annual power generated divided by the</span>
+<span class="sd">    :param capacity_factor_fraction:        Capacity factor defined as average annual power generated divided by the</span>
 <span class="sd">                                            potential output if the plant operated at its rated capacity for a year.</span>
 <span class="sd">                                            Units:  fraction</span>
-<span class="sd">    :type capacity_factor:                  float</span>
+<span class="sd">    :type capacity_factor_fraction:         float</span>
 
-<span class="sd">    :param variable_cost_esc_rate:          Escalation rate of variable cost.</span>
+<span class="sd">    :param variable_om_esc_rate_fraction:   Escalation rate of variable cost.</span>
 <span class="sd">                                            Units:  fraction</span>
-<span class="sd">    :type variable_cost_esc_rate:           float</span>
+<span class="sd">    :type variable_om_esc_rate_fraction:    float</span>
 
-<span class="sd">    :param fuel_esc_rate:                   Escalation rate of fuel.</span>
+<span class="sd">    :param fuel_price_esc_rate_fraction:    Escalation rate of fuel.</span>
 <span class="sd">                                            Units:  fraction</span>
-<span class="sd">    :type fuel_esc_rate:                    float</span>
+<span class="sd">    :type fuel_price_esc_rate_fraction:     float</span>
 
-<span class="sd">    :param carbon_esc_rate:                 Escalation rate of carbon.</span>
+<span class="sd">    :param carbon_tax_esc_rate_fraction:    Escalation rate of carbon.</span>
 <span class="sd">                                            Units:  fraction</span>
-<span class="sd">    :type carbon_esc_rate:                  float</span>
+<span class="sd">    :type carbon_tax_esc_rate_fraction:     float</span>
 
-<span class="sd">    :param variable_om:                     Variable operation and maintenance costs of yearly capacity use.</span>
+<span class="sd">    :param variable_om_usd_per_mwh:         Variable operation and maintenance costs of yearly capacity use.</span>
 <span class="sd">                                            Units:  $/MWh</span>
-<span class="sd">    :type variable_om:                      float</span>
+<span class="sd">    :type variable_om_usd_per_mwh:          float</span>
 
-<span class="sd">    :param heat_rate:                       Amount of energy used by a power plant to generate one kilowatt-hour of</span>
+<span class="sd">    :param heat_rate_btu_per_kWh:           Amount of energy used by a power plant to generate one kilowatt-hour of</span>
 <span class="sd">                                            electricity.</span>
 <span class="sd">                                            Units:  Btu/kWh</span>
-<span class="sd">    :type heat_rate:                        float</span>
+<span class="sd">    :type heat_rate_btu_per_kWh:            float</span>
 
-<span class="sd">    :param fuel_price:                      Cost of fuel per unit.</span>
-<span class="sd">                                            Units:  from GCAM ($/GJ) gets converted to ($/MBtu)</span>
-<span class="sd">    :type fuel_price:                       float</span>
+<span class="sd">    :param fuel_price_usd_per_mmbtu:        Cost of fuel per unit.</span>
+<span class="sd">                                            Units:  $/MMBtu</span>
+<span class="sd">    :type fuel_price_usd_per_mmbtu:         float</span>
 
-<span class="sd">    :param carbon_tax:                      The fee imposed on the burning of carbon-based fuels.</span>
+<span class="sd">    :param carbon_tax_usd_per_ton:          The fee imposed on the burning of carbon-based fuels.</span>
 <span class="sd">                                            Units:  $/ton</span>
-<span class="sd">    :type carbon_tax:                       float</span>
+<span class="sd">    :type carbon_tax_usd_per_ton:           float</span>
 
-<span class="sd">    :param carbon_capture_rate:             Rate of carbon capture.</span>
+<span class="sd">    :param carbon_capture_rate_fraction:    Rate of carbon capture.</span>
 <span class="sd">                                            Units:  fraction</span>
-<span class="sd">    :type carbon_capture_rate:              float</span>
+<span class="sd">    :type carbon_capture_rate_fraction:     float</span>
 
-<span class="sd">    :param fuel_co2_content:                CO2 content of the fuel and the heat rate of the technology.</span>
-<span class="sd">                                            Units:  from GCAM (tons/MWh) gets converted to (tons/Btu)</span>
-<span class="sd">    :type fuel_co2_content:                 float</span>
+<span class="sd">    :param fuel_co2_content_tons_per_btu:   CO2 content of the fuel and the heat rate of the technology.</span>
+<span class="sd">                                            Units:  tons/Btu</span>
+<span class="sd">    :type fuel_co2_content_tons_per_btu:    float</span>
 
 <span class="sd">    :param lmp_arr:                         Locational Marginal Price (LMP) per grid cell for each technology in a</span>
 <span class="sd">                                            multi-dimensional array where the shape is [tech_id, xcoord, ycoord].</span>
@@ -240,53 +245,67 @@
 <span class="sd">    :param consider_leap_year:              Choose to account for leap year in the number of hours per year calculation</span>
 <span class="sd">    :type consider_leap_year:               bool</span>
 
+<span class="sd">    :returns:                               [0] generation_mwh_per_year</span>
+<span class="sd">                                            [1] operating cost</span>
+<span class="sd">                                            [2] NOV</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># type hints</span>
     <span class="n">discount_rate</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">lifetime</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">unit_size</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">capacity_factor</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">variable_cost_esc_rate</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">fuel_esc_rate</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">carbon_esc_rate</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">variable_om</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">heat_rate</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">fuel_price</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">carbon_tax</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">carbon_capture_rate</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">fuel_co2_content</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">lifetime_yrs</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">unit_size_mw</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">capacity_factor_fraction</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">variable_om_esc_rate_fraction</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">fuel_price_esc_rate_fraction</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">carbon_tax_esc_rate_fraction</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">variable_om_usd_per_mwh</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">heat_rate_btu_per_kWh</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">fuel_price_usd_per_mmbtu</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">carbon_tax_usd_per_ton</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">carbon_capture_rate_fraction</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">fuel_co2_content_tons_per_btu</span><span class="p">:</span> <span class="nb">float</span>
     <span class="n">lmp_arr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="n">target_year</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">consider_leap_year</span><span class="p">:</span> <span class="nb">bool</span>
 
     <span class="c1"># constants for conversion</span>
-    <span class="n">FUEL_CO2_CONTENT_CONVERSION_FACTOR</span> <span class="o">=</span> <span class="mf">0.000000293071</span>
-    <span class="n">FUEL_PRICE_CONVERSION_FACTOR</span> <span class="o">=</span> <span class="mf">1.055056</span>
     <span class="n">HOURS_PER_YEAR_NONLEAP</span> <span class="o">=</span> <span class="mi">8760</span>
     <span class="n">HOURS_PER_YEAR_LEAP</span> <span class="o">=</span> <span class="mi">8784</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">discount_rate</span><span class="p">,</span> <span class="n">lifetime</span><span class="p">,</span> <span class="n">unit_size</span><span class="p">,</span> <span class="n">capacity_factor</span><span class="p">,</span> <span class="n">variable_cost_esc_rate</span><span class="p">,</span>
-                 <span class="n">fuel_esc_rate</span><span class="p">,</span> <span class="n">carbon_esc_rate</span><span class="p">,</span> <span class="n">variable_om</span><span class="p">,</span> <span class="n">heat_rate</span><span class="p">,</span> <span class="n">fuel_price</span><span class="p">,</span> <span class="n">carbon_tax</span><span class="p">,</span>
-                 <span class="n">carbon_capture_rate</span><span class="p">,</span> <span class="n">fuel_co2_content</span><span class="p">,</span> <span class="n">lmp_arr</span><span class="p">,</span> <span class="n">target_year</span><span class="p">,</span> <span class="n">consider_leap_year</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">discount_rate</span><span class="p">,</span>
+                 <span class="n">lifetime_yrs</span><span class="p">,</span>
+                 <span class="n">unit_size_mw</span><span class="p">,</span>
+                 <span class="n">capacity_factor_fraction</span><span class="p">,</span>
+                 <span class="n">variable_om_esc_rate_fraction</span><span class="p">,</span>
+                 <span class="n">fuel_price_esc_rate_fraction</span><span class="p">,</span>
+                 <span class="n">carbon_tax_esc_rate_fraction</span><span class="p">,</span>
+                 <span class="n">variable_om_usd_per_mwh</span><span class="p">,</span>
+                 <span class="n">heat_rate_btu_per_kWh</span><span class="p">,</span>
+                 <span class="n">fuel_price_usd_per_mmbtu</span><span class="p">,</span>
+                 <span class="n">carbon_tax_usd_per_ton</span><span class="p">,</span>
+                 <span class="n">carbon_capture_rate_fraction</span><span class="p">,</span>
+                 <span class="n">fuel_co2_content_tons_per_btu</span><span class="p">,</span>
+                 <span class="n">lmp_arr</span><span class="p">,</span>
+                 <span class="n">target_year</span><span class="p">,</span>
+                 <span class="n">consider_leap_year</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
         <span class="c1"># assign class attributes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">discount_rate</span> <span class="o">=</span> <span class="n">discount_rate</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span> <span class="o">=</span> <span class="n">lifetime</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">unit_size</span> <span class="o">=</span> <span class="n">unit_size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">capacity_factor</span> <span class="o">=</span> <span class="n">capacity_factor</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">variable_cost_esc</span> <span class="o">=</span> <span class="n">variable_cost_esc_rate</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_esc</span> <span class="o">=</span> <span class="n">fuel_esc_rate</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">carbon_esc</span> <span class="o">=</span> <span class="n">carbon_esc_rate</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">variable_om</span> <span class="o">=</span> <span class="n">variable_om</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">heat_rate</span> <span class="o">=</span> <span class="n">heat_rate</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">carbon_tax</span> <span class="o">=</span> <span class="n">carbon_tax</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">carbon_capture_rate</span> <span class="o">=</span> <span class="n">carbon_capture_rate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lifetime_yrs</span> <span class="o">=</span> <span class="n">lifetime_yrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unit_size_mw</span> <span class="o">=</span> <span class="n">unit_size_mw</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">capacity_factor_fraction</span> <span class="o">=</span> <span class="n">capacity_factor_fraction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variable_cost_esc</span> <span class="o">=</span> <span class="n">variable_om_esc_rate_fraction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_esc</span> <span class="o">=</span> <span class="n">fuel_price_esc_rate_fraction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">carbon_esc</span> <span class="o">=</span> <span class="n">carbon_tax_esc_rate_fraction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variable_om_usd_per_mwh</span> <span class="o">=</span> <span class="n">variable_om_usd_per_mwh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heat_rate_btu_per_kWh</span> <span class="o">=</span> <span class="n">heat_rate_btu_per_kWh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">carbon_tax_usd_per_ton</span> <span class="o">=</span> <span class="n">carbon_tax_usd_per_ton</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">carbon_capture_rate_fraction</span> <span class="o">=</span> <span class="n">carbon_capture_rate_fraction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_price_usd_per_mmbtu</span> <span class="o">=</span> <span class="n">fuel_price_usd_per_mmbtu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_co2_content_tons_per_btu</span> <span class="o">=</span> <span class="n">fuel_co2_content_tons_per_btu</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lmp_arr</span> <span class="o">=</span> <span class="n">lmp_arr</span>
-
-        <span class="c1"># create conversions</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_price</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_fuel_price</span><span class="p">(</span><span class="n">fuel_price</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fuel_co2_content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_fuel_co2_content</span><span class="p">(</span><span class="n">fuel_co2_content</span><span class="p">)</span>
 
         <span class="c1"># adjust by leap year if so desired</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hours_per_year</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assign_hours_per_year</span><span class="p">(</span><span class="n">target_year</span><span class="p">,</span> <span class="n">consider_leap_year</span><span class="p">)</span>
@@ -303,18 +322,6 @@
         <span class="c1"># calculate levelizing factor for carbon</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lf_carbon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_levelization_factor_carbon</span><span class="p">()</span>
 
-<div class="viewcode-block" id="NetOperationalValue.convert_fuel_price"><a class="viewcode-back" href="../../cerf.html#cerf.nov.NetOperationalValue.convert_fuel_price">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">convert_fuel_price</span><span class="p">(</span><span class="n">fuel_price</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Convert fuel price from units $/GJ to $/MBtu&quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="n">fuel_price</span> <span class="o">*</span> <span class="n">NetOperationalValue</span><span class="o">.</span><span class="n">FUEL_PRICE_CONVERSION_FACTOR</span></div>
-
-<div class="viewcode-block" id="NetOperationalValue.convert_fuel_co2_content"><a class="viewcode-back" href="../../cerf.html#cerf.nov.NetOperationalValue.convert_fuel_co2_content">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">convert_fuel_co2_content</span><span class="p">(</span><span class="n">fuel_co2_content</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Convert fuel CO2 content from units tons/MWh to tons/Btu&quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="n">fuel_co2_content</span> <span class="o">*</span> <span class="n">NetOperationalValue</span><span class="o">.</span><span class="n">FUEL_CO2_CONTENT_CONVERSION_FACTOR</span></div>
-
 <div class="viewcode-block" id="NetOperationalValue.assign_hours_per_year"><a class="viewcode-back" href="../../cerf.html#cerf.nov.NetOperationalValue.assign_hours_per_year">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">assign_hours_per_year</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">target_year</span><span class="p">,</span> <span class="n">consider_leap_year</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Assign the hours per year based on whether or not the target year is a leap year.&quot;&quot;&quot;</span>
@@ -327,42 +334,43 @@
 <div class="viewcode-block" id="NetOperationalValue.calc_annuity_factor"><a class="viewcode-back" href="../../cerf.html#cerf.nov.NetOperationalValue.calc_annuity_factor">[docs]</a>    <span class="k">def</span> <span class="nf">calc_annuity_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate annuity factor.&quot;&quot;&quot;</span>
 
-        <span class="n">fx</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">discount_rate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span><span class="p">)</span>
+        <span class="n">fx</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">discount_rate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lifetime_yrs</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">discount_rate</span> <span class="o">*</span> <span class="n">fx</span> <span class="o">/</span> <span class="p">(</span><span class="n">fx</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NetOperationalValue.calc_levelization_factor_vom"><a class="viewcode-back" href="../../cerf.html#cerf.nov.NetOperationalValue.calc_levelization_factor_vom">[docs]</a>    <span class="k">def</span> <span class="nf">calc_levelization_factor_vom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate the levelizing factor for variable OM.&quot;&quot;&quot;</span>
 
         <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">variable_cost_esc</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">discount_rate</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="nb">pow</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">annuity_factor</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="nb">pow</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lifetime_yrs</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">annuity_factor</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NetOperationalValue.calc_levelization_factor_fuel"><a class="viewcode-back" href="../../cerf.html#cerf.nov.NetOperationalValue.calc_levelization_factor_fuel">[docs]</a>    <span class="k">def</span> <span class="nf">calc_levelization_factor_fuel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate the levelizing factor for fuel.&quot;&quot;&quot;</span>
 
         <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuel_esc</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">discount_rate</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="nb">pow</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">annuity_factor</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="nb">pow</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lifetime_yrs</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">annuity_factor</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NetOperationalValue.calc_levelization_factor_carbon"><a class="viewcode-back" href="../../cerf.html#cerf.nov.NetOperationalValue.calc_levelization_factor_carbon">[docs]</a>    <span class="k">def</span> <span class="nf">calc_levelization_factor_carbon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate the levelizing factor for carbon.&quot;&quot;&quot;</span>
 
         <span class="n">k</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">carbon_esc</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">discount_rate</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="nb">pow</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lifetime</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">annuity_factor</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">k</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="nb">pow</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lifetime_yrs</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">annuity_factor</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NetOperationalValue.calc_generation"><a class="viewcode-back" href="../../cerf.html#cerf.nov.NetOperationalValue.calc_generation">[docs]</a>    <span class="k">def</span> <span class="nf">calc_generation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate electricity generation.&quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_size</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">capacity_factor</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">hours_per_year</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_size_mw</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">capacity_factor_fraction</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">hours_per_year</span></div>
 
 <div class="viewcode-block" id="NetOperationalValue.calc_nov"><a class="viewcode-back" href="../../cerf.html#cerf.nov.NetOperationalValue.calc_nov">[docs]</a>    <span class="k">def</span> <span class="nf">calc_nov</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Calculate NOV array for all technologies.&quot;&quot;&quot;</span>
 
         <span class="n">generation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calc_generation</span><span class="p">()</span>
         <span class="n">term2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lmp_arr</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lf_fuel</span>
-        <span class="n">term3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variable_om</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lf_vom</span>
-        <span class="n">term4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heat_rate</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fuel_price</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lf_fuel</span>
-        <span class="n">term5</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">carbon_tax</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuel_co2_content</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">heat_rate</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lf_carbon</span> <span class="o">/</span> <span class="mi">1000000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">carbon_capture_rate</span><span class="p">)</span>
+        <span class="n">term3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variable_om_usd_per_mwh</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lf_vom</span>
+        <span class="n">term4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heat_rate_btu_per_kWh</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fuel_price_usd_per_mmbtu</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lf_fuel</span>
+        <span class="n">term5</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">carbon_tax_usd_per_ton</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuel_co2_content_tons_per_btu</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">heat_rate_btu_per_kWh</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lf_carbon</span> <span class="o">/</span> <span class="mi">1000000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">carbon_capture_rate_fraction</span><span class="p">)</span>
+        <span class="n">operating_cost</span> <span class="o">=</span> <span class="p">(</span><span class="n">term2</span> <span class="o">-</span> <span class="p">(</span><span class="n">term3</span> <span class="o">+</span> <span class="n">term4</span> <span class="o">+</span> <span class="n">term5</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="n">generation</span> <span class="o">*</span> <span class="p">(</span><span class="n">term2</span> <span class="o">-</span> <span class="p">(</span><span class="n">term3</span> <span class="o">+</span> <span class="n">term4</span> <span class="o">+</span> <span class="n">term5</span><span class="p">))</span></div></div>
+        <span class="k">return</span> <span class="n">generation</span><span class="p">,</span> <span class="n">operating_cost</span><span class="p">,</span> <span class="n">generation</span> <span class="o">*</span> <span class="n">operating_cost</span></div></div>
 </pre></div>
 
            </div>
