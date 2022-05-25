@@ -10,9 +10,9 @@ class NetOperationalValue:
                                             Units:  fraction
     :type discount_rate:                    float
 
-    :param lifetime:                        Years of the expected technology plant lifetime.
+    :param lifetime_yrs:                        Years of the expected technology plant lifetime_yrs.
                                             Units:  years
-    :type lifetime:                         int
+    :type lifetime_yrs:                         int
 
     :param unit_size:                       The size of the expected power plant.
                                             Units:  megawatt
@@ -75,7 +75,7 @@ class NetOperationalValue:
 
     # type hints
     discount_rate: float
-    lifetime: int
+    lifetime_yrs: int
     unit_size: int
     capacity_factor_fraction: float
     variable_cost_esc_rate: float
@@ -97,13 +97,13 @@ class NetOperationalValue:
     HOURS_PER_YEAR_NONLEAP = 8760
     HOURS_PER_YEAR_LEAP = 8784
 
-    def __init__(self, discount_rate, lifetime, unit_size, capacity_factor_fraction, variable_cost_esc_rate,
+    def __init__(self, discount_rate, lifetime_yrs, unit_size, capacity_factor_fraction, variable_cost_esc_rate,
                  fuel_price_esc_rate_fraction, carbon_esc_rate, variable_om, heat_rate_btu_per_kWh, fuel_price_usd_per_mmbtu, carbon_tax,
                  carbon_capture_rate_fraction, fuel_co2_content_tons_per_btu, lmp_arr, target_year, consider_leap_year=False):
 
         # assign class attributes
         self.discount_rate = discount_rate
-        self.lifetime = lifetime
+        self.lifetime_yrs = lifetime_yrs
         self.unit_size = unit_size
         self.capacity_factor_fraction = capacity_factor_fraction
         self.variable_cost_esc = variable_cost_esc_rate
@@ -158,26 +158,26 @@ class NetOperationalValue:
     def calc_annuity_factor(self):
         """Calculate annuity factor."""
 
-        fx = pow(1.0 + self.discount_rate, self.lifetime)
+        fx = pow(1.0 + self.discount_rate, self.lifetime_yrs)
         return self.discount_rate * fx / (fx - 1.0)
 
     def calc_levelization_factor_vom(self):
         """Calculate the levelizing factor for variable OM."""
 
         k = (1.0 + self.variable_cost_esc) / (1.0 + self.discount_rate)
-        return k * (1.0 - pow(k, self.lifetime)) * self.annuity_factor / (1.0 - k)
+        return k * (1.0 - pow(k, self.lifetime_yrs)) * self.annuity_factor / (1.0 - k)
 
     def calc_levelization_factor_fuel(self):
         """Calculate the levelizing factor for fuel."""
 
         k = (1.0 + self.fuel_esc) / (1.0 + self.discount_rate)
-        return k * (1.0 - pow(k, self.lifetime)) * self.annuity_factor / (1.0 - k)
+        return k * (1.0 - pow(k, self.lifetime_yrs)) * self.annuity_factor / (1.0 - k)
 
     def calc_levelization_factor_carbon(self):
         """Calculate the levelizing factor for carbon."""
 
         k = (1.0 + self.carbon_esc) / (1.0 + self.discount_rate)
-        return k * (1.0 - pow(k, self.lifetime)) * self.annuity_factor / (1.0 - k)
+        return k * (1.0 - pow(k, self.lifetime_yrs)) * self.annuity_factor / (1.0 - k)
 
     def calc_generation(self):
         """Calculate electricity generation."""

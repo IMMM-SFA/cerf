@@ -95,7 +95,7 @@ These are technology-specific settings.
     +---------------------------------+---------------------------------------------+----------+----------+
     | tech_name                       | Name of the technology                      | NA       | str      |
     +---------------------------------+---------------------------------------------+----------+----------+
-    | lifetime                        | Asset lifetime                              | n_years  | int      |
+    | lifetime_yrs                    | Asset lifetime                              | n_years  | int      |
     +---------------------------------+---------------------------------------------+----------+----------+
     | capacity_factor                 | | Defined as average annual power generated | fraction | float    |
     |                                 | | divided by the potential output if the    |          |          |
@@ -149,7 +149,7 @@ The following is an example implementation in the YAML configuration file:
 
         9:
             tech_name: biomass
-            lifetime: 60
+            lifetime_yrs: 60
             capacity_factor_fraction: 0.6090000000000005
             variable_cost_esc_rate: -0.00398993418629034
             fuel_price_esc_rate_fraction: 0.0

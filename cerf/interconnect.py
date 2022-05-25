@@ -140,10 +140,10 @@ class Interconnection:
         self.pipeline_costs = self.transmission_to_cost_raster(setting='pipelines')
 
     @staticmethod
-    def calc_annuity_factor(discount_rate, lifetime):
+    def calc_annuity_factor(discount_rate, lifetime_yrs):
         """Calculate annuity factor."""
 
-        fx = pow(1.0 + discount_rate, lifetime)
+        fx = pow(1.0 + discount_rate, lifetime_yrs)
 
         return discount_rate * fx / (fx - 1.0)
 
@@ -365,10 +365,10 @@ class Interconnection:
             # get technology specific information
             require_pipelines = self.technology_dict[i].get('require_pipelines', False)
             discount_rate = self.technology_dict[i].get('discount_rate')
-            lifetime = self.technology_dict[i].get('lifetime')
+            lifetime_yrs = self.technology_dict[i].get('lifetime_yrs')
 
             # calculate annuity factor for technology
-            annuity_factor = self.calc_annuity_factor(discount_rate=discount_rate, lifetime=lifetime)
+            annuity_factor = self.calc_annuity_factor(discount_rate=discount_rate, lifetime_yrs=lifetime_yrs)
 
             # get transmission cost array and convert from thous$/km to $/km
             substation_cost_array = self.substation_costs * annuity_factor * 1000

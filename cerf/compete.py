@@ -175,7 +175,7 @@ class Competition:
                 required_sites = self.expansion_dict[tech_id]['n_sites']
 
                 # calculate the year of retirement
-                retirement_year = self.settings_dict['run_year'] + int(self.technology_dict[tech_id]['lifetime'])
+                retirement_year = self.settings_dict['run_year'] + int(self.technology_dict[tech_id]['lifetime_yrs'])
 
                 # if there are more power plants to site and there are grids available to site them...
                 if self.avail_grids > 0 and tech.shape[0] > 0 and required_sites > 0:
