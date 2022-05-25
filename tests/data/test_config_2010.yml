@@ -27,7 +27,7 @@ technology:
         lifetime: 60.0
         capacity_factor_fraction: 0.6090000000000005
         variable_cost_esc_rate: -0.00398993418629034
-        fuel_esc_rate: 0.0
+        fuel_price_esc_rate_fraction: 0.0
         unit_size: 80
         interconnection_cost_per_km: 552
         variable_om: 11.68495803744351
@@ -47,7 +47,7 @@ technology:
         lifetime: 60.0
         capacity_factor_fraction: 0.8999999999999995
         variable_cost_esc_rate: -0.00104311614063357
-        fuel_esc_rate: 0.04639000000000001
+        fuel_price_esc_rate_fraction: 0.04639000000000001
         unit_size: 1350
         interconnection_cost_per_km: 1104
         variable_om: 2.098127824402843

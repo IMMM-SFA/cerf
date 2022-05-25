@@ -23,7 +23,7 @@ class TestNov(unittest.TestCase):
     UNIT_SIZE = 1350  # megawatt
     CAPACITY_FACTOR_FRACTION = 0.9  # fraction
     VARIABLE_COST_ESC_RATE = -0.00104311614063357  # fraction
-    FUEL_ESC_RATE = 0.04639  # fraction
+    fuel_price_esc_rate_fraction = 0.04639  # fraction
     CARBON_ESC_RATE = 0.0  # fraction
     VARIABLE_OM = 2.09812782440284  # $/MWh
     HEAT_RATE = 10246.19999999998  # Btu/kWh
@@ -54,7 +54,7 @@ class TestNov(unittest.TestCase):
                                    unit_size=cls.UNIT_SIZE,
                                    capacity_factor_fraction=cls.CAPACITY_FACTOR_FRACTION,
                                    variable_cost_esc_rate=cls.VARIABLE_COST_ESC_RATE,
-                                   fuel_esc_rate=cls.FUEL_ESC_RATE,
+                                   fuel_price_esc_rate_fraction=cls.fuel_price_esc_rate_fraction,
                                    carbon_esc_rate=cls.CARBON_ESC_RATE,
                                    variable_om=cls.VARIABLE_OM,
                                    heat_rate=cls.HEAT_RATE,

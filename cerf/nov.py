@@ -27,9 +27,9 @@ class NetOperationalValue:
                                             Units:  fraction
     :type variable_cost_esc_rate:           float
 
-    :param fuel_esc_rate:                   Escalation rate of fuel.
+    :param fuel_price_esc_rate_fraction:                   Escalation rate of fuel.
                                             Units:  fraction
-    :type fuel_esc_rate:                    float
+    :type fuel_price_esc_rate_fraction:                    float
 
     :param carbon_esc_rate:                 Escalation rate of carbon.
                                             Units:  fraction
@@ -79,7 +79,7 @@ class NetOperationalValue:
     unit_size: int
     capacity_factor_fraction: float
     variable_cost_esc_rate: float
-    fuel_esc_rate: float
+    fuel_price_esc_rate_fraction: float
     carbon_esc_rate: float
     variable_om: float
     heat_rate: float
@@ -98,7 +98,7 @@ class NetOperationalValue:
     HOURS_PER_YEAR_LEAP = 8784
 
     def __init__(self, discount_rate, lifetime, unit_size, capacity_factor_fraction, variable_cost_esc_rate,
-                 fuel_esc_rate, carbon_esc_rate, variable_om, heat_rate, fuel_price_usd_per_mmbtu, carbon_tax,
+                 fuel_price_esc_rate_fraction, carbon_esc_rate, variable_om, heat_rate, fuel_price_usd_per_mmbtu, carbon_tax,
                  carbon_capture_rate_fraction, fuel_co2_content_tons_per_btu, lmp_arr, target_year, consider_leap_year=False):
 
         # assign class attributes
@@ -107,7 +107,7 @@ class NetOperationalValue:
         self.unit_size = unit_size
         self.capacity_factor_fraction = capacity_factor_fraction
         self.variable_cost_esc = variable_cost_esc_rate
-        self.fuel_esc = fuel_esc_rate
+        self.fuel_esc = fuel_price_esc_rate_fraction
         self.carbon_esc = carbon_esc_rate
         self.variable_om = variable_om
         self.heat_rate = heat_rate

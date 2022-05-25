@@ -161,7 +161,7 @@ class Stage:
                                        unit_size=self.technology_dict[i]['unit_size'],
                                        capacity_factor_fraction=self.technology_dict[i]['capacity_factor_fraction'],
                                        variable_cost_esc_rate=self.technology_dict[i]['variable_cost_esc_rate'],
-                                       fuel_esc_rate=self.technology_dict[i]['fuel_esc_rate'],
+                                       fuel_price_esc_rate_fraction=self.technology_dict[i]['fuel_price_esc_rate_fraction'],
                                        carbon_esc_rate=self.technology_dict[i]['carbon_esc_rate'],
                                        variable_om=self.technology_dict[i]['variable_om'],
                                        heat_rate=self.technology_dict[i]['heat_rate'],
