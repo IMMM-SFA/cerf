@@ -10,9 +10,9 @@ class TestCompete(unittest.TestCase):
     EXPANSION_PLAN = {1: {'n_sites': 1, 'tech_name': 'test1'},
                       2: {'n_sites': 1, 'tech_name': 'test2'},
                       3: {'n_sites': 1, 'tech_name': 'test3'}}  # n sites per tech
-    TECH_DICT = {1: {'buffer_in_km': 1, 'lifetime_yrs': 60, 'tech_name': 'test1', 'unit_size': 80},
-                 2: {'buffer_in_km': 1, 'lifetime_yrs': 60, 'tech_name': 'test2', 'unit_size': 80},
-                 3: {'buffer_in_km': 1, 'lifetime_yrs': 60, 'tech_name': 'test3', 'unit_size': 80}}  # buffer per tech
+    TECH_DICT = {1: {'buffer_in_km': 1, 'lifetime_yrs': 60, 'tech_name': 'test1', 'unit_size_mw': 80},
+                 2: {'buffer_in_km': 1, 'lifetime_yrs': 60, 'tech_name': 'test2', 'unit_size_mw': 80},
+                 3: {'buffer_in_km': 1, 'lifetime_yrs': 60, 'tech_name': 'test3', 'unit_size_mw': 80}}  # buffer per tech
     TECH_ORDER = [1, 2, 3]
 
     # proxy NLC array

@@ -158,7 +158,7 @@ class Stage:
         for index, i in enumerate(self.technology_order):
             econ = NetOperationalValue(discount_rate=self.technology_dict[i]['discount_rate'],
                                        lifetime_yrs=self.technology_dict[i]['lifetime_yrs'],
-                                       unit_size=self.technology_dict[i]['unit_size'],
+                                       unit_size_mw=self.technology_dict[i]['unit_size_mw'],
                                        capacity_factor_fraction=self.technology_dict[i]['capacity_factor_fraction'],
                                        variable_cost_esc_rate=self.technology_dict[i]['variable_cost_esc_rate'],
                                        fuel_price_esc_rate_fraction=self.technology_dict[i]['fuel_price_esc_rate_fraction'],

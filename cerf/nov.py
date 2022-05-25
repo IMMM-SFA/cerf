@@ -14,9 +14,9 @@ class NetOperationalValue:
                                             Units:  years
     :type lifetime_yrs:                         int
 
-    :param unit_size:                       The size of the expected power plant.
+    :param unit_size_mw:                       The size of the expected power plant.
                                             Units:  megawatt
-    :type unit_size:                        int
+    :type unit_size_mw:                        int
 
     :param capacity_factor_fraction:                 Capacity factor defined as average annual power generated divided by the
                                             potential output if the plant operated at its rated capacity for a year.
@@ -76,7 +76,7 @@ class NetOperationalValue:
     # type hints
     discount_rate: float
     lifetime_yrs: int
-    unit_size: int
+    unit_size_mw: int
     capacity_factor_fraction: float
     variable_cost_esc_rate: float
     fuel_price_esc_rate_fraction: float
@@ -97,14 +97,14 @@ class NetOperationalValue:
     HOURS_PER_YEAR_NONLEAP = 8760
     HOURS_PER_YEAR_LEAP = 8784
 
-    def __init__(self, discount_rate, lifetime_yrs, unit_size, capacity_factor_fraction, variable_cost_esc_rate,
+    def __init__(self, discount_rate, lifetime_yrs, unit_size_mw, capacity_factor_fraction, variable_cost_esc_rate,
                  fuel_price_esc_rate_fraction, carbon_esc_rate, variable_om, heat_rate_btu_per_kWh, fuel_price_usd_per_mmbtu, carbon_tax,
                  carbon_capture_rate_fraction, fuel_co2_content_tons_per_btu, lmp_arr, target_year, consider_leap_year=False):
 
         # assign class attributes
         self.discount_rate = discount_rate
         self.lifetime_yrs = lifetime_yrs
-        self.unit_size = unit_size
+        self.unit_size_mw = unit_size_mw
         self.capacity_factor_fraction = capacity_factor_fraction
         self.variable_cost_esc = variable_cost_esc_rate
         self.fuel_esc = fuel_price_esc_rate_fraction
@@ -182,7 +182,7 @@ class NetOperationalValue:
     def calc_generation(self):
         """Calculate electricity generation."""
 
-        return self.unit_size * self.capacity_factor_fraction * self.hours_per_year
+        return self.unit_size_mw * self.capacity_factor_fraction * self.hours_per_year
 
     def calc_nov(self):
         """Calculate NOV array for all technologies."""

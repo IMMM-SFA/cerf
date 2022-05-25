@@ -20,7 +20,7 @@ class TestNov(unittest.TestCase):
     # inputs as they would come from GCAM and input sources
     DISCOUNT_RATE = 0.05  # fraction
     lifetime_yrs = 60  # years
-    UNIT_SIZE = 1350  # megawatt
+    unit_size_mw = 1350  # megawatt
     CAPACITY_FACTOR_FRACTION = 0.9  # fraction
     VARIABLE_COST_ESC_RATE = -0.00104311614063357  # fraction
     fuel_price_esc_rate_fraction = 0.04639  # fraction
@@ -51,7 +51,7 @@ class TestNov(unittest.TestCase):
 
         return NetOperationalValue(discount_rate=cls.DISCOUNT_RATE,
                                    lifetime_yrs=cls.lifetime_yrs,
-                                   unit_size=cls.UNIT_SIZE,
+                                   unit_size_mw=cls.unit_size_mw,
                                    capacity_factor_fraction=cls.CAPACITY_FACTOR_FRACTION,
                                    variable_cost_esc_rate=cls.VARIABLE_COST_ESC_RATE,
                                    fuel_price_esc_rate_fraction=cls.fuel_price_esc_rate_fraction,
