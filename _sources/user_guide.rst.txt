@@ -114,11 +114,11 @@ These are technology-specific settings.
     | heat_rate_btu_per_kWh           | | Amount of energy used by a power plant to | Btu/kWh  | float    |
     |                                 | | generate one kilowatt-hour of electricity |          |          |
     +---------------------------------+---------------------------------------------+----------+----------+
-    | fuel_price_usd_per_mmbtu        | Cost of fuel per unit                       | $/GJ     | float    |
+    | fuel_price_usd_per_mmbtu        | Cost of fuel per unit                       | $/MMbtu  | float    |
     +---------------------------------+---------------------------------------------+----------+----------+
     | carbon_capture_rate_fraction    | Rate of carbon capture                      | fraction | float    |
     +---------------------------------+---------------------------------------------+----------+----------+
-    | fuel_co2_content_tons_per_btu   | | CO2 content of the fuel and the heat rate | tons/MWh | float    |
+    | fuel_co2_content_tons_per_btu   | | CO2 content of the fuel and the heat rate | tons/Btu | float    |
     |                                 | | of the technology                         |          |          |
     +---------------------------------+---------------------------------------------+----------+----------+
     | discount_rate                   | The time value of money in real terms       | fraction | float    |
