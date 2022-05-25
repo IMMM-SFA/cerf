@@ -35,9 +35,9 @@ class NetOperationalValue:
                                             Units:  fraction
     :type carbon_esc_rate:                  float
 
-    :param variable_om:                     Variable operation and maintenance costs of yearly capacity use.
+    :param variable_om_usd_per_mwh:                     Variable operation and maintenance costs of yearly capacity use.
                                             Units:  $/MWh
-    :type variable_om:                      float
+    :type variable_om_usd_per_mwh:                      float
 
     :param heat_rate_btu_per_kWh:                       Amount of energy used by a power plant to generate one kilowatt-hour of
                                             electricity.
@@ -81,7 +81,7 @@ class NetOperationalValue:
     variable_cost_esc_rate: float
     fuel_price_esc_rate_fraction: float
     carbon_esc_rate: float
-    variable_om: float
+    variable_om_usd_per_mwh: float
     heat_rate_btu_per_kWh: float
     fuel_price_usd_per_mmbtu: float
     carbon_tax: float
@@ -98,7 +98,7 @@ class NetOperationalValue:
     HOURS_PER_YEAR_LEAP = 8784
 
     def __init__(self, discount_rate, lifetime_yrs, unit_size_mw, capacity_factor_fraction, variable_cost_esc_rate,
-                 fuel_price_esc_rate_fraction, carbon_esc_rate, variable_om, heat_rate_btu_per_kWh, fuel_price_usd_per_mmbtu, carbon_tax,
+                 fuel_price_esc_rate_fraction, carbon_esc_rate, variable_om_usd_per_mwh, heat_rate_btu_per_kWh, fuel_price_usd_per_mmbtu, carbon_tax,
                  carbon_capture_rate_fraction, fuel_co2_content_tons_per_btu, lmp_arr, target_year, consider_leap_year=False):
 
         # assign class attributes
@@ -109,7 +109,7 @@ class NetOperationalValue:
         self.variable_cost_esc = variable_cost_esc_rate
         self.fuel_esc = fuel_price_esc_rate_fraction
         self.carbon_esc = carbon_esc_rate
-        self.variable_om = variable_om
+        self.variable_om_usd_per_mwh = variable_om_usd_per_mwh
         self.heat_rate_btu_per_kWh = heat_rate_btu_per_kWh
         self.carbon_tax = carbon_tax
         self.carbon_capture_rate_fraction = carbon_capture_rate_fraction
@@ -189,7 +189,7 @@ class NetOperationalValue:
 
         generation = self.calc_generation()
         term2 = self.lmp_arr * self.lf_fuel
-        term3 = self.variable_om * self.lf_vom
+        term3 = self.variable_om_usd_per_mwh * self.lf_vom
         term4 = self.heat_rate_btu_per_kWh * (self.fuel_price_usd_per_mmbtu / 1000) * self.lf_fuel
         term5 = (self.carbon_tax * self.fuel_co2_content_tons_per_btu * self.heat_rate_btu_per_kWh * self.lf_carbon / 1000000) * (1 - self.carbon_capture_rate_fraction)
 

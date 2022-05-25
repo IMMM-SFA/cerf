@@ -30,7 +30,7 @@ technology:
         fuel_price_esc_rate_fraction: 0.0
         unit_size_mw: 80
         interconnection_cost_per_km: 552
-        variable_om: 11.68495803744351
+        variable_om_usd_per_mwh: 11.68495803744351
         heat_rate_btu_per_kWh: 15117.64999999997
         fuel_price_usd_per_mmbtu: 0.0
         carbon_capture_rate_fraction: 0.0
@@ -50,7 +50,7 @@ technology:
         fuel_price_esc_rate_fraction: 0.04639000000000001
         unit_size_mw: 1350
         interconnection_cost_per_km: 1104
-        variable_om: 2.098127824402843
+        variable_om_usd_per_mwh: 2.098127824402843
         heat_rate_btu_per_kWh: 10246.19999999998
         fuel_price_usd_per_mmbtu: 0.7128099999999996
         carbon_capture_rate_fraction: 0.0
