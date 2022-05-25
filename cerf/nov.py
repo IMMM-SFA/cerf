@@ -48,9 +48,9 @@ class NetOperationalValue:
                                             Units:  from GCAM ($/GJ) gets converted to ($/MBtu)
     :type fuel_price_usd_per_mmbtu:                       float
 
-    :param carbon_tax:                      The fee imposed on the burning of carbon-based fuels.
+    :param carbon_tax_usd_per_ton:                      The fee imposed on the burning of carbon-based fuels.
                                             Units:  $/ton
-    :type carbon_tax:                       float
+    :type carbon_tax_usd_per_ton:                       float
 
     :param carbon_capture_rate_fraction:             Rate of carbon capture.
                                             Units:  fraction
@@ -84,7 +84,7 @@ class NetOperationalValue:
     variable_om_usd_per_mwh: float
     heat_rate_btu_per_kWh: float
     fuel_price_usd_per_mmbtu: float
-    carbon_tax: float
+    carbon_tax_usd_per_ton: float
     carbon_capture_rate_fraction: float
     fuel_co2_content_tons_per_btu: float
     lmp_arr: np.ndarray
@@ -98,7 +98,7 @@ class NetOperationalValue:
     HOURS_PER_YEAR_LEAP = 8784
 
     def __init__(self, discount_rate, lifetime_yrs, unit_size_mw, capacity_factor_fraction, variable_om_esc_rate_fraction,
-                 fuel_price_esc_rate_fraction, carbon_esc_rate, variable_om_usd_per_mwh, heat_rate_btu_per_kWh, fuel_price_usd_per_mmbtu, carbon_tax,
+                 fuel_price_esc_rate_fraction, carbon_esc_rate, variable_om_usd_per_mwh, heat_rate_btu_per_kWh, fuel_price_usd_per_mmbtu, carbon_tax_usd_per_ton,
                  carbon_capture_rate_fraction, fuel_co2_content_tons_per_btu, lmp_arr, target_year, consider_leap_year=False):
 
         # assign class attributes
@@ -111,7 +111,7 @@ class NetOperationalValue:
         self.carbon_esc = carbon_esc_rate
         self.variable_om_usd_per_mwh = variable_om_usd_per_mwh
         self.heat_rate_btu_per_kWh = heat_rate_btu_per_kWh
-        self.carbon_tax = carbon_tax
+        self.carbon_tax_usd_per_ton = carbon_tax_usd_per_ton
         self.carbon_capture_rate_fraction = carbon_capture_rate_fraction
         self.lmp_arr = lmp_arr
 
@@ -191,6 +191,6 @@ class NetOperationalValue:
         term2 = self.lmp_arr * self.lf_fuel
         term3 = self.variable_om_usd_per_mwh * self.lf_vom
         term4 = self.heat_rate_btu_per_kWh * (self.fuel_price_usd_per_mmbtu / 1000) * self.lf_fuel
-        term5 = (self.carbon_tax * self.fuel_co2_content_tons_per_btu * self.heat_rate_btu_per_kWh * self.lf_carbon / 1000000) * (1 - self.carbon_capture_rate_fraction)
+        term5 = (self.carbon_tax_usd_per_ton * self.fuel_co2_content_tons_per_btu * self.heat_rate_btu_per_kWh * self.lf_carbon / 1000000) * (1 - self.carbon_capture_rate_fraction)
 
         return generation * (term2 - (term3 + term4 + term5))

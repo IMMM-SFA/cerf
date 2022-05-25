@@ -125,7 +125,7 @@ These are technology-specific settings.
     +---------------------------------+---------------------------------------------+----------+----------+
     | carbon_esc_rate                 | Escalation rate of carbon                   | fraction | float    |
     +---------------------------------+---------------------------------------------+----------+----------+
-    | carbon_tax                      | | The fee imposed on the burning of         | $/ton    | float    |
+    | carbon_tax_usd_per_ton          | | The fee imposed on the burning of         | $/ton    | float    |
     |                                 | | carbon-based fuels                        |          |          |
     +---------------------------------+---------------------------------------------+----------+----------+
     | buffer_in_km                    | | Buffer around the site to apply in        | n_km     | int      |
@@ -161,7 +161,7 @@ The following is an example implementation in the YAML configuration file:
             fuel_co2_content_tons_per_btu: 0.3035999999999996
             discount_rate: 0.05
             carbon_esc_rate: 0.0
-            carbon_tax: 0.0
+            carbon_tax_usd_per_ton: 0.0
             buffer_in_km: 5
             require_pipelines: False
             suitability_raster_file: <path to file>

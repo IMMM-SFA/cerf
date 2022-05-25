@@ -37,7 +37,7 @@ technology:
         fuel_co2_content_tons_per_btu: 0.3035999999999996
         discount_rate: 0.05
         carbon_esc_rate: 0.0
-        carbon_tax: 0.0
+        carbon_tax_usd_per_ton: 0.0
         buffer_in_km: 5
         require_pipelines: False
         suitability_raster_file: null
@@ -57,7 +57,7 @@ technology:
         fuel_co2_content_tons_per_btu: 0.0
         discount_rate: 0.05
         carbon_esc_rate: 0.0
-        carbon_tax: 0.0
+        carbon_tax_usd_per_ton: 0.0
         buffer_in_km: 5
         require_pipelines: False
         suitability_raster_file: null

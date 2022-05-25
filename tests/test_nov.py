@@ -28,7 +28,7 @@ class TestNov(unittest.TestCase):
     variable_om_usd_per_mwh = 2.09812782440284  # $/MWh
     heat_rate_btu_per_kWh = 10246.19999999998  # Btu/kWh
     fuel_price_usd_per_mmbtu = 0.712809999999999  # $/GJ gets converted to $/MBtu in code
-    CARBON_TAX = 0.0  # $/ton
+    carbon_tax_usd_per_ton = 0.0  # $/ton
     CARBON_CAPTURE_RATE_FRACTION = 0.0  # fraction
     fuel_co2_content_tons_per_btu = 0.0  # tons/MWh gets converted to tons/Btu in code
     LMP_ARR = np.array([66.95609874])  # $/MWh
@@ -45,7 +45,7 @@ class TestNov(unittest.TestCase):
     EXPECTED_NOV_WITHCARBON_NOLEAP = np.array([1780847344.7371392])
 
     @classmethod
-    def instantiate_nov(cls, target_year, carbon_tax, fuel_co2_content_tons_per_btu, carbon_capture_rate_fraction, consider_leap_year):
+    def instantiate_nov(cls, target_year, carbon_tax_usd_per_ton, fuel_co2_content_tons_per_btu, carbon_capture_rate_fraction, consider_leap_year):
         """Instantiate NOV class with test values.  The additional parameters can be passed to
         test NOV under different carbon conditions."""
 
@@ -59,7 +59,7 @@ class TestNov(unittest.TestCase):
                                    variable_om_usd_per_mwh=cls.variable_om_usd_per_mwh,
                                    heat_rate_btu_per_kWh=cls.heat_rate_btu_per_kWh,
                                    fuel_price_usd_per_mmbtu=cls.fuel_price_usd_per_mmbtu,
-                                   carbon_tax=carbon_tax,
+                                   carbon_tax_usd_per_ton=carbon_tax_usd_per_ton,
                                    carbon_capture_rate_fraction=carbon_capture_rate_fraction,
                                    fuel_co2_content_tons_per_btu=fuel_co2_content_tons_per_btu,
                                    lmp_arr=cls.LMP_ARR,
@@ -71,7 +71,7 @@ class TestNov(unittest.TestCase):
 
         # create a no carbon, no leap year run
         econ = self.instantiate_nov(target_year=2010,  # four digit year
-                                    carbon_tax=0.0,  # $/ton
+                                    carbon_tax_usd_per_ton=0.0,  # $/ton
                                     fuel_co2_content_tons_per_btu=0.0,  # tons/MWh gets converted to tons/Btu
                                     carbon_capture_rate_fraction=0.0,  # fraction
                                     consider_leap_year=False
@@ -99,7 +99,7 @@ class TestNov(unittest.TestCase):
 
         # create a no carbon, leap year run
         econ = self.instantiate_nov(target_year=2012,  # four digit year
-                                    carbon_tax=0.0,  # $/ton
+                                    carbon_tax_usd_per_ton=0.0,  # $/ton
                                     fuel_co2_content_tons_per_btu=0.0,  # tons/MWh gets converted to tons/Btu
                                     carbon_capture_rate_fraction=0.0,  # fraction
                                     consider_leap_year=True
@@ -126,7 +126,7 @@ class TestNov(unittest.TestCase):
 
         # create a no carbon, leap year run
         econ = self.instantiate_nov(target_year=2010,  # four digit year
-                                    carbon_tax=10.0,  # $/ton
+                                    carbon_tax_usd_per_ton=10.0,  # $/ton
                                     fuel_co2_content_tons_per_btu=1.2,  # tons/MWh gets converted to tons/Btu
                                     carbon_capture_rate_fraction=0.05,  # fraction
                                     consider_leap_year=False
