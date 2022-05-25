@@ -23,9 +23,9 @@ class NetOperationalValue:
                                             Units:  fraction
     :type capacity_factor_fraction:                  float
 
-    :param variable_cost_esc_rate:          Escalation rate of variable cost.
+    :param variable_om_esc_rate_fraction:          Escalation rate of variable cost.
                                             Units:  fraction
-    :type variable_cost_esc_rate:           float
+    :type variable_om_esc_rate_fraction:           float
 
     :param fuel_price_esc_rate_fraction:                   Escalation rate of fuel.
                                             Units:  fraction
@@ -78,7 +78,7 @@ class NetOperationalValue:
     lifetime_yrs: int
     unit_size_mw: int
     capacity_factor_fraction: float
-    variable_cost_esc_rate: float
+    variable_om_esc_rate_fraction: float
     fuel_price_esc_rate_fraction: float
     carbon_esc_rate: float
     variable_om_usd_per_mwh: float
@@ -97,7 +97,7 @@ class NetOperationalValue:
     HOURS_PER_YEAR_NONLEAP = 8760
     HOURS_PER_YEAR_LEAP = 8784
 
-    def __init__(self, discount_rate, lifetime_yrs, unit_size_mw, capacity_factor_fraction, variable_cost_esc_rate,
+    def __init__(self, discount_rate, lifetime_yrs, unit_size_mw, capacity_factor_fraction, variable_om_esc_rate_fraction,
                  fuel_price_esc_rate_fraction, carbon_esc_rate, variable_om_usd_per_mwh, heat_rate_btu_per_kWh, fuel_price_usd_per_mmbtu, carbon_tax,
                  carbon_capture_rate_fraction, fuel_co2_content_tons_per_btu, lmp_arr, target_year, consider_leap_year=False):
 
@@ -106,7 +106,7 @@ class NetOperationalValue:
         self.lifetime_yrs = lifetime_yrs
         self.unit_size_mw = unit_size_mw
         self.capacity_factor_fraction = capacity_factor_fraction
-        self.variable_cost_esc = variable_cost_esc_rate
+        self.variable_cost_esc = variable_om_esc_rate_fraction
         self.fuel_esc = fuel_price_esc_rate_fraction
         self.carbon_esc = carbon_esc_rate
         self.variable_om_usd_per_mwh = variable_om_usd_per_mwh

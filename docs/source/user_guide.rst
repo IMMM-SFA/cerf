@@ -102,13 +102,13 @@ These are technology-specific settings.
     |                                 | | plant operated at its rated capacity for a|          |          |
     |                                 | | year                                      |          |          |
     +---------------------------------+---------------------------------------------+----------+----------+
-    | variable_cost_esc_rate          | Escalation rate of variable cost            | fraction | float    |
+    | variable_om_esc_rate_fraction   | Escalation rate of variable cost            | fraction | float    |
     +---------------------------------+---------------------------------------------+----------+----------+
     | fuel_price_esc_rate_fraction    | Escalation rate of fuel                     | fraction | float    |
     +---------------------------------+---------------------------------------------+----------+----------+
     | unit_size_mw                    | The size of the expected power plant        | MW       | float    |
     +---------------------------------+---------------------------------------------+----------+----------+
-    | variable_om                     | | Variable operation and maintenance costs  | $/MWh    | float    |
+    | variable_om_usd_per_mwh         | | Variable operation and maintenance costs  | $/MWh    | float    |
     |                                 | | of yearly capacity use                    |          |          |
     +---------------------------------+---------------------------------------------+----------+----------+
     | heat_rate_btu_per_kWh           | | Amount of energy used by a power plant to | Btu/kWh  | float    |
@@ -151,7 +151,7 @@ The following is an example implementation in the YAML configuration file:
             tech_name: biomass
             lifetime_yrs: 60
             capacity_factor_fraction: 0.6090000000000005
-            variable_cost_esc_rate: -0.00398993418629034
+            variable_om_esc_rate_fraction: -0.00398993418629034
             fuel_price_esc_rate_fraction: 0.0
             unit_size_mw: 80
             variable_om: 11.68495803744351

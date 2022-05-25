@@ -160,7 +160,7 @@ class Stage:
                                        lifetime_yrs=self.technology_dict[i]['lifetime_yrs'],
                                        unit_size_mw=self.technology_dict[i]['unit_size_mw'],
                                        capacity_factor_fraction=self.technology_dict[i]['capacity_factor_fraction'],
-                                       variable_cost_esc_rate=self.technology_dict[i]['variable_cost_esc_rate'],
+                                       variable_om_esc_rate_fraction=self.technology_dict[i]['variable_om_esc_rate_fraction'],
                                        fuel_price_esc_rate_fraction=self.technology_dict[i]['fuel_price_esc_rate_fraction'],
                                        carbon_esc_rate=self.technology_dict[i]['carbon_esc_rate'],
                                        variable_om_usd_per_mwh=self.technology_dict[i]['variable_om_usd_per_mwh'],

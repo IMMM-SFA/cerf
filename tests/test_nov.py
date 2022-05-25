@@ -22,7 +22,7 @@ class TestNov(unittest.TestCase):
     lifetime_yrs = 60  # years
     unit_size_mw = 1350  # megawatt
     CAPACITY_FACTOR_FRACTION = 0.9  # fraction
-    VARIABLE_COST_ESC_RATE = -0.00104311614063357  # fraction
+    variable_om_esc_rate_fraction = -0.00104311614063357  # fraction
     fuel_price_esc_rate_fraction = 0.04639  # fraction
     CARBON_ESC_RATE = 0.0  # fraction
     variable_om_usd_per_mwh = 2.09812782440284  # $/MWh
@@ -53,7 +53,7 @@ class TestNov(unittest.TestCase):
                                    lifetime_yrs=cls.lifetime_yrs,
                                    unit_size_mw=cls.unit_size_mw,
                                    capacity_factor_fraction=cls.CAPACITY_FACTOR_FRACTION,
-                                   variable_cost_esc_rate=cls.VARIABLE_COST_ESC_RATE,
+                                   variable_om_esc_rate_fraction=cls.variable_om_esc_rate_fraction,
                                    fuel_price_esc_rate_fraction=cls.fuel_price_esc_rate_fraction,
                                    carbon_esc_rate=cls.CARBON_ESC_RATE,
                                    variable_om_usd_per_mwh=cls.variable_om_usd_per_mwh,
