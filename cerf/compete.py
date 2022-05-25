@@ -54,6 +54,8 @@ class Competition:
                  technology_order,
                  expansion_dict,
                  lmp_dict,
+                 generation_dict,
+                 operating_cost_dict,
                  nov_dict,
                  ic_dict,
                  nlc_mask,
@@ -82,6 +84,12 @@ class Competition:
 
         # locational marginal pricing
         self.lmp_flat_dict = lmp_dict
+
+        # generation
+        self.generation_flat_dict = generation_dict
+
+        # operating cost
+        self.operating_cost_flat_dict = operating_cost_dict
 
         # net operational value
         self.nov_flat_dict = nov_dict
@@ -115,6 +123,12 @@ class Competition:
         # coordinates for each index
         self.xcoords = xcoords
         self.ycoords = ycoords
+
+        # mask any technologies having 0 expected sites in the expansion plan to exclude them from competition
+        for index, i in enumerate(self.technology_order, 1):
+            if expansion_dict[i]["n_sites"] == 0:
+                self.nlc_mask[index, :, :] = np.ma.masked_array(self.nlc_mask[index, :, :],
+                                                                np.ones_like(self.nlc_mask[index, :, :]))
 
         # show cheapest option, add 1 to the index to represent the technology number
         self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
@@ -169,7 +183,7 @@ class Competition:
                 required_sites = self.expansion_dict[tech_id]['n_sites']
 
                 # calculate the year of retirement
-                retirement_year = self.settings_dict['run_year'] + int(self.technology_dict[tech_id]['lifetime'])
+                retirement_year = self.settings_dict['run_year'] + int(self.technology_dict[tech_id]['lifetime_yrs'])
 
                 # if there are more power plants to site and there are grids available to site them...
                 if self.avail_grids > 0 and tech.shape[0] > 0 and required_sites > 0:
@@ -192,7 +206,7 @@ class Competition:
                         self.sited_dict['region_name'].append(self.target_region_name)
                         self.sited_dict['tech_id'].append(tech_id)
                         self.sited_dict['tech_name'].append(self.technology_dict[tech_id]['tech_name'])
-                        self.sited_dict['unit_size_mw'].append(self.technology_dict[tech_id]['unit_size'])
+                        self.sited_dict['unit_size_mw'].append(self.technology_dict[tech_id]['unit_size_mw'])
                         self.sited_dict['xcoord'].append(self.xcoords[target_ix])
                         self.sited_dict['ycoord'].append(self.ycoords[target_ix])
                         self.sited_dict['index'].append(self.indices_flat[target_ix])
@@ -200,21 +214,34 @@ class Competition:
                         self.sited_dict['sited_year'].append(self.settings_dict['run_year'])
                         self.sited_dict['retirement_year'].append(retirement_year)
                         self.sited_dict['lmp_zone'].append(self.zones_flat_arr[target_ix])
-                        self.sited_dict['locational_marginal_pricing'].append(self.lmp_flat_dict[tech_id][target_ix])
-                        self.sited_dict['net_operational_value'].append(self.nov_flat_dict[tech_id][target_ix])
-                        self.sited_dict['interconnection_cost'].append(self.ic_flat_dict[tech_id][target_ix])
-                        self.sited_dict['net_locational_cost'].append(self.nlc_flat_dict[tech_id][target_ix])
+                        self.sited_dict['locational_marginal_price_usd_per_mwh'].append(self.lmp_flat_dict[tech_id][target_ix])
+                        self.sited_dict['generation_mwh_per_year'].append(self.generation_flat_dict[tech_id][target_ix])
+                        self.sited_dict['operating_cost_usd_per_year'].append(self.operating_cost_flat_dict[tech_id][target_ix])
+                        self.sited_dict['net_operational_value_usd_per_year'].append(self.nov_flat_dict[tech_id][target_ix])
+                        self.sited_dict['interconnection_cost_usd_per_year'].append(self.ic_flat_dict[tech_id][target_ix])
+                        self.sited_dict['net_locational_cost_usd_per_year'].append(self.nlc_flat_dict[tech_id][target_ix])
+                        self.sited_dict['capacity_factor_fraction'].append(self.technology_dict[tech_id]["capacity_factor_fraction"])
+                        self.sited_dict['carbon_capture_rate_fraction'].append(self.technology_dict[tech_id]["carbon_capture_rate_fraction"])
+                        self.sited_dict['fuel_co2_content_tons_per_btu'].append(self.technology_dict[tech_id]["fuel_co2_content_tons_per_btu"])
+                        self.sited_dict['fuel_price_usd_per_mmbtu'].append(self.technology_dict[tech_id]["fuel_price_usd_per_mmbtu"])
+                        self.sited_dict['fuel_price_esc_rate_fraction'].append(self.technology_dict[tech_id]["fuel_price_esc_rate_fraction"])
+                        self.sited_dict['heat_rate_btu_per_kWh'].append(self.technology_dict[tech_id]["heat_rate_btu_per_kWh"])
+                        self.sited_dict['lifetime_yrs'].append(self.technology_dict[tech_id]["lifetime_yrs"])
+                        self.sited_dict['variable_om_usd_per_mwh'].append(self.technology_dict[tech_id]["variable_om_usd_per_mwh"])
+                        self.sited_dict['variable_om_esc_rate_fraction'].append(self.technology_dict[tech_id]["variable_om_esc_rate_fraction"])
+                        self.sited_dict['carbon_tax_usd_per_ton'].append(self.technology_dict[tech_id]["carbon_tax_usd_per_ton"])
+                        self.sited_dict['carbon_tax_esc_rate_fraction'].append(self.technology_dict[tech_id]["carbon_tax_esc_rate_fraction"])
 
                         # add selected index to list
                         sited_list.append(target_ix)
 
                         # apply buffer
                         result = util.buffer_flat_array(target_index=target_ix,
-                                                   arr=self.cheapest_arr_1d,
-                                                   nrows=self.cheapest_arr.shape[0],
-                                                   ncols=self.cheapest_arr.shape[1],
-                                                   ncells=self.technology_dict[tech_id]['buffer_in_km'],
-                                                   set_value=0)
+                                                        arr=self.cheapest_arr_1d,
+                                                        nrows=self.cheapest_arr.shape[0],
+                                                        ncols=self.cheapest_arr.shape[1],
+                                                        ncells=self.technology_dict[tech_id]['buffer_in_km'],
+                                                        set_value=0)
 
                         # unpack values
                         self.cheapest_arr_1d, buffer_indices_list = result
@@ -290,7 +317,7 @@ class Competition:
                 elif self.avail_grids == 0:
                     keep_siting = False
 
-                # if there are available grids but n
+                # if there are available grids and a cheapest option available but no more required sites
                 elif self.avail_grids > 0 and tech.shape[0] > 0 and required_sites == 0:
 
                     # if there are no required sites, then mask the rest of the techs suitable area so
@@ -307,8 +334,12 @@ class Competition:
                     # check for any available grids to site in
                     self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
 
-                # create sited data frame
-                df = pd.DataFrame(self.sited_dict).astype(util.sited_dtypes())
+                # if there are suitable cells AND no winners and some or no sites left to site pass until next round
+                else:
+                    pass
+
+        # create sited data frame
+        df = pd.DataFrame(self.sited_dict).astype(util.sited_dtypes())
 
         # reshape output array to 2D
         return self.sited_arr_1d.reshape(self.cheapest_arr.shape), df

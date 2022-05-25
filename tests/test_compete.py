@@ -10,9 +10,26 @@ class TestCompete(unittest.TestCase):
     EXPANSION_PLAN = {1: {'n_sites': 1, 'tech_name': 'test1'},
                       2: {'n_sites': 1, 'tech_name': 'test2'},
                       3: {'n_sites': 1, 'tech_name': 'test3'}}  # n sites per tech
-    TECH_DICT = {1: {'buffer_in_km': 1, 'lifetime': 60, 'tech_name': 'test1', 'unit_size': 80},
-                 2: {'buffer_in_km': 1, 'lifetime': 60, 'tech_name': 'test2', 'unit_size': 80},
-                 3: {'buffer_in_km': 1, 'lifetime': 60, 'tech_name': 'test3', 'unit_size': 80}}  # buffer per tech
+
+    SAMPLE_TECH_DICT = {'buffer_in_km': 1,
+                        'lifetime_yrs': 60,
+                        'tech_name': 'test',
+                        'unit_size_mw': 80,
+                        'capacity_factor_fraction': 0.1,
+                        'carbon_capture_rate_fraction': 0.0,
+                        'fuel_co2_content_tons_per_btu': 0.1,
+                        'fuel_price_usd_per_mmbtu': 1.0,
+                        'fuel_price_esc_rate_fraction': 1.0,
+                        'heat_rate_btu_per_kWh': 1.0,
+                        'variable_om_usd_per_mwh': 1.0,
+                        'variable_om_esc_rate_fraction': 1.0,
+                        'carbon_tax_usd_per_ton': 0.0,
+                        'carbon_tax_esc_rate_fraction': 1.0}
+
+    TECH_DICT = {1: SAMPLE_TECH_DICT,
+                 2: SAMPLE_TECH_DICT,
+                 3: SAMPLE_TECH_DICT}  # buffer per tech
+
     TECH_ORDER = [1, 2, 3]
 
     # proxy NLC array
@@ -49,8 +66,18 @@ class TestCompete(unittest.TestCase):
 
     COMP_SITED_DICT = {'region_name': ['test', 'test', 'test'],
                        'index': [2.4, 3.2, 3.2],
+                       'capacity_factor_fraction': [0.1, 0.1, 0.1],
+                       'carbon_capture_rate_fraction': [0.0, 0.0, 0.0],
+                       'carbon_tax_esc_rate_fraction': [1.0, 1.0, 1.0],
+                       'carbon_tax_usd_per_ton': [0.0, 0.0, 0.0],
+                       'fuel_co2_content_tons_per_btu': [0.1, 0.1, 0.1],
+                       'fuel_price_esc_rate_fraction': [1.0, 1.0, 1.0],
+                       'fuel_price_usd_per_mmbtu': [1.0, 1.0, 1.0],
+                       'generation_mwh_per_year': [2.4, 1.0, 3.2],
+                       'lifetime_yrs': [60, 60, 60],
+                       'heat_rate_btu_per_kWh': [1.0, 1.0, 1.0],
                        'tech_id': [1, 2, 3],
-                       'tech_name': ['test1', 'test2', 'test3'],
+                       'tech_name': ['test', 'test', 'test'],
                        'unit_size_mw': [80, 80, 80],
                        'xcoord': [2.4, 3.2, 3.2],
                        'ycoord': [2.4, 3.2, 3.2],
@@ -58,10 +85,13 @@ class TestCompete(unittest.TestCase):
                        'sited_year': [2010, 2010, 2010],
                        'retirement_year': [2070, 2070, 2070],
                        'lmp_zone': [2, 3, 3],
-                       'locational_marginal_pricing': [2.4, 1.0, 3.2],
-                       'net_operational_value': [2.4, 1.0, 3.2],
-                       'interconnection_cost': [2.4, 1.0, 3.2],
-                       'net_locational_cost': [2.4, 1.0, 3.2]}
+                       'variable_om_esc_rate_fraction': [1.0, 1.0, 1.0],
+                       'variable_om_usd_per_mwh': [1.0, 1.0, 1.0],
+                       'operating_cost_usd_per_year': [2.4, 1.0, 3.2],
+                       'locational_marginal_price_usd_per_mwh': [2.4, 1.0, 3.2],
+                       'net_operational_value_usd_per_year': [2.4, 1.0, 3.2],
+                       'interconnection_cost_usd_per_year': [2.4, 1.0, 3.2],
+                       'net_locational_cost_usd_per_year': [2.4, 1.0, 3.2]}
 
     @classmethod
     def create_masked_nlc_array(cls):
@@ -103,6 +133,8 @@ class TestCompete(unittest.TestCase):
                            technology_order=TestCompete.TECH_ORDER,
                            expansion_dict=TestCompete.EXPANSION_PLAN,
                            lmp_dict=fake_dict,
+                           generation_dict=fake_dict,
+                           operating_cost_dict=fake_dict,
                            nov_dict=fake_dict,
                            ic_dict=fake_dict,
                            nlc_mask=nlc_arr,

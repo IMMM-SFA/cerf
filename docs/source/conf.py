@@ -16,7 +16,7 @@ import sys
 import sphinx_rtd_theme
 
 # import cerf
-version = "2.0.9" #str(cerf.__version__)
+version = "2.1.0" #str(cerf.__version__)
 
 
 sys.path.insert(0, os.path.abspath('../../'))
@@ -25,7 +25,7 @@ sys.path.insert(0, os.path.abspath('../../'))
 # -- Project information -----------------------------------------------------
 
 project = 'cerf'
-copyright = '2021, Battelle Memorial Institute'
+copyright = '2021-2022, Battelle Memorial Institute'
 author = 'Chris R. Vernon'
 
 # The full version, including alpha/beta/rc tags
