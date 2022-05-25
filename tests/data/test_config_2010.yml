@@ -34,7 +34,7 @@ technology:
         heat_rate: 15117.64999999997
         fuel_price: 0.0
         carbon_capture_rate_fraction: 0.0
-        fuel_co2_content: 0.3035999999999996
+        fuel_co2_content_tons_per_btu: 0.3035999999999996
         discount_rate: 0.05
         carbon_esc_rate: 0.0
         carbon_tax: 0.0
@@ -54,7 +54,7 @@ technology:
         heat_rate: 10246.19999999998
         fuel_price: 0.7128099999999996
         carbon_capture_rate_fraction: 0.0
-        fuel_co2_content: 0.0
+        fuel_co2_content_tons_per_btu: 0.0
         discount_rate: 0.05
         carbon_esc_rate: 0.0
         carbon_tax: 0.0

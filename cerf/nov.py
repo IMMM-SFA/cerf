@@ -56,9 +56,9 @@ class NetOperationalValue:
                                             Units:  fraction
     :type carbon_capture_rate_fraction:              float
 
-    :param fuel_co2_content:                CO2 content of the fuel and the heat rate of the technology.
+    :param fuel_co2_content_tons_per_btu:                CO2 content of the fuel and the heat rate of the technology.
                                             Units:  from GCAM (tons/MWh) gets converted to (tons/Btu)
-    :type fuel_co2_content:                 float
+    :type fuel_co2_content_tons_per_btu:                 float
 
     :param lmp_arr:                         Locational Marginal Price (LMP) per grid cell for each technology in a
                                             multi-dimensional array where the shape is [tech_id, xcoord, ycoord].
@@ -86,7 +86,7 @@ class NetOperationalValue:
     fuel_price: float
     carbon_tax: float
     carbon_capture_rate_fraction: float
-    fuel_co2_content: float
+    fuel_co2_content_tons_per_btu: float
     lmp_arr: np.ndarray
     target_year: int
     consider_leap_year: bool
@@ -99,7 +99,7 @@ class NetOperationalValue:
 
     def __init__(self, discount_rate, lifetime, unit_size, capacity_factor_fraction, variable_cost_esc_rate,
                  fuel_esc_rate, carbon_esc_rate, variable_om, heat_rate, fuel_price, carbon_tax,
-                 carbon_capture_rate_fraction, fuel_co2_content, lmp_arr, target_year, consider_leap_year=False):
+                 carbon_capture_rate_fraction, fuel_co2_content_tons_per_btu, lmp_arr, target_year, consider_leap_year=False):
 
         # assign class attributes
         self.discount_rate = discount_rate
@@ -117,7 +117,7 @@ class NetOperationalValue:
 
         # create conversions
         self.fuel_price = self.convert_fuel_price(fuel_price)
-        self.fuel_co2_content = self.convert_fuel_co2_content(fuel_co2_content)
+        self.fuel_co2_content_tons_per_btu = self.convert_fuel_co2_content(fuel_co2_content_tons_per_btu)
 
         # adjust by leap year if so desired
         self.hours_per_year = self.assign_hours_per_year(target_year, consider_leap_year)
@@ -141,10 +141,10 @@ class NetOperationalValue:
         return fuel_price * NetOperationalValue.FUEL_PRICE_CONVERSION_FACTOR
 
     @staticmethod
-    def convert_fuel_co2_content(fuel_co2_content):
+    def convert_fuel_co2_content(fuel_co2_content_tons_per_btu):
         """Convert fuel CO2 content from units tons/MWh to tons/Btu"""
 
-        return fuel_co2_content * NetOperationalValue.FUEL_CO2_CONTENT_CONVERSION_FACTOR
+        return fuel_co2_content_tons_per_btu * NetOperationalValue.FUEL_CO2_CONTENT_CONVERSION_FACTOR
 
     @classmethod
     def assign_hours_per_year(cls, target_year, consider_leap_year):
@@ -191,6 +191,6 @@ class NetOperationalValue:
         term2 = self.lmp_arr * self.lf_fuel
         term3 = self.variable_om * self.lf_vom
         term4 = self.heat_rate * (self.fuel_price / 1000) * self.lf_fuel
-        term5 = (self.carbon_tax * self.fuel_co2_content * self.heat_rate * self.lf_carbon / 1000000) * (1 - self.carbon_capture_rate_fraction)
+        term5 = (self.carbon_tax * self.fuel_co2_content_tons_per_btu * self.heat_rate * self.lf_carbon / 1000000) * (1 - self.carbon_capture_rate_fraction)
 
         return generation * (term2 - (term3 + term4 + term5))

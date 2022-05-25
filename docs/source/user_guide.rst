@@ -118,7 +118,7 @@ These are technology-specific settings.
     +---------------------------------+---------------------------------------------+----------+----------+
     | carbon_capture_rate_fraction    | Rate of carbon capture                      | fraction | float    |
     +---------------------------------+---------------------------------------------+----------+----------+
-    | fuel_co2_content                | | CO2 content of the fuel and the heat rate | tons/MWh | float    |
+    | fuel_co2_content_tons_per_btu                | | CO2 content of the fuel and the heat rate | tons/MWh | float    |
     |                                 | | of the technology                         |          |          |
     +---------------------------------+---------------------------------------------+----------+----------+
     | discount_rate                   | The time value of money in real terms       | fraction | float    |
@@ -158,7 +158,7 @@ The following is an example implementation in the YAML configuration file:
             heat_rate: 15117.64999999997
             fuel_price: 0.0
             carbon_capture_rate_fraction: 0.0
-            fuel_co2_content: 0.3035999999999996
+            fuel_co2_content_tons_per_btu: 0.3035999999999996
             discount_rate: 0.05
             carbon_esc_rate: 0.0
             carbon_tax: 0.0
