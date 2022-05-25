@@ -52,9 +52,9 @@ class NetOperationalValue:
                                             Units:  $/ton
     :type carbon_tax:                       float
 
-    :param carbon_capture_rate:             Rate of carbon capture.
+    :param carbon_capture_rate_fraction:             Rate of carbon capture.
                                             Units:  fraction
-    :type carbon_capture_rate:              float
+    :type carbon_capture_rate_fraction:              float
 
     :param fuel_co2_content:                CO2 content of the fuel and the heat rate of the technology.
                                             Units:  from GCAM (tons/MWh) gets converted to (tons/Btu)
@@ -85,7 +85,7 @@ class NetOperationalValue:
     heat_rate: float
     fuel_price: float
     carbon_tax: float
-    carbon_capture_rate: float
+    carbon_capture_rate_fraction: float
     fuel_co2_content: float
     lmp_arr: np.ndarray
     target_year: int
@@ -99,7 +99,7 @@ class NetOperationalValue:
 
     def __init__(self, discount_rate, lifetime, unit_size, capacity_factor_fraction, variable_cost_esc_rate,
                  fuel_esc_rate, carbon_esc_rate, variable_om, heat_rate, fuel_price, carbon_tax,
-                 carbon_capture_rate, fuel_co2_content, lmp_arr, target_year, consider_leap_year=False):
+                 carbon_capture_rate_fraction, fuel_co2_content, lmp_arr, target_year, consider_leap_year=False):
 
         # assign class attributes
         self.discount_rate = discount_rate
@@ -112,7 +112,7 @@ class NetOperationalValue:
         self.variable_om = variable_om
         self.heat_rate = heat_rate
         self.carbon_tax = carbon_tax
-        self.carbon_capture_rate = carbon_capture_rate
+        self.carbon_capture_rate_fraction = carbon_capture_rate_fraction
         self.lmp_arr = lmp_arr
 
         # create conversions
@@ -191,6 +191,6 @@ class NetOperationalValue:
         term2 = self.lmp_arr * self.lf_fuel
         term3 = self.variable_om * self.lf_vom
         term4 = self.heat_rate * (self.fuel_price / 1000) * self.lf_fuel
-        term5 = (self.carbon_tax * self.fuel_co2_content * self.heat_rate * self.lf_carbon / 1000000) * (1 - self.carbon_capture_rate)
+        term5 = (self.carbon_tax * self.fuel_co2_content * self.heat_rate * self.lf_carbon / 1000000) * (1 - self.carbon_capture_rate_fraction)
 
         return generation * (term2 - (term3 + term4 + term5))

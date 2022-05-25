@@ -29,7 +29,7 @@ class TestNov(unittest.TestCase):
     HEAT_RATE = 10246.19999999998  # Btu/kWh
     FUEL_PRICE = 0.712809999999999  # $/GJ gets converted to $/MBtu in code
     CARBON_TAX = 0.0  # $/ton
-    CARBON_CAPTURE_RATE = 0.0  # fraction
+    CARBON_CAPTURE_RATE_FRACTION = 0.0  # fraction
     FUEL_CO2_CONTENT = 0.0  # tons/MWh gets converted to tons/Btu in code
     LMP_ARR = np.array([66.95609874])  # $/MWh
 
@@ -45,14 +45,14 @@ class TestNov(unittest.TestCase):
     EXPECTED_NOV_WITHCARBON_NOLEAP = np.array([1780847344.7371392])
 
     @classmethod
-    def instantiate_nov(cls, target_year, carbon_tax, fuel_co2_content, carbon_capture_rate, consider_leap_year):
+    def instantiate_nov(cls, target_year, carbon_tax, fuel_co2_content, carbon_capture_rate_fraction, consider_leap_year):
         """Instantiate NOV class with test values.  The additional parameters can be passed to
         test NOV under different carbon conditions."""
 
         return NetOperationalValue(discount_rate=cls.DISCOUNT_RATE,
                                    lifetime=cls.LIFETIME,
                                    unit_size=cls.UNIT_SIZE,
-                                   capacity_factor=cls.CAPACITY_FACTOR_FRACTION,
+                                   capacity_factor_fraction=cls.CAPACITY_FACTOR_FRACTION,
                                    variable_cost_esc_rate=cls.VARIABLE_COST_ESC_RATE,
                                    fuel_esc_rate=cls.FUEL_ESC_RATE,
                                    carbon_esc_rate=cls.CARBON_ESC_RATE,
@@ -60,7 +60,7 @@ class TestNov(unittest.TestCase):
                                    heat_rate=cls.HEAT_RATE,
                                    fuel_price=cls.FUEL_PRICE,
                                    carbon_tax=carbon_tax,
-                                   carbon_capture_rate=carbon_capture_rate,
+                                   carbon_capture_rate_fraction=carbon_capture_rate_fraction,
                                    fuel_co2_content=fuel_co2_content,
                                    lmp_arr=cls.LMP_ARR,
                                    target_year=target_year,
@@ -73,7 +73,7 @@ class TestNov(unittest.TestCase):
         econ = self.instantiate_nov(target_year=2010,  # four digit year
                                     carbon_tax=0.0,  # $/ton
                                     fuel_co2_content=0.0,  # tons/MWh gets converted to tons/Btu
-                                    carbon_capture_rate=0.0,  # fraction
+                                    carbon_capture_rate_fraction=0.0,  # fraction
                                     consider_leap_year=False
                                     )
         nov_tech_arr = econ.calc_nov()
@@ -100,7 +100,7 @@ class TestNov(unittest.TestCase):
         econ = self.instantiate_nov(target_year=2012,  # four digit year
                                     carbon_tax=0.0,  # $/ton
                                     fuel_co2_content=0.0,  # tons/MWh gets converted to tons/Btu
-                                    carbon_capture_rate=0.0,  # fraction
+                                    carbon_capture_rate_fraction=0.0,  # fraction
                                     consider_leap_year=True
                                     )
         nov_tech_arr = econ.calc_nov()
@@ -127,7 +127,7 @@ class TestNov(unittest.TestCase):
         econ = self.instantiate_nov(target_year=2010,  # four digit year
                                     carbon_tax=10.0,  # $/ton
                                     fuel_co2_content=1.2,  # tons/MWh gets converted to tons/Btu
-                                    carbon_capture_rate=0.05,  # fraction
+                                    carbon_capture_rate_fraction=0.05,  # fraction
                                     consider_leap_year=False
                                     )
         nov_tech_arr = econ.calc_nov()

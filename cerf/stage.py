@@ -167,7 +167,7 @@ class Stage:
                                        heat_rate=self.technology_dict[i]['heat_rate'],
                                        fuel_price=self.technology_dict[i]['fuel_price'],
                                        carbon_tax=self.technology_dict[i]['carbon_tax'],
-                                       carbon_capture_rate=self.technology_dict[i]['carbon_capture_rate'],
+                                       carbon_capture_rate_fraction=self.technology_dict[i]['carbon_capture_rate_fraction'],
                                        fuel_co2_content=self.technology_dict[i]['fuel_co2_content'],
                                        lmp_arr=self.lmp_arr[index, :, :],
                                        target_year=self.settings_dict.get('run_year'))
