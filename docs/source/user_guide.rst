@@ -97,7 +97,7 @@ These are technology-specific settings.
     +---------------------------------+---------------------------------------------+----------+----------+
     | lifetime_yrs                    | Asset lifetime                              | n_years  | int      |
     +---------------------------------+---------------------------------------------+----------+----------+
-    | capacity_factor                 | | Defined as average annual power generated | fraction | float    |
+    | capacity_factor_fraction        | | Defined as average annual power generated | fraction | float    |
     |                                 | | divided by the potential output if the    |          |          |
     |                                 | | plant operated at its rated capacity for a|          |          |
     |                                 | | year                                      |          |          |
@@ -608,6 +608,12 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
     * - locational_marginal_price_usd_per_mwh
       - See :ref:`Locational marginal price (LMP)`
       - $/MWh
+    * - generation_mwh_per_year
+      - See :ref:`Generation (G)`
+      - MWh/yr
+    * - operating_cost_usd_per_year
+      - See :ref:`Operating cost (OC)`
+      - $/yr
     * - net_operational_value
       - See :ref:`Net Operating Value`
       - $/yr
@@ -617,3 +623,36 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
     * - net_locational_cost
       - See :ref:`Net Locational Cost`
       - $/yr
+    * - capacity_factor_fraction
+      - Capacity factor
+      - fraction
+    * - carbon_capture_rate_fraction
+      - Carbon capture rate
+      - fraction
+    * - fuel_co2_content_tons_per_btu
+      - Fuel CO2 content
+      - tons/Btu
+    * - fuel_price_usd_per_mmbtu
+      - Fuel price
+      - $/MMBtu
+    * - fuel_price_esc_rate_fraction
+      - Fuel price escalation rate
+      - fraction
+    * - heat_rate_btu_per_kWh
+      - Heat rate
+      - Btu/kWh
+    * - lifetime_yrs
+      - Technology lifetime
+      - years
+    * - variable_om_usd_per_mwh
+      - Variable operation and maintenance costs of yearly capacity use
+      - #/mWh
+    * - variable_om_esc_rate_fraction
+      - Variable operation and maintenance costs escalation rate
+      - fraction
+    * - carbon_tax_usd_per_ton
+      - Carbon tax
+      - $/ton       
+    * - carbon_tax_esc_rate_fraction
+      - Carbon tax escalation rate
+      - fraction
