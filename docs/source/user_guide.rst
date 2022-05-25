@@ -111,7 +111,7 @@ These are technology-specific settings.
     | variable_om                     | | Variable operation and maintenance costs  | $/MWh    | float    |
     |                                 | | of yearly capacity use                    |          |          |
     +---------------------------------+---------------------------------------------+----------+----------+
-    | heat_rate                       | | Amount of energy used by a power plant to | Btu/kWh  | float    |
+    | heat_rate_btu_per_kWh           | | Amount of energy used by a power plant to | Btu/kWh  | float    |
     |                                 | | generate one kilowatt-hour of electricity |          |          |
     +---------------------------------+---------------------------------------------+----------+----------+
     | fuel_price_usd_per_mmbtu        | Cost of fuel per unit                       | $/GJ     | float    |
@@ -155,7 +155,7 @@ The following is an example implementation in the YAML configuration file:
             fuel_price_esc_rate_fraction: 0.0
             unit_size: 80
             variable_om: 11.68495803744351
-            heat_rate: 15117.64999999997
+            heat_rate_btu_per_kWh: 15117.64999999997
             fuel_price_usd_per_mmbtu: 0.0
             carbon_capture_rate_fraction: 0.0
             fuel_co2_content_tons_per_btu: 0.3035999999999996

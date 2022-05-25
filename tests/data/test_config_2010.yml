@@ -31,7 +31,7 @@ technology:
         unit_size: 80
         interconnection_cost_per_km: 552
         variable_om: 11.68495803744351
-        heat_rate: 15117.64999999997
+        heat_rate_btu_per_kWh: 15117.64999999997
         fuel_price_usd_per_mmbtu: 0.0
         carbon_capture_rate_fraction: 0.0
         fuel_co2_content_tons_per_btu: 0.3035999999999996
@@ -51,7 +51,7 @@ technology:
         unit_size: 1350
         interconnection_cost_per_km: 1104
         variable_om: 2.098127824402843
-        heat_rate: 10246.19999999998
+        heat_rate_btu_per_kWh: 10246.19999999998
         fuel_price_usd_per_mmbtu: 0.7128099999999996
         carbon_capture_rate_fraction: 0.0
         fuel_co2_content_tons_per_btu: 0.0
