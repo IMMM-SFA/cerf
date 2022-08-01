@@ -179,14 +179,12 @@ class Interconnection:
             self.transmission_costs_dict = pkg.costs_per_kv_substation()
 
         elif self.transmission_costs_file is not None:
-
             logging.info(f"Using substation costs from file: {self.transmission_costs_file}")
 
             with open(self.transmission_costs_file, 'r') as yml:
                 self.transmission_costs_dict = yaml.load(yml, Loader=yaml.FullLoader)
 
         if self.substation_file is None:
-
             sub_file = pkg.get_substation_file()
 
             logging.info(f"Using default substation file: {sub_file}")
@@ -219,8 +217,9 @@ class Interconnection:
                 for i in self.transmission_costs_dict.keys():
                     gdf['_rval_'] = np.where((gdf['min_volt'] >= self.transmission_costs_dict[i]['min_voltage']) &
                                              (gdf['min_volt'] <= self.transmission_costs_dict[i]['max_voltage']),
-                                             self.transmission_costs_dict[i]['thous_dollar_per_km'],
+                                             self.transmission_costs_dict[i]['dollar_per_km'],
                                              gdf['_rval_'])
+                    gdf['_rval_'] = 1
 
                 return gdf
 
