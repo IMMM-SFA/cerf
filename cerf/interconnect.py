@@ -219,8 +219,6 @@ class Interconnection:
                                              (gdf['min_volt'] <= self.transmission_costs_dict[i]['max_voltage']),
                                              self.transmission_costs_dict[i]['dollar_per_km'],
                                              gdf['_rval_'])
-                    gdf['_rval_'] = 1
-
                 return gdf
 
     def process_pipelines(self):
