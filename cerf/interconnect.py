@@ -323,8 +323,12 @@ class Interconnection:
                 out_alloc = os.path.join(tempdir, f'cerf_transmission_allocation_{setting}.tif')
                 out_costs = os.path.join(tempdir, f'cerf_transmission_costs_{setting}.tif')
 
+            # update source file nodata value to nan to ensure a fill of 0 can occur for the background
+            metadata.update({"nodata": -np.nan})
+
             # rasterize transmission vector data and write to memory
             with rasterio.open(out_rast, 'w', **metadata) as dataset:
+
                 # burn features into raster
                 burned = features.rasterize(shapes=shapes, fill=0, out=arr, transform=dataset.transform)
 
