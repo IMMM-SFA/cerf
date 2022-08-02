@@ -179,14 +179,12 @@ class Interconnection:
             self.transmission_costs_dict = pkg.costs_per_kv_substation()
 
         elif self.transmission_costs_file is not None:
-
             logging.info(f"Using substation costs from file: {self.transmission_costs_file}")
 
             with open(self.transmission_costs_file, 'r') as yml:
                 self.transmission_costs_dict = yaml.load(yml, Loader=yaml.FullLoader)
 
         if self.substation_file is None:
-
             sub_file = pkg.get_substation_file()
 
             logging.info(f"Using default substation file: {sub_file}")
@@ -216,11 +214,16 @@ class Interconnection:
                 # assign a field to rasterize by containing the cost of transmission per km
                 gdf['_rval_'] = 0
 
-                for i in self.transmission_costs_dict.keys():
-                    gdf['_rval_'] = np.where((gdf['min_volt'] >= self.transmission_costs_dict[i]['min_voltage']) &
-                                             (gdf['min_volt'] <= self.transmission_costs_dict[i]['max_voltage']),
-                                             self.transmission_costs_dict[i]['thous_dollar_per_km'],
-                                             gdf['_rval_'])
+                # check for the presence of a minimum voltage field
+                if 'min_volt' in gdf.columns:
+
+                    for i in self.transmission_costs_dict.keys():
+                        gdf['_rval_'] = np.where((gdf['min_volt'] >= self.transmission_costs_dict[i]['min_voltage']) &
+                                                 (gdf['min_volt'] <= self.transmission_costs_dict[i]['max_voltage']),
+                                                 self.transmission_costs_dict[i]['dollar_per_km'],
+                                                 gdf['_rval_'])
+                else:
+                    raise KeyError(f"Substations file must have a field named `min_volt` containing the minimum voltage.")
 
                 return gdf
 
@@ -320,8 +323,12 @@ class Interconnection:
                 out_alloc = os.path.join(tempdir, f'cerf_transmission_allocation_{setting}.tif')
                 out_costs = os.path.join(tempdir, f'cerf_transmission_costs_{setting}.tif')
 
+            # update source file nodata value to nan to ensure a fill of 0 can occur for the background
+            metadata.update({"nodata": -np.nan})
+
             # rasterize transmission vector data and write to memory
             with rasterio.open(out_rast, 'w', **metadata) as dataset:
+
                 # burn features into raster
                 burned = features.rasterize(shapes=shapes, fill=0, out=arr, transform=dataset.transform)
 
