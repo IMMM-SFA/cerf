@@ -9,7 +9,7 @@ Though **cerf** is demonstrated for the conterminous United States (CONUS), the 
 
 **cerf** requires the following inputs to be able to operate:
 
-- A shapefile of substations as points.
+- A shapefile of substations as points.  The substation file must contain a field defining the minimum voltage per substation named "min_volt".
 - A shapefile of gas pipelines as polylines if siting gas technologies.
 - A raster containing region IDs.  Each grid cell has the value of its parent region.  Currently, this is demonstrated using US states, though this could be generalized to any region/country/locale identifier matching what the electricity expansion plan provides.
 - A raster containing locational marginal pricing (LMP) zone IDs.  Each grid cell has the ID of its LMP zones.  These zones are representative of the nodal structure of the underlying model or software that produces the LMPs.  Production cost models to generate this value are not US-specific and this could be generated from any number of open-source and/or commercial products.
