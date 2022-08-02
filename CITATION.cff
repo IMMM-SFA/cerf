@@ -26,7 +26,7 @@ authors:
   given-names: "Matthew"
   orcid: "https://orcid.org/0000-0002-5177-7253"
 title: "cerf: A Python package to evaluate the feasibility and costs of power plant siting for alternative futures"
-version: 2.0.9
+version: 2.1.1
 doi: 10.5281/zenodo.1321312
 date-released: 2021-09-24
 url: "https://github.com/IMMM-SFA/cerf"
