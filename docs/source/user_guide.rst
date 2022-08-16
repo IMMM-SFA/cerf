@@ -95,7 +95,14 @@ These are technology-specific settings.
     +---------------------------------+---------------------------------------------+----------+----------+
     | tech_name                       | Name of the technology                      | NA       | str      |
     +---------------------------------+---------------------------------------------+----------+----------+
-    | lifetime_yrs                    | Asset lifetime                              | n_years  | int      |
+    | lifetime_yrs                    | Asset lifetime used in calculating annuity  | n_years  | int      |
+    |                                 | factor                                      |          |          |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | operational_life_yrs            | A separate parameter to allow for early     | n_years  | int      |
+    |                                 | retirement of power plants (i.e., not       |          |          |
+    |                                 | operating to their full expected life) and  |          |          |
+    |                                 | is set as the number of years after siting  |          |          |
+    |                                 | that the plant gets retired.                |          |          |
     +---------------------------------+---------------------------------------------+----------+----------+
     | capacity_factor_fraction        | | Defined as average annual power generated | fraction | float    |
     |                                 | | divided by the potential output if the    |          |          |
@@ -150,6 +157,7 @@ The following is an example implementation in the YAML configuration file:
         9:
             tech_name: biomass
             lifetime_yrs: 60
+            operational_life_yrs: 60
             capacity_factor_fraction: 0.6090000000000005
             variable_om_esc_rate_fraction: -0.00398993418629034
             fuel_price_esc_rate_fraction: 0.0
@@ -642,7 +650,10 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
       - Heat rate
       - Btu/kWh
     * - lifetime_yrs
-      - Technology lifetime
+      - Technology lifetime for annuity
+      - years
+    * - operational_life_yrs
+      - Operational lifetime for retirement
       - years
     * - variable_om_usd_per_mwh
       - Variable operation and maintenance costs of yearly capacity use
