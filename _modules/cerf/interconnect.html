@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.interconnect &mdash; cerf 2.0.9 documentation</title>
+  <title>cerf.interconnect &mdash; cerf 2.2.0 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                2.0.9
+                2.2.0
               </div>
             
           
@@ -353,14 +353,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span> <span class="o">=</span> <span class="n">pkg</span><span class="o">.</span><span class="n">costs_per_kv_substation</span><span class="p">()</span>
 
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using substation costs from file: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">yml</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">yml</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">substation_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-
             <span class="n">sub_file</span> <span class="o">=</span> <span class="n">pkg</span><span class="o">.</span><span class="n">get_substation_file</span><span class="p">()</span>
 
             <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using default substation file: </span><span class="si">{</span><span class="n">sub_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -390,11 +388,16 @@
                 <span class="c1"># assign a field to rasterize by containing the cost of transmission per km</span>
                 <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
 
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                    <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;min_volt&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;min_voltage&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
-                                             <span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;min_volt&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;max_voltage&#39;</span><span class="p">]),</span>
-                                             <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;thous_dollar_per_km&#39;</span><span class="p">],</span>
-                                             <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">])</span>
+                <span class="c1"># check for the presence of a minimum voltage field</span>
+                <span class="k">if</span> <span class="s1">&#39;min_volt&#39;</span> <span class="ow">in</span> <span class="n">gdf</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;min_volt&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;min_voltage&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
+                                                 <span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;min_volt&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;max_voltage&#39;</span><span class="p">]),</span>
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;dollar_per_km&#39;</span><span class="p">],</span>
+                                                 <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Substations file must have a field named `min_volt` containing the minimum voltage.&quot;</span><span class="p">)</span>
 
                 <span class="k">return</span> <span class="n">gdf</span></div>
 
@@ -494,8 +497,12 @@
                 <span class="n">out_alloc</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;cerf_transmission_allocation_</span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s1">.tif&#39;</span><span class="p">)</span>
                 <span class="n">out_costs</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tempdir</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;cerf_transmission_costs_</span><span class="si">{</span><span class="n">setting</span><span class="si">}</span><span class="s1">.tif&#39;</span><span class="p">)</span>
 
+            <span class="c1"># update source file nodata value to nan to ensure a fill of 0 can occur for the background</span>
+            <span class="n">metadata</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;nodata&quot;</span><span class="p">:</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">})</span>
+
             <span class="c1"># rasterize transmission vector data and write to memory</span>
             <span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">out_rast</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">metadata</span><span class="p">)</span> <span class="k">as</span> <span class="n">dataset</span><span class="p">:</span>
+
                 <span class="c1"># burn features into raster</span>
                 <span class="n">burned</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">rasterize</span><span class="p">(</span><span class="n">shapes</span><span class="o">=</span><span class="n">shapes</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">arr</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">dataset</span><span class="o">.</span><span class="n">transform</span><span class="p">)</span>
 
@@ -667,7 +674,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021, Battelle Memorial Institute.
+        &#169; Copyright 2021-2022, Battelle Memorial Institute.
 
     </p>
   </div>

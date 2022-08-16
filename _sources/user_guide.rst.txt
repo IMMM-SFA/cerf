@@ -9,7 +9,7 @@ Though **cerf** is demonstrated for the conterminous United States (CONUS), the 
 
 **cerf** requires the following inputs to be able to operate:
 
-- A shapefile of substations as points.
+- A shapefile of substations as points.  The substation file must contain a field defining the minimum voltage per substation named "min_volt".
 - A shapefile of gas pipelines as polylines if siting gas technologies.
 - A raster containing region IDs.  Each grid cell has the value of its parent region.  Currently, this is demonstrated using US states, though this could be generalized to any region/country/locale identifier matching what the electricity expansion plan provides.
 - A raster containing locational marginal pricing (LMP) zone IDs.  Each grid cell has the ID of its LMP zones.  These zones are representative of the nodal structure of the underlying model or software that produces the LMPs.  Production cost models to generate this value are not US-specific and this could be generated from any number of open-source and/or commercial products.
@@ -95,7 +95,14 @@ These are technology-specific settings.
     +---------------------------------+---------------------------------------------+----------+----------+
     | tech_name                       | Name of the technology                      | NA       | str      |
     +---------------------------------+---------------------------------------------+----------+----------+
-    | lifetime_yrs                    | Asset lifetime                              | n_years  | int      |
+    | lifetime_yrs                    | | Asset lifetime used in calculating        | n_years  | int      |
+    |                                 | | annuity factor                            |          |          |
+    +---------------------------------+---------------------------------------------+----------+----------+
+    | operational_life_yrs            | | A separate parameter to allow for early   | n_years  | int      |
+    |                                 | | retirement of power plants (i.e., not     |          |          |
+    |                                 | | operating to their full expected life) and|          |          |
+    |                                 | | is set as the number of years after       |          |          |
+    |                                 | | siting that the plant gets retired.       |          |          |
     +---------------------------------+---------------------------------------------+----------+----------+
     | capacity_factor_fraction        | | Defined as average annual power generated | fraction | float    |
     |                                 | | divided by the potential output if the    |          |          |
@@ -150,6 +157,7 @@ The following is an example implementation in the YAML configuration file:
         9:
             tech_name: biomass
             lifetime_yrs: 60
+            operational_life_yrs: 60
             capacity_factor_fraction: 0.6090000000000005
             variable_om_esc_rate_fraction: -0.00398993418629034
             fuel_price_esc_rate_fraction: 0.0
@@ -642,7 +650,10 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
       - Heat rate
       - Btu/kWh
     * - lifetime_yrs
-      - Technology lifetime
+      - Technology lifetime for annuity
+      - years
+    * - operational_life_yrs
+      - Operational lifetime for retirement
       - years
     * - variable_om_usd_per_mwh
       - Variable operation and maintenance costs of yearly capacity use
