@@ -98,11 +98,11 @@ These are technology-specific settings.
     | lifetime_yrs                    | Asset lifetime used in calculating annuity  | n_years  | int      |
     |                                 | factor                                      |          |          |
     +---------------------------------+---------------------------------------------+----------+----------+
-    | operational_life_yrs            | A separate parameter to allow for early     | n_years  | int      |
-    |                                 | retirement of power plants (i.e., not       |          |          |
-    |                                 | operating to their full expected life) and  |          |          |
-    |                                 | is set as the number of years after siting  |          |          |
-    |                                 | that the plant gets retired.                |          |          |
+    | operational_life_yrs            | | A separate parameter to allow for early   | n_years  | int      |
+    |                                 | | retirement of power plants (i.e., not     |          |          |
+    |                                 | | operating to their full expected life) and|          |          |
+    |                                 | | is set as the number of years after       |          |          |
+    |                                 | | siting that the plant gets retired.       |          |          |
     +---------------------------------+---------------------------------------------+----------+----------+
     | capacity_factor_fraction        | | Defined as average annual power generated | fraction | float    |
     |                                 | | divided by the potential output if the    |          |          |
