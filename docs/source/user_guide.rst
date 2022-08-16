@@ -95,8 +95,8 @@ These are technology-specific settings.
     +---------------------------------+---------------------------------------------+----------+----------+
     | tech_name                       | Name of the technology                      | NA       | str      |
     +---------------------------------+---------------------------------------------+----------+----------+
-    | lifetime_yrs                    | Asset lifetime used in calculating annuity  | n_years  | int      |
-    |                                 | factor                                      |          |          |
+    | lifetime_yrs                    | | Asset lifetime used in calculating        | n_years  | int      |
+    |                                 | | annuity factor                            |          |          |
     +---------------------------------+---------------------------------------------+----------+----------+
     | operational_life_yrs            | | A separate parameter to allow for early   | n_years  | int      |
     |                                 | | retirement of power plants (i.e., not     |          |          |
