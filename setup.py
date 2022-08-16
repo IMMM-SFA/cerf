@@ -44,7 +44,7 @@ setup(
         'fiona>=1.8.19',
         'pyproj>=3.0.1',
         'rtree>=0.9.7',
-        'shapely~=1',
+        'shapely>=1.7, <2',
         'geopandas>=0.9.0'
     ],
     extras_require={
