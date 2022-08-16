@@ -13,6 +13,7 @@ class TestCompete(unittest.TestCase):
 
     SAMPLE_TECH_DICT = {'buffer_in_km': 1,
                         'lifetime_yrs': 60,
+                        'operational_life_yrs': 60,
                         'tech_name': 'test',
                         'unit_size_mw': 80,
                         'capacity_factor_fraction': 0.1,
@@ -75,6 +76,7 @@ class TestCompete(unittest.TestCase):
                        'fuel_price_usd_per_mmbtu': [1.0, 1.0, 1.0],
                        'generation_mwh_per_year': [2.4, 1.0, 3.2],
                        'lifetime_yrs': [60, 60, 60],
+                       'operational_life_yrs': [60, 60, 60],
                        'heat_rate_btu_per_kWh': [1.0, 1.0, 1.0],
                        'tech_id': [1, 2, 3],
                        'tech_name': ['test', 'test', 'test'],
