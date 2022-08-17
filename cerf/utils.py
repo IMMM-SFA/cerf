@@ -77,6 +77,7 @@ def empty_sited_dict():
             'fuel_price_esc_rate_fraction': [],
             'heat_rate_btu_per_kWh': [],
             'lifetime_yrs': [],
+            'operational_life_yrs': [],
             'variable_om_usd_per_mwh': [],
             'variable_om_esc_rate_fraction': [],
             'carbon_tax_usd_per_ton': [],

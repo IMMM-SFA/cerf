@@ -183,7 +183,7 @@ class Competition:
                 required_sites = self.expansion_dict[tech_id]['n_sites']
 
                 # calculate the year of retirement
-                retirement_year = self.settings_dict['run_year'] + int(self.technology_dict[tech_id]['lifetime_yrs'])
+                retirement_year = self.settings_dict['run_year'] + int(self.technology_dict[tech_id]['operational_life_yrs'])
 
                 # if there are more power plants to site and there are grids available to site them...
                 if self.avail_grids > 0 and tech.shape[0] > 0 and required_sites > 0:
@@ -227,6 +227,7 @@ class Competition:
                         self.sited_dict['fuel_price_esc_rate_fraction'].append(self.technology_dict[tech_id]["fuel_price_esc_rate_fraction"])
                         self.sited_dict['heat_rate_btu_per_kWh'].append(self.technology_dict[tech_id]["heat_rate_btu_per_kWh"])
                         self.sited_dict['lifetime_yrs'].append(self.technology_dict[tech_id]["lifetime_yrs"])
+                        self.sited_dict['operational_life_yrs'].append(self.technology_dict[tech_id]["operational_life_yrs"])
                         self.sited_dict['variable_om_usd_per_mwh'].append(self.technology_dict[tech_id]["variable_om_usd_per_mwh"])
                         self.sited_dict['variable_om_esc_rate_fraction'].append(self.technology_dict[tech_id]["variable_om_esc_rate_fraction"])
                         self.sited_dict['carbon_tax_usd_per_ton'].append(self.technology_dict[tech_id]["carbon_tax_usd_per_ton"])
