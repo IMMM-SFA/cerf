@@ -194,6 +194,7 @@ class NetOperationalValue:
         term3 = self.variable_om_usd_per_mwh * self.lf_vom
         term4 = self.heat_rate_btu_per_kWh * (self.fuel_price_usd_per_mmbtu / 1000) * self.lf_fuel
         term5 = (self.carbon_tax_usd_per_ton * self.fuel_co2_content_tons_per_btu * self.heat_rate_btu_per_kWh * self.lf_carbon / 1000000) * (1 - self.carbon_capture_rate_fraction)
-        operating_cost = (term2 - (term3 + term4 + term5))
+        operating_cost = term3 + term4 + term5
+        nov = generation * (term2 - operating_cost)
 
-        return generation, operating_cost, generation * operating_cost
+        return generation, operating_cost, nov
