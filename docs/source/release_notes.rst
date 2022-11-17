@@ -4,6 +4,12 @@ Release notes
 This is the list of changes to **cerf** between each release. For full details,
 see the `commit logs <https://github.com/IMMM-SFA/cerf/commits>`_.
 
+Version 2.2.1
+_____________
+
+-
+
+
 Version 2.1.1
 _____________
 
