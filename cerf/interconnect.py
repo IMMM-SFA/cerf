@@ -23,10 +23,10 @@ class Interconnection:
     """Calculate interconnection costs per grid cell in $ / yr using:
 
     Interconnection Cost ($ / yr) = Distance to nearest suitable transmission line (km) *
-                                        Electric grid interconnection captial cost ($ / km) *
+                                        Electric grid interconnection captial cost (thous$ / km) *
                                         Annuity factor
                                         + (if gas-fired technology) Distance to nearest suitable gas pipeline (km) *
-                                        Gas interconnection captial cost ($ / km) *
+                                        Gas interconnection captial cost (thous$ / km) *
                                         Annuity factor
 
             where, Annuity factor is (d(1 + d)**n) / ((1 + d)**n - 1)
@@ -220,7 +220,7 @@ class Interconnection:
                     for i in self.transmission_costs_dict.keys():
                         gdf['_rval_'] = np.where((gdf['min_volt'] >= self.transmission_costs_dict[i]['min_voltage']) &
                                                  (gdf['min_volt'] <= self.transmission_costs_dict[i]['max_voltage']),
-                                                 self.transmission_costs_dict[i]['dollar_per_km'],
+                                                 self.transmission_costs_dict[i]['thous_dollar_per_km'],
                                                  gdf['_rval_'])
                 else:
                     raise KeyError(f"Substations file must have a field named `min_volt` containing the minimum voltage.")
@@ -400,7 +400,7 @@ class Interconnection:
 def preprocess_hifld_substations(substation_file, output_file=None):
     """Select substations from HIFLD data that are within the CONUS and either in service or under construction and
     having a minimum voltage rating >= 0.  A field used to rasterize ('_rval_') is also added containing the cost of
-    connection in $/km for each substation.
+    connection in thous$/km for each substation.
 
     This data is assumed to have the following fields:  ['TYPE', 'STATE', 'STATUS'].
 

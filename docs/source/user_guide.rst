@@ -535,7 +535,7 @@ Interconnection cost is the sum of the transmission interconnection cost and the
 
     IC = (D_{elec} * C_{elec} * AF) + (D_{gas} * C_{gas} * AF)
 
-where, *IC* is Interconnection Cost in $/yr; *D*\ :subscript:`elec` is the distance to the nearest suitable electricity transmission infrastructure (e.g., substation) in kilometers; *C*\ :subscript:`elec` is the electric grid interconnection captial cost in $/km; *D*\ :subscript:`gas` is the distance to the nearest suitable gas pipeline in kilometers; *C*\ :subscript:`gas` is the gas interconnection captial cost in $/km and *AF* is the annuity factor.
+where, *IC* is Interconnection Cost in $/yr; *D*\ :subscript:`elec` is the distance to the nearest suitable electricity transmission infrastructure (e.g., substation) in kilometers; *C*\ :subscript:`elec` is the electric grid interconnection captial cost in thous$/km; *D*\ :subscript:`gas` is the distance to the nearest suitable gas pipeline in kilometers; *C*\ :subscript:`gas` is the gas interconnection capital cost in thous$/km and *AF* is the annuity factor.
 
 The annuity factor (*AF*) is calculated as:
 
