@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf package &mdash; cerf 2.2.0 documentation</title>
+  <title>cerf package &mdash; cerf 2.2.1 documentation</title>
   
 
   
@@ -72,7 +72,7 @@
             
             
               <div class="version">
-                2.2.0
+                2.2.1
               </div>
             
           
@@ -293,7 +293,7 @@ to install it in data directory of the package.</p>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cerf.install_supplement.InstallSupplement.DATA_VERSION_URLS">
-<span class="sig-name descname"><span class="pre">DATA_VERSION_URLS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{'2.0.0':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.1':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.2':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.3':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.4':</span> <span class="pre">'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.5':</span> <span class="pre">'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.6':</span> <span class="pre">'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.7':</span> <span class="pre">'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.8':</span> <span class="pre">'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.9':</span> <span class="pre">'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.1.0':</span> <span class="pre">'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.1.1':</span> <span class="pre">'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.2.0':</span> <span class="pre">''}</span></em><a class="headerlink" href="#cerf.install_supplement.InstallSupplement.DATA_VERSION_URLS" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">DATA_VERSION_URLS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{'2.0.0':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.1':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.2':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.3':</span> <span class="pre">'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.4':</span> <span class="pre">'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.5':</span> <span class="pre">'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.6':</span> <span class="pre">'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.7':</span> <span class="pre">'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.8':</span> <span class="pre">'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.0.9':</span> <span class="pre">'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.1.0':</span> <span class="pre">'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.1.1':</span> <span class="pre">'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.2.0':</span> <span class="pre">'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',</span> <span class="pre">'2.2.1':</span> <span class="pre">'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1'}</span></em><a class="headerlink" href="#cerf.install_supplement.InstallSupplement.DATA_VERSION_URLS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -328,10 +328,10 @@ to install it in data directory of the package.</p>
 <p>Calculate interconnection costs per grid cell in $ / yr using:</p>
 <dl>
 <dt>Interconnection Cost ($ / yr) = Distance to nearest suitable transmission line (km) *</dt><dd><blockquote>
-<div><p>Electric grid interconnection captial cost ($ / km) *
+<div><p>Electric grid interconnection captial cost (thous$ / km) *
 Annuity factor
 + (if gas-fired technology) Distance to nearest suitable gas pipeline (km) *
-Gas interconnection captial cost ($ / km) *
+Gas interconnection captial cost (thous$ / km) *
 Annuity factor</p>
 </div></blockquote>
 <p>where, Annuity factor is (d(1 + d)**n) / ((1 + d)**n - 1)
@@ -451,7 +451,7 @@ shapefile</p></li>
 <span class="sig-prename descclassname"><span class="pre">cerf.interconnect.</span></span><span class="sig-name descname"><span class="pre">preprocess_hifld_substations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substation_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cerf/interconnect.html#preprocess_hifld_substations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cerf.interconnect.preprocess_hifld_substations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Select substations from HIFLD data that are within the CONUS and either in service or under construction and
 having a minimum voltage rating &gt;= 0.  A field used to rasterize (‘_rval_’) is also added containing the cost of
-connection in $/km for each substation.</p>
+connection in thous$/km for each substation.</p>
 <p>This data is assumed to have the following fields:  [‘TYPE’, ‘STATE’, ‘STATUS’].</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

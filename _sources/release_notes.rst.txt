@@ -4,6 +4,13 @@ Release notes
 This is the list of changes to **cerf** between each release. For full details,
 see the `commit logs <https://github.com/IMMM-SFA/cerf/commits>`_.
 
+Version 2.2.1
+_____________
+
+- Changed docs to thousands of km for interconnection cost variables https://github.com/IMMM-SFA/cerf/pull/92
+- Reporting incorrect operation costs. There will be no effect to the siting result, but will influence operating cost reporting in the output. https://github.com/IMMM-SFA/cerf/pull/91
+
+
 Version 2.1.1
 _____________
 

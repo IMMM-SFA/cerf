@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.interconnect &mdash; cerf 2.2.0 documentation</title>
+  <title>cerf.interconnect &mdash; cerf 2.2.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                2.2.0
+                2.2.1
               </div>
             
           
@@ -197,10 +197,10 @@
     <span class="sd">&quot;&quot;&quot;Calculate interconnection costs per grid cell in $ / yr using:</span>
 
 <span class="sd">    Interconnection Cost ($ / yr) = Distance to nearest suitable transmission line (km) *</span>
-<span class="sd">                                        Electric grid interconnection captial cost ($ / km) *</span>
+<span class="sd">                                        Electric grid interconnection captial cost (thous$ / km) *</span>
 <span class="sd">                                        Annuity factor</span>
 <span class="sd">                                        + (if gas-fired technology) Distance to nearest suitable gas pipeline (km) *</span>
-<span class="sd">                                        Gas interconnection captial cost ($ / km) *</span>
+<span class="sd">                                        Gas interconnection captial cost (thous$ / km) *</span>
 <span class="sd">                                        Annuity factor</span>
 
 <span class="sd">            where, Annuity factor is (d(1 + d)**n) / ((1 + d)**n - 1)</span>
@@ -394,7 +394,7 @@
                     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                         <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;min_volt&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;min_voltage&#39;</span><span class="p">])</span> <span class="o">&amp;</span>
                                                  <span class="p">(</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;min_volt&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;max_voltage&#39;</span><span class="p">]),</span>
-                                                 <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;dollar_per_km&#39;</span><span class="p">],</span>
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">transmission_costs_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;thous_dollar_per_km&#39;</span><span class="p">],</span>
                                                  <span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;_rval_&#39;</span><span class="p">])</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Substations file must have a field named `min_volt` containing the minimum voltage.&quot;</span><span class="p">)</span>
@@ -574,7 +574,7 @@
 <div class="viewcode-block" id="preprocess_hifld_substations"><a class="viewcode-back" href="../../cerf.html#cerf.interconnect.preprocess_hifld_substations">[docs]</a><span class="k">def</span> <span class="nf">preprocess_hifld_substations</span><span class="p">(</span><span class="n">substation_file</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Select substations from HIFLD data that are within the CONUS and either in service or under construction and</span>
 <span class="sd">    having a minimum voltage rating &gt;= 0.  A field used to rasterize (&#39;_rval_&#39;) is also added containing the cost of</span>
-<span class="sd">    connection in $/km for each substation.</span>
+<span class="sd">    connection in thous$/km for each substation.</span>
 
 <span class="sd">    This data is assumed to have the following fields:  [&#39;TYPE&#39;, &#39;STATE&#39;, &#39;STATUS&#39;].</span>
 

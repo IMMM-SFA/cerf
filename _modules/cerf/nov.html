@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.nov &mdash; cerf 2.2.0 documentation</title>
+  <title>cerf.nov &mdash; cerf 2.2.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                2.2.0
+                2.2.1
               </div>
             
           
@@ -368,9 +368,10 @@
         <span class="n">term3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variable_om_usd_per_mwh</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lf_vom</span>
         <span class="n">term4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">heat_rate_btu_per_kWh</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fuel_price_usd_per_mmbtu</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lf_fuel</span>
         <span class="n">term5</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">carbon_tax_usd_per_ton</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuel_co2_content_tons_per_btu</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">heat_rate_btu_per_kWh</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lf_carbon</span> <span class="o">/</span> <span class="mi">1000000</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">carbon_capture_rate_fraction</span><span class="p">)</span>
-        <span class="n">operating_cost</span> <span class="o">=</span> <span class="p">(</span><span class="n">term2</span> <span class="o">-</span> <span class="p">(</span><span class="n">term3</span> <span class="o">+</span> <span class="n">term4</span> <span class="o">+</span> <span class="n">term5</span><span class="p">))</span>
+        <span class="n">operating_cost</span> <span class="o">=</span> <span class="n">term3</span> <span class="o">+</span> <span class="n">term4</span> <span class="o">+</span> <span class="n">term5</span>
+        <span class="n">nov</span> <span class="o">=</span> <span class="n">generation</span> <span class="o">*</span> <span class="p">(</span><span class="n">term2</span> <span class="o">-</span> <span class="n">operating_cost</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">generation</span><span class="p">,</span> <span class="n">operating_cost</span><span class="p">,</span> <span class="n">generation</span> <span class="o">*</span> <span class="n">operating_cost</span></div></div>
+        <span class="k">return</span> <span class="n">generation</span><span class="p">,</span> <span class="n">operating_cost</span><span class="p">,</span> <span class="n">nov</span></div></div>
 </pre></div>
 
            </div>

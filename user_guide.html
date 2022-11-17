@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>User guide &mdash; cerf 2.2.0 documentation</title>
+  <title>User guide &mdash; cerf 2.2.1 documentation</title>
   
 
   
@@ -72,7 +72,7 @@
             
             
               <div class="version">
-                2.2.0
+                2.2.1
               </div>
             
           
@@ -1124,7 +1124,7 @@ python3 -c <span class="s1">&#39;import cerf; cerf.install_package_data()&#39;</
 <p>Interconnection cost is the sum of the transmission interconnection cost and the gas pipeline interconnection cost (if a gas-fired technology is being evaluated) at each grid cell.  <strong>cerf</strong> calculates the distances to the nearest substation with the minimum required voltage rating and to the nearest gas pipeline with the minimum required diameter for each suitable grid cell.  It then applies distance- and voltage-based capital costs to estimate the total cost for the new plant to connect to the grid.  This is calculated as:</p>
 <div class="math">
 <p><img src="_images/math/e8de11eb01d453ad52e244f7a9941bb251d1735e.png" alt="IC = (D_{elec} * C_{elec} * AF) + (D_{gas} * C_{gas} * AF)"/></p>
-</div><p>where, <em>IC</em> is Interconnection Cost in $/yr; <em>D</em><sub>elec</sub> is the distance to the nearest suitable electricity transmission infrastructure (e.g., substation) in kilometers; <em>C</em><sub>elec</sub> is the electric grid interconnection captial cost in $/km; <em>D</em><sub>gas</sub> is the distance to the nearest suitable gas pipeline in kilometers; <em>C</em><sub>gas</sub> is the gas interconnection captial cost in $/km and <em>AF</em> is the annuity factor.</p>
+</div><p>where, <em>IC</em> is Interconnection Cost in $/yr; <em>D</em><sub>elec</sub> is the distance to the nearest suitable electricity transmission infrastructure (e.g., substation) in kilometers; <em>C</em><sub>elec</sub> is the electric grid interconnection captial cost in thous$/km; <em>D</em><sub>gas</sub> is the distance to the nearest suitable gas pipeline in kilometers; <em>C</em><sub>gas</sub> is the gas interconnection capital cost in thous$/km and <em>AF</em> is the annuity factor.</p>
 <p>The annuity factor (<em>AF</em>) is calculated as:</p>
 <div class="math">
 <p><img src="_images/math/8ff73e9308fe851036cbddd32ed53043fdddb6c9.png" alt="AF = \frac{d(1 + d)^n}{(1 + d)^n - 1}"/></p>
