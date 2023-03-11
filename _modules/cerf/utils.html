@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.utils &mdash; cerf 2.2.1 documentation</title>
+  <title>cerf.utils &mdash; cerf 2.3 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                2.2.1
+                2.3
               </div>
             
           
@@ -434,7 +434,39 @@
     <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span></div>
 
 
-<div class="viewcode-block" id="ingest_sited_data"><a class="viewcode-back" href="../../cerf.html#cerf.utils.ingest_sited_data">[docs]</a><span class="k">def</span> <span class="nf">ingest_sited_data</span><span class="p">(</span><span class="n">run_year</span><span class="p">,</span> <span class="n">x_array</span><span class="p">,</span> <span class="n">siting_data</span><span class="p">):</span>
+<div class="viewcode-block" id="genrate_grid_coordinate_lookup"><a class="viewcode-back" href="../../cerf.html#cerf.utils.genrate_grid_coordinate_lookup">[docs]</a><span class="k">def</span> <span class="nf">genrate_grid_coordinate_lookup</span><span class="p">(</span><span class="n">template_raster</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                   <span class="n">precision</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Generate a lookup data frame from the input template raster.</span>
+
+<span class="sd">    :param template_raster:                 Full path with file name and extension to the input tempate raster file</span>
+<span class="sd">    :type template_raster:                  str</span>
+
+<span class="sd">    :param precision:                       Desired precision of coordinates to round to</span>
+<span class="sd">    :type precision:                        int</span>
+
+<span class="sd">    :returns:                               DataFrame of grid index, xcoords, and ycoords in template raster</span>
+<span class="sd">    :rtype:                                 pd.DataFrame</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">template_raster</span><span class="p">)</span> <span class="k">as</span> <span class="n">src</span><span class="p">:</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">height</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">cols</span><span class="p">,</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">width</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">height</span><span class="p">))</span>
+        <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span> <span class="o">=</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">xy</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">transform</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">)</span>
+
+        <span class="c1"># convert to arrays, flatten to 1D and round to tenth</span>
+        <span class="n">xcoords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">precision</span><span class="p">)</span>
+        <span class="n">ycoords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">precision</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;grid_index&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="n">xcoords</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">&quot;xcoord&quot;</span><span class="p">:</span> <span class="n">xcoords</span><span class="p">,</span> <span class="s2">&quot;ycoord&quot;</span><span class="p">:</span> <span class="n">ycoords</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="ingest_sited_data"><a class="viewcode-back" href="../../cerf.html#cerf.utils.ingest_sited_data">[docs]</a><span class="k">def</span> <span class="nf">ingest_sited_data</span><span class="p">(</span><span class="n">run_year</span><span class="p">,</span>
+                      <span class="n">x_array</span><span class="p">,</span>
+                      <span class="n">siting_data</span><span class="p">,</span>
+                      <span class="n">template_raster_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                      <span class="n">precision</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Import sited data containing the locations and additional data to establish an initial suitability condition</span>
 <span class="sd">    representing power plants and their siting buffer.</span>
 
@@ -457,6 +489,12 @@
 <span class="sd">    :param siting_data:                     Full path with file name and extension for the input siting file or a</span>
 <span class="sd">                                            Pandas DataFrame</span>
 <span class="sd">    :type siting_data:                      str, DataFrame</span>
+
+<span class="sd">    :param template_raster_file:            Full path with file name and extension to the input tempate raster file</span>
+<span class="sd">    :type template_raster_file:             str</span>
+
+<span class="sd">    :param precision:                       Desired precision of coordinates to round to</span>
+<span class="sd">    :type precision:                        int</span>
 
 <span class="sd">    :return:                                [0] 2D array of 0 (suitable) and 1 (unsuitable) values where 1 are the sites</span>
 <span class="sd">                                            and their buffers of active power plants</span>
@@ -481,6 +519,19 @@
     <span class="c1"># initialize an array to hold the 0, 1 sited and buffer data</span>
     <span class="n">sited_arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x_array</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 
+    <span class="c1"># convert coordinates from initialization file</span>
+    <span class="n">lookup_df</span> <span class="o">=</span> <span class="n">genrate_grid_coordinate_lookup</span><span class="p">(</span><span class="n">template_raster_file</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="n">precision</span><span class="p">)</span>
+
+    <span class="c1"># match coordinates in input file to the lookup from the template raster</span>
+    <span class="n">df_input</span> <span class="o">=</span> <span class="n">df_active</span><span class="p">[[</span><span class="s2">&quot;xcoord&quot;</span><span class="p">,</span> <span class="s2">&quot;ycoord&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">precision</span><span class="p">)</span>
+    <span class="n">df_input</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_input</span><span class="p">,</span>
+                        <span class="n">lookup_df</span><span class="p">,</span>
+                        <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>
+                        <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;xcoord&quot;</span><span class="p">,</span> <span class="s2">&quot;ycoord&quot;</span><span class="p">])</span>
+
+    <span class="c1"># give the input data frame the new index from the coordinate lookup</span>
+    <span class="n">df_active</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_input</span><span class="p">[</span><span class="s2">&quot;grid_index&quot;</span><span class="p">]</span>
+
     <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="n">df_active</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>
 
         <span class="c1"># get the buffer size for the site</span>
@@ -501,7 +552,7 @@
 
   <div role="contentinfo">
     <p>
-        &#169; Copyright 2021-2022, Battelle Memorial Institute.
+        &#169; Copyright 2021-current, Battelle Memorial Institute.
 
     </p>
   </div>
