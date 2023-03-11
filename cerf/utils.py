@@ -8,8 +8,6 @@ import xarray as xr
 import geopandas as gpd
 from shapely.geometry import Point
 
-from .package_data import get_suitability_raster
-
 
 def results_to_geodataframe(result_df, target_crs):
     """Convert the results from 'cerf.run()' to a GeoDataFrame.
@@ -290,7 +288,11 @@ def genrate_grid_coordinate_lookup(template_raster: str,
     return pd.DataFrame({"grid_index": range(xcoords.shape[0]), "xcoord": xcoords, "ycoord": ycoords})
 
 
-def ingest_sited_data(run_year, x_array, siting_data, precision: int = 1):
+def ingest_sited_data(run_year,
+                      x_array,
+                      siting_data,
+                      template_raster_file: str,
+                      precision: int = 1):
     """Import sited data containing the locations and additional data to establish an initial suitability condition
     representing power plants and their siting buffer.
 
@@ -313,6 +315,9 @@ def ingest_sited_data(run_year, x_array, siting_data, precision: int = 1):
     :param siting_data:                     Full path with file name and extension for the input siting file or a
                                             Pandas DataFrame
     :type siting_data:                      str, DataFrame
+
+    :param template_raster_file:            Full path with file name and extension to the input tempate raster file
+    :type template_raster_file:             str
 
     :param precision:                       Desired precision of coordinates to round to
     :type precision:                        int
@@ -341,19 +346,17 @@ def ingest_sited_data(run_year, x_array, siting_data, precision: int = 1):
     sited_arr = np.zeros_like(x_array).flatten()
 
     # convert coordinates from initialization file
-    lookup_df = genrate_grid_coordinate_lookup(get_suitability_raster(), precision=precision)
+    lookup_df = genrate_grid_coordinate_lookup(template_raster_file, precision=precision)
 
     # match coordinates in input file to the lookup from the template raster
-    df_active = pd.merge(df_active[["xcoord", "ycoord", "index"]].round(precision),
-                         lookup_df,
-                         how="left",
-                         on=["xcoord", "ycoord"])
+    df_input = df_active[["xcoord", "ycoord"]].copy().round(precision)
+    df_input = pd.merge(df_input,
+                        lookup_df,
+                        how="left",
+                        on=["xcoord", "ycoord"])
 
     # give the input data frame the new index from the coordinate lookup
-    df_active["index"] = df_active["grid_index"]
-
-    # drop lookup index
-    df_active.drop(columns=["grid_index"], inplace=True)
+    df_active["index"] = df_input["grid_index"]
 
     for ix in df_active['index'].tolist():
 
