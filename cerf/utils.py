@@ -8,6 +8,8 @@ import xarray as xr
 import geopandas as gpd
 from shapely.geometry import Point
 
+from .package_data import get_suitability_raster
+
 
 def results_to_geodataframe(result_df, target_crs):
     """Convert the results from 'cerf.run()' to a GeoDataFrame.
@@ -288,7 +290,7 @@ def genrate_grid_coordinate_lookup(template_raster: str,
     return pd.DataFrame({"grid_index": range(xcoords.shape[0]), "xcoord": xcoords, "ycoord": ycoords})
 
 
-def ingest_sited_data(run_year, x_array, siting_data):
+def ingest_sited_data(run_year, x_array, siting_data, precision: int = 1):
     """Import sited data containing the locations and additional data to establish an initial suitability condition
     representing power plants and their siting buffer.
 
@@ -312,6 +314,9 @@ def ingest_sited_data(run_year, x_array, siting_data):
                                             Pandas DataFrame
     :type siting_data:                      str, DataFrame
 
+    :param precision:                       Desired precision of coordinates to round to
+    :type precision:                        int
+
     :return:                                [0] 2D array of 0 (suitable) and 1 (unsuitable) values where 1 are the sites
                                             and their buffers of active power plants
 
@@ -334,6 +339,21 @@ def ingest_sited_data(run_year, x_array, siting_data):
 
     # initialize an array to hold the 0, 1 sited and buffer data
     sited_arr = np.zeros_like(x_array).flatten()
+
+    # convert coordinates from initialization file
+    lookup_df = genrate_grid_coordinate_lookup(get_suitability_raster(), precision=precision)
+
+    # match coordinates in input file to the lookup from the template raster
+    df_active = pd.merge(df_active[["xcoord", "ycoord", "index"]].round(precision),
+                         lookup_df,
+                         how="left",
+                         on=["xcoord", "ycoord"])
+
+    # give the input data frame the new index from the coordinate lookup
+    df_active["index"] = df_active["grid_index"]
+
+    # drop lookup index
+    df_active.drop(columns=["grid_index"], inplace=True)
 
     for ix in df_active['index'].tolist():
 
