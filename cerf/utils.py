@@ -260,6 +260,34 @@ def raster_to_coord_arrays(template_raster):
     return x, y
 
 
+def genrate_grid_coordinate_lookup(template_raster: str,
+                                   precision: int = 1) -> pd.DataFrame:
+    """Generate a lookup data frame from the input template raster.
+
+    :param template_raster:                 Full path with file name and extension to the input tempate raster file
+    :type template_raster:                  str
+
+    :param precision:                       Desired precision of coordinates to round to
+    :type precision:                        int
+
+    :returns:                               DataFrame of grid index, xcoords, and ycoords in template raster
+    :rtype:                                 pd.DataFrame
+
+    """
+
+    with rasterio.open(template_raster) as src:
+        arr = src.read(1)
+        height, width = arr.shape
+        cols, rows = np.meshgrid(np.arange(width), np.arange(height))
+        xs, ys = rasterio.transform.xy(src.transform, rows, cols)
+
+        # convert to arrays, flatten to 1D and round to tenth
+        xcoords = np.array(xs).flatten().round(precision)
+        ycoords = np.array(ys).flatten().round(precision)
+
+    return pd.DataFrame({"grid_index": range(xcoords.shape[0]), "xcoord": xcoords, "ycoord": ycoords})
+
+
 def ingest_sited_data(run_year, x_array, siting_data):
     """Import sited data containing the locations and additional data to establish an initial suitability condition
     representing power plants and their siting buffer.
