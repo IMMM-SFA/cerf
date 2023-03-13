@@ -260,7 +260,39 @@ def raster_to_coord_arrays(template_raster):
     return x, y
 
 
-def ingest_sited_data(run_year, x_array, siting_data):
+def genrate_grid_coordinate_lookup(template_raster: str,
+                                   precision: int = 1) -> pd.DataFrame:
+    """Generate a lookup data frame from the input template raster.
+
+    :param template_raster:                 Full path with file name and extension to the input tempate raster file
+    :type template_raster:                  str
+
+    :param precision:                       Desired precision of coordinates to round to
+    :type precision:                        int
+
+    :returns:                               DataFrame of grid index, xcoords, and ycoords in template raster
+    :rtype:                                 pd.DataFrame
+
+    """
+
+    with rasterio.open(template_raster) as src:
+        arr = src.read(1)
+        height, width = arr.shape
+        cols, rows = np.meshgrid(np.arange(width), np.arange(height))
+        xs, ys = rasterio.transform.xy(src.transform, rows, cols)
+
+        # convert to arrays, flatten to 1D and round to tenth
+        xcoords = np.array(xs).flatten().round(precision)
+        ycoords = np.array(ys).flatten().round(precision)
+
+    return pd.DataFrame({"grid_index": range(xcoords.shape[0]), "xcoord": xcoords, "ycoord": ycoords})
+
+
+def ingest_sited_data(run_year,
+                      x_array,
+                      siting_data,
+                      template_raster_file: str,
+                      precision: int = 1):
     """Import sited data containing the locations and additional data to establish an initial suitability condition
     representing power plants and their siting buffer.
 
@@ -284,6 +316,12 @@ def ingest_sited_data(run_year, x_array, siting_data):
                                             Pandas DataFrame
     :type siting_data:                      str, DataFrame
 
+    :param template_raster_file:            Full path with file name and extension to the input tempate raster file
+    :type template_raster_file:             str
+
+    :param precision:                       Desired precision of coordinates to round to
+    :type precision:                        int
+
     :return:                                [0] 2D array of 0 (suitable) and 1 (unsuitable) values where 1 are the sites
                                             and their buffers of active power plants
 
@@ -306,6 +344,19 @@ def ingest_sited_data(run_year, x_array, siting_data):
 
     # initialize an array to hold the 0, 1 sited and buffer data
     sited_arr = np.zeros_like(x_array).flatten()
+
+    # convert coordinates from initialization file
+    lookup_df = genrate_grid_coordinate_lookup(template_raster_file, precision=precision)
+
+    # match coordinates in input file to the lookup from the template raster
+    df_input = df_active[["xcoord", "ycoord"]].copy().round(precision)
+    df_input = pd.merge(df_input,
+                        lookup_df,
+                        how="left",
+                        on=["xcoord", "ycoord"])
+
+    # give the input data frame the new index from the coordinate lookup
+    df_active["index"] = df_input["grid_index"]
 
     for ix in df_active['index'].tolist():
 
