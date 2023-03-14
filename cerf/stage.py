@@ -204,9 +204,7 @@ class Stage:
             init_arr, init_df = util.ingest_sited_data(run_year=self.settings_dict['run_year'],
                                                        x_array=self.xcoords,
                                                        siting_data=self.initialize_site_data,
-                                                       template_raster_file=self.settings_dict.get('grid_index_raster_file',
-                                                            pkg_resources.resource_filename("cerf", "data/cerf_grid_index.tif")))
-
+                                                       template_raster_file=self.settings_dict.get('region_raster_file'))
             return init_arr, init_df
 
         else:

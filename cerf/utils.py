@@ -1,5 +1,6 @@
 
 import logging
+import tempfile
 
 import numpy as np
 import pandas as pd
@@ -260,34 +261,6 @@ def raster_to_coord_arrays(template_raster):
     return x, y
 
 
-def genrate_grid_coordinate_lookup(template_raster: str,
-                                   precision: int = 1) -> pd.DataFrame:
-    """Generate a lookup data frame from the input template raster.
-
-    :param template_raster:                 Full path with file name and extension to the input tempate raster file
-    :type template_raster:                  str
-
-    :param precision:                       Desired precision of coordinates to round to
-    :type precision:                        int
-
-    :returns:                               DataFrame of grid index, xcoords, and ycoords in template raster
-    :rtype:                                 pd.DataFrame
-
-    """
-
-    with rasterio.open(template_raster) as src:
-        arr = src.read(1)
-        height, width = arr.shape
-        cols, rows = np.meshgrid(np.arange(width), np.arange(height))
-        xs, ys = rasterio.transform.xy(src.transform, rows, cols)
-
-        # convert to arrays, flatten to 1D and round to tenth
-        xcoords = np.array(xs).flatten().round(precision)
-        ycoords = np.array(ys).flatten().round(precision)
-
-    return pd.DataFrame({"grid_index": range(xcoords.shape[0]), "xcoord": xcoords, "ycoord": ycoords})
-
-
 def ingest_sited_data(run_year,
                       x_array,
                       siting_data,
@@ -307,9 +280,6 @@ def ingest_sited_data(run_year,
 
     :param x_array:                         2D array of X coordinates for the entire grid space
     :type x_array:                          ndarray
-
-    :param y_array:                         2D array of Y coordinates for the entire grid space
-    :type y_array:                          ndarray
 
     :param siting_data:                     Full path with file name and extension for the input siting file or a
                                             Pandas DataFrame
@@ -344,8 +314,33 @@ def ingest_sited_data(run_year,
 
     # generate the corresponding grid index for the input coordinate pairs
     with rasterio.open(template_raster_file) as src:
-        index_generator = src.sample(df_active[["xcoord", "ycoord"]].values)
-        located_index_list = [i[0] for i in index_generator]
+        metadata = src.meta.copy()
+
+        # get array
+        arr = src.read(1)
+        n_cells = arr.shape[0] * arr.shape[1]
+        max_allowable_cells = np.iinfo(rasterio.uint32).max
+
+        if n_cells > max_allowable_cells:
+            raise ValueError(f"Too many grid cells in array for a uint32 format.  Max allowable: {max_allowable_cells}")
+
+        # create continuous index values from flat array and then reshape back to 2D
+        flat_arr = np.array(range(arr.shape[0] * arr.shape[1]))
+        index_arr = flat_arr.reshape((arr.shape[0], arr.shape[1])).astype(np.uint32)
+
+        # update data type
+        metadata.update(dtype=np.uint32)
+
+    with tempfile.NamedTemporaryFile() as tmpfile:
+
+        # write array as spatial in a temp file
+        with rasterio.open(tmpfile, "w", **metadata) as dest:
+            dest.write(index_arr, 1)
+
+        # read temp file to use for grid search
+        with rasterio.open(tmpfile.name) as idx:
+            index_generator = idx.sample(df_active[["xcoord", "ycoord"]].values)
+            located_index_list = [i[0] for i in index_generator]
 
     # give the input data frame the new index from the coordinate lookup
     df_active["index"] = located_index_list
