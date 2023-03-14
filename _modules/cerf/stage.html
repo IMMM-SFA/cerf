@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>cerf.stage &mdash; cerf 2.3 documentation</title>
+  <title>cerf.stage &mdash; cerf 2.3.1 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                2.3
+                2.3.1
               </div>
             
           
@@ -184,6 +184,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
 <span class="kn">import</span> <span class="nn">rasterio</span>
 
 <span class="kn">import</span> <span class="nn">cerf.utils</span> <span class="k">as</span> <span class="nn">util</span>
@@ -377,9 +378,7 @@
             <span class="n">init_arr</span><span class="p">,</span> <span class="n">init_df</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">ingest_sited_data</span><span class="p">(</span><span class="n">run_year</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="p">[</span><span class="s1">&#39;run_year&#39;</span><span class="p">],</span>
                                                        <span class="n">x_array</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">xcoords</span><span class="p">,</span>
                                                        <span class="n">siting_data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">initialize_site_data</span><span class="p">,</span>
-                                                       <span class="n">template_raster_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region_raster_file&#39;</span><span class="p">),</span>
-                                                       <span class="n">precision</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;lookup_coordinate_precision&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-
+                                                       <span class="n">template_raster_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region_raster_file&#39;</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">init_arr</span><span class="p">,</span> <span class="n">init_df</span>
 
         <span class="k">else</span><span class="p">:</span>
