@@ -291,8 +291,7 @@ def genrate_grid_coordinate_lookup(template_raster: str,
 def ingest_sited_data(run_year,
                       x_array,
                       siting_data,
-                      template_raster_file: str,
-                      precision: int = 1):
+                      template_raster_file: str):
     """Import sited data containing the locations and additional data to establish an initial suitability condition
     representing power plants and their siting buffer.
 
@@ -316,11 +315,9 @@ def ingest_sited_data(run_year,
                                             Pandas DataFrame
     :type siting_data:                      str, DataFrame
 
-    :param template_raster_file:            Full path with file name and extension to the input tempate raster file
+    :param template_raster_file:            Full path with file name and extension to the input template raster file
+                                            containing a grid index value per grid cell.
     :type template_raster_file:             str
-
-    :param precision:                       Desired precision of coordinates to round to
-    :type precision:                        int
 
     :return:                                [0] 2D array of 0 (suitable) and 1 (unsuitable) values where 1 are the sites
                                             and their buffers of active power plants
@@ -345,18 +342,13 @@ def ingest_sited_data(run_year,
     # initialize an array to hold the 0, 1 sited and buffer data
     sited_arr = np.zeros_like(x_array).flatten()
 
-    # convert coordinates from initialization file
-    lookup_df = genrate_grid_coordinate_lookup(template_raster_file, precision=precision)
-
-    # match coordinates in input file to the lookup from the template raster
-    df_input = df_active[["xcoord", "ycoord"]].copy().round(precision)
-    df_input = pd.merge(df_input,
-                        lookup_df,
-                        how="left",
-                        on=["xcoord", "ycoord"])
+    # generate the corresponding grid index for the input coordinate pairs
+    with rasterio.open(template_raster_file) as src:
+        index_generator = src.sample(df_active[["xcoord", "ycoord"]].values)
+        located_index_list = [i[0] for i in index_generator]
 
     # give the input data frame the new index from the coordinate lookup
-    df_active["index"] = df_input["grid_index"]
+    df_active["index"] = located_index_list
 
     for ix in df_active['index'].tolist():
 
