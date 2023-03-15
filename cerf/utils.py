@@ -1,4 +1,4 @@
-
+import os
 import logging
 import tempfile
 
@@ -331,14 +331,17 @@ def ingest_sited_data(run_year,
         # update data type
         metadata.update(dtype=np.uint32)
 
-    with tempfile.NamedTemporaryFile() as tmpfile:
+    with tempfile.TemporaryDirectory() as tempdir:
+
+        # construct temporary raster file name
+        out_temp_rast = os.path.join(tempdir, "cerf_temp_raster.tif")
 
         # write array as spatial in a temp file
-        with rasterio.open(tmpfile, "w", **metadata) as dest:
+        with rasterio.open(out_temp_rast, "w", **metadata) as dest:
             dest.write(index_arr, 1)
 
         # read temp file to use for grid search
-        with rasterio.open(tmpfile.name) as idx:
+        with rasterio.open(out_temp_rast) as idx:
             index_generator = idx.sample(df_active[["xcoord", "ycoord"]].values)
             located_index_list = [i[0] for i in index_generator]
 
