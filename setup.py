@@ -31,7 +31,7 @@ setup(
     python_requires=">3.9",
     include_package_data=True,
     install_requires=[
-        'numpy>=1.19.4',
+        'numpy>=1.19.4,<2.0.0',
         'pandas>=1.1.4',
         'rasterio>=1.2.3',
         'rioxarray>=0.15.1',
