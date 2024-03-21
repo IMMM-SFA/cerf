@@ -5,7 +5,7 @@ import tempfile
 import numpy as np
 import pandas as pd
 import rasterio
-import xarray as xr
+import rioxarray
 import geopandas as gpd
 from shapely.geometry import Point
 
@@ -253,7 +253,7 @@ def raster_to_coord_arrays(template_raster):
     """
 
     # Read the data
-    da = xr.open_rasterio(template_raster)
+    da = rioxarray.open_rasterio(template_raster)
 
     # Compute the lon/lat coordinates with rasterio.warp.transform
     x, y = np.meshgrid(da['x'], da['y'])
