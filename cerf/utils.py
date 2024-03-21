@@ -253,7 +253,7 @@ def raster_to_coord_arrays(template_raster):
     """
 
     # Read the data
-    da = xr.open_rasterio(template_raster)
+    da = xr.open_dataset(template_raster, engine="rasterio")
 
     # Compute the lon/lat coordinates with rasterio.warp.transform
     x, y = np.meshgrid(da['x'], da['y'])
