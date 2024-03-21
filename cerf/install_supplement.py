@@ -39,7 +39,10 @@ class InstallSupplement:
                          '2.2.1': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
                          '2.3': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
                          '2.3.1': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
-                         '2.3.2': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1'}
+                         '2.3.2': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
+                         '2.3.3': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
+
+    }
 
     def __init__(self, data_dir=None):
 
