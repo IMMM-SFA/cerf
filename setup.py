@@ -28,7 +28,7 @@ setup(
     description='An open-source geospatial Python package for assessing and analyzing future electricity technology capacity expansion feasibility',
     long_description=readme(),
     long_description_content_type="text/markdown",
-    python_requires='>=3.9.*, <4',
+    python_requires='>=3.9',
     include_package_data=True,
     install_requires=[
         'numpy>=1.19.4,<2',
