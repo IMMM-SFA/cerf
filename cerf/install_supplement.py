@@ -23,25 +23,25 @@ class InstallSupplement:
     """
 
     # URL for DOI minted example data hosted on Zenodo
-    DATA_VERSION_URLS = {'2.0.0': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
-                         '2.0.1': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
-                         '2.0.2': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
-                         '2.0.3': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
-                         '2.0.4': 'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',
-                         '2.0.5': 'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',
-                         '2.0.6': 'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',
-                         '2.0.7': 'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',
-                         '2.0.8': 'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',
-                         '2.0.9': 'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',
-                         '2.1.0': 'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',
-                         '2.1.1': 'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',
-                         '2.2.0': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
-                         '2.2.1': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
-                         '2.3': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
-                         '2.3.1': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
-                         '2.3.2': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
-                         '2.3.3': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
-
+    DATA_VERSION_URLS = {
+        '2.0.0': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
+        '2.0.1': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
+        '2.0.2': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
+        '2.0.3': 'https://zenodo.org/record/5218436/files/cerf_package_data.zip?download=1',
+        '2.0.4': 'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',
+        '2.0.5': 'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',
+        '2.0.6': 'https://zenodo.org/record/5247690/files/cerf_package_data.zip?download=1',
+        '2.0.7': 'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',
+        '2.0.8': 'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',
+        '2.0.9': 'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',
+        '2.1.0': 'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',
+        '2.1.1': 'https://zenodo.org/record/5514010/files/cerf_package_data.zip?download=1',
+        '2.2.0': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
+        '2.2.1': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
+        '2.3': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
+        '2.3.1': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
+        '2.3.2': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
+        '2.3.3': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
     }
 
     def __init__(self, data_dir=None):

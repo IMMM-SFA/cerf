@@ -28,10 +28,10 @@ setup(
     description='An open-source geospatial Python package for assessing and analyzing future electricity technology capacity expansion feasibility',
     long_description=readme(),
     long_description_content_type="text/markdown",
-    python_requires=">3.9",
+    python_requires='>=3.9',
     include_package_data=True,
     install_requires=[
-        'numpy>=1.19.4,<2.0.0',
+        'numpy>=1.19.4,<2',
         'pandas>=1.1.4',
         'rasterio>=1.2.3',
         'rioxarray>=0.15.1',
@@ -44,7 +44,7 @@ setup(
         'fiona>=1.8.19',
         'pyproj>=3.0.1',
         'rtree>=0.9.7',
-        'shapely>=1.7, <2',
+        'shapely>=1.7,<2',
         'geopandas>=0.9.0'
     ],
     extras_require={
