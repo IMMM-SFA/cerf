@@ -35,7 +35,7 @@ setup(
         'scipy>=1.12',
         'pandas>=1.1.4',
         'rasterio>=1.2.3',
-        'rioxarray>=0.15.1',
+        'rioxarray>=0.15',
         'PyYAML>=5.4.1',
         'requests>=2.25.1',
         'joblib>=1.0.1',
