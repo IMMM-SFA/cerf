@@ -32,6 +32,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'numpy>=1.19.4,<2',
+        'scipy>=1.12',
         'pandas>=1.1.4',
         'rasterio>=1.2.3',
         'rioxarray>=0.15.1',
