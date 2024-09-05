@@ -41,7 +41,6 @@ setup(
         'joblib>=1.0.1',
         'matplotlib>=3.3.3',
         'seaborn>=0.11.1',
-        'whitebox>=1.5.1',
         'fiona>=1.8.19',
         'pyproj>=3.0.1',
         'rtree>=0.9.7',
