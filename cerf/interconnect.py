@@ -2,21 +2,15 @@ import os
 import logging
 import tempfile
 
+import geopandas as gpd
+import numpy as np
 import rasterio
-import whitebox
+from rasterio import features
+from scipy.ndimage import distance_transform_edt
 import yaml
 
-import numpy as np
-import geopandas as gpd
-
 import cerf.package_data as pkg
-
-from rasterio import features
-
 from cerf.utils import suppress_callback
-
-# instantiate whitebox toolset
-wbt = whitebox.WhiteboxTools()
 
 
 class Interconnection:
@@ -263,9 +257,10 @@ class Interconnection:
 
             return gdf
 
+
     def transmission_to_cost_raster(self, setting):
         """Create a cost per grid cell in $/km from the input GeoDataFrame of transmission infrastructure having a cost
-        designation field as '_rval_'
+        designation field as '_rval_'.
 
         :param setting:                         Either 'substations' or 'pipelines'
         :type setting:                          str
@@ -273,9 +268,6 @@ class Interconnection:
         :return:                                Array of transmission interconnection cost per grid cell
 
         """
-        # conversion factor for meters to km
-        m_to_km_factor = 0.001
-
         if setting == 'substations':
             infrastructure_gdf = self.process_substations()
 
@@ -335,26 +327,35 @@ class Interconnection:
                 # write the outputs to file
                 dataset.write_band(1, burned)
 
-            # calculate Euclidean distance and write raster; result just stores the return value 0
-            dist_result = wbt.euclidean_distance(out_rast, out_dist, callback=suppress_callback)
+            # create a mask of target (non-zero) cells
+            target_cells = burned != 0
 
-            # calculate Euclidean allocation and write raster
-            alloc_result = wbt.euclidean_allocation(out_rast, out_alloc, callback=suppress_callback)
+            # calculate the Euclidean distance and the indices of the nearest target cell
+            distance_array, nearest_indices = distance_transform_edt(
+                ~target_cells, 
+                return_distances=True, 
+                return_indices=True
+            )
 
-            with rasterio.open(out_dist) as dist:
-                dist_arr = dist.read(1)
+            # use the nearest indices to map the value of the nearest target to each cell (allocation map)
+            nearest_row_indices, nearest_col_indices = nearest_indices
+            allocation_array = burned[nearest_row_indices, nearest_col_indices]
 
-            with rasterio.open(out_alloc) as alloc:
-                alloc_arr = alloc.read(1)
+            with rasterio.open(out_dist, 'w', **metadata) as dist_ds:
+                dist_ds.write(distance_array.astype(rasterio.float64), 1)
+
+            with rasterio.open(out_alloc, 'w', **metadata) as alloc_ds:
+                alloc_ds.write(allocation_array.astype(rasterio.float64), 1)
 
             with rasterio.open(out_costs, 'w', **metadata) as out:
 
                 # distance in km * the cost of the nearest substation; outputs thous$/km
-                cost_arr = (dist_arr * m_to_km_factor) * alloc_arr
+                cost_arr = distance_array * allocation_array
 
                 out.write(cost_arr, 1)
 
         return cost_arr
+
 
     def generate_interconnection_costs_array(self):
         """Calculate the costs of interconnection for each technology."""
