@@ -45,9 +45,11 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-test = [
-    "pytest>=6.0",
-    "pytest-cov>=2.12.1",
+deploy = [
+    "twine>=4.0.1",
+]
+dev = [
+    "pre-commit>=4.0.1",
 ]
 docs = [
     "setuptools>=57.0.0",
@@ -61,8 +63,9 @@ docs = [
     "sphinx-mathjax-offline~=0.0.2",
     "sphinx-panels>=0.6.0",
 ]
-deploy = [
-    "twine>=4.0.1",
+test = [
+    "pytest>=6.0",
+    "pytest-cov>=2.12.1",
 ]
 
 [project.urls]

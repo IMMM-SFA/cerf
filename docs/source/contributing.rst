@@ -21,11 +21,13 @@ The following is the recommended workflow for contributing to **cerf**:
 
     git clone https://github.com/<your-user-name>/cerf
 
-  Cloning the repository will give you access to the test suite.  It is important to install the package in development mode before running tests.  This will give you the flexibility to make changes in the code without having to rebuild your package before running tests.  To do this run the following from your terminal in the **cerf** directory containing your ``setup.py`` script:
+
+  Cloning the repository will give you access to the test suite.  It is important to install the package in development mode before running tests. This will give you the flexibility to make changes in the code without having to rebuild your package before running tests. Also install `pre-commit`, a code formatting tool. To do this run the following from your terminal in the **cerf** directory containing the ``pyproject.toml`` file:
 
   .. code-block:: bash
 
-      python setup.py develop
+    pip install -e ".[dev]"
+    pre-commit install
 
 
 2. Create a branch for your changes
@@ -48,11 +50,13 @@ The following is the recommended workflow for contributing to **cerf**:
 
     git commit -m '<my short message>'
 
+
   Changes to the documenation can be made in the ``cerf/docs/source`` directory containing the RST files.  To view your changes, ensure you have the development dependencies of **cerf** installed and run the following from the ``cerf/docs/source`` directory:
 
   .. code-block:: bash
 
       make html
+
 
   This will generate your new documentation in a directory named ``cerf/docs/build/html``.  You can open the ``index.html`` in your browser to view the documentation site locally.  If your changes are merged into the main branch of **cerf**, changes in your documentation will go live as well.
 
@@ -61,6 +65,7 @@ The following is the recommended workflow for contributing to **cerf**:
   .. code-block:: bash
 
     git push origin <my-branch-name>
+
 
 5. Submit a pull request with the following information:
 
