@@ -16,15 +16,11 @@ We introduce a metric named Net Locational Cost (NLC) that is used compete power
 Python version support
 ----------------------
 
-Officially Python 3.7, 3.8, and 3.9
+Officially Python 3.9, 3.10, and 3.11.
 
 
 Installation
 ------------
-
-.. note::
-
-  **cerf** is not officially supported for Ubuntu 18 users due to a system dependency (``GLIBC_2.29``) required by the ``whitebox`` package which **cerf** uses to conduct spatial analysis. Ubuntu 18 natively includes ``GLIBC_2.27``.  It may be possible for Ubuntu 18 users to upgrade to ``GLIBC_2.29`` but this should be done with careful consideration.  Instead, we officially support **cerf** use for Ubuntu users for versions 20.04.2 LTS and greater.
 
 **cerf** can be installed via pip by running the following from a terminal window::
 
@@ -59,19 +55,20 @@ Dependencies
 Dependency      Minimum Version
 =============   ================
 numpy           1.19.4
+scipy           1.12
+pyarrow         17.0.0
 pandas          1.1.4
 rasterio        1.2.3
-xarray          0.16.1
+rioxarray       0.15
 PyYAML          5.4.1
 requests        2.25.1
 joblib          1.0.1
 matplotlib      3.3.3
 seaborn         0.11.1
-whitebox        1.5.1
 fiona           1.8.19
 pyproj          3.0.1
 rtree           0.9.7
-shapely         1.7.1
+shapely         1.7
 geopandas       0.9.0
 =============   ================
 
@@ -79,16 +76,20 @@ geopandas       0.9.0
 Optional dependencies
 ---------------------
 
-==================    ================
-Dependency            Minimum Version
-==================    ================
-build                 0.5.1
-nbsphinx              0.8.6
-setuptools            57.0.0
-sphinx                4.0.2
-sphinx-panels         0.6.0
-sphinx-rtd-theme      0.5.2
-twine                 3.4.1
-pytest                6.2.4
-pytest-cov            2.12.1
-==================    ================
+==================      ================
+Dependency              Minimum Version
+==================      ================
+setuptools              57.0.0
+build                   0.5.1
+ipykernel               6.15.1
+autodoc                 0.5.0
+nbsphinx                0.8.6
+sphinx                  7.2.6
+sphinx-design           0.5.0
+sphinx-rtd-theme        2.0.0
+sphinx-mathjax-offline  0.0.2
+sphinx-panels           0.6.0
+twine                   4.0.1
+pytest                  6.0
+pytest-cov              2.12.1
+==================      ================
