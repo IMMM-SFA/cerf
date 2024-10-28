@@ -1,6 +1,7 @@
 [![build](https://github.com/IMMM-SFA/cerf/actions/workflows/build.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/build.yml)
 [![DOI](https://zenodo.org/badge/115649750.svg)](https://zenodo.org/badge/latestdoi/115649750)
 [![status](https://joss.theoj.org/papers/28fee3407bbbef020fb4bb19bd451407/status.svg)](https://joss.theoj.org/papers/28fee3407bbbef020fb4bb19bd451407)
+[![codecov](https://codecov.io/gh/IMMM-SFA/cerf/graph/badge.svg?token=9jbGJv8XCJ)](https://codecov.io/gh/IMMM-SFA/cerf)
 
 ## cerf
 
