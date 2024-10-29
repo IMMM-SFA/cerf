@@ -1,5 +1,5 @@
 [![PyPI version](https://badge.fury.io/py/cerf.svg)](https://badge.fury.io/py/cerf)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/cerf?pypiBaseUrl=https%3A%2F%2Fpypi.org&logo=python&logoColor=yellow)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/cerf?pypiBaseUrl=https%3A%2F%2Fpypi.org&logo=python&logoColor=yellow)](https://pypi.org/project/cerf/)
 [![test](https://github.com/IMMM-SFA/cerf/actions/workflows/test.yml/badge.svg)](https://github.com/IMMM-SFA/cerf/actions/workflows/test.yml)
 [![DOI](https://zenodo.org/badge/115649750.svg)](https://zenodo.org/badge/latestdoi/115649750)
 [![status](https://joss.theoj.org/papers/28fee3407bbbef020fb4bb19bd451407/status.svg)](https://joss.theoj.org/papers/28fee3407bbbef020fb4bb19bd451407)
