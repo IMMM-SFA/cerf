@@ -1,4 +1,4 @@
-name: build
+name: test
 
 on: [push, pull_request]
 
@@ -31,7 +31,5 @@ jobs:
 
         - name: Test and generate coverage report on Linux
           run: |
-            pip install pytest
-            pip install pytest-cov
+            pip install .[test]
             pytest --cov=./ --cov-report=xml
-
