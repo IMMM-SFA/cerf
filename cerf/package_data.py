@@ -1,9 +1,25 @@
 import os
-import pkg_resources
+from importlib.resources import files
 
 import yaml
 import pandas as pd
 import geopandas as gpd
+
+
+def _package_resource_path(*parts):
+    """Return a package resource path as a string."""
+
+    resource = files('cerf')
+    for part in parts:
+        resource = resource.joinpath(part)
+
+    return str(resource)
+
+
+def _data_file(filename):
+    """Return a path to a file in the package data directory."""
+
+    return _package_resource_path('data', str(filename))
 
 
 def config_file(yr):
@@ -16,19 +32,19 @@ def config_file(yr):
 
     """
 
-    return pkg_resources.resource_filename('cerf', f'data/config_{yr}.yml')
+    return _data_file(f'config_{yr}.yml')
 
 
 def cerf_regions_raster():
     """Return the cerf regions raster file."""
 
-    return pkg_resources.resource_filename('cerf', 'data/cerf_conus_states_albers_1km.tif')
+    return _data_file('cerf_conus_states_albers_1km.tif')
 
 
 def cerf_regions_shapefile():
     """Return the cerf regions shapefile as a Geopandas data frame.  Used in output plot."""
 
-    f = pkg_resources.resource_filename('cerf', 'data/cerf_conus_states_albers.zip')
+    f = _data_file('cerf_conus_states_albers.zip')
 
     return gpd.read_file(f)
 
@@ -36,7 +52,7 @@ def cerf_regions_shapefile():
 def cerf_boundary_shapefile():
     """Return the cerf boundary shapefile as a Geopandas data frame.  Used in output plot."""
 
-    f = pkg_resources.resource_filename('cerf', 'data/cerf_conus_boundary_albers.zip')
+    f = _data_file('cerf_conus_boundary_albers.zip')
 
     return gpd.read_file(f)
 
@@ -55,19 +71,19 @@ def cerf_crs():
 def get_default_gas_pipelines():
     """Return the full path with file name and extension to the default gas pipeline shapefile"""
 
-    return pkg_resources.resource_filename('cerf', 'data/eia_natural_gas_pipelines_conus_albers.zip')
+    return _data_file('eia_natural_gas_pipelines_conus_albers.zip')
 
 
 def get_costs_per_kv_substation_file():
     """Return the full path with file name and extension to the default costs per km of each kv substation file."""
 
-    return pkg_resources.resource_filename('cerf', 'data/costs_per_kv_substation.yml')
+    return _data_file('costs_per_kv_substation.yml')
 
 
 def get_costs_gas_pipeline():
     """Return the full path with file name and extension to the default costs per km to gas connect to pipelines."""
 
-    return pkg_resources.resource_filename('cerf', 'data/costs_gas_pipeline.yml')
+    return _data_file('costs_gas_pipeline.yml')
 
 
 def costs_per_kv_substation():
@@ -94,7 +110,7 @@ def load_sample_config(yr):
     if yr not in available_years:
         raise KeyError(f"Year '{yr}' not available as a default configuration file.  Must be in {available_years}")
 
-    f = pkg_resources.resource_filename('cerf', f'data/config_{yr}.yml')
+    f = _data_file(f'config_{yr}.yml')
 
     with open(f, 'r') as yml:
         return yaml.load(yml, Loader=yaml.FullLoader)
@@ -103,7 +119,7 @@ def load_sample_config(yr):
 def list_available_suitability_files():
     """Return a list of available suitability files."""
 
-    root_dir = pkg_resources.resource_filename('cerf', 'data')
+    root_dir = get_data_directory()
 
     return [os.path.join(root_dir, i) for i in os.listdir(root_dir) if
             (i.split('_')[0] == 'suitability') and
@@ -113,19 +129,19 @@ def list_available_suitability_files():
 def sample_lmp_zones_raster_file():
     """Return path for the sample lmp zoness raster file."""
 
-    return pkg_resources.resource_filename('cerf', 'data/lmp_zones_1km.img')
+    return _data_file('lmp_zones_1km.img')
 
 
 def get_sample_lmp_file():
     """Return the sample 8760 hourly locational marginal price sample file."""
 
-    return pkg_resources.resource_filename('cerf', 'data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
+    return _data_file('illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
 
 
 def get_sample_lmp_data():
     """Return the sample 8760 hourly locational marginal price data as a Pandas DataFrame."""
 
-    f = pkg_resources.resource_filename('cerf', 'data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip')
+    f = get_sample_lmp_file()
 
     return pd.read_csv(f)
 
@@ -133,14 +149,14 @@ def get_sample_lmp_data():
 def get_suitability_raster(default_raster):
     """Return the default suitability raster file associated with the technology being processed."""
 
-    return pkg_resources.resource_filename('cerf', f'data/{default_raster}')
+    return _data_file(default_raster)
 
 
 def get_region_abbrev_to_name_file():
     """Return the file path for region abbreviation to region name."""
 
     # get region abbreviations file from cerf package data
-    return pkg_resources.resource_filename('cerf', 'data/region-abbrev_to_region-name.yml')
+    return _data_file('region-abbrev_to_region-name.yml')
 
 
 def get_region_abbrev_to_name():
@@ -157,16 +173,16 @@ def get_region_abbrev_to_name():
 def get_region_name_to_id():
     """Return the region name to ID file path."""
 
-    return pkg_resources.resource_filename('cerf', 'data/region-name_to_region-id.yml')
+    return _data_file('region-name_to_region-id.yml')
 
 
 def get_data_directory():
     """Return the directory of where the cerf package data resides."""
 
-    return pkg_resources.resource_filename('cerf', 'data')
+    return _package_resource_path('data')
 
 
 def get_substation_file():
     """Return the default substation file for the CONUS."""
 
-    return pkg_resources.resource_filename('cerf', 'data/hifld_substations_conus_albers.zip')
+    return _data_file('hifld_substations_conus_albers.zip')
