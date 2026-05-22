@@ -10,7 +10,6 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 import logging
 
 import numpy as np
-import pkg_resources
 import rasterio
 
 import cerf.utils as util

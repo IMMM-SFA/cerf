@@ -2,11 +2,10 @@ import os
 import tempfile
 import zipfile
 import shutil
+from importlib.metadata import version
+from io import BytesIO as BytesIO
 
 import requests
-
-from pkg_resources import get_distribution
-from io import BytesIO as BytesIO
 
 import cerf.package_data as pkg
 
@@ -60,7 +59,7 @@ class InstallSupplement:
             data_directory = self.data_dir
 
         # get the current version of cerf that is installed
-        current_version = get_distribution('cerf').version
+        current_version = version('cerf')
 
         try:
             data_link = InstallSupplement.DATA_VERSION_URLS[current_version]
