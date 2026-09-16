@@ -18,8 +18,8 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | — | Evaluation document | `release/2.5.0` `2376b34` | ✅ Done | n/a | n/a |
 | — | Seeded reference run + baseline CSV (`benchmark/`) | `release/2.5.0` `8c720bd` | ✅ Done | baseline: 1838 sites | staging 8.45 s · competition 11.93 s · total 20.37 s |
 | 4.1 | Vectorise buffer removal in `Competition.compete()` | [#118](https://github.com/IMMM-SFA/cerf/pull/118) `eb3da1b` | ✅ Merged | identical | competition **11.93 → 5.77 s (−52%)**; total 20.37 → 13.82 s |
-| 4.2 + 4.3 | LUT zone lookup + single sort in `get_lmp()` | `feature/lmp-lookup-table` | 🔄 In progress | — | — |
-| 3.1 | `isin` signature bug in `preprocess_hifld_substations()` | — | ⬜ Not started | — | — |
+| 4.2 + 4.3 | LUT zone lookup + single sort in `get_lmp()` | [#119](https://github.com/IMMM-SFA/cerf/pull/119) `adcc9c3` | ✅ Merged | identical (LMP array bitwise equal) | `get_lmp` **4.71 → 0.26 s (18×)**; staging 8.05 → 3.34 s; total 13.82 → 8.65 s |
+| 3.1 | `isin` signature bug in `preprocess_hifld_substations()` | `fix/hifld-substation-isin` | 🔄 In progress | n/a (preprocessing utility, not on run path) | n/a |
 | 3.2 | NOV `ZeroDivisionError` when esc == discount | — | ⬜ Not started | — | — |
 | 3.3 | Model mutates caller's config dict | — | ⬜ Not started | — | — |
 | 3.4 | Dead `expansion_dict[tech_id] == 0` branch | — | ⬜ Not started | — | — |
@@ -41,6 +41,7 @@ Cumulative full-run timing (2010 CONUS sample, sequential, single process):
 |-------|---------|-------------|-------|--------------|
 | baseline `8c720bd` | 8.45 s | 11.93 s | 20.37 s | — |
 | #118 (4.1) | 8.05 s | 5.77 s | 13.82 s | −32% |
+| #119 (4.2 + 4.3) | 3.34 s | 5.31 s | 8.65 s | −58% |
 
 ---
 
@@ -97,7 +98,7 @@ All staged arrays are `float64`, shape `(9, 2999, 4693)`:
 
 ## 3. Confirmed Bugs
 
-### 3.1 `preprocess_hifld_substations()` always raises `TypeError`
+### 3.1 `preprocess_hifld_substations()` always raises `TypeError` — 🔄 IN PROGRESS
 
 **Location:** [`cerf/interconnect.py:435`](../cerf/interconnect.py:435)
 
@@ -230,7 +231,9 @@ tech = tech[self.cheapest_arr_1d[tech] == tech_index]
 
 Expected: region compute drops by roughly an order of magnitude for large states.
 
-### 4.2 `np.vectorize(dict.get)` for LMP zone lookup (critical for staging) — 🔄 IN PROGRESS
+### 4.2 `np.vectorize(dict.get)` for LMP zone lookup (critical for staging) — ✅ DONE in #119
+
+> **Resolved.** Implemented as `LocationalMarginalPricing.zone_lookup()`, a dense integer lookup table offset by `zones.min()`. Full-CONUS LMP array bitwise identical to the previous implementation; `get_lmp` 4.71 s → 0.26 s.
 
 **Location:** [`cerf/lmp.py:166`](../cerf/lmp.py:166)
 
@@ -244,7 +247,7 @@ lmp_arr[index] = lut[zones_arr]
 
 This is a single fancy-index operation (~50 ms). The `nodata` value (255) is handled by leaving that slot as `nan`.
 
-### 4.3 Redundant per-technology sorting in `get_lmp` — 🔄 IN PROGRESS (bundled with 4.2)
+### 4.3 Redundant per-technology sorting in `get_lmp` — ✅ DONE in #119 (bundled with 4.2)
 
 **Location:** [`cerf/lmp.py:154-156`](../cerf/lmp.py:154)
 
