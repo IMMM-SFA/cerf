@@ -6,6 +6,8 @@ import pandas as pd
 
 import cerf.utils as util
 
+logger = logging.getLogger(__name__)
+
 
 class Competition:
     """Technology competition algorithm for CERF.
@@ -162,7 +164,7 @@ class Competition:
             remaining_sites = self.expansion_dict[k]['n_sites']
 
             if remaining_sites > 0:
-                logging.warning(f"Unable to achieve full siting for `{tech_name}` in `{self.target_region_name}`:  {remaining_sites} unsited.")
+                logger.warning(f"Unable to achieve full siting for `{tech_name}` in `{self.target_region_name}`:  {remaining_sites} unsited.")
 
     def compete(self):
 
@@ -269,8 +271,8 @@ class Competition:
                     self.sited_arr_1d[rdx] = tech_id
 
                     if self.verbose:
-                        logging.info('\nUpdate expansion plan to represent siting requirements:')
-                        logging.info(self.expansion_dict)
+                        logger.info('\nUpdate expansion plan to represent siting requirements:')
+                        logger.info(self.expansion_dict)
 
                     # apply the new exclusion from the current technology to all techs...
                     #   invert sited elements to have a value of 1 so they can be used as a mask
@@ -306,7 +308,7 @@ class Competition:
                         keep_siting = False
 
                     if self.verbose:
-                        logging.info(f'\nAvailable grid cells:  {self.avail_grids}')
+                        logger.info(f'\nAvailable grid cells:  {self.avail_grids}')
 
                 # there are no more suitable grid cells
                 elif self.avail_grids == 0:

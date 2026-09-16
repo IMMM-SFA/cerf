@@ -9,6 +9,8 @@ import rioxarray
 import geopandas as gpd
 from shapely.geometry import Point
 
+logger = logging.getLogger(__name__)
+
 
 def results_to_geodataframe(result_df, target_crs):
     """Convert the results from 'cerf.run()' to a GeoDataFrame.
@@ -303,7 +305,7 @@ def ingest_sited_data(run_year,
         df = pd.read_csv(siting_data, dtype=sited_dtypes())
     else:
         msg = "The user must pass either a CSV file path to 'sited_csv' or a Pandas DataFrame to 'sited_df'"
-        logging.error(msg)
+        logger.error(msg)
         raise TypeError()
 
     # only keep sites that are not retired

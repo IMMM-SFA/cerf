@@ -18,6 +18,8 @@ from cerf.lmp import LocationalMarginalPricing
 from cerf.nov import NetOperationalValue
 from cerf.interconnect import Interconnection
 
+logger = logging.getLogger(__name__)
+
 
 class Stage:
 
@@ -66,23 +68,23 @@ class Stage:
         self.zones_arr = self.load_lmp_zone_raster()
 
         # get LMP array per tech [tech_order, x, y]
-        logging.info('Processing locational marginal pricing (LMP)')
+        logger.info('Processing locational marginal pricing (LMP)')
         self.lmp_arr = self.calculate_lmp()
 
         # get interconnection cost per tech [tech_order, x, y]
-        logging.info('Calculating interconnection costs (IC)')
+        logger.info('Calculating interconnection costs (IC)')
         self.ic_arr = self.calculate_ic()
 
         # get NOV array per tech [tech_order, x, y]
-        logging.info('Calculating net operational cost (NOV)')
+        logger.info('Calculating net operational cost (NOV)')
         self.generation_arr, self.operating_cost_arr, self.nov_arr = self.calculate_nov()
 
         # get NLC array per tech [tech_order, x, y]
-        logging.info('Calculating net locational cost (NLC)')
+        logger.info('Calculating net locational cost (NLC)')
         self.nlc_arr = self.calculate_nlc()
 
         # combine all suitability rasters into an array
-        logging.info('Building suitability array')
+        logger.info('Building suitability array')
         self.suitability_arr = self.build_suitability_array()
 
     def load_lmp_zone_raster(self):
@@ -95,7 +97,7 @@ class Stage:
         if zones_raster_file is None:
             zones_raster_file = pkg.sample_lmp_zones_raster_file()
 
-        logging.info(f"Using 'zones_raster_file':  {zones_raster_file}")
+        logger.info(f"Using 'zones_raster_file':  {zones_raster_file}")
 
         # read in lmp zoness raster as a 2D numpy array
         with rasterio.open(zones_raster_file) as src:
@@ -199,7 +201,7 @@ class Stage:
         if self.initialize_site_data is not None:
 
             # load siting data into a 2D array for the full grid space
-            logging.info("Initializing previous siting data")
+            logger.info("Initializing previous siting data")
             init_arr, init_df = util.ingest_sited_data(run_year=self.settings_dict['run_year'],
                                                        x_array=self.xcoords,
                                                        siting_data=self.initialize_site_data,
@@ -228,7 +230,7 @@ class Stage:
                 default_raster = default_suitability_file_dict[self.tech_name_dict[i]]
                 tech_suitability_raster_file = pkg.get_suitability_raster(default_raster)
 
-            logging.info(f"Using suitability file for '{self.technology_dict[i]['tech_name']}':  {tech_suitability_raster_file}")
+            logger.info(f"Using suitability file for '{self.technology_dict[i]['tech_name']}':  {tech_suitability_raster_file}")
 
             # load raster to array
             with rasterio.open(tech_suitability_raster_file) as src:

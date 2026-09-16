@@ -11,6 +11,8 @@ import requests
 
 import cerf.package_data as pkg
 
+logger = logging.getLogger(__name__)
+
 
 # ZIP archives begin with the local file header signature "PK\x03\x04"; an empty archive begins with "PK\x05\x06"
 ZIP_MAGIC_PREFIXES = (b"PK\x03\x04", b"PK\x05\x06")
@@ -161,7 +163,7 @@ class InstallSupplement:
 
             if attempt < self.max_attempts - 1:
                 delay = self._retry_delay(response, attempt, self.backoff_seconds)
-                logging.warning(
+                logger.warning(
                     f"Download attempt {attempt + 1}/{self.max_attempts} failed ({last_error}); "
                     f"retrying in {delay:.0f} s"
                 )
