@@ -8,6 +8,8 @@ import cerf.utils as utils
 import cerf.package_data as pkg
 from cerf.logger import Logger
 
+logger = logging.getLogger(__name__)
+
 
 class ReadConfig(Logger):
     """Read the configuration YAML file to a dictionary. Users can optionally pass in a configuration dictionary
@@ -39,7 +41,7 @@ class ReadConfig(Logger):
             if not config_dict:
                 msg = ("A configuration must be provided either as `config_file='<path to config.yml>'` "
                        "or as a non-empty `config_dict`.")
-                logging.error(msg)
+                logger.error(msg)
                 raise ValueError(msg)
 
             self.config = config_dict
@@ -114,7 +116,7 @@ class ReadConfig(Logger):
         # if config file not passed
         if self.config_file is None:
             msg = "Config file must be passed as an argument using:  config_file='<path to config.yml'>"
-            logging.error(msg)
+            logger.error(msg)
             raise AttributeError(msg)
 
         # check for path exists
@@ -126,7 +128,7 @@ class ReadConfig(Logger):
             msg = f"""Config file not found for path:  {self.config_file}. If using defaults, please download the package data. 
             See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data"""
 
-            logging.error(msg)
+            logger.error(msg)
             raise FileNotFoundError(msg)
 
     def get_regions_dict(self):

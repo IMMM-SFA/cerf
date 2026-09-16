@@ -18,6 +18,8 @@ import cerf.utils as util
 from cerf.model import Model
 from cerf.process_region import process_region
 
+logger = logging.getLogger(__name__)
+
 
 def generate_model(config_file=None, config_dict=None, initialize_site_data=None, log_level='info'):
     """Generate model instance for use in parallel applications.
@@ -104,8 +106,8 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
                                                                               verbose=model.settings_dict.get('verbose', False),
                                                                               write_output=False) for i in model.regions_dict.keys())
 
-    logging.info(f"All regions processed in {round((time.time() - t0), 7)} seconds.")
-    logging.info("Aggregating outputs...")
+    logger.info(f"All regions processed in {round((time.time() - t0), 7)} seconds.")
+    logger.info("Aggregating outputs...")
 
     # create a data frame to hold the outputs
     df = pd.DataFrame(util.empty_sited_dict()).astype(util.sited_dtypes())
@@ -192,16 +194,10 @@ def run(config_file=None, config_dict=None, write_output=True, n_jobs=-1, method
                            n_jobs=n_jobs,
                            method=method)
 
-        logging.info(f"CERF model run completed in {round(time.time() - model.start_time, 7)} seconds")
+        logger.info(f"CERF model run completed in {round(time.time() - model.start_time, 7)} seconds")
 
     finally:
-        # remove logging handlers
-        logger = logging.getLogger()
-
-        for handler in logger.handlers[:]:
-            handler.close()
-            logger.removeHandler(handler)
-
-        logging.shutdown()
+        # detach the handlers CERF attached to its own logger; application handlers are left alone
+        Model.close_logger()
 
     return df

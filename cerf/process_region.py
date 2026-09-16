@@ -18,6 +18,8 @@ import rasterio
 import cerf.package_data as pkg
 from cerf.compete import Competition
 
+logger = logging.getLogger(__name__)
+
 
 class ProcessRegion:
 
@@ -105,25 +107,25 @@ class ProcessRegion:
         # set write outputs flag
         self.write_outputs = write_output
 
-        logging.debug(f"Extracting suitable grids for {self.target_region_name}")
+        logger.debug(f"Extracting suitable grids for {self.target_region_name}")
         self.suitability_array_region, self.ymin, self.ymax, self.xmin, self.xmax = self.extract_region_suitability()
 
-        logging.debug(f"Creating a NLC region level array for {self.target_region_name}")
+        logger.debug(f"Creating a NLC region level array for {self.target_region_name}")
         self.suitable_nlc_region = self.mask_nlc()
 
-        logging.debug(f"Generating grid indices for {self.target_region_name}")
+        logger.debug(f"Generating grid indices for {self.target_region_name}")
         # grid indices for the entire grid in a 2D array
         self.indices_2d = indices_2d
         self.indices_flat_region = self.get_grid_indices()
 
-        logging.debug(f"Get grid coordinates for {self.target_region_name}")
+        logger.debug(f"Get grid coordinates for {self.target_region_name}")
         self.xcoords_region, self.ycoords_region = self.get_grid_coordinates()
 
-        logging.debug(f"Extracting additional metrics for {self.target_region_name}")
+        logger.debug(f"Extracting additional metrics for {self.target_region_name}")
         self.lmp_flat_dict, self.generation_flat_dict, self.operating_cost_flat_dict, self.nov_flat_dict, self.ic_flat_dict = self.extract_region_metrics()
         self.zones_flat_arr = self.extract_lmp_zones()
 
-        logging.debug(f"Competing technologies to site expansion for {self.target_region_name}")
+        logger.debug(f"Competing technologies to site expansion for {self.target_region_name}")
         self.run_data = self.competition()
 
     def get_region_id(self):
@@ -138,8 +140,8 @@ class ProcessRegion:
 
         else:
 
-            logging.error(f"State name: `{self.target_region_name}` not in registry.")
-            logging.error(f"Please select a region name from the following:  {list(self.regions_dict.keys())}")
+            logger.error(f"State name: `{self.target_region_name}` not in registry.")
+            logger.error(f"Please select a region name from the following:  {list(self.regions_dict.keys())}")
 
             raise KeyError()
 
@@ -344,14 +346,14 @@ def process_region(target_region_name,
 
     """
 
-    logging.debug(f'Processing region:  {target_region_name}')
+    logger.debug(f'Processing region:  {target_region_name}')
 
     # check to see if region has any sites in the expansion
     n_sites = sum([expansion_dict[target_region_name][k]['n_sites'] for k in expansion_dict[target_region_name].keys()])
 
     # if there are no sites in the expansion, return an all NaN 2D array
     if n_sites <= 0:
-        logging.warning(f"There were no sites expected for any technology in `{target_region_name}`")
+        logger.warning(f"There were no sites expected for any technology in `{target_region_name}`")
         return None
 
     else:
@@ -382,6 +384,6 @@ def process_region(target_region_name,
                                 verbose=verbose,
                                 write_output=write_output)
 
-        logging.info(f'Processed `{target_region_name}` in {round(time.time() - region_t0, 7)} seconds')
+        logger.info(f'Processed `{target_region_name}` in {round(time.time() - region_t0, 7)} seconds')
 
         return process
