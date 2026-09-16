@@ -1,3 +1,4 @@
+import copy
 import logging
 import os
 
@@ -27,6 +28,10 @@ class ReadConfig(Logger):
 
         # inherit logger class attributes
         super(ReadConfig, self).__init__()
+
+        # work on a private copy so the model never mutates the caller's dictionary; the expansion plan and
+        #  settings are modified during a run and a shared reference would corrupt subsequent runs
+        config_dict = copy.deepcopy(config_dict)
 
         if config_file is None and config_dict is not None:
             self.config = config_dict

@@ -1,3 +1,4 @@
+import copy
 import logging
 
 import numpy as np
@@ -79,8 +80,9 @@ class Competition:
         # order of technologies to process
         self.technology_order = technology_order
 
-        # dictionary containing the expansion plan
-        self.expansion_dict = expansion_dict
+        # private copy of the region's expansion plan; `compete()` decrements `n_sites` as plants are sited and the
+        #  remaining counts are exposed via `self.expansion_dict`, so the caller's plan must never be touched
+        self.expansion_dict = copy.deepcopy(expansion_dict)
 
         # locational marginal pricing
         self.lmp_flat_dict = lmp_dict
@@ -126,7 +128,7 @@ class Competition:
 
         # mask any technologies having 0 expected sites in the expansion plan to exclude them from competition
         for index, i in enumerate(self.technology_order, 1):
-            if expansion_dict[i]["n_sites"] == 0:
+            if self.expansion_dict[i]["n_sites"] == 0:
                 self.nlc_mask[index, :, :] = np.ma.masked_array(self.nlc_mask[index, :, :],
                                                                 np.ones_like(self.nlc_mask[index, :, :]))
 
