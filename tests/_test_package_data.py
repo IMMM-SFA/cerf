@@ -1,6 +1,24 @@
+import os
 import unittest
+from importlib.resources import files
+
+import yaml
+import pandas as pd
+import geopandas as gpd
 
 from cerf.package_data import *
+
+
+def data_file(filename):
+    """Return a package data file path for expected test values."""
+
+    return str(files('cerf').joinpath('data').joinpath(filename))
+
+
+def data_directory():
+    """Return the package data directory path for expected test values."""
+
+    return str(files('cerf').joinpath('data'))
 
 
 class TestPackageData(unittest.TestCase):
@@ -11,7 +29,7 @@ class TestPackageData(unittest.TestCase):
 
         yr = 2010
 
-        comp = pkg_resources.resource_filename('cerf', f'data/config_{yr}.yml')
+        comp = data_file(f'config_{yr}.yml')
         val = config_file(yr)
 
         self.assertEqual(comp, val)
@@ -19,7 +37,7 @@ class TestPackageData(unittest.TestCase):
     def test_cerf_regions_shapefile(self):
         """Ensure package data functions do not get modified."""
 
-        comp = gpd.read_file(pkg_resources.resource_filename('cerf', 'data/cerf_conus_states_albers.zip'))
+        comp = gpd.read_file(data_file('cerf_conus_states_albers.zip'))
         val = cerf_regions_shapefile()
 
         pd.testing.assert_frame_equal(comp, val)
@@ -27,7 +45,7 @@ class TestPackageData(unittest.TestCase):
     def test_cerf_boundary_shapefile(self):
         """Ensure package data functions do not get modified."""
 
-        comp = gpd.read_file(pkg_resources.resource_filename('cerf', 'data/cerf_conus_boundary_albers.zip'))
+        comp = gpd.read_file(data_file('cerf_conus_boundary_albers.zip'))
         val = cerf_boundary_shapefile()
 
         pd.testing.assert_frame_equal(comp, val)
@@ -43,7 +61,7 @@ class TestPackageData(unittest.TestCase):
     def test_costs_per_kv_substation(self):
         """Ensure package data functions do not get modified."""
 
-        f = pkg_resources.resource_filename('cerf', 'data/costs_per_kv_substation.yml')
+        f = data_file('costs_per_kv_substation.yml')
 
         with open(f, 'r') as yml:
             comp = yaml.load(yml, Loader=yaml.FullLoader)
@@ -62,7 +80,7 @@ class TestPackageData(unittest.TestCase):
         if yr not in available_years:
             raise KeyError(f"Year '{yr}' not available as a default configuration file.  Must be in {available_years}")
 
-        f = pkg_resources.resource_filename('cerf', f'data/config_{yr}.yml')
+        f = data_file(f'config_{yr}.yml')
 
         with open(f, 'r') as yml:
             comp =  yaml.load(yml, Loader=yaml.FullLoader)
@@ -74,7 +92,7 @@ class TestPackageData(unittest.TestCase):
     def test_list_available_suitability_files(self):
         """Ensure package data functions do not get modified."""
 
-        root_dir = pkg_resources.resource_filename('cerf', 'data')
+        root_dir = data_directory()
 
         comp = [os.path.join(root_dir, i) for i in os.listdir(root_dir) if
                 (i.split('_')[0] == 'suitability') and
@@ -87,7 +105,7 @@ class TestPackageData(unittest.TestCase):
     def test_sample_lmp_zones_raster_file(self):
         """Ensure package data functions do not get modified."""
 
-        comp = pkg_resources.resource_filename('cerf', 'data/lmp_zones_1km.img')
+        comp = data_file('lmp_zones_1km.img')
         val = sample_lmp_zones_raster_file()
 
         self.assertEqual(comp, val)
@@ -95,7 +113,7 @@ class TestPackageData(unittest.TestCase):
     def test_get_sample_lmp_data(self):
         """Ensure package data functions do not get modified."""
 
-        comp = pd.read_csv(pkg_resources.resource_filename('cerf', 'data/illustrative_lmp_8760-per-zone_dollars-per-mwh.zip'))
+        comp = pd.read_csv(data_file('illustrative_lmp_8760-per-zone_dollars-per-mwh.zip'))
         val = get_sample_lmp_data()
 
         pd.testing.assert_frame_equal(comp, val)
@@ -103,7 +121,7 @@ class TestPackageData(unittest.TestCase):
     def test_get_region_abbrev_to_name(self):
         """Ensure package data functions do not get modified."""
 
-        regions_file = pkg_resources.resource_filename('cerf', 'data/region-abbrev_to_region-name.yml')
+        regions_file = data_file('region-abbrev_to_region-name.yml')
 
         with open(regions_file, 'r') as yml:
             comp = yaml.load(yml, Loader=yaml.FullLoader)
@@ -115,7 +133,7 @@ class TestPackageData(unittest.TestCase):
     def test_get_data_directory(self):
         """Ensure package data functions do not get modified."""
 
-        comp = pkg_resources.resource_filename('cerf', 'data')
+        comp = data_directory()
         val = get_data_directory()
 
         self.assertEqual(comp, val)

@@ -2,9 +2,9 @@ import os
 import unittest
 
 import numpy as np
-import pkg_resources
 import rasterio
 
+import cerf.package_data as pkg
 from cerf.lmp import LocationalMarginalPricing
 from cerf.read_config import ReadConfig
 
@@ -30,7 +30,7 @@ class TestLmp(unittest.TestCase):
         zones_raster_file = lmp_zone_dict.get('lmp_zone_raster_file')
 
         if zones_raster_file is None:
-            zones_raster_file = pkg_resources.resource_filename('cerf', 'data/lmp_zones_1km.img')
+            zones_raster_file = pkg.sample_lmp_zones_raster_file()
 
         # read in lmp zoness raster as a 2D numpy array
         with rasterio.open(zones_raster_file) as src:

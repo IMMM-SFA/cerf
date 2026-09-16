@@ -2,11 +2,10 @@ import os
 import tempfile
 import zipfile
 import shutil
+from importlib.metadata import version
+from io import BytesIO as BytesIO
 
 import requests
-
-from pkg_resources import get_distribution
-from io import BytesIO as BytesIO
 
 import cerf.package_data as pkg
 
@@ -43,6 +42,7 @@ class InstallSupplement:
         '2.3.2': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
         '2.3.3': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
         '2.4.0': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
+        '2.4.1': 'https://zenodo.org/record/6998151/files/cerf_package_data.zip?download=1',
     }
 
     def __init__(self, data_dir=None):
@@ -60,7 +60,7 @@ class InstallSupplement:
             data_directory = self.data_dir
 
         # get the current version of cerf that is installed
-        current_version = get_distribution('cerf').version
+        current_version = version('cerf')
 
         try:
             data_link = InstallSupplement.DATA_VERSION_URLS[current_version]
