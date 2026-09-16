@@ -55,6 +55,33 @@ class TestReadConfig(unittest.TestCase):
         cfg.expansion_dict[region][tech]['n_sites'] = -999
         self.assertEqual(snapshot, user_config)
 
+    def test_config_dict_none_with_file(self):
+        """`config_dict=None` alongside a config file must behave exactly like no overrides."""
+
+        cfg_none = ReadConfig(config_file=self.TEST_CONFIG, config_dict=None)
+        cfg_default = ReadConfig(config_file=self.TEST_CONFIG)
+        cfg_empty = ReadConfig(config_file=self.TEST_CONFIG, config_dict={})
+
+        self.assertEqual(cfg_default.settings_dict, cfg_none.settings_dict)
+        self.assertEqual(cfg_default.expansion_dict, cfg_none.expansion_dict)
+        self.assertEqual(cfg_empty.settings_dict, cfg_none.settings_dict)
+
+    def test_no_config_raises_value_error(self):
+        """Neither a file nor a dictionary is an error, not an obscure AttributeError."""
+
+        for empty in (None, {}):
+            with self.assertRaises(ValueError):
+                ReadConfig(config_dict=empty)
+
+    def test_default_config_dict_is_not_shared(self):
+        """The default argument must not be a mutable object shared across instances."""
+
+        first = ReadConfig(config_file=self.TEST_CONFIG)
+        first.settings_dict['run_year'] = 1900
+        second = ReadConfig(config_file=self.TEST_CONFIG)
+
+        self.assertNotEqual(1900, second.settings_dict['run_year'])
+
     def test_config_dict_overrides_do_not_mutate_caller(self):
         """Overrides passed alongside a config file must not be written back to the caller's dictionary."""
 

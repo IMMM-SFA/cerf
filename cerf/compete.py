@@ -272,14 +272,6 @@ class Competition:
                         logging.info('\nUpdate expansion plan to represent siting requirements:')
                         logging.info(self.expansion_dict)
 
-                    # update original array with excluded area where siting occurred
-                    # if target technology has no more sites to be sited
-                    if self.expansion_dict[tech_id] == 0:
-
-                        # make all elements for the target tech in the NLC mask unsuitable so we can progress
-                        self.nlc_mask[tech_index, :, :] = np.ma.masked_array(self.nlc_mask[0, :, :],
-                                                                             np.ones_like(self.nlc_mask[0, :, :]))
-
                     # apply the new exclusion from the current technology to all techs...
                     #   invert sited elements to have a value of 1 so they can be used as a mask
                     #   repeat the new sited array to create a mask for all techs and reshape to 2D
