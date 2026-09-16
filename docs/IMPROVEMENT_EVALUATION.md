@@ -19,8 +19,8 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | — | Seeded reference run + baseline CSV (`benchmark/`) | `release/2.5.0` `8c720bd` | ✅ Done | baseline: 1838 sites | staging 8.45 s · competition 11.93 s · total 20.37 s |
 | 4.1 | Vectorise buffer removal in `Competition.compete()` | [#118](https://github.com/IMMM-SFA/cerf/pull/118) `eb3da1b` | ✅ Merged | identical | competition **11.93 → 5.77 s (−52%)**; total 20.37 → 13.82 s |
 | 4.2 + 4.3 | LUT zone lookup + single sort in `get_lmp()` | [#119](https://github.com/IMMM-SFA/cerf/pull/119) `adcc9c3` | ✅ Merged | identical (LMP array bitwise equal) | `get_lmp` **4.71 → 0.26 s (18×)**; staging 8.05 → 3.34 s; total 13.82 → 8.65 s |
-| 3.1 | `isin` signature bug in `preprocess_hifld_substations()` | `fix/hifld-substation-isin` | 🔄 In progress | n/a (preprocessing utility, not on run path) | n/a |
-| 3.2 | NOV `ZeroDivisionError` when esc == discount | — | ⬜ Not started | — | — |
+| 3.1 | `isin` signature bug in `preprocess_hifld_substations()` | [#120](https://github.com/IMMM-SFA/cerf/pull/120) `df4445d` | ✅ Merged | identical (not on run path) | n/a; +5 tests |
+| 3.2 | NOV `ZeroDivisionError` when esc == discount | `fix/nov-levelization-limits` | 🔄 In progress | — | — |
 | 3.3 | Model mutates caller's config dict | — | ⬜ Not started | — | — |
 | 3.4 | Dead `expansion_dict[tech_id] == 0` branch | — | ⬜ Not started | — | — |
 | 3.5 | `config_dict=None` crash | — | ⬜ Not started | — | — |
@@ -98,7 +98,9 @@ All staged arrays are `float64`, shape `(9, 2999, 4693)`:
 
 ## 3. Confirmed Bugs
 
-### 3.1 `preprocess_hifld_substations()` always raises `TypeError` — 🔄 IN PROGRESS
+### 3.1 `preprocess_hifld_substations()` always raises `TypeError` — ✅ DONE in #120
+
+> **Resolved.** Case-insensitive `type`/`status` filters; voltage binning extracted to `assign_substation_costs()` and shared with `Interconnection.process_substations()`. New `tests/test_interconnect_preprocess.py`.
 
 **Location:** [`cerf/interconnect.py:435`](../cerf/interconnect.py:435)
 
@@ -113,7 +115,7 @@ gdf = gdf.loc[(gdf['type'].isin('SUBSTATION', 'substation')) & ...
 
 **Also:** there is no test covering this function.
 
-### 3.2 `ZeroDivisionError` in NOV levelization factors
+### 3.2 `ZeroDivisionError` in NOV levelization factors — 🔄 IN PROGRESS
 
 **Location:** [`cerf/nov.py:166-182`](../cerf/nov.py:166)
 
