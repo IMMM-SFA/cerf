@@ -13,6 +13,8 @@ import cerf.package_data as pkg
 from cerf.nov import NetOperationalValue
 from cerf.utils import suppress_callback
 
+logger = logging.getLogger(__name__)
+
 
 class Interconnection:
     """Calculate interconnection costs per grid cell in $ / yr using:
@@ -146,16 +148,16 @@ class Interconnection:
         """Get the costs of gas pipeline interconnection per kilometer."""
 
         if self.pipeline_costs_dict is not None:
-            logging.info(f"Using gas pipeline costs from user defined dictionary:  {self.pipeline_costs_dict}")
+            logger.info(f"Using gas pipeline costs from user defined dictionary:  {self.pipeline_costs_dict}")
             return self.pipeline_costs_dict.get('gas_pipeline_cost')
 
         if self.pipeline_costs_file is not None:
             f = self.pipeline_costs_file
-            logging.info(f"Using gas pipeline costs from file:  {f}")
+            logger.info(f"Using gas pipeline costs from file:  {f}")
 
         else:
             f = pkg.get_costs_gas_pipeline()
-            logging.info(f"Using gas pipeline costs from default file:  {f}")
+            logger.info(f"Using gas pipeline costs from default file:  {f}")
 
         with open(f, 'r') as yml:
             yaml_dict = yaml.load(yml, Loader=yaml.FullLoader)
@@ -169,12 +171,12 @@ class Interconnection:
         if (self.transmission_costs_dict is None) and (self.transmission_costs_file is None):
             default_kv_file = pkg.get_costs_per_kv_substation_file()
 
-            logging.info(f"Using default substation costs from file: {default_kv_file}")
+            logger.info(f"Using default substation costs from file: {default_kv_file}")
 
             self.transmission_costs_dict = pkg.costs_per_kv_substation()
 
         elif self.transmission_costs_file is not None:
-            logging.info(f"Using substation costs from file: {self.transmission_costs_file}")
+            logger.info(f"Using substation costs from file: {self.transmission_costs_file}")
 
             with open(self.transmission_costs_file, 'r') as yml:
                 self.transmission_costs_dict = yaml.load(yml, Loader=yaml.FullLoader)
@@ -182,13 +184,13 @@ class Interconnection:
         if self.substation_file is None:
             sub_file = pkg.get_substation_file()
 
-            logging.info(f"Using default substation file: {sub_file}")
+            logger.info(f"Using default substation file: {sub_file}")
 
             return gpd.read_file(sub_file)
 
         else:
 
-            logging.info(f"Using substation file: {self.substation_file}")
+            logger.info(f"Using substation file: {self.substation_file}")
 
             # load file
             gdf = gpd.read_file(self.substation_file)
@@ -196,8 +198,8 @@ class Interconnection:
             # detect existing raster value binning for rasterization
             if '_rval_' in gdf.columns:
 
-                logging.info("Using current '_rval_' field found in substation file which is used in rasterization.")
-                logging.info("If '_rval_' field was included unintentionally, please remove from file and re-run.")
+                logger.info("Using current '_rval_' field found in substation file which is used in rasterization.")
+                logger.info("If '_rval_' field was included unintentionally, please remove from file and re-run.")
 
                 return gdf
 
@@ -221,7 +223,7 @@ class Interconnection:
 
             f = pkg.get_default_gas_pipelines()
 
-            logging.info(f"Using default gas pipeline file:  {f}")
+            logger.info(f"Using default gas pipeline file:  {f}")
 
             # read in default shapefile for pipelines
             gdf = gpd.read_file(f)
@@ -233,7 +235,7 @@ class Interconnection:
 
         else:
 
-            logging.info(f"Using gas pipeline file:  {self.pipeline_file}")
+            logger.info(f"Using gas pipeline file:  {self.pipeline_file}")
 
             # read in data and reproject
             gdf = gpd.read_file(self.pipeline_file)
@@ -290,7 +292,7 @@ class Interconnection:
 
                 if self.output_dir is None:
                     msg = "If writing rasters to file must specify 'output_dir'"
-                    logging.error(msg)
+                    logger.error(msg)
                     raise NotADirectoryError(msg)
 
                 else:
@@ -351,7 +353,7 @@ class Interconnection:
 
         # if a preprocessed file has been provided, load and return it
         if self.interconnection_cost_file is not None:
-            logging.info(f"Using prebuilt interconnection costs file:  {self.interconnection_cost_file}")
+            logger.info(f"Using prebuilt interconnection costs file:  {self.interconnection_cost_file}")
             return np.load(self.interconnection_cost_file)
 
         # set up array to hold interconnection costs

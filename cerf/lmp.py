@@ -5,6 +5,8 @@ import logging
 
 import cerf.package_data as pkg
 
+logger = logging.getLogger(__name__)
+
 
 def generate_random_lmp_dataframe(n_zones=57, low_value=10, mid_value=300, high_value=500, n_samples=5000):
     """Generate a random dataframe of hourly 8760 LMP values per lmp zone.  Let high value LMPs only be used
@@ -170,10 +172,10 @@ class LocationalMarginalPricing:
 
             # default illustrative LMP file
             lmp_file = pkg.get_sample_lmp_file()
-            logging.info(f"Using LMP from default illustrative package data:  {lmp_file}")
+            logger.info(f"Using LMP from default illustrative package data:  {lmp_file}")
 
         else:
-            logging.info(f"Using LMP file:  {lmp_file}")
+            logger.info(f"Using LMP file:  {lmp_file}")
 
         lmp_df = pd.read_csv(lmp_file)
 
