@@ -13,25 +13,50 @@ jobs:
       env:
         OS: ${{ matrix.os }}
         PYTHON: '3.9'
+        # Directory the package data is installed into; cached across runs so the Zenodo download
+        # (rate limited, ~10 MB) only happens when the data URL for this cerf version changes.
+        CERF_DATA_DIR: ${{ github.workspace }}/.cerf_data
 
       steps:
 
-        - uses: actions/checkout@v1
+        - uses: actions/checkout@v4
 
         - name: Set up Python
-          uses: actions/setup-python@master
+          uses: actions/setup-python@v5
           with:
-            python-version: 3.9
+            python-version: '3.9'
 
         - name: Install dependencies
           run: |
             python -m pip install --upgrade pip
-            python -m pip install .
-            python -c 'import cerf; cerf.install_package_data()'
+            python -m pip install ".[test]"
+
+        - name: Resolve package data URL for this cerf version
+          id: data-url
+          run: |
+            URL=$(python -c 'from importlib.metadata import version; from cerf.install_supplement import InstallSupplement as I; print(I.get_data_link(version("cerf")))')
+            echo "url=$URL" >> "$GITHUB_OUTPUT"
+            echo "Package data URL: $URL"
+
+        - name: Restore cached package data
+          id: cache-data
+          uses: actions/cache@v4
+          with:
+            path: ${{ env.CERF_DATA_DIR }}
+            key: cerf-package-data-${{ hashFiles('cerf/install_supplement.py') }}-${{ steps.data-url.outputs.url }}
+
+        - name: Download package data (cache miss)
+          if: steps.cache-data.outputs.cache-hit != 'true'
+          run: |
+            python -c "import os, cerf; cerf.install_package_data(data_dir=os.environ['CERF_DATA_DIR'])"
+
+        - name: Link package data into the installed package
+          run: |
+            PKG_DATA=$(python -c 'import cerf.package_data as p; print(p.get_data_directory())')
+            mkdir -p "$PKG_DATA"
+            cp -n "$CERF_DATA_DIR"/* "$PKG_DATA"/ || true
+            ls "$PKG_DATA" | head -50
 
         - name: Test and generate coverage report on Linux
           run: |
-            pip install pytest
-            pip install pytest-cov
             pytest --cov=./ --cov-report=xml
-
