@@ -7,13 +7,34 @@ import geopandas as gpd
 
 
 def _package_resource_path(*parts):
-    """Return a package resource path as a string."""
+    """Return a package resource path as a string.
+
+    cerf requires its package data to live on the filesystem: the default data
+    files are downloaded into the package ``data`` directory by
+    ``cerf.install_package_data()`` and are consumed by ``rasterio``,
+    ``geopandas``, ``open``, and ``os.listdir`` which all need real paths.
+    Installs that expose the package through a non-filesystem loader (e.g., a
+    zipped archive) are therefore not supported and raise an explicit error
+    rather than returning an unusable path string.
+
+    :param parts:               Path components relative to the ``cerf`` package root
+
+    :return:                    Absolute filesystem path to the resource as a string
+
+    """
 
     resource = files('cerf')
     for part in parts:
         resource = resource.joinpath(part)
 
-    return str(resource)
+    if not isinstance(resource, os.PathLike):
+        raise RuntimeError(
+            "cerf package data must be installed on the filesystem; "
+            f"resource '{'/'.join(parts)}' resolved to a non-filesystem location ({resource!r}). "
+            "Install cerf as a regular (non-zipped) package."
+        )
+
+    return os.fspath(resource)
 
 
 def _data_file(filename):
