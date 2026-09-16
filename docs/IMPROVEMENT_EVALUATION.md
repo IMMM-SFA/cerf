@@ -23,8 +23,8 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 3.2 | NOV `ZeroDivisionError` when esc == discount | [#121](https://github.com/IMMM-SFA/cerf/pull/121) `994c4d9` | ✅ Merged | identical | n/a; +6 tests |
 | 7.3 (part) | Robust Zenodo download (retries, ZIP magic check, clear errors) + cached package data in CI | [#122](https://github.com/IMMM-SFA/cerf/pull/122) `2688d06` | ✅ Merged | identical (not on run path) | CI: data download skipped on cache hit; +13 tests |
 | 3.3 | Model mutates caller's config dict | [#123](https://github.com/IMMM-SFA/cerf/pull/123) `8fa201c` | ✅ Merged | identical | none (8.60–8.71 s); +3 tests |
-| 3.4 + 3.5 | Dead `expansion_dict[tech_id] == 0` branch; `config_dict=None` crash / mutable default | `fix/dead-branch-and-none-config` | 🔄 In progress | — | — |
-| 3.6 / 3.7 | Logger handler accumulation / dead logger code | — | ⬜ Not started | — | — |
+| 3.4 + 3.5 | Dead `expansion_dict[tech_id] == 0` branch; `config_dict=None` crash / mutable default | [#124](https://github.com/IMMM-SFA/cerf/pull/124) `c9fffd2` | ✅ Merged | identical | none (8.59 s); +3 tests |
+| 3.6 / 3.7 | Logger handler accumulation / dead logger code | `fix/named-logger` | 🔄 In progress | — | — |
 | 4.4 | Read region raster once / precompute bounding boxes | — | ⬜ Not started | — | — |
 | 4.5 | dtype reduction (`bool` suitability, `float32` costs) | — | ⬜ Not started | — | — |
 | 4.6 | Replace masked arrays in competition loop | — | ⬜ Not started | — | — |
@@ -141,7 +141,7 @@ Consequences:
 
 **Fix:** `copy.deepcopy` the config in `ReadConfig.__init__`, and have `Competition` track remaining sites in a local dict rather than mutating `expansion_dict`.
 
-### 3.4 Dead code in `Competition.compete()` — 🔄 IN PROGRESS
+### 3.4 Dead code in `Competition.compete()` — ✅ DONE in #124
 
 **Location:** [`cerf/compete.py:275`](../cerf/compete.py:275)
 
@@ -151,7 +151,7 @@ if self.expansion_dict[tech_id] == 0:
 
 `expansion_dict[tech_id]` is a dict (`{'tech_name': ..., 'n_sites': ...}`), never `0`. This branch never executes. The intended check (`['n_sites'] == 0`) already appears correctly at line 294, so this block should simply be removed. Note also the body would assign a masked copy of `nlc_mask[0]` (the sentinel layer) into the tech layer rather than masking the tech layer itself – a second latent bug hidden behind the first.
 
-### 3.5 `ReadConfig` crashes when `config_dict=None` is passed with a file — 🔄 IN PROGRESS
+### 3.5 `ReadConfig` crashes when `config_dict=None` is passed with a file — ✅ DONE in #124
 
 **Location:** [`cerf/read_config.py:26-44`](../cerf/read_config.py:26)
 
@@ -159,7 +159,7 @@ The signature advertises `config_dict` as optional, but passing `config_dict=Non
 
 **Fix:** default to `None`, then `config_dict = config_dict or {}` at the top.
 
-### 3.6 Logging handlers accumulate
+### 3.6 Logging handlers accumulate — 🔄 IN PROGRESS
 
 **Location:** [`cerf/model.py:53`](../cerf/model.py:53), [`cerf/logger.py:46`](../cerf/logger.py:46)
 
@@ -167,7 +167,7 @@ Each `Model()` instantiation calls `console_handler()`, which adds a new `Stream
 
 **Fix:** Use a named logger (`logging.getLogger('cerf')`), do not touch the root level, check for existing handlers before adding, and prefer a context manager or explicit `close()` for teardown.
 
-### 3.7 Broken / dead code in `Logger`
+### 3.7 Broken / dead code in `Logger` — 🔄 IN PROGRESS
 
 **Location:** [`cerf/logger.py:36-70`](../cerf/logger.py:36)
 
