@@ -20,8 +20,9 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 4.1 | Vectorise buffer removal in `Competition.compete()` | [#118](https://github.com/IMMM-SFA/cerf/pull/118) `eb3da1b` | ✅ Merged | identical | competition **11.93 → 5.77 s (−52%)**; total 20.37 → 13.82 s |
 | 4.2 + 4.3 | LUT zone lookup + single sort in `get_lmp()` | [#119](https://github.com/IMMM-SFA/cerf/pull/119) `adcc9c3` | ✅ Merged | identical (LMP array bitwise equal) | `get_lmp` **4.71 → 0.26 s (18×)**; staging 8.05 → 3.34 s; total 13.82 → 8.65 s |
 | 3.1 | `isin` signature bug in `preprocess_hifld_substations()` | [#120](https://github.com/IMMM-SFA/cerf/pull/120) `df4445d` | ✅ Merged | identical (not on run path) | n/a; +5 tests |
-| 3.2 | NOV `ZeroDivisionError` when esc == discount | `fix/nov-levelization-limits` | 🔄 In progress | — | — |
-| 3.3 | Model mutates caller's config dict | — | ⬜ Not started | — | — |
+| 3.2 | NOV `ZeroDivisionError` when esc == discount | [#121](https://github.com/IMMM-SFA/cerf/pull/121) `994c4d9` | ✅ Merged | identical | n/a; +6 tests |
+| 7.3 (part) | Robust Zenodo download (retries, ZIP magic check, clear errors) + cached package data in CI | [#122](https://github.com/IMMM-SFA/cerf/pull/122) `2688d06` | ✅ Merged | identical (not on run path) | CI: data download skipped on cache hit; +13 tests |
+| 3.3 | Model mutates caller's config dict | `fix/config-mutation` | 🔄 In progress | — | — |
 | 3.4 | Dead `expansion_dict[tech_id] == 0` branch | — | ⬜ Not started | — | — |
 | 3.5 | `config_dict=None` crash | — | ⬜ Not started | — | — |
 | 3.6 / 3.7 | Logger handler accumulation / dead logger code | — | ⬜ Not started | — | — |
@@ -115,7 +116,7 @@ gdf = gdf.loc[(gdf['type'].isin('SUBSTATION', 'substation')) & ...
 
 **Also:** there is no test covering this function.
 
-### 3.2 `ZeroDivisionError` in NOV levelization factors — 🔄 IN PROGRESS
+### 3.2 `ZeroDivisionError` in NOV levelization factors — ✅ DONE in #121
 
 **Location:** [`cerf/nov.py:166-182`](../cerf/nov.py:166)
 
@@ -128,7 +129,7 @@ When any escalation rate equals the discount rate, `k == 1.0` and `1.0 - k == 0.
 
 **Fix:** Add a guard for `abs(1.0 - k) < eps` returning `lifetime_yrs * annuity_factor`; handle `discount_rate == 0` in the annuity factor (limit is `1 / lifetime_yrs`). The three `calc_levelization_factor_*` methods are copy-paste identical apart from the rate; collapse into one `_levelization_factor(esc_rate)` helper.
 
-### 3.3 Model mutates the caller's configuration dictionary
+### 3.3 Model mutates the caller's configuration dictionary — 🔄 IN PROGRESS
 
 **Location:** [`cerf/read_config.py:43-62`](../cerf/read_config.py:43), [`cerf/compete.py:252`](../cerf/compete.py:252)
 
