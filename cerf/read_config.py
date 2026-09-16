@@ -24,16 +24,24 @@ class ReadConfig(Logger):
     # type hints
     config_file: str
 
-    def __init__(self, config_file=None, config_dict={}):
+    def __init__(self, config_file=None, config_dict=None):
 
         # inherit logger class attributes
         super(ReadConfig, self).__init__()
 
-        # work on a private copy so the model never mutates the caller's dictionary; the expansion plan and
-        #  settings are modified during a run and a shared reference would corrupt subsequent runs
-        config_dict = copy.deepcopy(config_dict)
+        # `None` and `{}` both mean "no overrides"; work on a private copy so the model never mutates the caller's
+        #  dictionary (the expansion plan and settings are modified during a run and a shared reference would corrupt
+        #  subsequent runs)
+        config_dict = copy.deepcopy(config_dict) if config_dict else {}
 
-        if config_file is None and config_dict is not None:
+        if config_file is None:
+
+            if not config_dict:
+                msg = ("A configuration must be provided either as `config_file='<path to config.yml>'` "
+                       "or as a non-empty `config_dict`.")
+                logging.error(msg)
+                raise ValueError(msg)
+
             self.config = config_dict
 
         else:
