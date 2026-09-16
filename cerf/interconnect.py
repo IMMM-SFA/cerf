@@ -10,6 +10,7 @@ from scipy.ndimage import distance_transform_edt
 import yaml
 
 import cerf.package_data as pkg
+from cerf.nov import NetOperationalValue
 from cerf.utils import suppress_callback
 
 
@@ -135,11 +136,11 @@ class Interconnection:
 
     @staticmethod
     def calc_annuity_factor(discount_rate, lifetime_yrs):
-        """Calculate annuity factor."""
+        """Calculate annuity factor. Delegates to the shared implementation in
+        :meth:`cerf.nov.NetOperationalValue.annuity_factor_from` so that interconnection and NOV
+        always use identical financial factors, including the zero-discount-rate limit."""
 
-        fx = pow(1.0 + discount_rate, lifetime_yrs)
-
-        return discount_rate * fx / (fx - 1.0)
+        return NetOperationalValue.annuity_factor_from(discount_rate, lifetime_yrs)
 
     def get_pipeline_costs(self):
         """Get the costs of gas pipeline interconnection per kilometer."""
