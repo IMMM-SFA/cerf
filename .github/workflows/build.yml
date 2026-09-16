@@ -14,7 +14,9 @@ jobs:
         OS: ${{ matrix.os }}
         PYTHON: '3.9'
         # Directory the package data is installed into; cached across runs so the Zenodo download
-        # (rate limited, ~10 MB) only happens when the data URL for this cerf version changes.
+        # (rate limited, intermittently 5xx, ~10 MB) only happens when the data URL for this cerf
+        # version changes. The cache key deliberately depends on the data URL only, never on source
+        # files, so refactoring the downloader does not force a cold download.
         CERF_DATA_DIR: ${{ github.workspace }}/.cerf_data
 
       steps:
@@ -43,12 +45,13 @@ jobs:
           uses: actions/cache@v4
           with:
             path: ${{ env.CERF_DATA_DIR }}
-            key: cerf-package-data-${{ hashFiles('cerf/install_supplement.py') }}-${{ steps.data-url.outputs.url }}
+            key: cerf-package-data-v1-${{ steps.data-url.outputs.url }}
 
         - name: Download package data (cache miss)
           if: steps.cache-data.outputs.cache-hit != 'true'
+          # Zenodo returns 429/5xx in streaks; give CI more headroom than the library default.
           run: |
-            python -c "import os, cerf; cerf.install_package_data(data_dir=os.environ['CERF_DATA_DIR'])"
+            python -c "import os, cerf; cerf.install_package_data(data_dir=os.environ['CERF_DATA_DIR'], max_attempts=8, timeout=600)"
 
         - name: Link package data into the installed package
           run: |
