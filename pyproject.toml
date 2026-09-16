@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "cerf"
 description = "An open-source geospatial Python package for assessing and analyzing future electricity technology capacity expansion feasibility."
 readme = "README.md"
-version = "2.4.0"
+version = "2.4.1"
 requires-python = ">=3.9"
 license = {file = "LICENSE"}
 authors = [
