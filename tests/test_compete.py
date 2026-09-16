@@ -1,3 +1,4 @@
+import copy
 import unittest
 
 import numpy as np
@@ -151,11 +152,48 @@ class TestCompete(unittest.TestCase):
         # test output equality
         np.testing.assert_array_equal(TestCompete.COMP_SITED, comp.sited_array)
 
-        # ensure the expansion plan was updated
+        # ensure the remaining-site counts are exposed on the competition object
         self.assertEqual(TestCompete.COMP_EXP_PLAN, comp.expansion_dict)
 
         # check sited dict match
         self.assertEqual(TestCompete.COMP_SITED_DICT, comp.sited_dict)
+
+    def test_competition_does_not_mutate_expansion_plan(self):
+        """The caller's expansion plan must be unchanged and a second run must site the same plants."""
+
+        expansion_plan = copy.deepcopy(TestCompete.EXPANSION_PLAN)
+        snapshot = copy.deepcopy(expansion_plan)
+
+        results = []
+        for _ in range(2):
+            comp = Competition(target_region_name='test',
+                               settings_dict=TestCompete.SETTINGS_DICT,
+                               technology_dict=TestCompete.TECH_DICT,
+                               technology_order=TestCompete.TECH_ORDER,
+                               expansion_dict=expansion_plan,
+                               lmp_dict=self.create_proxy_arrays()[0],
+                               generation_dict=self.create_proxy_arrays()[0],
+                               operating_cost_dict=self.create_proxy_arrays()[0],
+                               nov_dict=self.create_proxy_arrays()[0],
+                               ic_dict=self.create_proxy_arrays()[0],
+                               nlc_mask=self.create_masked_nlc_array(),
+                               zones_arr=self.create_proxy_arrays()[1].astype(np.int32),
+                               xcoords=self.create_proxy_arrays()[1],
+                               ycoords=self.create_proxy_arrays()[1],
+                               indices_flat=self.create_proxy_arrays()[1],
+                               randomize=False,
+                               seed_value=0,
+                               verbose=False)
+            results.append(comp)
+
+            # caller's plan untouched; competition's private copy reflects remaining sites
+            self.assertEqual(snapshot, expansion_plan)
+            self.assertIsNot(expansion_plan, comp.expansion_dict)
+            self.assertEqual(TestCompete.COMP_EXP_PLAN, comp.expansion_dict)
+
+        # a second competition with the same (unmutated) plan sites the same plants rather than zero
+        np.testing.assert_array_equal(results[0].sited_array, results[1].sited_array)
+        np.testing.assert_array_equal(TestCompete.COMP_SITED, results[1].sited_array)
 
 
 if __name__ == '__main__':
