@@ -3,7 +3,44 @@
 **Package:** `cerf` v2.4.1 (commit `7d94f07`)
 **Evaluated:** 2026-09-16
 **Environment:** Python 3.11.7, numpy 2.1.1, pandas 2.2.2, rasterio 1.3.11, geopandas 1.0.1
-**Status:** Evaluation only. No code changes have been made.
+**Target release:** 2.5.0 (branch `release/2.5.0`)
+
+---
+
+## 0. Progress Tracker
+
+Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the unit suite and the seeded end-to-end regression check (`python benchmark/run_reference.py --compare`), which compares all sited plants for the 2010 CONUS sample (49 regions, `seed_value=0`, sequential backend) against the reference generated on the unmodified code at `8c720bd`. PRs that intentionally change results must say so and regenerate the reference in a separate commit.
+
+**Workflow:** `git checkout release/2.5.0 && git pull` → `git checkout -b feature/<name>` → implement → `pytest` + `run_reference.py --compare` → push → PR into `release/2.5.0`.
+
+| Item | Description | Branch / PR | Status | Result vs. reference | Timing impact |
+|------|-------------|-------------|--------|----------------------|---------------|
+| — | Evaluation document | `release/2.5.0` `2376b34` | ✅ Done | n/a | n/a |
+| — | Seeded reference run + baseline CSV (`benchmark/`) | `release/2.5.0` `8c720bd` | ✅ Done | baseline: 1838 sites | staging 8.45 s · competition 11.93 s · total 20.37 s |
+| 4.1 | Vectorise buffer removal in `Competition.compete()` | [#118](https://github.com/IMMM-SFA/cerf/pull/118) `eb3da1b` | ✅ Merged | identical | competition **11.93 → 5.77 s (−52%)**; total 20.37 → 13.82 s |
+| 4.2 + 4.3 | LUT zone lookup + single sort in `get_lmp()` | `feature/lmp-lookup-table` | 🔄 In progress | — | — |
+| 3.1 | `isin` signature bug in `preprocess_hifld_substations()` | — | ⬜ Not started | — | — |
+| 3.2 | NOV `ZeroDivisionError` when esc == discount | — | ⬜ Not started | — | — |
+| 3.3 | Model mutates caller's config dict | — | ⬜ Not started | — | — |
+| 3.4 | Dead `expansion_dict[tech_id] == 0` branch | — | ⬜ Not started | — | — |
+| 3.5 | `config_dict=None` crash | — | ⬜ Not started | — | — |
+| 3.6 / 3.7 | Logger handler accumulation / dead logger code | — | ⬜ Not started | — | — |
+| 4.4 | Read region raster once / precompute bounding boxes | — | ⬜ Not started | — | — |
+| 4.5 | dtype reduction (`bool` suitability, `float32` costs) | — | ⬜ Not started | — | — |
+| 4.6 | Replace masked arrays in competition loop | — | ⬜ Not started | — | — |
+| 4.9 | Parallel backend data transfer | — | ⬜ Not started | — | — |
+| 4.10 | Single `pd.concat` in aggregation | — | ⬜ Not started | — | — |
+| 5.1 | LMP CF-bin discontinuity (decision required) | — | ⬜ Not started | will change results | — |
+| 5.2 | Pixel-size-aware interconnection distance | — | ⬜ Not started | no change on 1 km data | — |
+| 5.3 | Local RNG instead of global seed | — | ⬜ Not started | may change seeded results | — |
+| 6.x / 7.x / 8.x | Code quality, tests, CI, packaging | — | ⬜ Not started | — | — |
+
+Cumulative full-run timing (2010 CONUS sample, sequential, single process):
+
+| After | Staging | Competition | Total | vs. baseline |
+|-------|---------|-------------|-------|--------------|
+| baseline `8c720bd` | 8.45 s | 11.93 s | 20.37 s | — |
+| #118 (4.1) | 8.05 s | 5.77 s | 13.82 s | −32% |
 
 ---
 
@@ -166,9 +203,11 @@ Membership is tested on the raw name but the lookup uses `.lower()`. A mixed-cas
 
 ## 4. Performance Improvements
 
-### 4.1 `Competition.compete()` buffer-removal list comprehension (critical)
+### 4.1 `Competition.compete()` buffer-removal list comprehension (critical) — ✅ DONE in #118
 
 **Location:** [`cerf/compete.py:255-256`](../cerf/compete.py:255)
+
+> **Resolved.** Implemented as `tech = tech[~np.isin(tech, buffer_indices_list)]`. Seeded reference output identical (1838/1838 sites). Competition phase 11.93 s → 5.77 s.
 
 ```python
 tech_indices_to_delete = [np.where(tech == i)[0][0] for i in buffer_indices_list if i in tech]
@@ -191,7 +230,7 @@ tech = tech[self.cheapest_arr_1d[tech] == tech_index]
 
 Expected: region compute drops by roughly an order of magnitude for large states.
 
-### 4.2 `np.vectorize(dict.get)` for LMP zone lookup (critical for staging)
+### 4.2 `np.vectorize(dict.get)` for LMP zone lookup (critical for staging) — 🔄 IN PROGRESS
 
 **Location:** [`cerf/lmp.py:166`](../cerf/lmp.py:166)
 
@@ -205,7 +244,7 @@ lmp_arr[index] = lut[zones_arr]
 
 This is a single fancy-index operation (~50 ms). The `nodata` value (255) is handled by leaving that slot as `nan`.
 
-### 4.3 Redundant per-technology sorting in `get_lmp`
+### 4.3 Redundant per-technology sorting in `get_lmp` — 🔄 IN PROGRESS (bundled with 4.2)
 
 **Location:** [`cerf/lmp.py:154-156`](../cerf/lmp.py:154)
 
