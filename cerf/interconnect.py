@@ -205,21 +205,9 @@ class Interconnection:
                 # make all column names lower case
                 gdf.columns = [i.lower() for i in gdf.columns]
 
-                # assign a field to rasterize by containing the cost of transmission per km
-                gdf['_rval_'] = 0
-
-                # check for the presence of a minimum voltage field
-                if 'min_volt' in gdf.columns:
-
-                    for i in self.transmission_costs_dict.keys():
-                        gdf['_rval_'] = np.where((gdf['min_volt'] >= self.transmission_costs_dict[i]['min_voltage']) &
-                                                 (gdf['min_volt'] <= self.transmission_costs_dict[i]['max_voltage']),
-                                                 self.transmission_costs_dict[i]['thous_dollar_per_km'],
-                                                 gdf['_rval_'])
-                else:
-                    raise KeyError(f"Substations file must have a field named `min_volt` containing the minimum voltage.")
-
-                return gdf
+                # assign a field to rasterize by containing the cost of transmission per km; raises KeyError if
+                #  the required `min_volt` field is absent
+                return assign_substation_costs(gdf, self.transmission_costs_dict)
 
     def process_pipelines(self):
         """Select natural gas pipelines data that have a length greater than 0.
@@ -398,18 +386,51 @@ class Interconnection:
         return ic_arr
 
 
-def preprocess_hifld_substations(substation_file, output_file=None):
-    """Select substations from HIFLD data that are within the CONUS and either in service or under construction and
-    having a minimum voltage rating >= 0.  A field used to rasterize ('_rval_') is also added containing the cost of
-    connection in thous$/km for each substation.
+def assign_substation_costs(gdf, transmission_costs_dict, voltage_field='min_volt'):
+    """Assign a rasterization value field ('_rval_') to a substation GeoDataFrame containing the cost of
+    interconnection in thous$/km based on the voltage class bin that each substation's minimum voltage falls in.
 
-    This data is assumed to have the following fields:  ['TYPE', 'STATE', 'STATUS'].
+    :param gdf:                             Substation GeoDataFrame containing ``voltage_field``
+    :type gdf:                              GeoDataFrame
+
+    :param transmission_costs_dict:         Dictionary of {bin_id: {'min_voltage': int, 'max_voltage': int,
+                                            'thous_dollar_per_km': int}, ...}
+    :type transmission_costs_dict:          dict
+
+    :param voltage_field:                   Name of the minimum voltage field. Default 'min_volt'.
+    :type voltage_field:                    str
+
+    :returns:                               The input GeoDataFrame with a populated '_rval_' field
+
+    """
+
+    if voltage_field not in gdf.columns:
+        raise KeyError(f"Substations data must have a field named `{voltage_field}` containing the minimum voltage.")
+
+    gdf['_rval_'] = 0
+
+    for i in transmission_costs_dict.keys():
+        gdf['_rval_'] = np.where((gdf[voltage_field] >= transmission_costs_dict[i]['min_voltage']) &
+                                 (gdf[voltage_field] <= transmission_costs_dict[i]['max_voltage']),
+                                 transmission_costs_dict[i]['thous_dollar_per_km'],
+                                 gdf['_rval_'])
+
+    return gdf
+
+
+def preprocess_hifld_substations(substation_file, output_file=None):
+    """Select substations from HIFLD data that are within the CONUS and either in service or under construction.
+    A field used to rasterize ('_rval_') is also added containing the cost of connection in thous$/km for each
+    substation based on its minimum voltage class.
+
+    This data is assumed to have the following fields (case-insensitive):  ['TYPE', 'STATE', 'STATUS', 'MIN_VOLT'].
+    Values in 'TYPE' and 'STATUS' are matched case-insensitively.
 
     :param substation_file:                 Full path with filename and extension to the input HIFLD substation
                                             shapefile
     :type substation_file:                  str
 
-    :param output_file:                     Full path with filename and extension to the output shapefile
+    :param output_file:                     Optional. Full path with filename and extension to the output shapefile
     :type output_file:                      str
 
     :returns:                               A geodataframe containing the target substations
@@ -432,18 +453,14 @@ def preprocess_hifld_substations(substation_file, output_file=None):
     gdf.columns = [i.lower() for i in gdf.columns]
 
     # keep only substations in the CONUS that are either in service or under construction
-    gdf = gdf.loc[(gdf['type'].isin('SUBSTATION', 'substation')) &
-                  (gdf['state'].isin(regions.keys())) &
-                  (gdf['status'].isin(('IN SERVICE', 'UNDER CONST', 'in service', 'under const')))].copy()
+    is_substation = gdf['type'].astype(str).str.strip().str.upper() == 'SUBSTATION'
+    in_conus = gdf['state'].isin(regions.keys())
+    is_active = gdf['status'].astype(str).str.strip().str.upper().isin(('IN SERVICE', 'UNDER CONST'))
+
+    gdf = gdf.loc[is_substation & in_conus & is_active].copy()
 
     # assign a field to rasterize by containing the cost of transmission per km
-    gdf['_rval_'] = 0
-
-    for i in transmission_costs_dict.keys():
-        gdf['_rval_'] = np.where((gdf['min_volt'] >= transmission_costs_dict[i]['min_voltage']) &
-                                 (gdf['min_volt'] <= transmission_costs_dict[i]['max_voltage']),
-                                 transmission_costs_dict[i]['thous_dollar_per_km'],
-                                 gdf['_rval_'])
+    gdf = assign_substation_costs(gdf, transmission_costs_dict)
 
     if output_file is not None:
         gdf.to_file(output_file)
@@ -451,14 +468,16 @@ def preprocess_hifld_substations(substation_file, output_file=None):
     return gdf
 
 
-def preprocess_eia_natural_gas_pipelines(pipeline_file, output_file):
+def preprocess_eia_natural_gas_pipelines(pipeline_file, output_file=None):
     """Select natural gas pipelines from EIA data that have a status of operating and a length greater than 0.
+
+    This data is assumed to have a 'STATUS' field (case-insensitive) whose values are matched case-insensitively.
 
     :param pipeline_file:                   Full path with filename and extension to the input EIA pipeline
                                             shapefile
     :type pipeline_file:                    str
 
-    :param output_file:                     Full path with filename and extension to the output shapefile
+    :param output_file:                     Optional. Full path with filename and extension to the output shapefile
     :type output_file:                      str
 
     :returns:                               A geodataframe containing the target pipelines
@@ -471,11 +490,14 @@ def preprocess_eia_natural_gas_pipelines(pipeline_file, output_file):
     # read in data and reproject
     gdf = gpd.read_file(pipeline_file).to_crs(target_crs)
 
+    # make all column names lower case
+    gdf.columns = [i.lower() for i in gdf.columns]
+
     # only keep features with a length > 0
     gdf = gdf.loc[gdf.geometry.length > 0].copy()
 
     # only keep operational pipelines
-    gdf = gdf.loc[gdf['Status'] == 'Operating'].copy()
+    gdf = gdf.loc[gdf['status'].astype(str).str.strip().str.upper() == 'OPERATING'].copy()
 
     # use default costs file
     f = pkg.get_costs_gas_pipeline()
