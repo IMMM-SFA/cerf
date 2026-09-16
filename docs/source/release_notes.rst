@@ -7,7 +7,8 @@ see the `commit logs <https://github.com/IMMM-SFA/cerf/commits>`_.
 Version 2.4.0
 _____________
 
-- Replaced whitebox dependency used in Euclidean distance calculations with SciPy https://github.com/IMMM-SFA/cerf/pull/107 
+- Replaced deprecated ``pkg_resources`` usage with ``importlib.resources`` and ``importlib.metadata``; cerf package data must now be installed on the filesystem https://github.com/IMMM-SFA/cerf/pull/117
+- Replaced whitebox dependency used in Euclidean distance calculations with SciPy https://github.com/IMMM-SFA/cerf/pull/107
 - Limited NumPy version to less than 2 due Fiona dependency https://github.com/IMMM-SFA/cerf/pull/105
 - Updated depreciated calls to xarray https://github.com/IMMM-SFA/cerf/pull/105 
 
