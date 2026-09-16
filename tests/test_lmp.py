@@ -36,6 +36,47 @@ class TestLmp(unittest.TestCase):
         with rasterio.open(zones_raster_file) as src:
             return src.read(1)
 
+    def test_zone_lookup_matches_vectorized_dict_get(self):
+        """The lookup table must reproduce np.vectorize(dict.get) semantics exactly, including
+        NaN for zone IDs absent from the dictionary and for the nodata value."""
+
+        rng = np.random.default_rng(42)
+
+        # zone IDs with gaps (9 and 13 absent from the dict) plus a nodata value of 255
+        zones = rng.choice(np.array([1, 2, 3, 9, 13, 255], dtype=np.uint8), size=(40, 60))
+        lmp_dict = {1: 10.5, 2: 20.25, 3: 30.125, 255: np.nan}
+
+        expected = np.vectorize(lmp_dict.get)(zones).astype(np.float64)
+        result = LocationalMarginalPricing.zone_lookup(zones, lmp_dict)
+
+        self.assertEqual(result.dtype, np.float64)
+        self.assertEqual(result.shape, zones.shape)
+        np.testing.assert_array_equal(result, expected)
+
+        # zones absent from the dictionary must be NaN
+        self.assertTrue(np.all(np.isnan(result[zones == 9])))
+        self.assertTrue(np.all(np.isnan(result[zones == 13])))
+        self.assertTrue(np.all(np.isnan(result[zones == 255])))
+
+    def test_zone_lookup_handles_negative_and_signed_ids(self):
+        """Negative nodata values and signed integer dtypes must be supported."""
+
+        zones = np.array([[-9999, 1, 2], [2, -9999, 1]], dtype=np.int32)
+        lmp_dict = {1: 1.0, 2: 2.0, -9999: np.nan}
+
+        expected = np.vectorize(lmp_dict.get)(zones).astype(np.float64)
+        result = LocationalMarginalPricing.zone_lookup(zones, lmp_dict)
+
+        np.testing.assert_array_equal(result, expected)
+
+    def test_zone_lookup_rejects_non_integer_zones(self):
+        """A float zone raster is a configuration error and must not be silently truncated."""
+
+        zones = np.array([[1.0, 2.0]], dtype=np.float32)
+
+        with self.assertRaises(TypeError):
+            LocationalMarginalPricing.zone_lookup(zones, {1: 1.0, 2: 2.0})
+
     def test_lmp_outputs(self):
         """Test to make sure LMP outputs match expected."""
 
