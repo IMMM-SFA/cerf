@@ -251,9 +251,9 @@ class Competition:
                         required_sites -= 1
                         self.expansion_dict[tech_id].update(n_sites=required_sites)
 
-                        # remove any buffered elements as an option to site
-                        tech_indices_to_delete = [np.where(tech == i)[0][0] for i in buffer_indices_list if i in tech]
-                        tech = np.delete(tech, tech_indices_to_delete)
+                        # remove any buffered elements as an option to site; `tech` is a sorted unique index array
+                        #  from np.where, and boolean masking preserves its order so seeded outcomes are unchanged
+                        tech = tech[~np.isin(tech, buffer_indices_list)]
 
                         # exit siting for the target technology if all sites have been sited or if there are no more
                         #   winning cells
