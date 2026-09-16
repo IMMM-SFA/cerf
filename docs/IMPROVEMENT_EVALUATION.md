@@ -22,9 +22,8 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 3.1 | `isin` signature bug in `preprocess_hifld_substations()` | [#120](https://github.com/IMMM-SFA/cerf/pull/120) `df4445d` | ✅ Merged | identical (not on run path) | n/a; +5 tests |
 | 3.2 | NOV `ZeroDivisionError` when esc == discount | [#121](https://github.com/IMMM-SFA/cerf/pull/121) `994c4d9` | ✅ Merged | identical | n/a; +6 tests |
 | 7.3 (part) | Robust Zenodo download (retries, ZIP magic check, clear errors) + cached package data in CI | [#122](https://github.com/IMMM-SFA/cerf/pull/122) `2688d06` | ✅ Merged | identical (not on run path) | CI: data download skipped on cache hit; +13 tests |
-| 3.3 | Model mutates caller's config dict | `fix/config-mutation` | 🔄 In progress | — | — |
-| 3.4 | Dead `expansion_dict[tech_id] == 0` branch | — | ⬜ Not started | — | — |
-| 3.5 | `config_dict=None` crash | — | ⬜ Not started | — | — |
+| 3.3 | Model mutates caller's config dict | [#123](https://github.com/IMMM-SFA/cerf/pull/123) `8fa201c` | ✅ Merged | identical | none (8.60–8.71 s); +3 tests |
+| 3.4 + 3.5 | Dead `expansion_dict[tech_id] == 0` branch; `config_dict=None` crash / mutable default | `fix/dead-branch-and-none-config` | 🔄 In progress | — | — |
 | 3.6 / 3.7 | Logger handler accumulation / dead logger code | — | ⬜ Not started | — | — |
 | 4.4 | Read region raster once / precompute bounding boxes | — | ⬜ Not started | — | — |
 | 4.5 | dtype reduction (`bool` suitability, `float32` costs) | — | ⬜ Not started | — | — |
@@ -129,7 +128,7 @@ When any escalation rate equals the discount rate, `k == 1.0` and `1.0 - k == 0.
 
 **Fix:** Add a guard for `abs(1.0 - k) < eps` returning `lifetime_yrs * annuity_factor`; handle `discount_rate == 0` in the annuity factor (limit is `1 / lifetime_yrs`). The three `calc_levelization_factor_*` methods are copy-paste identical apart from the rate; collapse into one `_levelization_factor(esc_rate)` helper.
 
-### 3.3 Model mutates the caller's configuration dictionary — 🔄 IN PROGRESS
+### 3.3 Model mutates the caller's configuration dictionary — ✅ DONE in #123
 
 **Location:** [`cerf/read_config.py:43-62`](../cerf/read_config.py:43), [`cerf/compete.py:252`](../cerf/compete.py:252)
 
@@ -142,7 +141,7 @@ Consequences:
 
 **Fix:** `copy.deepcopy` the config in `ReadConfig.__init__`, and have `Competition` track remaining sites in a local dict rather than mutating `expansion_dict`.
 
-### 3.4 Dead code in `Competition.compete()`
+### 3.4 Dead code in `Competition.compete()` — 🔄 IN PROGRESS
 
 **Location:** [`cerf/compete.py:275`](../cerf/compete.py:275)
 
@@ -152,7 +151,7 @@ if self.expansion_dict[tech_id] == 0:
 
 `expansion_dict[tech_id]` is a dict (`{'tech_name': ..., 'n_sites': ...}`), never `0`. This branch never executes. The intended check (`['n_sites'] == 0`) already appears correctly at line 294, so this block should simply be removed. Note also the body would assign a masked copy of `nlc_mask[0]` (the sentinel layer) into the tech layer rather than masking the tech layer itself – a second latent bug hidden behind the first.
 
-### 3.5 `ReadConfig` crashes when `config_dict=None` is passed with a file
+### 3.5 `ReadConfig` crashes when `config_dict=None` is passed with a file — 🔄 IN PROGRESS
 
 **Location:** [`cerf/read_config.py:26-44`](../cerf/read_config.py:26)
 
