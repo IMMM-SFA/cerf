@@ -149,5 +149,99 @@ class TestNov(unittest.TestCase):
         np.testing.assert_almost_equal(nov_tech_arr, TestNov.EXPECTED_NOV_WITHCARBON_NOLEAP, decimal=4)
 
 
+class TestFinancialFactorLimits(unittest.TestCase):
+    """Degenerate-input handling for the annuity and levelization factors."""
+
+    D = 0.05
+    N = 60
+
+    def test_escalation_equal_to_discount_rate_does_not_raise(self):
+        """esc == discount gives k == 1 and previously raised ZeroDivisionError."""
+
+        econ = TestNov.instantiate_nov(target_year=2010, carbon_tax_usd_per_ton=0.0,
+                                       fuel_co2_content_tons_per_btu=0.0, carbon_capture_rate_fraction=0.0,
+                                       consider_leap_year=False)
+
+        # override all three escalation rates to equal the discount rate and recompute
+        econ.variable_cost_esc = econ.fuel_esc = econ.carbon_esc = econ.discount_rate
+        lf = econ.calc_levelization_factor_fuel()
+
+        self.assertTrue(np.isfinite(lf))
+        self.assertAlmostEqual(lf, econ.lifetime_yrs * econ.annuity_factor, places=12)
+        self.assertEqual(econ.calc_levelization_factor_vom(), lf)
+        self.assertEqual(econ.calc_levelization_factor_carbon(), lf)
+
+        # NOV itself must be finite
+        _, _, nov = econ.calc_nov()
+        self.assertTrue(np.all(np.isfinite(nov)))
+
+    def test_levelization_factor_is_continuous_at_the_limit(self):
+        """The k == 1 branch must agree with the general formula as esc -> discount from both sides.
+
+        LF has a finite, non-zero slope with respect to the escalation rate at the limit (about n^2 * AF / 2
+        in k, i.e. ~90 per unit escalation for n=60), so the general formula evaluated at esc = d + eps
+        differs from the limit by O(eps). Continuity means that difference must shrink proportionally with
+        eps and vanish as eps -> 0, so the tolerance scales with |eps| and is much larger than the slope.
+        """
+
+        af = NetOperationalValue.annuity_factor_from(self.D, self.N)
+        limit = NetOperationalValue.levelization_factor_from(self.D, self.D, self.N, af)
+
+        # bound on |dLF/d(esc)| near k = 1; generous relative to the true slope (~92 for n=60, d=0.05)
+        slope_bound = self.N ** 2 * af
+
+        previous_error = None
+        for eps in (1e-4, 1e-6, 1e-8):
+            for sign in (1.0, -1.0):
+                near = NetOperationalValue.levelization_factor_from(self.D + sign * eps, self.D, self.N, af)
+                error = abs(near - limit)
+                self.assertLess(error, slope_bound * eps, msg=f"discontinuity at eps={sign * eps}")
+
+            # error must decrease as eps decreases (approaching the limit, not a jump)
+            if previous_error is not None:
+                self.assertLess(error, previous_error)
+            previous_error = error
+
+    def test_zero_discount_rate_annuity_factor(self):
+        """d == 0 previously raised ZeroDivisionError; the limit is 1 / n."""
+
+        af = NetOperationalValue.annuity_factor_from(0.0, self.N)
+        self.assertEqual(af, 1.0 / self.N)
+
+        # continuity from above: dAF/dd at d=0 is (n+1)/(2n) ~ 0.5, so error is O(eps); use tolerance of 1 * eps
+        for eps in (1e-4, 1e-6, 1e-8):
+            self.assertLess(abs(NetOperationalValue.annuity_factor_from(eps, self.N) - af), eps)
+
+        # with zero escalation as well, every year is weighted equally: LF == 1
+        lf = NetOperationalValue.levelization_factor_from(0.0, 0.0, self.N, af)
+        self.assertAlmostEqual(lf, 1.0, places=12)
+
+    def test_general_case_unchanged(self):
+        """Non-degenerate inputs must still reproduce the historical expected values exactly."""
+
+        af = NetOperationalValue.annuity_factor_from(TestNov.DISCOUNT_RATE, TestNov.lifetime_yrs)
+        self.assertEqual(af, TestNov.EXPECTED_ANNUITY_FACTOR)
+
+        lf_fuel = NetOperationalValue.levelization_factor_from(TestNov.fuel_price_esc_rate_fraction,
+                                                               TestNov.DISCOUNT_RATE, TestNov.lifetime_yrs, af)
+        self.assertEqual(lf_fuel, TestNov.EXPECTED_LF_FUEL)
+
+    def test_interconnection_uses_same_annuity_factor(self):
+        """IC and NOV must agree on the annuity factor, including at d == 0."""
+
+        from cerf.interconnect import Interconnection
+
+        for d in (0.0, 0.03, 0.05, 0.1):
+            self.assertEqual(Interconnection.calc_annuity_factor(d, self.N),
+                             NetOperationalValue.annuity_factor_from(d, self.N))
+
+    def test_invalid_inputs_raise_value_error(self):
+        with self.assertRaises(ValueError):
+            NetOperationalValue.annuity_factor_from(self.D, 0)
+
+        with self.assertRaises(ValueError):
+            NetOperationalValue.annuity_factor_from(-1.0, self.N)
+
+
 if __name__ == '__main__':
     unittest.main()
