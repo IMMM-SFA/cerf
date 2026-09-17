@@ -35,7 +35,9 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 5.3 | Per-competition `RandomState` (legacy-stream compatible) instead of global seed; seedable `generate_random_lmp_dataframe` | [#132](https://github.com/IMMM-SFA/cerf/pull/132) `b09603e` | ✅ Merged | identical; `threading` backend now also identical (was nondeterministic) | `threading, n_jobs=4`: full CONUS competition **1.0 s**; +3 tests |
 | 3.8–3.11 | `np.nan` nodata / redundant `astype` removed; `raster_to_coord_arrays` via rasterio transform (**`rioxarray` dependency dropped**); case-insensitive `get_region_id` with informative `KeyError`; `sited_dtypes()` covers all 29 columns | [#133](https://github.com/IMMM-SFA/cerf/pull/133) `76cc346` | ✅ Merged | identical | none; +3 tests; one fewer dependency |
 | 4.7 + 4.8 | `buffer_window` / `buffer_flat_indices` index arrays (exact bounds); bulk shapely → GeoJSON conversion for `rasterize`; no temp-file round trip, outputs written only on request | [#134](https://github.com/IMMM-SFA/cerf/pull/134) `5d5b9ac` | ✅ Merged | identical | IC step **2.71 → 2.16 s**; total 5.5 → 5.2 s; +3 tests |
-| 6.x / 7.x / 8.x | Code quality, tests, CI, packaging | — | ⬜ Not started | — | — |
+| 5.4 + 5.5 + 5.6 | Lifetime fields documented/validated (`validate_technology_parameters`); `EmptyRegionResult` instead of `None`; suitability honours raster `nodata`, shape check, non-0/1 warning | [#135](https://github.com/IMMM-SFA/cerf/pull/135) `c148e04` | ✅ Merged | identical | none; +3 tests |
+| 6.x | Code quality: `__all__` / explicit exports, single-source version, dependency pruning, unused imports/helpers, `safe_load`, docstrings, records-as-dicts | — | 🟡 In progress | — | — |
+| 7.x / 8.x | Tests, CI, packaging | — | ⬜ Not started | — | — |
 
 Cumulative full-run timing (2010 CONUS sample, sequential, single process):
 
@@ -363,19 +365,25 @@ A technology at CF = 0.49 is priced on the most expensive hours; at CF = 0.50 on
 
 `np.random.seed(seed_value)` sets the **global** NumPy RNG state, which affects any other code in the process and is reset per region in a way that depends on execution order. Use a local `np.random.default_rng(seed)` instance; for parallel runs derive per-region seeds (e.g., `seed + region_id`) so results are reproducible regardless of backend or scheduling.
 
-### 5.4 Retirement year uses `operational_life_yrs` but IC/NOV use `lifetime_yrs`
+### 5.4 Retirement year uses `operational_life_yrs` but IC/NOV use `lifetime_yrs` — ✅ DONE in #135
+
+> **Resolved.** `ReadConfig.validate_technology_parameters()` documents the semantics (economic vs. physical life), requires a positive `lifetime_yrs`, defaults `operational_life_yrs` to it, and rejects non-positive values.
 
 **Location:** [`cerf/compete.py:186`](../cerf/compete.py:186), [`cerf/nov.py`](../cerf/nov.py), [`cerf/interconnect.py:376`](../cerf/interconnect.py:376)
 
 Two lifetime fields exist and are used in different places. The sample configs appear to set them equal, but the semantics should be documented (economic vs. physical life) and validated on read.
 
-### 5.5 `n_sites <= 0` check silently returns `None`
+### 5.5 `n_sites <= 0` check silently returns `None` — ✅ DONE in #135
+
+> **Resolved.** `process_region()` returns an `EmptyRegionResult` with the same attribute surface as a `ProcessRegion` result and an empty, correctly typed `sited_df`.
 
 **Location:** [`cerf/process_region.py:350-355`](../cerf/process_region.py:350)
 
 Regions with zero planned sites return `None`, which the aggregator handles, but `run_single_region` returns `None` to the user with only a log warning. Prefer returning an empty result object so downstream code (`process.run_data.sited_df`) doesn't need `None` checks.
 
-### 5.6 Suitability rasters combined with `np.maximum` assumes 0/1 encoding
+### 5.6 Suitability rasters combined with `np.maximum` assumes 0/1 encoding — ✅ DONE in #135
+
+> **Resolved.** `Stage.unsuitable_from_raster()` honours the declared nodata explicitly (incl. nodata 0 and NaN); `build_suitability_array()` checks the grid shape and warns on values other than 0 / 1 / nodata.
 
 **Location:** [`cerf/stage.py:240`](../cerf/stage.py:240)
 
