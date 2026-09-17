@@ -228,6 +228,27 @@ class TestCompete(unittest.TestCase):
         self.assertEqual(0, comp.cheapest_arr[0, 0])
         self.assertEqual(1, comp.cheapest_arr[0, 1])
 
+    def test_seeded_competition_does_not_touch_global_rng(self):
+        """A seeded competition must neither read nor reset the process-wide NumPy RNG."""
+
+        plain = self.create_masked_nlc_array().astype(np.float64).filled(np.inf)
+
+        np.random.seed(12345)
+        expected_next = np.random.randint(0, 1_000_000)   # what the global stream yields after seeding
+        np.random.seed(12345)
+
+        comp = self._run(plain.copy())
+        np.testing.assert_array_equal(TestCompete.COMP_SITED, comp.sited_array)
+        self.assertIsInstance(comp.rng, np.random.RandomState)
+
+        # global stream is exactly where it was before the competition ran
+        self.assertEqual(expected_next, np.random.randint(0, 1_000_000))
+
+        # and the competition result does not depend on the global state
+        np.random.seed(999)
+        comp2 = self._run(plain.copy())
+        np.testing.assert_array_equal(comp.sited_array, comp2.sited_array)
+
     def test_metric_views_2d_match_flat_arrays(self):
         """2D region views of the metric arrays give the same sited values as pre-flattened arrays."""
 

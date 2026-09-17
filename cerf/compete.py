@@ -45,7 +45,10 @@ class Competition:
                                                     Default:  True
     :type randomize:                                bool
 
-    :param seed_value:                              Value for the see if randomize is False.
+    :param seed_value:                              Seed for this competition's private random number generator when
+                                                    ``randomize`` is False. The generator is local to the instance
+                                                    (the global NumPy RNG is never touched), so seeded results are
+                                                    identical for every joblib backend and processing order.
     :type seed_value:                               int
 
     :param verbose:                                 Log out siting information. Default False.
@@ -124,9 +127,10 @@ class Competition:
         # log out additional info
         self.verbose = verbose
 
-        # use random seed to create reproducible outcomes
-        if randomize is False:
-            np.random.seed(seed_value)
+        # private random number generator; seeded for reproducible outcomes when requested. A local `RandomState`
+        #  yields exactly the same draws the legacy global `np.random.seed`/`np.random.choice` did, without mutating
+        #  process-wide state shared with other regions, threads, or user code
+        self.rng = np.random.RandomState(None if randomize else seed_value)
 
         # number of technologies
         self.n_techs = len(self.technology_order)
@@ -246,7 +250,7 @@ class Competition:
                         tech_nlc_cheap = tech[np.where(tech_nlc == np.nanmin(tech_nlc))]
 
                         # select a random index that has a winning cell for the check where multiple low NLC may exists
-                        target_ix = np.random.choice(tech_nlc_cheap)
+                        target_ix = self.rng.choice(tech_nlc_cheap)
 
                         # add selected index to sited dictionary
                         self.sited_dict['region_name'].append(self.target_region_name)

@@ -8,7 +8,7 @@ import cerf.package_data as pkg
 logger = logging.getLogger(__name__)
 
 
-def generate_random_lmp_dataframe(n_zones=57, low_value=10, mid_value=300, high_value=500, n_samples=5000):
+def generate_random_lmp_dataframe(n_zones=57, low_value=10, mid_value=300, high_value=500, n_samples=5000, seed=None):
     """Generate a random dataframe of hourly 8760 LMP values per lmp zone.  Let high value LMPs only be used
     for 15 percent of the data.
     :param n_zones:                     Number of zones to process
@@ -16,11 +16,11 @@ def generate_random_lmp_dataframe(n_zones=57, low_value=10, mid_value=300, high_
     :param mid_value:                   Desired mid value of MWh to split the 85-15 split to
     :param high_value:                  Desired max value of MWh
     :param n_samples:                   Number of intervals to split the min, max choices by
+    :param seed:                        Optional seed for a local random generator; the global NumPy RNG is not used
     :return:                            Data frame of LMPs per zone
     """
 
-    # initialize a dictionary with the hour count for the number of hours in a year
-    d = {'hour': list(range(1, 8761, 1))}
+    rng = np.random.default_rng(seed)
 
     # create an array with n_samples covering an equal space from low to mid values
     array_1 = np.linspace(low_value, mid_value, n_samples)
@@ -29,26 +29,17 @@ def generate_random_lmp_dataframe(n_zones=57, low_value=10, mid_value=300, high_
     array_2 = np.linspace(mid_value, high_value, n_samples)
 
     # let only 15 percent of values come from high cost values
-    threshold = 8760 - (8760 * 0.15)
+    n_low = int(8760 - (8760 * 0.15))
+    n_high = 8760 - n_low
 
-    # create an LMP array for each zone
+    # initialize a dictionary with the hour count for the number of hours in a year
+    d = {'hour': np.arange(1, 8761)}
+
+    # create an LMP array for each zone: 85% drawn from the low range, 15% from the high range, then shuffled
     for i in range(n_zones):
-
-        # construct a list of random LMP values
-        l = []
-        for j in range(8760):
-
-            if j < threshold:
-                l.append(np.random.choice(array_1))
-
-            else:
-                l.append(np.random.choice(array_2))
-
-        # shuffle the list
-        np.random.shuffle(l)
-
-        # assign to dict
-        d[i] = l
+        values = np.concatenate((rng.choice(array_1, size=n_low), rng.choice(array_2, size=n_high)))
+        rng.shuffle(values)
+        d[i] = values
 
     # convert to data frame
     return pd.DataFrame(d)

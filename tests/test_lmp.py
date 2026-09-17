@@ -2,10 +2,11 @@ import os
 import unittest
 
 import numpy as np
+import pandas as pd
 import rasterio
 
 import cerf.package_data as pkg
-from cerf.lmp import LocationalMarginalPricing
+from cerf.lmp import LocationalMarginalPricing, generate_random_lmp_dataframe
 from cerf.read_config import ReadConfig
 
 
@@ -35,6 +36,22 @@ class TestLmp(unittest.TestCase):
         # read in lmp zoness raster as a 2D numpy array
         with rasterio.open(zones_raster_file) as src:
             return src.read(1)
+
+    def test_generate_random_lmp_dataframe_is_seedable_and_local(self):
+        np.random.seed(1)
+        a = generate_random_lmp_dataframe(n_zones=3, seed=42)
+        np.random.seed(2)
+        b = generate_random_lmp_dataframe(n_zones=3, seed=42)
+        c = generate_random_lmp_dataframe(n_zones=3, seed=43)
+
+        pd.testing.assert_frame_equal(a, b)                       # seed controls output, global state does not
+        self.assertFalse(a.drop(columns='hour').equals(c.drop(columns='hour')))
+        self.assertEqual((8760, 4), a.shape)
+        self.assertEqual(list(range(1, 8761)), a['hour'].tolist())
+
+        # 85 % of values from [low, mid], 15 % from [mid, high]
+        vals = a[0].to_numpy()
+        self.assertEqual(int(8760 - 8760 * 0.15), int((vals <= 300).sum()))
 
     def test_zone_lookup_matches_vectorized_dict_get(self):
         """The lookup table must reproduce np.vectorize(dict.get) semantics exactly, including
