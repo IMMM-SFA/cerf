@@ -286,17 +286,13 @@ class Competition:
                         # add selected index to list
                         sited_list.append(target_ix)
 
-                        # apply buffer
-                        result = util.buffer_flat_array(target_index=target_ix,
-                                                        arr=self.cheapest_arr_1d,
-                                                        nrows=self.cheapest_arr.shape[0],
-                                                        ncols=self.cheapest_arr.shape[1],
-                                                        ncells=self.technology_dict[tech_id]['buffer_in_km'],
-                                                        set_value=0)
-
-                        # unpack values
-                        self.cheapest_arr_1d, buffer_indices_list = result
-                        excluded_lists.append(buffer_indices_list)
+                        # apply buffer: the site and its neighbourhood are no longer the cheapest option for anyone
+                        buffer_indices = util.buffer_flat_indices(target_index=target_ix,
+                                                                  nrows=self.nlc_mask_shape[1],
+                                                                  ncols=self.nlc_mask_shape[2],
+                                                                  ncells=self.technology_dict[tech_id]['buffer_in_km'])
+                        self.cheapest_arr_1d[buffer_indices] = 0
+                        excluded_lists.append(buffer_indices)
 
                         # update the number of sites left to site
                         required_sites -= 1
@@ -304,7 +300,7 @@ class Competition:
 
                         # remove any buffered elements as an option to site; `tech` is a sorted unique index array
                         #  from np.where, and boolean masking preserves its order so seeded outcomes are unchanged
-                        tech = tech[~np.isin(tech, buffer_indices_list)]
+                        tech = tech[~np.isin(tech, buffer_indices, assume_unique=True)]
 
                         # exit siting for the target technology if all sites have been sited or if there are no more
                         #   winning cells
@@ -322,7 +318,7 @@ class Competition:
                         logger.info(self.expansion_dict)
 
                     # apply the new exclusion (sited cells and their buffers from this batch) to all techs
-                    self.exclude_cells(np.concatenate(excluded_lists).astype(np.intp))
+                    self.exclude_cells(np.concatenate(excluded_lists))
 
                     # if the technology has achieved its full expansion, then exclude the rest of its suitable area so
                     #  other technologies can now compete for the grid cells it previously won but now no longer needs

@@ -29,6 +29,7 @@ class TestUtils(unittest.TestCase):
                                  [7., 7., 7., 0., 0.],
                                  [0., 0., 0., 0., 0.]])
 
+    # buffered indices are returned sorted (row-major) as an integer array
     COMP_BUFF_FLAT_0_LIST = [0, 1, 2, 5, 6, 7, 10, 11, 12]
 
     COMP_BUFF_FLAT_19 = np.array([[0., 0., 0., 0., 0.],
@@ -36,7 +37,7 @@ class TestUtils(unittest.TestCase):
                                   [0., 0., 7., 7., 7.],
                                   [0., 0., 7., 7., 7.]])
 
-    COMP_BUFF_FLAT_19_LIST = [17, 18, 19, 12, 13, 14, 7, 8, 9]
+    COMP_BUFF_FLAT_19_LIST = [7, 8, 9, 12, 13, 14, 17, 18, 19]
 
     @staticmethod
     def reference_bounds(arr):
@@ -139,7 +140,8 @@ class TestUtils(unittest.TestCase):
         np.testing.assert_array_equal(TestUtils.COMP_BUFF_FLAT_0, arr_2d_0)
 
         # compare buffer indices
-        self.assertEqual(TestUtils.COMP_BUFF_FLAT_0_LIST, buff_0)
+        self.assertIsInstance(buff_0, np.ndarray)
+        self.assertEqual(TestUtils.COMP_BUFF_FLAT_0_LIST, buff_0.tolist())
 
         # buffer bottom right corner by two cells and set the value to 7
         arr_1d_19, buff_19 = util.buffer_flat_array(target_index=19,
@@ -156,7 +158,38 @@ class TestUtils(unittest.TestCase):
         np.testing.assert_array_equal(TestUtils.COMP_BUFF_FLAT_19, arr_2d_19)
 
         # compare buffer indices
-        self.assertEqual(TestUtils.COMP_BUFF_FLAT_19_LIST, buff_19)
+        self.assertEqual(TestUtils.COMP_BUFF_FLAT_19_LIST, buff_19.tolist())
+
+    def test_buffer_window_and_indices_match_reference(self):
+        """4.7: window slices / index arrays equal a brute-force neighbourhood for every cell and radius, incl. edges."""
+
+        nrows, ncols = 5, 7
+        for ncells in (0, 1, 2, 4, 10):
+            for target in range(nrows * ncols):
+                r, c = divmod(target, ncols)
+                expected = sorted(rr * ncols + cc
+                                  for rr in range(max(r - ncells, 0), min(r + ncells + 1, nrows))
+                                  for cc in range(max(c - ncells, 0), min(c + ncells + 1, ncols)))
+
+                got = util.buffer_flat_indices(target, nrows, ncols, ncells)
+                self.assertEqual(expected, got.tolist(), (target, ncells))
+                self.assertEqual(np.intp, got.dtype)
+
+                rows, cols = util.buffer_window(target, nrows, ncols, ncells)
+                grid = np.zeros((nrows, ncols), dtype=bool)
+                grid[rows, cols] = True
+                self.assertEqual(expected, np.flatnonzero(grid).tolist())
+
+        # the last row is buffered correctly (the legacy implementation's `<= ngrids` bounds check was off by one
+        #  but harmless; the new one is exact)
+        last = nrows * ncols - 1
+        self.assertEqual([last - ncols - 1, last - ncols, last - 1, last],
+                         util.buffer_flat_indices(last, nrows, ncols, 1).tolist())
+
+        with self.assertRaises(IndexError):
+            util.buffer_flat_indices(nrows * ncols, nrows, ncols, 1)
+        with self.assertRaises(IndexError):
+            util.buffer_flat_indices(-1, nrows, ncols, 1)
 
 
 if __name__ == '__main__':

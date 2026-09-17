@@ -1,12 +1,13 @@
 import os
 import logging
-import tempfile
 
 import geopandas as gpd
 import numpy as np
 import rasterio
+import shapely
 from rasterio import features
 from scipy.ndimage import distance_transform_edt
+from shapely.geometry import mapping
 import yaml
 
 import cerf.package_data as pkg
@@ -284,6 +285,46 @@ class Interconnection:
 
         return abs(y_res) * to_metres / 1000.0, abs(x_res) * to_metres / 1000.0
 
+    @staticmethod
+    def geometries_to_shapes(geometries, values):
+        """Yield ``(GeoJSON-like dict, value)`` pairs for ``rasterio.features.rasterize``.
+
+        ``rasterize`` accepts shapely objects directly, but then calls ``__geo_interface__`` on every feature, which
+        for ~85 k features costs more than the burn itself. Points and LineStrings (the bulk of the packaged
+        substation and pipeline data) are converted in bulk with shapely's vectorised coordinate extraction; any
+        other geometry type falls back to ``shapely.geometry.mapping``.
+
+        :param geometries:                      GeoPandas ``GeometryArray`` or sequence of shapely geometries
+        :param values:                          Sequence of burn values, one per geometry
+
+        """
+
+        geometries = np.asarray(geometries, dtype=object)
+        values = np.asarray(values)
+
+        type_ids = shapely.get_type_id(geometries)
+        coords, feature_index = shapely.get_coordinates(geometries, return_index=True)
+
+        # start offset of each feature's coordinate run (features with no coordinates get an empty run)
+        starts = np.searchsorted(feature_index, np.arange(len(geometries)), side='left')
+        stops = np.searchsorted(feature_index, np.arange(len(geometries)), side='right')
+
+        point_id, line_id = shapely.GeometryType.POINT, shapely.GeometryType.LINESTRING
+
+        for i, (geom, type_id, value) in enumerate(zip(geometries, type_ids, values)):
+
+            if geom is None or shapely.is_empty(geom):
+                continue
+
+            if type_id == point_id:
+                yield {'type': 'Point', 'coordinates': coords[starts[i]].tolist()}, value
+
+            elif type_id == line_id:
+                yield {'type': 'LineString', 'coordinates': coords[starts[i]:stops[i]].tolist()}, value
+
+            else:
+                yield mapping(geom), value
+
     def transmission_to_cost_raster(self, setting):
         """Create a cost per grid cell in $/km from the input GeoDataFrame of transmission infrastructure having a cost
         designation field as '_rval_'.
@@ -312,83 +353,56 @@ class Interconnection:
             # pixel size in km along (row, col) so the distance transform returns km rather than pixel counts
             sampling_km = self.pixel_size_km(src.res, src.crs)
 
-            # create 0 where land array
-            arr = (src.read(1) * 0).astype(rasterio.float64)
+            out_shape = (src.height, src.width)
+            transform = src.transform
+            crs = src.crs
 
-            # update metadata datatype to float64
+            # metadata for the optional float64 output rasters; the background is burned as 0, so NaN nodata only
+            #  clears the inherited integer nodata (e.g. 128 from the region raster) that would be invalid for float64
             metadata = src.meta.copy()
-            metadata.update({'dtype': rasterio.float64})
+            metadata.update({'dtype': rasterio.float64, 'nodata': np.nan})
 
-            # reproject transmission data if necessary
-            if infrastructure_gdf.crs != src.crs:
-                infrastructure_gdf = infrastructure_gdf.to_crs(src.crs)
+        # reproject transmission data if necessary
+        if infrastructure_gdf.crs != crs:
+            infrastructure_gdf = infrastructure_gdf.to_crs(crs)
 
-            # get shapes
-            shapes = ((geom, value) for geom, value in zip(infrastructure_gdf.geometry, infrastructure_gdf['_rval_']))
+        # burn features into a zero-filled float64 raster; no temp file round trip is needed since `rasterize`
+        #  returns the array
+        shapes = self.geometries_to_shapes(infrastructure_gdf.geometry.values, infrastructure_gdf['_rval_'].values)
+        burned = features.rasterize(shapes=shapes, fill=0, out_shape=out_shape, transform=transform,
+                                    dtype=rasterio.float64)
 
-        with tempfile.TemporaryDirectory() as tempdir:
+        # calculate the Euclidean distance (km) and the indices of the nearest target (non-zero) cell
+        distance_array, nearest_indices = distance_transform_edt(
+            burned == 0,
+            sampling=sampling_km,
+            return_distances=True,
+            return_indices=True
+        )
 
-            # if write desired
-            if any((self.output_rasterized_file, self.output_dist_file, self.output_alloc_file, self.output_cost_file)):
+        # use the nearest indices to map the value of the nearest target to each cell (allocation map)
+        allocation_array = burned[nearest_indices[0], nearest_indices[1]]
 
-                if self.output_dir is None:
-                    msg = "If writing rasters to file must specify 'output_dir'"
-                    logger.error(msg)
-                    raise NotADirectoryError(msg)
+        # distance in km * the cost of the nearest infrastructure feature; outputs thous$/km
+        cost_arr = distance_array * allocation_array
 
-                else:
-                    out_rast = os.path.join(self.output_dir, f'cerf_transmission_raster_{setting}.tif')
-                    out_dist = os.path.join(self.output_dir, f'cerf_transmission_distance_{setting}.tif')
-                    out_alloc = os.path.join(self.output_dir, f'cerf_transmission_allocation_{setting}.tif')
-                    out_costs = os.path.join(self.output_dir, f'cerf_transmission_costs_{setting}.tif')
-            else:
-                out_rast = os.path.join(tempdir, f'cerf_transmission_raster_{setting}.tif')
-                out_dist = os.path.join(tempdir, f'cerf_transmission_distance_{setting}.tif')
-                out_alloc = os.path.join(tempdir, f'cerf_transmission_allocation_{setting}.tif')
-                out_costs = os.path.join(tempdir, f'cerf_transmission_costs_{setting}.tif')
+        # write only the rasters the user asked for
+        requested = {f'cerf_transmission_raster_{setting}.tif': (self.output_rasterized_file, burned),
+                     f'cerf_transmission_distance_{setting}.tif': (self.output_dist_file, distance_array),
+                     f'cerf_transmission_allocation_{setting}.tif': (self.output_alloc_file, allocation_array),
+                     f'cerf_transmission_costs_{setting}.tif': (self.output_cost_file, cost_arr)}
 
-            # the background is burned as 0, so the written rasters carry no nodata value; NaN is used only to
-            #  clear any inherited integer nodata (e.g. 128 from the region raster) that would otherwise be invalid
-            #  for the float64 outputs
-            metadata.update({"nodata": np.nan})
+        if any(flag for flag, _ in requested.values()):
 
-            # rasterize transmission vector data and write to memory
-            with rasterio.open(out_rast, 'w', **metadata) as dataset:
+            if self.output_dir is None:
+                msg = "If writing rasters to file must specify 'output_dir'"
+                logger.error(msg)
+                raise NotADirectoryError(msg)
 
-                # burn features into raster
-                burned = features.rasterize(shapes=shapes, fill=0, out=arr, transform=dataset.transform)
-
-                # write the outputs to file
-                dataset.write_band(1, burned)
-
-            # create a mask of target (non-zero) cells
-            target_cells = burned != 0
-
-            # calculate the Euclidean distance (km) and the indices of the nearest target cell
-            distance_array, nearest_indices = distance_transform_edt(
-                ~target_cells,
-                sampling=sampling_km,
-                return_distances=True,
-                return_indices=True
-            )
-
-            # use the nearest indices to map the value of the nearest target to each cell (allocation map)
-            nearest_row_indices, nearest_col_indices = nearest_indices
-            allocation_array = burned[nearest_row_indices, nearest_col_indices]
-
-            # distance_array and allocation_array are already float64 (EDT output / values gathered from `burned`)
-            with rasterio.open(out_dist, 'w', **metadata) as dist_ds:
-                dist_ds.write(distance_array, 1)
-
-            with rasterio.open(out_alloc, 'w', **metadata) as alloc_ds:
-                alloc_ds.write(allocation_array, 1)
-
-            with rasterio.open(out_costs, 'w', **metadata) as out:
-
-                # distance in km * the cost of the nearest substation; outputs thous$/km
-                cost_arr = distance_array * allocation_array
-
-                out.write(cost_arr, 1)
+            for file_name, (flag, array) in requested.items():
+                if flag:
+                    with rasterio.open(os.path.join(self.output_dir, file_name), 'w', **metadata) as dst:
+                        dst.write(array, 1)
 
         return cost_arr
 
