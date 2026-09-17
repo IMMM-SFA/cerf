@@ -29,9 +29,9 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 4.4 | Read region raster once / precompute bounding boxes | [#127](https://github.com/IMMM-SFA/cerf/pull/127) `bc95610` | ✅ Merged | identical | competition **5.40 → 3.65 s (−32%)**; total 8.59 → 6.9 s; Rhode Island 50 → 3 ms |
 | 4.6 | Replace masked arrays in competition loop with `+inf` sentinels; buffer exclusion touches only changed cells | [#128](https://github.com/IMMM-SFA/cerf/pull/128) `c8eb8ea` | ✅ Merged | identical | competition **3.65 → 3.21 s (−12%)**; total 6.93 → 6.8 s; +3 tests |
 | 4.5 | `uint8` suitability; scalar (broadcast-view) generation / operating cost; boolean region suitability; deferred metric lookups via 2D views | [#129](https://github.com/IMMM-SFA/cerf/pull/129) `fd2c27f` | ✅ Merged | identical | staged memory **7.4 → 4.2 GB**; competition **3.21 → 2.18 s (−32%)**; total 6.80 → 5.53 s; +4 tests (first `ProcessRegion` tests). `float32` costs deferred (would change `$/yr` outputs) |
-| 4.9 + 4.10 | Parallel backend data transfer; single `pd.concat` in aggregation | — | 🟡 In progress | — | — |
-| 5.1 | LMP CF-bin discontinuity (decision required) | — | ⬜ Not started | will change results | — |
-| 5.2 | Pixel-size-aware interconnection distance | — | ⬜ Not started | no change on 1 km data | — |
+| 4.9 + 4.10 | Crop regions before dispatch to process backends (`crop_to_region`, `region_tasks`); single `pd.concat` (`aggregate_results`) | [#130](https://github.com/IMMM-SFA/cerf/pull/130) `7578f2c` | ✅ Merged | identical (sequential and `loky`) | `loky, n_jobs=4`: **294 s → 9.2 s**; per-task payload ~4 GB → ≤ 481 MB; +3 tests |
+| 5.1 | LMP CF-bin discontinuity (decision required) | — | ⏸ Deferred by maintainer | will change results | — |
+| 5.2 | Pixel-size-aware interconnection distance | — | 🟡 In progress | no change on 1 km data | — |
 | 5.3 | Local RNG instead of global seed | — | ⬜ Not started | may change seeded results | — |
 | 6.x / 7.x / 8.x | Code quality, tests, CI, packaging | — | ⬜ Not started | — | — |
 
@@ -46,6 +46,7 @@ Cumulative full-run timing (2010 CONUS sample, sequential, single process):
 | #127 (4.4) | 3.28 s | 3.65 s | 6.93 s | −66% |
 | #128 (4.6) | 3.30 s | 3.21 s | 6.80 s | −67% |
 | #129 (4.5) | 3.30 s | 2.18 s | 5.53 s | −73% |
+| #130 (4.9 + 4.10) | 3.22 s | 2.24 s | 5.47 s | −73% (sequential unchanged; `loky` now usable) |
 
 ---
 
@@ -298,7 +299,9 @@ Builds `buffer_indices` via repeated `list.extend(range(...))` and is called onc
 
 ~1.7 s of the 2.7 s IC step is `np.asanyarray` + `__geo_interface__` on 84 k shapely geometries. Passing `infrastructure_gdf.geometry.values` (a GeometryArray) or pre-converting with `shapely.to_geojson`/`__geo_interface__` in bulk avoids the per-feature Python attribute traversal. Also, all four intermediate rasters are written to disk (temp dir) even when no outputs are requested; `rasterize` already returns the array, so the temp-file round trip is unnecessary unless the user asked for the files.
 
-### 4.9 Parallel backend and data transfer
+### 4.9 Parallel backend and data transfer — ✅ DONE in #130
+
+> **Resolved.** `process_region.crop_to_region()` slices every staged array to the region's bounding box in the parent (contiguous copies; broadcast-view metrics collapsed to a per-technology vector) and `process.region_tasks()` uses it for `loky`/`multiprocessing`, while in-process backends still share the full arrays by reference. `loky, n_jobs=4` full CONUS run 294 s → 9.2 s with results identical to the seeded reference. Note: `threading` results differ from the reference before and after because of the shared global RNG (→ 5.3).
 
 **Location:** [`cerf/process.py:85-105`](../cerf/process.py:85)
 
@@ -308,7 +311,9 @@ With `method='loky'` or `'multiprocessing'`, joblib pickles all ~7.4 GB of array
 - Pre-crop each region's bounding box in the parent process and send only the cropped stack (Texas is ~1/8 of the grid; Rhode Island is <0.1%).
 - Combined with 4.5, the payload shrinks by an order of magnitude.
 
-### 4.10 Output aggregation with repeated `pd.concat`
+### 4.10 Output aggregation with repeated `pd.concat` — ✅ DONE in #130
+
+> **Resolved.** `process.aggregate_results()` collects the frames and concatenates once with `ignore_index=True`.
 
 **Location:** [`cerf/process.py:118-122`](../cerf/process.py:118)
 
