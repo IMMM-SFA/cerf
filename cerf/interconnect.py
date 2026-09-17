@@ -249,9 +249,47 @@ class Interconnection:
             return gdf
 
 
+    @staticmethod
+    def pixel_size_km(res, crs):
+        """Return the ``(row, col)`` pixel size of a raster in kilometres.
+
+        The interconnection costs are specified in thous$/km, so the Euclidean distance to the nearest
+        infrastructure must be measured in kilometres regardless of the raster resolution. The raster CRS must be
+        projected (as the packaged Albers rasters are); its linear unit (metre, foot, ...) is converted to
+        kilometres. A geographic CRS has no meaningful per-pixel distance and is rejected.
+
+        :param res:                             ``(x_res, y_res)`` pixel size in CRS units, as ``rasterio``'s
+                                                ``dataset.res``
+        :type res:                              tuple
+
+        :param crs:                             ``rasterio.crs.CRS`` of the raster (``None`` is rejected)
+
+        :return:                                ``(pixel_height_km, pixel_width_km)`` in array (row, col) order,
+                                                suitable for ``scipy.ndimage.distance_transform_edt(sampling=...)``
+
+        """
+
+        if crs is None:
+            raise ValueError("The region raster has no CRS; a projected CRS is required to compute interconnection "
+                             "distances in kilometres.")
+
+        if crs.is_geographic or not crs.is_projected:
+            raise ValueError(f"The region raster CRS '{crs.to_string()}' is not projected. A projected CRS in linear "
+                             f"units is required to compute interconnection distances in kilometres.")
+
+        # conversion factor from the CRS linear unit to metres (1.0 for metre-based CRSs)
+        _, to_metres = crs.linear_units_factor
+
+        x_res, y_res = res
+
+        return abs(y_res) * to_metres / 1000.0, abs(x_res) * to_metres / 1000.0
+
     def transmission_to_cost_raster(self, setting):
         """Create a cost per grid cell in $/km from the input GeoDataFrame of transmission infrastructure having a cost
         designation field as '_rval_'.
+
+        Distances are computed in kilometres using the raster's pixel size, so a raster at a resolution other than
+        1 km produces correctly scaled costs.
 
         :param setting:                         Either 'substations' or 'pipelines'
         :type setting:                          str
@@ -270,6 +308,9 @@ class Interconnection:
                 f"Incorrect setting '{setting}' for transmission data.  Must be 'substations' or 'pipelines'")
 
         with rasterio.open(self.region_raster_file) as src:
+
+            # pixel size in km along (row, col) so the distance transform returns km rather than pixel counts
+            sampling_km = self.pixel_size_km(src.res, src.crs)
 
             # create 0 where land array
             arr = (src.read(1) * 0).astype(rasterio.float64)
@@ -321,10 +362,11 @@ class Interconnection:
             # create a mask of target (non-zero) cells
             target_cells = burned != 0
 
-            # calculate the Euclidean distance and the indices of the nearest target cell
+            # calculate the Euclidean distance (km) and the indices of the nearest target cell
             distance_array, nearest_indices = distance_transform_edt(
-                ~target_cells, 
-                return_distances=True, 
+                ~target_cells,
+                sampling=sampling_km,
+                return_distances=True,
                 return_indices=True
             )
 
