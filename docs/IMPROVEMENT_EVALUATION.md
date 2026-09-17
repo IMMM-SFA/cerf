@@ -32,7 +32,8 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 4.9 + 4.10 | Crop regions before dispatch to process backends (`crop_to_region`, `region_tasks`); single `pd.concat` (`aggregate_results`) | [#130](https://github.com/IMMM-SFA/cerf/pull/130) `7578f2c` | ✅ Merged | identical (sequential and `loky`) | `loky, n_jobs=4`: **294 s → 9.2 s**; per-task payload ~4 GB → ≤ 481 MB; +3 tests |
 | 5.1 | LMP CF-bin discontinuity (decision required) | — | ⏸ Deferred by maintainer | will change results | — |
 | 5.2 | Pixel-size-aware interconnection distance (`Interconnection.pixel_size_km`, `sampling=` in EDT) | [#131](https://github.com/IMMM-SFA/cerf/pull/131) `7c33993` | ✅ Merged | identical (1 km pixels) | none; +6 tests |
-| 5.3 | Local RNG instead of global seed | — | 🟡 In progress | — | — |
+| 5.3 | Per-competition `RandomState` (legacy-stream compatible) instead of global seed; seedable `generate_random_lmp_dataframe` | [#132](https://github.com/IMMM-SFA/cerf/pull/132) `b09603e` | ✅ Merged | identical; `threading` backend now also identical (was nondeterministic) | `threading, n_jobs=4`: full CONUS competition **1.0 s**; +3 tests |
+| 3.8–3.11 | `-np.nan` nodata / redundant `astype`; `rioxarray` file-handle leak; `get_region_id` lookup; incomplete `sited_dtypes()` | — | 🟡 In progress | — | — |
 | 6.x / 7.x / 8.x | Code quality, tests, CI, packaging | — | ⬜ Not started | — | — |
 
 Cumulative full-run timing (2010 CONUS sample, sequential, single process):
@@ -345,7 +346,9 @@ A technology at CF = 0.49 is priced on the most expensive hours; at CF = 0.50 on
 
 `distance_transform_edt` returns distance in **pixels** and the result is multiplied directly by `thous$/km`. This is only correct because the shipped raster is exactly 1 km × 1 km (verified: `res = (1000.0, 1000.0)`). A user providing a different-resolution `region_raster_file` gets silently wrong costs. Pass `sampling=src.res` (in km) to `distance_transform_edt`, or multiply by pixel size.
 
-### 5.3 `randomize`/`seed_value` semantics
+### 5.3 `randomize`/`seed_value` semantics — ✅ DONE in #132
+
+> **Resolved.** Each `Competition` owns `self.rng = np.random.RandomState(None if randomize else seed_value)` and draws tie-breaks from it. `RandomState` reproduces the legacy global stream exactly, so the seeded reference is unchanged, while results are now independent of backend / thread scheduling / region order. `generate_random_lmp_dataframe` gained a `seed` parameter with a local generator.
 
 **Location:** [`cerf/compete.py:114-115`](../cerf/compete.py:114)
 
