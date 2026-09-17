@@ -78,6 +78,21 @@ class TestProcessRegion(unittest.TestCase):
                     indices_2d=indices_2d, target_region_name='left', randomize=False, seed_value=0,
                     verbose=False, write_output=False, regions_arr=regions, region_bounds=None)
 
+    def test_get_region_id_is_case_insensitive_and_reports_choices(self):
+        """3.10: mixed-case names resolve; unknown names raise a KeyError that lists the valid names."""
+
+        kwargs = self.build()
+        mixed = ProcessRegion(**dict(kwargs, target_region_name='Left'))
+        lower = ProcessRegion(**kwargs)
+        self.assertEqual(1, mixed.target_region_id)
+        self.assertEqual(lower.run_data.sited_dict, mixed.run_data.sited_dict)
+
+        with self.assertRaises(KeyError) as ctx:
+            ProcessRegion(**dict(kwargs, target_region_name='nowhere'))
+        self.assertIn('nowhere', str(ctx.exception))
+        self.assertIn("'left'", str(ctx.exception))
+        self.assertIn("'right'", str(ctx.exception))
+
     def test_region_suitability_is_boolean_and_excludes_outside_cells(self):
         kwargs = self.build()
         pr = ProcessRegion(**kwargs)

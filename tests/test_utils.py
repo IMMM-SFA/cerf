@@ -7,9 +7,15 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 
 """
 
+import os
+import tempfile
 import unittest
 
 import numpy as np
+import pandas as pd
+import rasterio
+from rasterio.crs import CRS
+from rasterio.transform import from_origin
 
 import cerf.utils as util
 
@@ -41,6 +47,38 @@ class TestUtils(unittest.TestCase):
             idx = np.where(arr == rid)
             out[int(rid)] = (int(idx[0].min()), int(idx[0].max()) + 1, int(idx[1].min()), int(idx[1].max()) + 1)
         return out
+
+    def test_sited_dtypes_cover_every_sited_column(self):
+        """3.11: every column of the sited dictionary has an explicit dtype and nothing extra is declared."""
+
+        self.assertEqual(set(util.empty_sited_dict()), set(util.sited_dtypes()))
+
+        # an empty frame typed with sited_dtypes has no `object` columns except the two string fields
+        df = pd.DataFrame(util.empty_sited_dict()).astype(util.sited_dtypes())
+        object_cols = [c for c in df.columns if df[c].dtype == object]
+        self.assertEqual(['region_name', 'tech_name'], object_cols)
+
+    def test_raster_to_coord_arrays_cell_centres_and_no_open_handle(self):
+        """3.9: coordinates are cell centres from the affine transform and the file is closed afterwards."""
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = os.path.join(tmpdir, 'template.tif')
+            transform = from_origin(100.0, 500.0, 10.0, 20.0)   # x0=100, y0=500 (top), 10 m wide, 20 m tall
+            with rasterio.open(path, 'w', driver='GTiff', height=3, width=4, count=1, dtype=rasterio.uint8,
+                               crs=CRS.from_epsg(32617), transform=transform) as dst:
+                dst.write(np.zeros((3, 4), dtype=np.uint8), 1)
+
+            x, y = util.raster_to_coord_arrays(path)
+
+            # the file must not be held open: on every platform a closed dataset can be removed
+            os.remove(path)
+
+        self.assertEqual((3, 4), x.shape)
+        self.assertEqual((3, 4), y.shape)
+        np.testing.assert_array_equal([105.0, 115.0, 125.0, 135.0], x[0])
+        np.testing.assert_array_equal([490.0, 470.0, 450.0], y[:, 0])
+        self.assertTrue((x == x[0]).all())
+        self.assertTrue((y == y[:, [0]]).all())
 
     def test_region_bounding_boxes_matches_np_where(self):
         """Bounds must equal the per-region np.where derivation, including a 0 background and disjoint regions."""
