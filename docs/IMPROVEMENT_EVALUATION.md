@@ -36,7 +36,8 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 3.8–3.11 | `np.nan` nodata / redundant `astype` removed; `raster_to_coord_arrays` via rasterio transform (**`rioxarray` dependency dropped**); case-insensitive `get_region_id` with informative `KeyError`; `sited_dtypes()` covers all 29 columns | [#133](https://github.com/IMMM-SFA/cerf/pull/133) `76cc346` | ✅ Merged | identical | none; +3 tests; one fewer dependency |
 | 4.7 + 4.8 | `buffer_window` / `buffer_flat_indices` index arrays (exact bounds); bulk shapely → GeoJSON conversion for `rasterize`; no temp-file round trip, outputs written only on request | [#134](https://github.com/IMMM-SFA/cerf/pull/134) `5d5b9ac` | ✅ Merged | identical | IC step **2.71 → 2.16 s**; total 5.5 → 5.2 s; +3 tests |
 | 5.4 + 5.5 + 5.6 | Lifetime fields documented/validated (`validate_technology_parameters`); `EmptyRegionResult` instead of `None`; suitability honours raster `nodata`, shape check, non-0/1 warning | [#135](https://github.com/IMMM-SFA/cerf/pull/135) `c148e04` | ✅ Merged | identical | none; +3 tests |
-| 6.x | Code quality: `__all__` / explicit exports, single-source version, dependency pruning, unused imports/helpers, `safe_load`, docstrings, records-as-dicts | — | 🟡 In progress | — | — |
+| 6.3–6.8 | Explicit `__all__` / no star imports; `__version__` from package metadata; unused deps (`seaborn`, `pyarrow`, `rtree`, `fiona`, `pyproj`) removed, `environment.yml` synced; dead code removed; `yaml.safe_load`; `__init__` annotations; `sited_record()` | [#136](https://github.com/IMMM-SFA/cerf/pull/136) `6070061` | ✅ Merged | identical | none; +5 tests; pyflakes clean |
+| 6.1 + 6.2 | Split construction from execution; pass a data object instead of 21 arguments | — | ⬜ Not started | — | — |
 | 7.x / 8.x | Tests, CI, packaging | — | ⬜ Not started | — | — |
 
 Cumulative full-run timing (2010 CONUS sample, sequential, single process):
@@ -401,17 +402,17 @@ Both classes run the full algorithm during construction, making them impossible 
 
 `process_region()` takes 21 positional/keyword arguments, mirrored in `ProcessRegion.__init__`, `Model.run_single_region`, and `cerf_parallel`. Passing the `Stage` object (or a small dataclass of arrays) would remove ~60 lines of duplicated plumbing and make it impossible to mis-order arguments.
 
-### 6.3 `Competition` sited-record construction
+### 6.3 `Competition` sited-record construction — ✅ DONE in #136
 
 Lines 206–234 append 29 fields one at a time per site. A single `dict` per site appended to a list, then `pd.DataFrame(records)`, is shorter, faster, and guarantees column alignment with `empty_sited_dict()`.
 
-### 6.4 `from .module import *` in `__init__.py`
+### 6.4 `from .module import *` in `__init__.py` — ✅ DONE in #136
 
 **Location:** [`cerf/__init__.py`](../cerf/__init__.py:1)
 
 Star imports without `__all__` export every helper (`os`, `np`, `logging`, private-ish functions) into the top-level namespace and make the public API unclear. Define `__all__` in each module or import names explicitly. Also `__version__` is duplicated between `__init__.py` and `pyproject.toml`; use `importlib.metadata.version('cerf')` or hatch's dynamic version.
 
-### 6.5 Dependency hygiene
+### 6.5 Dependency hygiene — ✅ DONE in #133 (`rioxarray`) and #136 (remaining unused deps)
 
 **Location:** [`pyproject.toml:22-39`](../pyproject.toml:22)
 
@@ -420,7 +421,7 @@ Star imports without `__all__` export every helper (`os`, `np`, `logging`, priva
 - `requests` is only needed for `install_package_data`; could be an optional extra.
 - Dropping these would cut install size substantially and remove several version-conflict surfaces.
 
-### 6.6 Unused imports and helpers
+### 6.6 Unused imports and helpers — ✅ DONE in #136 (`generate_random_lmp_dataframe` vectorised in #132)
 
 - `cerf/process_region.py:18` imports `cerf.package_data as pkg` – unused.
 - `cerf/interconnect.py:13` imports `suppress_callback` – unused (`suppress_callback` itself is a leftover from a removed whitebox dependency).
@@ -430,11 +431,11 @@ Star imports without `__all__` export every helper (`os`, `np`, `logging`, priva
 - `cerf/utils.py:322`: `n_cells > max_allowable_cells` check compares a cell count to `uint32` max but `index_arr` is only used locally.
 - `cerf/lmp.py:9` `generate_random_lmp_dataframe`: pure-Python loop over 8760 × 57 samples; `np.random.choice(array, size=8760)` does it in one call.
 
-### 6.7 YAML loading
+### 6.7 YAML loading — ✅ DONE in #136
 
 `yaml.load(..., Loader=yaml.FullLoader)` is used in six places. `yaml.safe_load` is the recommended API and is sufficient for these plain configuration files.
 
-### 6.8 Type hints and docstrings
+### 6.8 Type hints and docstrings — ✅ DONE in #130 / #135 / #136
 
 Class-level "type hints" (e.g., `settings_dict: dict` at class scope in `Stage`, `NetOperationalValue`) are annotations on class attributes, not constructor parameters, and don't help IDEs or type checkers. Move them to `__init__` signatures. Several docstrings are stale (e.g., `process_region` documents a `data` parameter that doesn't exist and a 2D-array return that is actually a `ProcessRegion` object; `cerf_parallel` documents a `config_file` parameter it doesn't accept).
 
