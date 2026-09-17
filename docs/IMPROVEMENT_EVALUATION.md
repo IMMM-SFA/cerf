@@ -31,8 +31,8 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 4.5 | `uint8` suitability; scalar (broadcast-view) generation / operating cost; boolean region suitability; deferred metric lookups via 2D views | [#129](https://github.com/IMMM-SFA/cerf/pull/129) `fd2c27f` | ✅ Merged | identical | staged memory **7.4 → 4.2 GB**; competition **3.21 → 2.18 s (−32%)**; total 6.80 → 5.53 s; +4 tests (first `ProcessRegion` tests). `float32` costs deferred (would change `$/yr` outputs) |
 | 4.9 + 4.10 | Crop regions before dispatch to process backends (`crop_to_region`, `region_tasks`); single `pd.concat` (`aggregate_results`) | [#130](https://github.com/IMMM-SFA/cerf/pull/130) `7578f2c` | ✅ Merged | identical (sequential and `loky`) | `loky, n_jobs=4`: **294 s → 9.2 s**; per-task payload ~4 GB → ≤ 481 MB; +3 tests |
 | 5.1 | LMP CF-bin discontinuity (decision required) | — | ⏸ Deferred by maintainer | will change results | — |
-| 5.2 | Pixel-size-aware interconnection distance | — | 🟡 In progress | no change on 1 km data | — |
-| 5.3 | Local RNG instead of global seed | — | ⬜ Not started | may change seeded results | — |
+| 5.2 | Pixel-size-aware interconnection distance (`Interconnection.pixel_size_km`, `sampling=` in EDT) | [#131](https://github.com/IMMM-SFA/cerf/pull/131) `7c33993` | ✅ Merged | identical (1 km pixels) | none; +6 tests |
+| 5.3 | Local RNG instead of global seed | — | 🟡 In progress | — | — |
 | 6.x / 7.x / 8.x | Code quality, tests, CI, packaging | — | ⬜ Not started | — | — |
 
 Cumulative full-run timing (2010 CONUS sample, sequential, single process):
@@ -337,7 +337,9 @@ Verified behaviour (LMPs sorted descending):
 
 A technology at CF = 0.49 is priced on the most expensive hours; at CF = 0.50 on the cheapest. This is a hard discontinuity and the two branches embody opposite assumptions (peaking vs. baseload dispatch). If this is intentional it needs documentation and a test; if not, one consistent convention should be chosen (e.g., a plant with CF *c* is dispatched during the top *c* fraction of price hours).
 
-### 5.2 Interconnection distance units
+### 5.2 Interconnection distance units — ✅ DONE in #131
+
+> **Resolved.** `Interconnection.pixel_size_km(res, crs)` derives the `(row, col)` pixel size in km (converting the CRS linear unit; geographic / missing CRS rejected) and is passed as `sampling=` to `distance_transform_edt`. Bitwise identical on the packaged 1 km rasters.
 
 **Location:** [`cerf/interconnect.py:353`](../cerf/interconnect.py:353)
 
