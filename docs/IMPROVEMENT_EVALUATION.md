@@ -1,6 +1,6 @@
 # CERF Package Evaluation: Recommended Improvements
 
-**Package:** `cerf` v2.4.1 (commit `7d94f07`)
+**Package:** `cerf` v2.4.1 (commit `8fbe0db`)
 **Evaluated:** 2026-09-16
 **Environment:** Python 3.11.7, numpy 2.1.1, pandas 2.2.2, rasterio 1.3.11, geopandas 1.0.1
 **Target release:** 2.5.0 (branch `release/2.5.0`)
@@ -9,23 +9,24 @@
 
 ## 0. Progress Tracker
 
-Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the unit suite and the seeded end-to-end regression check (`python benchmark/run_reference.py --compare`), which compares all sited plants for the 2010 CONUS sample (49 regions, `seed_value=0`, sequential backend) against the reference generated on the unmodified code at `8c720bd`. PRs that intentionally change results must say so and regenerate the reference in a separate commit.
+Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the unit suite and the seeded end-to-end regression check (`python benchmark/run_reference.py --compare`), which compares all sited plants for the 2010 CONUS sample (49 regions, `seed_value=0`, sequential backend) against the reference generated on the unmodified code at `4821f51`. PRs that intentionally change results must say so and regenerate the reference in a separate commit.
 
 **Workflow:** `git checkout release/2.5.0 && git pull` → `git checkout -b feature/<name>` → implement → `pytest` + `run_reference.py --compare` → push → PR into `release/2.5.0`.
 
 | Item | Description | Branch / PR | Status | Result vs. reference | Timing impact |
 |------|-------------|-------------|--------|----------------------|---------------|
-| — | Evaluation document | `release/2.5.0` `2376b34` | ✅ Done | n/a | n/a |
-| — | Seeded reference run + baseline CSV (`benchmark/`) | `release/2.5.0` `8c720bd` | ✅ Done | baseline: 1838 sites | staging 8.45 s · competition 11.93 s · total 20.37 s |
-| 4.1 | Vectorise buffer removal in `Competition.compete()` | [#118](https://github.com/IMMM-SFA/cerf/pull/118) `eb3da1b` | ✅ Merged | identical | competition **11.93 → 5.77 s (−52%)**; total 20.37 → 13.82 s |
-| 4.2 + 4.3 | LUT zone lookup + single sort in `get_lmp()` | [#119](https://github.com/IMMM-SFA/cerf/pull/119) `adcc9c3` | ✅ Merged | identical (LMP array bitwise equal) | `get_lmp` **4.71 → 0.26 s (18×)**; staging 8.05 → 3.34 s; total 13.82 → 8.65 s |
-| 3.1 | `isin` signature bug in `preprocess_hifld_substations()` | [#120](https://github.com/IMMM-SFA/cerf/pull/120) `df4445d` | ✅ Merged | identical (not on run path) | n/a; +5 tests |
-| 3.2 | NOV `ZeroDivisionError` when esc == discount | [#121](https://github.com/IMMM-SFA/cerf/pull/121) `994c4d9` | ✅ Merged | identical | n/a; +6 tests |
-| 7.3 (part) | Robust Zenodo download (retries, ZIP magic check, clear errors) + cached package data in CI | [#122](https://github.com/IMMM-SFA/cerf/pull/122) `2688d06` | ✅ Merged | identical (not on run path) | CI: data download skipped on cache hit; +13 tests |
-| 3.3 | Model mutates caller's config dict | [#123](https://github.com/IMMM-SFA/cerf/pull/123) `8fa201c` | ✅ Merged | identical | none (8.60–8.71 s); +3 tests |
-| 3.4 + 3.5 | Dead `expansion_dict[tech_id] == 0` branch; `config_dict=None` crash / mutable default | [#124](https://github.com/IMMM-SFA/cerf/pull/124) `c9fffd2` | ✅ Merged | identical | none (8.59 s); +3 tests |
-| 3.6 / 3.7 | Logger handler accumulation / dead logger code | `fix/named-logger` | 🔄 In progress | — | — |
-| 4.4 | Read region raster once / precompute bounding boxes | — | ⬜ Not started | — | — |
+| — | Evaluation document | `release/2.5.0` `af98651` | ✅ Done | n/a | n/a |
+| — | Seeded reference run + baseline CSV (`benchmark/`) | `release/2.5.0` `4821f51` | ✅ Done | baseline: 1838 sites | staging 8.45 s · competition 11.93 s · total 20.37 s |
+| 4.1 | Vectorise buffer removal in `Competition.compete()` | [#118](https://github.com/IMMM-SFA/cerf/pull/118) `6013ff0` | ✅ Merged | identical | competition **11.93 → 5.77 s (−52%)**; total 20.37 → 13.82 s |
+| 4.2 + 4.3 | LUT zone lookup + single sort in `get_lmp()` | [#119](https://github.com/IMMM-SFA/cerf/pull/119) `01d0545` | ✅ Merged | identical (LMP array bitwise equal) | `get_lmp` **4.71 → 0.26 s (18×)**; staging 8.05 → 3.34 s; total 13.82 → 8.65 s |
+| 3.1 | `isin` signature bug in `preprocess_hifld_substations()` | [#120](https://github.com/IMMM-SFA/cerf/pull/120) `03fef02` | ✅ Merged | identical (not on run path) | n/a; +5 tests |
+| 3.2 | NOV `ZeroDivisionError` when esc == discount | [#121](https://github.com/IMMM-SFA/cerf/pull/121) `f16fb73` | ✅ Merged | identical | n/a; +6 tests |
+| 7.3 (part) | Robust Zenodo download (retries, ZIP magic check, clear errors) + cached package data in CI | [#122](https://github.com/IMMM-SFA/cerf/pull/122) `a2f9b66` | ✅ Merged | identical (not on run path) | CI: data download skipped on cache hit; +13 tests |
+| 3.3 | Model mutates caller's config dict | [#123](https://github.com/IMMM-SFA/cerf/pull/123) `d4b59fc` | ✅ Merged | identical | none (8.60–8.71 s); +3 tests |
+| 3.4 + 3.5 | Dead `expansion_dict[tech_id] == 0` branch; `config_dict=None` crash / mutable default | [#124](https://github.com/IMMM-SFA/cerf/pull/124) `9b67175` | ✅ Merged | identical | none (8.59 s); +3 tests |
+| 3.6 / 3.7 | Named `cerf` logger; idempotent handlers; root logger untouched; working optional log file | [#125](https://github.com/IMMM-SFA/cerf/pull/125) `a986694` | ✅ Merged | identical | none; +8 tests |
+| 7.3 (part) | CI package-data cache keyed on data URL only; 8 download attempts | [#126](https://github.com/IMMM-SFA/cerf/pull/126) `3771712` | ✅ Merged | n/a (workflow only) | cold-cache downloads only on data-version change |
+| 4.4 | Read region raster once / precompute bounding boxes | `feature/region-bbox-once` | 🔄 In progress | — | — |
 | 4.5 | dtype reduction (`bool` suitability, `float32` costs) | — | ⬜ Not started | — | — |
 | 4.6 | Replace masked arrays in competition loop | — | ⬜ Not started | — | — |
 | 4.9 | Parallel backend data transfer | — | ⬜ Not started | — | — |
@@ -39,7 +40,7 @@ Cumulative full-run timing (2010 CONUS sample, sequential, single process):
 
 | After | Staging | Competition | Total | vs. baseline |
 |-------|---------|-------------|-------|--------------|
-| baseline `8c720bd` | 8.45 s | 11.93 s | 20.37 s | — |
+| baseline `4821f51` | 8.45 s | 11.93 s | 20.37 s | — |
 | #118 (4.1) | 8.05 s | 5.77 s | 13.82 s | −32% |
 | #119 (4.2 + 4.3) | 3.34 s | 5.31 s | 8.65 s | −58% |
 
@@ -159,7 +160,7 @@ The signature advertises `config_dict` as optional, but passing `config_dict=Non
 
 **Fix:** default to `None`, then `config_dict = config_dict or {}` at the top.
 
-### 3.6 Logging handlers accumulate — 🔄 IN PROGRESS
+### 3.6 Logging handlers accumulate — ✅ DONE in #125
 
 **Location:** [`cerf/model.py:53`](../cerf/model.py:53), [`cerf/logger.py:46`](../cerf/logger.py:46)
 
@@ -167,7 +168,7 @@ Each `Model()` instantiation calls `console_handler()`, which adds a new `Stream
 
 **Fix:** Use a named logger (`logging.getLogger('cerf')`), do not touch the root level, check for existing handlers before adding, and prefer a context manager or explicit `close()` for teardown.
 
-### 3.7 Broken / dead code in `Logger` — 🔄 IN PROGRESS
+### 3.7 Broken / dead code in `Logger` — ✅ DONE in #125
 
 **Location:** [`cerf/logger.py:36-70`](../cerf/logger.py:36)
 
@@ -255,7 +256,7 @@ This is a single fancy-index operation (~50 ms). The `nodata` value (255) is han
 
 Inside the technology loop, every zone column is re-sorted descending on each iteration. The sort is idempotent, so it only needs to happen once before the loop. Additionally, the column-by-column assignment loop can be replaced by `np.sort(lmp_df.values, axis=0)[::-1]` on the underlying array.
 
-### 4.4 Region raster re-read from disk per region
+### 4.4 Region raster re-read from disk per region — 🔄 IN PROGRESS
 
 **Location:** [`cerf/process_region.py:150-153`](../cerf/process_region.py:150)
 
