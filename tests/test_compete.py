@@ -228,6 +228,51 @@ class TestCompete(unittest.TestCase):
         self.assertEqual(0, comp.cheapest_arr[0, 0])
         self.assertEqual(1, comp.cheapest_arr[0, 1])
 
+    def test_metric_views_2d_match_flat_arrays(self):
+        """2D region views of the metric arrays give the same sited values as pre-flattened arrays."""
+
+        fake_dict, fake_flat_array = self.create_proxy_arrays()
+        nlc_mask = self.create_masked_nlc_array().astype(np.float64).filled(np.inf)
+
+        # distinct per-metric values so a wrong lookup would be visible
+        lmp_2d = {i: TestCompete.NLC_ARR[i - 1] * 10.0 for i in fake_dict}
+        gen_2d = {i: np.full(TestCompete.NLC_ARR[0].shape, 100.0 * i) for i in fake_dict}   # scalar-like per tech
+        flat = lambda d: {i: a.flatten() for i, a in d.items()}
+        grid_index = np.arange(fake_flat_array.size)
+
+        comp_2d = Competition(target_region_name='test',
+                              settings_dict=TestCompete.SETTINGS_DICT,
+                              technology_dict=TestCompete.TECH_DICT,
+                              technology_order=TestCompete.TECH_ORDER,
+                              expansion_dict=TestCompete.EXPANSION_PLAN,
+                              lmp_dict=lmp_2d, generation_dict=gen_2d, operating_cost_dict=gen_2d,
+                              nov_dict=lmp_2d, ic_dict=lmp_2d,
+                              nlc_mask=nlc_mask.copy(),
+                              zones_arr=fake_flat_array.astype(np.int32),
+                              xcoords=fake_flat_array, ycoords=fake_flat_array, indices_flat=grid_index,
+                              randomize=False, seed_value=0, verbose=False)
+
+        comp_flat = Competition(target_region_name='test',
+                                settings_dict=TestCompete.SETTINGS_DICT,
+                                technology_dict=TestCompete.TECH_DICT,
+                                technology_order=TestCompete.TECH_ORDER,
+                                expansion_dict=TestCompete.EXPANSION_PLAN,
+                                lmp_dict=flat(lmp_2d), generation_dict=flat(gen_2d), operating_cost_dict=flat(gen_2d),
+                                nov_dict=flat(lmp_2d), ic_dict=flat(lmp_2d),
+                                nlc_mask=nlc_mask.copy(),
+                                zones_arr=fake_flat_array.astype(np.int32),
+                                xcoords=fake_flat_array, ycoords=fake_flat_array, indices_flat=grid_index,
+                                randomize=False, seed_value=0, verbose=False)
+
+        np.testing.assert_array_equal(TestCompete.COMP_SITED, comp_2d.sited_array)
+        self.assertEqual(comp_flat.sited_dict, comp_2d.sited_dict)
+
+        # the reported LMP is the value of the *sited* technology at the sited cell
+        for tech_id, ix, lmp in zip(comp_2d.sited_dict['tech_id'], comp_2d.sited_dict['index'],
+                                    comp_2d.sited_dict['locational_marginal_price_usd_per_mwh']):
+            self.assertEqual(lmp_2d[tech_id].flatten()[int(ix)], lmp)
+            self.assertEqual(100.0 * tech_id, comp_2d.metric_at(gen_2d[tech_id], int(ix)))
+
     def test_competition_does_not_mutate_expansion_plan(self):
         """The caller's expansion plan must be unchanged and a second run must site the same plants."""
 

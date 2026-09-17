@@ -164,11 +164,17 @@ class Stage:
         return ic_arr
 
     def calculate_nov(self):
-        """Calculate Net Operational Value."""
+        """Calculate Net Operational Value.
+
+        Generation and operating cost do not vary spatially; they are per-technology scalars. They are returned as
+        read-only broadcast views with the same ``[tech_order, x, y]`` shape as ``nov_arr`` so callers can index them
+        like any other staged array without holding two extra full-grid copies in memory.
+
+        """
 
         nov_arr = np.zeros_like(self.lmp_arr)
-        generation_arr = np.zeros_like(self.lmp_arr)
-        operating_cost_arr = np.zeros_like(self.lmp_arr)
+        generation_per_tech = np.zeros(len(self.technology_order), dtype=np.float64)
+        operating_cost_per_tech = np.zeros(len(self.technology_order), dtype=np.float64)
 
         for index, i in enumerate(self.technology_order):
             econ = NetOperationalValue(discount_rate=self.technology_dict[i]['discount_rate'],
@@ -187,11 +193,14 @@ class Stage:
                                        lmp_arr=self.lmp_arr[index, :, :],
                                        target_year=self.settings_dict.get('run_year'))
 
-            generation_tech_arr, operating_cost_tech_arr, nov_tech_arr = econ.calc_nov()
+            generation_tech, operating_cost_tech, nov_tech_arr = econ.calc_nov()
 
             nov_arr[index, :, :] = nov_tech_arr
-            generation_arr[index, :, :] = generation_tech_arr
-            operating_cost_arr[index, :, :] = operating_cost_tech_arr
+            generation_per_tech[index] = generation_tech
+            operating_cost_per_tech[index] = operating_cost_tech
+
+        generation_arr = np.broadcast_to(generation_per_tech[:, None, None], self.lmp_arr.shape)
+        operating_cost_arr = np.broadcast_to(operating_cost_per_tech[:, None, None], self.lmp_arr.shape)
 
         return generation_arr, operating_cost_arr, nov_arr
 
@@ -228,8 +237,8 @@ class Stage:
         # fetch the default suitability dictionary
         default_suitability_file_dict = util.default_suitabiity_files()
 
-        # set up holder for suitability array
-        suitability_array = np.ones_like(self.nlc_arr)
+        # set up holder for suitability array; 0 = suitable, non-zero = unsuitable, so a byte per cell is sufficient
+        suitability_array = np.ones(self.nlc_arr.shape, dtype=np.uint8)
 
         # load tech specific rasters
         for index, i in enumerate(self.technology_order):
@@ -252,7 +261,7 @@ class Stage:
                 if self.initialize_site_data is not None:
                     tech_arr = np.maximum(tech_arr, self.init_arr)
 
-                # add to suitability array avoid overwriting the default dimension
-                suitability_array[index, :, :] = tech_arr
+                # add to suitability array; any non-zero value marks the cell unsuitable
+                suitability_array[index, :, :] = tech_arr != 0
 
         return suitability_array

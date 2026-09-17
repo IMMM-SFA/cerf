@@ -31,6 +31,8 @@ class Competition:
                                                     cells are ``+inf`` (a ``numpy.ma`` masked array is also accepted
                                                     and converted). The 0 index position is a default dimension, all
                                                     ``+inf``, which is chosen if no technologies are able to compete.
+                                                    A contiguous ``float64`` input is used as the working array and
+                                                    is modified in place as cells are sited and excluded.
     :type nlc_mask:                                 ndarray
 
     :param technology_dict:                         A technology dictionary containing at a minimum
@@ -157,6 +159,21 @@ class Competition:
         # evaluate sites to see if expansion plan was met
         self.log_outcome()
 
+    def metric_at(self, arr, flat_index):
+        """Return the value of a per-technology metric array at a flat region cell index.
+
+        Metric arrays may be either flat 1D arrays or 2D ``[row, col]`` views over the region's bounding box (the
+        latter avoids flattening full technology stacks per region); both are indexed without copying.
+
+        """
+
+        if arr.ndim == 1:
+            return arr[flat_index]
+
+        row, col = divmod(int(flat_index), self.nlc_mask_shape[2])
+
+        return arr[row, col]
+
     def exclude_technology(self, tech_index):
         """Make every grid cell unavailable to the technology at layer ``tech_index``."""
 
@@ -243,11 +260,11 @@ class Competition:
                         self.sited_dict['sited_year'].append(self.settings_dict['run_year'])
                         self.sited_dict['retirement_year'].append(retirement_year)
                         self.sited_dict['lmp_zone'].append(self.zones_flat_arr[target_ix])
-                        self.sited_dict['locational_marginal_price_usd_per_mwh'].append(self.lmp_flat_dict[tech_id][target_ix])
-                        self.sited_dict['generation_mwh_per_year'].append(self.generation_flat_dict[tech_id][target_ix])
-                        self.sited_dict['operating_cost_usd_per_year'].append(self.operating_cost_flat_dict[tech_id][target_ix])
-                        self.sited_dict['net_operational_value_usd_per_year'].append(self.nov_flat_dict[tech_id][target_ix])
-                        self.sited_dict['interconnection_cost_usd_per_year'].append(self.ic_flat_dict[tech_id][target_ix])
+                        self.sited_dict['locational_marginal_price_usd_per_mwh'].append(self.metric_at(self.lmp_flat_dict[tech_id], target_ix))
+                        self.sited_dict['generation_mwh_per_year'].append(self.metric_at(self.generation_flat_dict[tech_id], target_ix))
+                        self.sited_dict['operating_cost_usd_per_year'].append(self.metric_at(self.operating_cost_flat_dict[tech_id], target_ix))
+                        self.sited_dict['net_operational_value_usd_per_year'].append(self.metric_at(self.nov_flat_dict[tech_id], target_ix))
+                        self.sited_dict['interconnection_cost_usd_per_year'].append(self.metric_at(self.ic_flat_dict[tech_id], target_ix))
                         self.sited_dict['net_locational_cost_usd_per_year'].append(self.nlc_flat_dict[tech_id][target_ix])
                         self.sited_dict['capacity_factor_fraction'].append(self.technology_dict[tech_id]["capacity_factor_fraction"])
                         self.sited_dict['carbon_capture_rate_fraction'].append(self.technology_dict[tech_id]["carbon_capture_rate_fraction"])
