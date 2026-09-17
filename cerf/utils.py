@@ -5,7 +5,6 @@ import tempfile
 import numpy as np
 import pandas as pd
 import rasterio
-import rioxarray
 import geopandas as gpd
 from scipy.ndimage import find_objects
 from shapely.geometry import Point
@@ -122,7 +121,12 @@ def empty_sited_dict():
 
 
 def sited_dtypes():
-    """Return data type dictionary for the sited data frame."""
+    """Return the data type of every column produced by `empty_sited_dict()`.
+
+    Keeping this complete ensures an empty initial frame, per-region results, and a CSV round trip through
+    `ingest_sited_data` all carry identical dtypes rather than whatever pandas infers per column.
+
+    """
 
     return {'region_name': str,
             'tech_id': np.int64,
@@ -130,15 +134,29 @@ def sited_dtypes():
             'unit_size_mw': np.float64,
             'xcoord': np.float64,
             'ycoord': np.float64,
+            'index': np.int64,
+            'buffer_in_km': np.int64,
+            'sited_year': np.int64,
+            'retirement_year': np.int64,
             'lmp_zone': np.int64,
             'locational_marginal_price_usd_per_mwh': np.float64,
+            'generation_mwh_per_year': np.float64,
+            'operating_cost_usd_per_year': np.float64,
             'net_operational_value_usd_per_year': np.float64,
             'interconnection_cost_usd_per_year': np.float64,
             'net_locational_cost_usd_per_year': np.float64,
-            'index': np.int64,
-            'retirement_year': np.int64,
-            'sited_year': np.int64,
-            'buffer_in_km': np.int64}
+            'capacity_factor_fraction': np.float64,
+            'carbon_capture_rate_fraction': np.float64,
+            'fuel_co2_content_tons_per_btu': np.float64,
+            'fuel_price_usd_per_mmbtu': np.float64,
+            'fuel_price_esc_rate_fraction': np.float64,
+            'heat_rate_btu_per_kWh': np.float64,
+            'lifetime_yrs': np.int64,
+            'operational_life_yrs': np.int64,
+            'variable_om_usd_per_mwh': np.float64,
+            'variable_om_esc_rate_fraction': np.float64,
+            'carbon_tax_usd_per_ton': np.float64,
+            'carbon_tax_esc_rate_fraction': np.float64}
 
 
 def default_suitabiity_files():
@@ -278,7 +296,8 @@ def array_to_raster(arr, template_raster_file, output_raster_file):
 
 
 def raster_to_coord_arrays(template_raster):
-    """Use the template raster to create two 2D arrays containing the X and Y coordinates of every grid cell.
+    """Use the template raster to create two 2D arrays containing the X and Y cell-centre coordinates of every grid
+    cell, computed from the raster's affine transform.
 
     :param template_raster:                 Full path with file name and extension to the input raster.
     :type template_raster:                  str
@@ -288,13 +307,18 @@ def raster_to_coord_arrays(template_raster):
 
     """
 
-    # Read the data
-    da = rioxarray.open_rasterio(template_raster)
+    with rasterio.open(template_raster) as src:
+        transform = src.transform
+        height, width = src.height, src.width
 
-    # Compute the lon/lat coordinates with rasterio.warp.transform
-    x, y = np.meshgrid(da['x'], da['y'])
+    if transform.b != 0 or transform.d != 0:
+        raise ValueError(f"Rotated or sheared rasters are not supported: {template_raster}")
 
-    return x, y
+    # cell centres: origin + (index + 0.5) * pixel size along each axis
+    xs = transform.c + (np.arange(width) + 0.5) * transform.a
+    ys = transform.f + (np.arange(height) + 0.5) * transform.e
+
+    return np.meshgrid(xs, ys)
 
 
 def ingest_sited_data(run_year,

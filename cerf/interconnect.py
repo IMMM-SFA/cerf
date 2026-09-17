@@ -347,8 +347,10 @@ class Interconnection:
                 out_alloc = os.path.join(tempdir, f'cerf_transmission_allocation_{setting}.tif')
                 out_costs = os.path.join(tempdir, f'cerf_transmission_costs_{setting}.tif')
 
-            # update source file nodata value to nan to ensure a fill of 0 can occur for the background
-            metadata.update({"nodata": -np.nan})
+            # the background is burned as 0, so the written rasters carry no nodata value; NaN is used only to
+            #  clear any inherited integer nodata (e.g. 128 from the region raster) that would otherwise be invalid
+            #  for the float64 outputs
+            metadata.update({"nodata": np.nan})
 
             # rasterize transmission vector data and write to memory
             with rasterio.open(out_rast, 'w', **metadata) as dataset:
@@ -374,11 +376,12 @@ class Interconnection:
             nearest_row_indices, nearest_col_indices = nearest_indices
             allocation_array = burned[nearest_row_indices, nearest_col_indices]
 
+            # distance_array and allocation_array are already float64 (EDT output / values gathered from `burned`)
             with rasterio.open(out_dist, 'w', **metadata) as dist_ds:
-                dist_ds.write(distance_array.astype(rasterio.float64), 1)
+                dist_ds.write(distance_array, 1)
 
             with rasterio.open(out_alloc, 'w', **metadata) as alloc_ds:
-                alloc_ds.write(allocation_array.astype(rasterio.float64), 1)
+                alloc_ds.write(allocation_array, 1)
 
             with rasterio.open(out_costs, 'w', **metadata) as out:
 

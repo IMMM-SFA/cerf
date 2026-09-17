@@ -110,8 +110,8 @@ class ProcessRegion:
         # regions dictionary with region name to region ID mapping
         self.regions_dict = regions_dict
 
-        # target region name
-        self.target_region_name = target_region_name
+        # target region name, normalised to the lower-case form used as the key in the regions and expansion dicts
+        self.target_region_name = str(target_region_name).lower()
 
         # the id of the target region as it is represented in the region raster
         self.target_region_id = self.get_region_id()
@@ -189,21 +189,25 @@ class ProcessRegion:
         self.run_data = self.competition()
 
     def get_region_id(self):
-        """Load region name to region id YAML file to a dictionary.
+        """Look up the region ID for the target region name.
+
+        Names are matched case-insensitively (the registry keys are lower case), so ``'Rhode_Island'`` and
+        ``'rhode_island'`` resolve to the same ID.
 
         :return:                        Corresponding region ID for the user passed region name.
 
         """
 
-        if self.target_region_name in self.regions_dict:
-            return self.regions_dict.get(self.target_region_name.lower())
+        key = self.target_region_name
 
-        else:
+        if key in self.regions_dict:
+            return self.regions_dict[key]
 
-            logger.error(f"State name: `{self.target_region_name}` not in registry.")
-            logger.error(f"Please select a region name from the following:  {list(self.regions_dict.keys())}")
+        msg = (f"Region name `{self.target_region_name}` not in registry. Please select a region name from the "
+               f"following:  {sorted(self.regions_dict.keys())}")
+        logger.error(msg)
 
-            raise KeyError()
+        raise KeyError(msg)
 
     def get_region_bounds(self):
         """Return the grid-space bounding box ``(ymin, ymax, xmin, xmax)`` of the target region.
@@ -439,6 +443,9 @@ def process_region(target_region_name,
                                                 expansion plan
 
     """
+
+    # region names are keyed in lower case throughout the configuration
+    target_region_name = str(target_region_name).lower()
 
     logger.debug(f'Processing region:  {target_region_name}')
 
