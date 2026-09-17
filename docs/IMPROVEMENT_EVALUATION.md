@@ -28,9 +28,8 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 7.3 (part) | CI package-data cache keyed on data URL only; 8 download attempts | [#126](https://github.com/IMMM-SFA/cerf/pull/126) `3771712` | ✅ Merged | n/a (workflow only) | cold-cache downloads only on data-version change |
 | 4.4 | Read region raster once / precompute bounding boxes | [#127](https://github.com/IMMM-SFA/cerf/pull/127) `bc95610` | ✅ Merged | identical | competition **5.40 → 3.65 s (−32%)**; total 8.59 → 6.9 s; Rhode Island 50 → 3 ms |
 | 4.6 | Replace masked arrays in competition loop with `+inf` sentinels; buffer exclusion touches only changed cells | [#128](https://github.com/IMMM-SFA/cerf/pull/128) `c8eb8ea` | ✅ Merged | identical | competition **3.65 → 3.21 s (−12%)**; total 6.93 → 6.8 s; +3 tests |
-| 4.5 | dtype reduction (`bool` suitability, `float32` costs) | — | 🟡 In progress | — | — |
-| 4.9 | Parallel backend data transfer | — | ⬜ Not started | — | — |
-| 4.10 | Single `pd.concat` in aggregation | — | ⬜ Not started | — | — |
+| 4.5 | `uint8` suitability; scalar (broadcast-view) generation / operating cost; boolean region suitability; deferred metric lookups via 2D views | [#129](https://github.com/IMMM-SFA/cerf/pull/129) `fd2c27f` | ✅ Merged | identical | staged memory **7.4 → 4.2 GB**; competition **3.21 → 2.18 s (−32%)**; total 6.80 → 5.53 s; +4 tests (first `ProcessRegion` tests). `float32` costs deferred (would change `$/yr` outputs) |
+| 4.9 + 4.10 | Parallel backend data transfer; single `pd.concat` in aggregation | — | 🟡 In progress | — | — |
 | 5.1 | LMP CF-bin discontinuity (decision required) | — | ⬜ Not started | will change results | — |
 | 5.2 | Pixel-size-aware interconnection distance | — | ⬜ Not started | no change on 1 km data | — |
 | 5.3 | Local RNG instead of global seed | — | ⬜ Not started | may change seeded results | — |
@@ -46,6 +45,7 @@ Cumulative full-run timing (2010 CONUS sample, sequential, single process):
 | #120–#126 (bug fixes, logger, CI) | 3.20 s | 5.40 s | 8.59 s | −58% |
 | #127 (4.4) | 3.28 s | 3.65 s | 6.93 s | −66% |
 | #128 (4.6) | 3.30 s | 3.21 s | 6.80 s | −67% |
+| #129 (4.5) | 3.30 s | 2.18 s | 5.53 s | −73% |
 
 ---
 
@@ -265,7 +265,9 @@ Inside the technology loop, every zone column is re-sorted descending on each it
 
 `extract_region_suitability` opens and reads the full 14 M-cell region raster for every region (49 times). For small states this is the dominant cost (Rhode Island: 30 ms of 50 ms). The array should be read once in `Stage` and passed in, exactly like `zones_arr`. Even better, precompute the bounding box (`ymin, ymax, xmin, xmax`) per region ID once via `scipy.ndimage.find_objects` and pass a small dict.
 
-### 4.5 Excessive `float64` and full-grid copies
+### 4.5 Excessive `float64` and full-grid copies — ✅ DONE in #129 (except `float32` costs)
+
+> **Resolved.** Suitability is `uint8`; generation and operating cost are per-technology scalars exposed as read-only broadcast views; `ProcessRegion` builds a boolean unsuitable stack and passes 2D metric *views* to `Competition`, which reads them only at sited cells (`metric_at`). Staged memory 7.4 GB → 4.2 GB, seeded reference identical. Converting `lmp`/`ic`/`nov`/`nlc` to `float32` was measured (~6e-8 relative error) and deferred because it would change the reported `$/yr` columns.
 
 **Location:** [`cerf/stage.py`](../cerf/stage.py), [`cerf/process_region.py`](../cerf/process_region.py)
 
