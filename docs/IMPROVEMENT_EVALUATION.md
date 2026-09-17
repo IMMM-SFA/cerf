@@ -26,7 +26,7 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 3.4 + 3.5 | Dead `expansion_dict[tech_id] == 0` branch; `config_dict=None` crash / mutable default | [#124](https://github.com/IMMM-SFA/cerf/pull/124) `9b67175` | ✅ Merged | identical | none (8.59 s); +3 tests |
 | 3.6 / 3.7 | Named `cerf` logger; idempotent handlers; root logger untouched; working optional log file | [#125](https://github.com/IMMM-SFA/cerf/pull/125) `a986694` | ✅ Merged | identical | none; +8 tests |
 | 7.3 (part) | CI package-data cache keyed on data URL only; 8 download attempts | [#126](https://github.com/IMMM-SFA/cerf/pull/126) `3771712` | ✅ Merged | n/a (workflow only) | cold-cache downloads only on data-version change |
-| 4.4 | Read region raster once / precompute bounding boxes | `feature/region-bbox-once` | 🔄 In progress | — | — |
+| 4.4 | Read region raster once / precompute bounding boxes | [#127](https://github.com/IMMM-SFA/cerf/pull/127) `bc95610` | ✅ Merged | identical | competition **5.40 → 3.65 s (−32%)**; total 8.59 → 6.9 s; Rhode Island 50 → 3 ms |
 | 4.5 | dtype reduction (`bool` suitability, `float32` costs) | — | ⬜ Not started | — | — |
 | 4.6 | Replace masked arrays in competition loop | — | ⬜ Not started | — | — |
 | 4.9 | Parallel backend data transfer | — | ⬜ Not started | — | — |
@@ -43,6 +43,8 @@ Cumulative full-run timing (2010 CONUS sample, sequential, single process):
 | baseline `4821f51` | 8.45 s | 11.93 s | 20.37 s | — |
 | #118 (4.1) | 8.05 s | 5.77 s | 13.82 s | −32% |
 | #119 (4.2 + 4.3) | 3.34 s | 5.31 s | 8.65 s | −58% |
+| #120–#126 (bug fixes, logger, CI) | 3.20 s | 5.40 s | 8.59 s | −58% |
+| #127 (4.4) | 3.28 s | 3.65 s | 6.93 s | −66% |
 
 ---
 
@@ -256,7 +258,7 @@ This is a single fancy-index operation (~50 ms). The `nodata` value (255) is han
 
 Inside the technology loop, every zone column is re-sorted descending on each iteration. The sort is idempotent, so it only needs to happen once before the loop. Additionally, the column-by-column assignment loop can be replaced by `np.sort(lmp_df.values, axis=0)[::-1]` on the underlying array.
 
-### 4.4 Region raster re-read from disk per region — 🔄 IN PROGRESS
+### 4.4 Region raster re-read from disk per region — ✅ DONE in #127
 
 **Location:** [`cerf/process_region.py:150-153`](../cerf/process_region.py:150)
 
