@@ -16,7 +16,7 @@ from joblib import Parallel, delayed
 
 import cerf.utils as util
 from cerf.model import Model
-from cerf.process_region import process_region
+from cerf.process_region import process_region, crop_to_region
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +52,73 @@ def generate_model(config_file=None, config_dict=None, initialize_site_data=None
     return Model(config_file, config_dict, initialize_site_data, log_level)
 
 
+# joblib backends that run tasks in separate processes and therefore pickle every argument per task
+PROCESS_BACKENDS = ('loky', 'multiprocessing')
+
+
+def region_tasks(model, data, method):
+    """Yield the `process_region` keyword arguments for every region in the model.
+
+    With an in-process backend (``sequential``, ``threading``) the staged full-grid arrays are shared by reference.
+    With a process backend (``loky``, ``multiprocessing``) every argument is pickled per task, so each region is
+    cropped to its bounding box in the parent first (see `crop_to_region`); a region's payload is then proportional
+    to its own area (Texas ~11% of the grid, Rhode Island <0.1%) instead of ~4 GB of full-grid arrays per task.
+
+    """
+
+    common = dict(settings_dict=model.settings_dict,
+                  technology_dict=model.technology_dict,
+                  technology_order=model.technology_order,
+                  expansion_dict=model.expansion_dict,
+                  regions_dict=model.regions_dict,
+                  randomize=model.settings_dict.get('randomize', True),
+                  seed_value=model.settings_dict.get('seed_value', 0),
+                  verbose=model.settings_dict.get('verbose', False),
+                  write_output=False)
+
+    full_grid = dict(suitability_arr=data.suitability_arr,
+                     lmp_arr=data.lmp_arr,
+                     generation_arr=data.generation_arr,
+                     operating_cost_arr=data.operating_cost_arr,
+                     nov_arr=data.nov_arr,
+                     ic_arr=data.ic_arr,
+                     nlc_arr=data.nlc_arr,
+                     zones_arr=data.zones_arr,
+                     xcoords=data.xcoords,
+                     ycoords=data.ycoords,
+                     indices_2d=data.indices_2d,
+                     regions_arr=data.regions_arr)
+
+    crop = method in PROCESS_BACKENDS
+
+    for region_name, region_id in model.regions_dict.items():
+
+        if crop:
+            arrays = crop_to_region(region_id, data.region_bounds, **full_grid)
+        else:
+            arrays = dict(full_grid, region_bounds=data.region_bounds)
+
+        yield dict(common, target_region_name=region_name, **arrays)
+
+
+def aggregate_results(results, init_df=None):
+    """Combine per-region results into a single sited data frame with the canonical columns and dtypes.
+
+    :param results:                     Iterable of `ProcessRegion` objects or ``None`` (regions with no sites)
+    :param init_df:                     Optional data frame of still-active sites from a previous run to prepend
+
+    """
+
+    frames = [pd.DataFrame(util.empty_sited_dict()).astype(util.sited_dtypes())]
+
+    if init_df is not None:
+        frames.append(init_df)
+
+    frames.extend(i.run_data.sited_df for i in results if i is not None)
+
+    return pd.concat(frames, ignore_index=True)
+
+
 def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'):
     """Run all regions in parallel.
 
@@ -59,24 +126,24 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
     :type model:                        class
 
     :param data:                        Data from cerf.stage.Stage containing NLC and suitability arrays
+    :type data:                         cerf.stage.Stage
 
-    :param config_file:                 Full path with file name and extension to the input config.yml file
-    :type config_file:                  str
-
-    :param write_output:                Write output as a raster to the output directory specified in the config file
+    :param write_output:                Write the combined sited CSV to the output directory specified in the config
     :type write_output:                 bool
 
-    :param n_jobs:                      The number of processors to utilize.  Default is -1 which is all but 1.
+    :param n_jobs:                      The number of processors to utilize. Default is -1 which uses all processors
+                                        (``-2`` is all but one; see joblib).
     :type n_jobs:                       int
 
     :param method:                      Backend parallelization method used in Joblib.  Default is `sequential` to
                                         manage overhead for local runs.  Options for advanced configurations are:
-                                        `loky`, `threading`, and `multiprocessing`.
+                                        `loky`, `threading`, and `multiprocessing`. For the process backends each
+                                        region is cropped to its bounding box before dispatch so workers receive
+                                        only the data they need.
                                         See https://joblib.readthedocs.io/en/latest/parallel.html for details.
     :type method:                       str
 
-    :return:                            A 2D arrays containing sites as the technology ID per grid cell.  All
-                                        non-sited grid cells are given the value of NaN.
+    :return:                            A data frame containing each sited power plant and its attributes
 
     """
 
@@ -84,46 +151,14 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
     t0 = time.time()
 
     # run all regions in parallel
-    results = Parallel(n_jobs=n_jobs, backend=method)(delayed(process_region)(target_region_name=i,
-                                                                              settings_dict=model.settings_dict,
-                                                                              technology_dict=model.technology_dict,
-                                                                              technology_order=model.technology_order,
-                                                                              expansion_dict=model.expansion_dict,
-                                                                              regions_dict=model.regions_dict,
-                                                                              suitability_arr=data.suitability_arr,
-                                                                              lmp_arr=data.lmp_arr,
-                                                                              generation_arr=data.generation_arr,
-                                                                              operating_cost_arr=data.operating_cost_arr,
-                                                                              nov_arr=data.nov_arr,
-                                                                              ic_arr=data.ic_arr,
-                                                                              nlc_arr=data.nlc_arr,
-                                                                              zones_arr=data.zones_arr,
-                                                                              xcoords=data.xcoords,
-                                                                              ycoords=data.ycoords,
-                                                                              indices_2d=data.indices_2d,
-                                                                              randomize=model.settings_dict.get('randomize', True),
-                                                                              seed_value=model.settings_dict.get('seed_value', 0),
-                                                                              verbose=model.settings_dict.get('verbose', False),
-                                                                              write_output=False,
-                                                                              regions_arr=data.regions_arr,
-                                                                              region_bounds=data.region_bounds) for i in model.regions_dict.keys())
+    results = Parallel(n_jobs=n_jobs, backend=method)(delayed(process_region)(**kwargs)
+                                                      for kwargs in region_tasks(model, data, method))
 
     logger.info(f"All regions processed in {round((time.time() - t0), 7)} seconds.")
     logger.info("Aggregating outputs...")
 
-    # create a data frame to hold the outputs
-    df = pd.DataFrame(util.empty_sited_dict()).astype(util.sited_dtypes())
-
-    # add in the initialized siting data from a previous years run if so desired
-    if model.initialize_site_data is not None:
-        df = pd.concat([df, data.init_df])
-
-    # combine the outputs for all regions
-    for i in results:
-
-        # ensure some sites were able to be sited for the target region
-        if i is not None:
-            df = pd.concat([df, i.run_data.sited_df])
+    # combine the outputs for all regions, including active sites from a previous run if provided
+    df = aggregate_results(results, init_df=data.init_df if model.initialize_site_data is not None else None)
 
     if write_output:
 
@@ -147,7 +182,8 @@ def run(config_file=None, config_dict=None, write_output=True, n_jobs=-1, method
     :param write_output:                Write output as a raster to the output directory specified in the config file
     :type write_output:                 bool
 
-    :param n_jobs:                      The number of processors to utilize.  Default is -1 which is all but 1.
+    :param n_jobs:                      The number of processors to utilize. Default is -1 which uses all processors
+                                        (``-2`` is all but one; see joblib).
     :type n_jobs:                       int
 
     :param method:                      Backend parallelization method used in Joblib.  Default is sequential to
