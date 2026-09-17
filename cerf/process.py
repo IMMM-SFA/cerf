@@ -104,7 +104,9 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
                                                                               randomize=model.settings_dict.get('randomize', True),
                                                                               seed_value=model.settings_dict.get('seed_value', 0),
                                                                               verbose=model.settings_dict.get('verbose', False),
-                                                                              write_output=False) for i in model.regions_dict.keys())
+                                                                              write_output=False,
+                                                                              regions_arr=data.regions_arr,
+                                                                              region_bounds=data.region_bounds) for i in model.regions_dict.keys())
 
     logger.info(f"All regions processed in {round((time.time() - t0), 7)} seconds.")
     logger.info("Aggregating outputs...")

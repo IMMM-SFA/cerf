@@ -57,6 +57,11 @@ class Stage:
         self.cerf_regionid_raster_file = self.settings_dict.get('region_raster_file')
         self.xcoords, self.ycoords = util.raster_to_coord_arrays(self.cerf_regionid_raster_file)
 
+        # region ID per grid cell, read once here and shared with every region instead of re-reading the raster
+        #  per region; plus each region's bounding box in grid space
+        self.regions_arr = self.load_regions_raster()
+        self.region_bounds = util.region_bounding_boxes(self.regions_arr)
+
         # generate grid indices in a flat array
         self.indices_flat = np.array(np.arange(self.xcoords.flatten().shape[0]))
         self.indices_2d = self.indices_flat.reshape(self.xcoords.shape)
@@ -86,6 +91,12 @@ class Stage:
         # combine all suitability rasters into an array
         logger.info('Building suitability array')
         self.suitability_arr = self.build_suitability_array()
+
+    def load_regions_raster(self):
+        """Load the region ID raster for the CONUS into a 2D array."""
+
+        with rasterio.open(self.cerf_regionid_raster_file) as src:
+            return src.read(1)
 
     def load_lmp_zone_raster(self):
         """Load the lmp zoness raster for the CONUS into a 2D array."""

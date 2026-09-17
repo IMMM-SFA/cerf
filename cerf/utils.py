@@ -7,9 +7,43 @@ import pandas as pd
 import rasterio
 import rioxarray
 import geopandas as gpd
+from scipy.ndimage import find_objects
 from shapely.geometry import Point
 
 logger = logging.getLogger(__name__)
+
+
+def region_bounding_boxes(regions_arr):
+    """Compute the grid-space bounding box of every region ID present in a 2D region raster array.
+
+    The bounds follow Python slice conventions so that ``arr[ymin:ymax, xmin:xmax]`` is the smallest window
+    containing every cell of the region, matching the values previously derived per region with ``np.where``.
+
+    :param regions_arr:                     2D array of integer region IDs
+    :type regions_arr:                      ndarray
+
+    :return:                                Dictionary of ``{region_id: (ymin, ymax, xmin, xmax)}`` for every region
+                                            ID that occurs in the array (a nodata/background ID is included if present)
+
+    """
+
+    regions_arr = np.asarray(regions_arr)
+
+    if regions_arr.ndim != 2:
+        raise ValueError(f"`regions_arr` must be 2D; got shape {regions_arr.shape}")
+
+    if not np.issubdtype(regions_arr.dtype, np.integer):
+        raise TypeError(f"`regions_arr` must have an integer dtype; got {regions_arr.dtype}")
+
+    # find_objects treats 0 as background and needs labels >= 1 and small; remap the (arbitrary, possibly
+    #  negative or nodata) IDs to 1..n first
+    ids, labels = np.unique(regions_arr, return_inverse=True)
+    labels = labels.reshape(regions_arr.shape).astype(np.int32) + 1
+
+    slices = find_objects(labels)
+
+    return {int(region_id): (sl[0].start, sl[0].stop, sl[1].start, sl[1].stop)
+            for region_id, sl in zip(ids, slices) if sl is not None}
 
 
 def results_to_geodataframe(result_df, target_crs):
