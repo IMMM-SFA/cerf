@@ -27,8 +27,8 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 3.6 / 3.7 | Named `cerf` logger; idempotent handlers; root logger untouched; working optional log file | [#125](https://github.com/IMMM-SFA/cerf/pull/125) `a986694` | ✅ Merged | identical | none; +8 tests |
 | 7.3 (part) | CI package-data cache keyed on data URL only; 8 download attempts | [#126](https://github.com/IMMM-SFA/cerf/pull/126) `3771712` | ✅ Merged | n/a (workflow only) | cold-cache downloads only on data-version change |
 | 4.4 | Read region raster once / precompute bounding boxes | [#127](https://github.com/IMMM-SFA/cerf/pull/127) `bc95610` | ✅ Merged | identical | competition **5.40 → 3.65 s (−32%)**; total 8.59 → 6.9 s; Rhode Island 50 → 3 ms |
-| 4.5 | dtype reduction (`bool` suitability, `float32` costs) | — | ⬜ Not started | — | — |
-| 4.6 | Replace masked arrays in competition loop | — | ⬜ Not started | — | — |
+| 4.6 | Replace masked arrays in competition loop with `+inf` sentinels; buffer exclusion touches only changed cells | [#128](https://github.com/IMMM-SFA/cerf/pull/128) `c8eb8ea` | ✅ Merged | identical | competition **3.65 → 3.21 s (−12%)**; total 6.93 → 6.8 s; +3 tests |
+| 4.5 | dtype reduction (`bool` suitability, `float32` costs) | — | 🟡 In progress | — | — |
 | 4.9 | Parallel backend data transfer | — | ⬜ Not started | — | — |
 | 4.10 | Single `pd.concat` in aggregation | — | ⬜ Not started | — | — |
 | 5.1 | LMP CF-bin discontinuity (decision required) | — | ⬜ Not started | will change results | — |
@@ -45,6 +45,7 @@ Cumulative full-run timing (2010 CONUS sample, sequential, single process):
 | #119 (4.2 + 4.3) | 3.34 s | 5.31 s | 8.65 s | −58% |
 | #120–#126 (bug fixes, logger, CI) | 3.20 s | 5.40 s | 8.59 s | −58% |
 | #127 (4.4) | 3.28 s | 3.65 s | 6.93 s | −66% |
+| #128 (4.6) | 3.30 s | 3.21 s | 6.80 s | −67% |
 
 ---
 
@@ -272,7 +273,9 @@ Inside the technology loop, every zone column is re-sorted descending on each it
 - `lmp_arr`, `ic_arr`, `nov_arr`, `generation_arr`, `operating_cost_arr` could be `float32` with no meaningful loss for $/yr magnitudes (halves 5 GB → 2.5 GB). `generation_arr` is a per-technology scalar broadcast to the full grid – it does not need to be an array at all.
 - `extract_region_metrics` flattens 5 full technology stacks for the bounding box, then `Competition` receives them as dicts of flat arrays. Only the values at the finally-sited indices are ever read (see `sited_dict[...].append(self.lmp_flat_dict[tech_id][target_ix])`). These lookups could be deferred to the end and done once against the 3D arrays with the winning `(tech, row, col)` indices, eliminating five 3D slices + flattens per region.
 
-### 4.6 Masked arrays in the competition loop
+### 4.6 Masked arrays in the competition loop — ✅ DONE in #128
+
+> **Resolved.** `Competition` now works on a plain contiguous `float64` stack where unsuitable cells are `+inf` (`ProcessRegion.mask_nlc` builds it directly; masked-array input is still accepted and converted). Buffer exclusion is `nlc_2d[1:, flat_indices] = inf` on only the affected cells, batched per technology, followed by a single `argmin` refresh (`exclude_technology` / `exclude_cells` / `update_cheapest`). Seeded reference identical.
 
 **Location:** [`cerf/compete.py`](../cerf/compete.py)
 
