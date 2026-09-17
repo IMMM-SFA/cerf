@@ -104,7 +104,8 @@ def region_tasks(model, data, method):
 def aggregate_results(results, init_df=None):
     """Combine per-region results into a single sited data frame with the canonical columns and dtypes.
 
-    :param results:                     Iterable of `ProcessRegion` objects or ``None`` (regions with no sites)
+    :param results:                     Iterable of `ProcessRegion` / `EmptyRegionResult` objects (``None`` entries
+                                        are tolerated for backwards compatibility)
     :param init_df:                     Optional data frame of still-active sites from a previous run to prepend
 
     """

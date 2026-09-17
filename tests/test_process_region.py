@@ -13,7 +13,8 @@ from joblib import Parallel, delayed
 
 import cerf.utils as util
 from cerf.process import aggregate_results, region_tasks
-from cerf.process_region import ProcessRegion, crop_to_region, process_region
+from cerf.process_region import EmptyRegionResult, ProcessRegion, crop_to_region, process_region
+from cerf.stage import Stage
 
 
 class TestProcessRegion(unittest.TestCase):
@@ -77,6 +78,47 @@ class TestProcessRegion(unittest.TestCase):
                     nov_arr=nov, ic_arr=ic, nlc_arr=nlc, zones_arr=zones, xcoords=xcoords, ycoords=ycoords,
                     indices_2d=indices_2d, target_region_name='left', randomize=False, seed_value=0,
                     verbose=False, write_output=False, regions_arr=regions, region_bounds=None)
+
+    def test_region_with_no_sites_returns_empty_result_not_none(self):
+        """5.5: a zero-site region yields an EmptyRegionResult that aggregates like any other region."""
+
+        kwargs = self.build()
+        kwargs['expansion_dict'] = {'left': {1: {'tech_name': 'a', 'n_sites': 0}, 2: {'tech_name': 'b', 'n_sites': 0}}}
+
+        result = process_region(**kwargs)
+        self.assertIsInstance(result, EmptyRegionResult)
+        self.assertEqual('left', result.target_region_name)
+        self.assertEqual(0, len(result.run_data.sited_df))
+        self.assertEqual(list(util.empty_sited_dict()), list(result.run_data.sited_df.columns))
+        self.assertIsNone(result.run_data.sited_array)
+        self.assertEqual(kwargs['expansion_dict']['left'], result.run_data.expansion_dict)
+        self.assertIsNot(kwargs['expansion_dict']['left'], result.run_data.expansion_dict)
+
+        # aggregates alongside real results without None checks
+        real = ProcessRegion(**self.build())
+        df = aggregate_results([result, real])
+        self.assertEqual(len(real.run_data.sited_df), len(df))
+
+    def test_unsuitable_from_raster_honours_nodata(self):
+        """5.6: declared nodata is unsuitable even when it is 0; NaN nodata handled; 0/1 encoding unchanged."""
+
+        arr = np.array([[0, 1, 0],
+                        [255, 0, 1]], dtype=np.uint8)
+
+        # plain 0/1 encoding, no nodata: only the 1s (and the 255) are unsuitable
+        np.testing.assert_array_equal([[False, True, False], [True, False, True]],
+                                      Stage.unsuitable_from_raster(arr, nodata=None))
+
+        # declared nodata 255 -> still unsuitable (already non-zero) and explicitly flagged
+        np.testing.assert_array_equal([[False, True, False], [True, False, True]],
+                                      Stage.unsuitable_from_raster(arr, nodata=255))
+
+        # a raster whose nodata is 0 must not make missing cells look suitable
+        np.testing.assert_array_equal(np.ones_like(arr, dtype=bool), Stage.unsuitable_from_raster(arr, nodata=0))
+
+        # float raster with NaN nodata
+        farr = np.array([[0.0, np.nan], [1.0, 0.0]])
+        np.testing.assert_array_equal([[False, True], [True, False]], Stage.unsuitable_from_raster(farr, nodata=np.nan))
 
     def test_get_region_id_is_case_insensitive_and_reports_choices(self):
         """3.10: mixed-case names resolve; unknown names raise a KeyError that lists the valid names."""

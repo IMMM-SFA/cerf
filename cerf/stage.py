@@ -231,8 +231,39 @@ class Stage:
         else:
             return None, None
 
+    @staticmethod
+    def unsuitable_from_raster(arr, nodata=None):
+        """Convert a suitability raster band to a boolean *unsuitable* mask.
+
+        The suitability convention is ``0`` = suitable and ``1`` = unsuitable. Any cell holding the raster's declared
+        ``nodata`` value is treated as unsuitable explicitly, so a raster whose nodata happens to be ``0`` cannot
+        make missing data look suitable. Any other non-zero value is also unsuitable (logged, since it indicates a
+        raster that is not 0/1 encoded).
+
+        :param arr:                             2D raster band
+        :param nodata:                          Declared nodata value of the band, or ``None``
+
+        :return:                                Boolean array, ``True`` where the cell is unsuitable
+
+        """
+
+        unsuitable = arr != 0
+
+        if nodata is not None and not (isinstance(nodata, float) and np.isnan(nodata)):
+            unsuitable |= arr == nodata
+
+        elif nodata is not None:
+            unsuitable |= np.isnan(arr)
+
+        return unsuitable
+
     def build_suitability_array(self):
-        """Build suitability array for all technologies."""
+        """Build suitability array for all technologies.
+
+        Cells are unsuitable (``1``) where the technology raster is non-zero **or** equals its declared nodata value,
+        and, when initial siting data is provided, where an existing plant or its buffer occupies the cell.
+
+        """
 
         # fetch the default suitability dictionary
         default_suitability_file_dict = util.default_suitabiity_files()
@@ -255,13 +286,30 @@ class Stage:
             # load raster to array
             with rasterio.open(tech_suitability_raster_file) as src:
 
-                # read to 2D array
+                if (src.height, src.width) != suitability_array.shape[1:]:
+                    raise ValueError(f"Suitability raster {tech_suitability_raster_file} has shape "
+                                     f"{(src.height, src.width)} but the region raster grid is "
+                                     f"{suitability_array.shape[1:]}.")
+
                 tech_arr = src.read(1)
+                nodata = src.nodata
 
-                if self.initialize_site_data is not None:
-                    tech_arr = np.maximum(tech_arr, self.init_arr)
+            unsuitable = self.unsuitable_from_raster(tech_arr, nodata)
 
-                # add to suitability array; any non-zero value marks the cell unsuitable
-                suitability_array[index, :, :] = tech_arr != 0
+            # values other than 0 / 1 / nodata indicate a raster that is not encoded as expected; they are treated
+            #  as unsuitable but flagged so the user can check the input
+            other = unsuitable & (tech_arr != 1)
+            if nodata is not None:
+                other &= tech_arr != nodata
+            if other.any():
+                logger.warning(f"Suitability raster {tech_suitability_raster_file} contains "
+                               f"{int(other.sum())} cells with values other than 0, 1 or nodata ({nodata}); "
+                               f"they are treated as unsuitable.")
+
+            # existing plants and their buffers from previous siting data are unsuitable for every technology
+            if self.initialize_site_data is not None:
+                unsuitable |= self.init_arr != 0
+
+            suitability_array[index, :, :] = unsuitable
 
         return suitability_array

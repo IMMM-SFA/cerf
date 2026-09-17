@@ -82,6 +82,37 @@ class TestReadConfig(unittest.TestCase):
 
         self.assertNotEqual(1900, second.settings_dict['run_year'])
 
+    def test_lifetime_fields_validated_and_defaulted(self):
+        """5.4: `lifetime_yrs` required and positive; `operational_life_yrs` defaults to it and must be positive."""
+
+        base = ReadConfig(config_file=TestReadConfig.TEST_CONFIG)
+        cfg = copy.deepcopy(base.config)
+        tech_id = next(iter(cfg['technology']))
+
+        # default: missing operational life falls back to the economic life
+        c = copy.deepcopy(cfg)
+        del c['technology'][tech_id]['operational_life_yrs']
+        rc = ReadConfig(config_dict=c)
+        self.assertEqual(rc.technology_dict[tech_id]['lifetime_yrs'], rc.technology_dict[tech_id]['operational_life_yrs'])
+
+        # the two may legitimately differ
+        c = copy.deepcopy(cfg)
+        c['technology'][tech_id]['lifetime_yrs'] = 30
+        c['technology'][tech_id]['operational_life_yrs'] = 60
+        rc = ReadConfig(config_dict=c)
+        self.assertEqual(30, rc.technology_dict[tech_id]['lifetime_yrs'])
+        self.assertEqual(60, rc.technology_dict[tech_id]['operational_life_yrs'])
+
+        for field, value in (('lifetime_yrs', None), ('lifetime_yrs', 0), ('lifetime_yrs', -5),
+                             ('operational_life_yrs', 0), ('operational_life_yrs', -1)):
+            c = copy.deepcopy(cfg)
+            if value is None:
+                del c['technology'][tech_id][field]
+            else:
+                c['technology'][tech_id][field] = value
+            with self.assertRaises(ValueError, msg=(field, value)):
+                ReadConfig(config_dict=c)
+
     def test_config_dict_overrides_do_not_mutate_caller(self):
         """Overrides passed alongside a config file must not be written back to the caller's dictionary."""
 
