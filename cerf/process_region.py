@@ -181,26 +181,27 @@ class ProcessRegion:
         return bounds
 
     def extract_region_suitability(self):
-        """Extract a single region from the suitability."""
+        """Extract a single region from the suitability.
+
+        Returns a boolean array ``[layer, row, col]`` over the region's bounding box where ``True`` marks an
+        unsuitable cell. Layer 0 is the "no technology" default and is entirely unsuitable; layers ``1..n_tech``
+        follow ``technology_order``. Cells outside the target region are unsuitable for every technology.
+
+        """
 
         ymin, ymax, xmin, xmax = self.get_region_bounds()
 
-        # extract region and give binary designation
-        region_mask = np.where(self.regions_arr[ymin:ymax, xmin:xmax] == self.target_region_id, 0, 1)
+        # cells in the bounding box that do not belong to the target region
+        outside_region = self.regions_arr[ymin:ymax, xmin:xmax] != self.target_region_id
 
-        # extract region footprint from suitability data
-        suitability_array_region = self.suitability_arr[:, ymin:ymax, xmin:xmax].copy()
+        # extract region footprint from suitability data; any non-zero value is unsuitable
+        n_tech = self.suitability_arr.shape[0]
+        unsuitable = np.empty((n_tech + 1, ymax - ymin, xmax - xmin), dtype=bool)
+        unsuitable[0] = True
+        np.not_equal(self.suitability_arr[:, ymin:ymax, xmin:xmax], 0, out=unsuitable[1:])
+        unsuitable[1:] |= outside_region
 
-        # add in suitability where unsuitable is the highest value of NLC
-        suitability_array_region += region_mask
-
-        # at this point, we have all suitable grid cells as 0 and all not as 1
-        suitability_array_region = np.where(suitability_array_region == 0, 0, 1)
-
-        # exclude all area for the default dimension
-        suitability_array_region = np.insert(suitability_array_region, 0, np.ones_like(suitability_array_region[0, :, :]), axis=0)
-
-        return suitability_array_region, ymin, ymax, xmin, xmax
+        return unsuitable, ymin, ymax, xmin, xmax
 
     def mask_nlc(self):
         """Extract NLC elements for the current region with suitability applied.
@@ -223,8 +224,8 @@ class ProcessRegion:
         nlc_arr_region[0] = np.inf
         nlc_arr_region[1:] = np.nan_to_num(nlc_region, nan=fill_value)
 
-        # unsuitable cells (1 in the suitability array) are unavailable
-        nlc_arr_region[self.suitability_array_region == 1] = np.inf
+        # unsuitable cells are unavailable
+        nlc_arr_region[self.suitability_array_region] = np.inf
 
         return nlc_arr_region
 
@@ -243,26 +244,23 @@ class ProcessRegion:
         return xcoord_2d_region, ycoord_2d_region
 
     def extract_region_metrics(self):
-        """Extract the LMP, NOV, and IC arrays for the target region and return them as dictionaries where
-        {tech_id: flat_array, ...}.
+        """Extract the LMP, generation, operating cost, NOV, and IC arrays for the target region and return them as
+        dictionaries where {tech_id: 2D_region_view, ...}.
+
+        The values are views into the staged full-grid arrays (no copies). `Competition` only reads these metrics at
+        the handful of cells that are finally sited, so flattening five full technology stacks per region is avoided.
 
         """
 
-        # extract the target region
-        lmp_arr_region = self.lmp_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
-        generation_arr_region = self.generation_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
-        operating_cost_arr_region = self.operating_cost_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
-        nov_arr_region = self.nov_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
-        ic_arr_region = self.ic_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
+        def region_views(arr):
+            region = arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
+            return {i: region[ix] for ix, i in enumerate(self.technology_order)}
 
-        # create a reference dictionary where {tech_id: flat_region_array, ...}
-        lmp_flat_dict = {i: lmp_arr_region[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
-        generation_flat_dict = {i: generation_arr_region[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
-        operating_cost_flat_dict = {i: operating_cost_arr_region[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
-        nov_flat_dict = {i: nov_arr_region[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
-        ic_flat_dict = {i: ic_arr_region[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
-
-        return lmp_flat_dict, generation_flat_dict, operating_cost_flat_dict, nov_flat_dict, ic_flat_dict
+        return (region_views(self.lmp_arr),
+                region_views(self.generation_arr),
+                region_views(self.operating_cost_arr),
+                region_views(self.nov_arr),
+                region_views(self.ic_arr))
 
     def extract_lmp_zones(self):
         """Extract the lmp zones elements for the target region and return as a flat array."""
@@ -350,7 +348,8 @@ def process_region(target_region_name,
     :param regions_dict:                         Mapping from region name to region ID from cerf.read_config.ReadConfig
     :type regions_dict:                          dict
 
-    :param suitability_arr:                     3D array where {tech_id, x, y} for suitability data
+    :param suitability_arr:                     3D array where {tech_id, x, y} for suitability data; 0 is suitable
+                                                and any non-zero value is unsuitable
     :type suitability_arr:                      ndarray
 
     :param nlc_arr:                             3D array where {tech_id, x, y} for NLC data
