@@ -25,11 +25,12 @@ class Competition:
     :param expansion_plan:                          Dictionary of {tech_id: number_of_sites, ...}
     :type expansion_plan:                           dict
 
-    :param nlc_mask:                                3D masked array of [tech_id, x, y] for Net Locational Costs. Each
+    :param nlc_mask:                                3D array of [tech_id, x, y] for Net Locational Costs. Each
                                                     technology has been masked with its suitability data, so only
-                                                    grid cells that are suitable have an NLC per tech. The 0 index
-                                                    position is a default dimension which is chosen if no technologies
-                                                    are able to compete.
+                                                    grid cells that are suitable have a finite NLC per tech; unsuitable
+                                                    cells are ``+inf`` (a ``numpy.ma`` masked array is also accepted
+                                                    and converted). The 0 index position is a default dimension, all
+                                                    ``+inf``, which is chosen if no technologies are able to compete.
     :type nlc_mask:                                 ndarray
 
     :param technology_dict:                         A technology dictionary containing at a minimum
@@ -107,9 +108,16 @@ class Competition:
         # flat array of full grid indices value for the target region
         self.indices_flat = indices_flat
 
-        # net locational costs with suitability mask for the target region
-        self.nlc_mask = nlc_mask
+        # net locational costs with suitability applied for the target region: unsuitable / excluded cells are +inf so a
+        #  plain float array with `argmin` reproduces the masked-array semantics (masked values fill with +inf) at a
+        #  fraction of the cost
+        if np.ma.isMaskedArray(nlc_mask):
+            nlc_mask = nlc_mask.astype(np.float64).filled(np.inf)
+        self.nlc_mask = np.ascontiguousarray(nlc_mask, dtype=np.float64)
         self.nlc_mask_shape = self.nlc_mask.shape
+
+        # 2D view [layer, flat_cell] of the same memory for cheap per-cell exclusion updates
+        self._nlc_2d = self.nlc_mask.reshape(self.nlc_mask_shape[0], -1)
 
         # log out additional info
         self.verbose = verbose
@@ -128,32 +136,48 @@ class Competition:
         self.xcoords = xcoords
         self.ycoords = ycoords
 
-        # mask any technologies having 0 expected sites in the expansion plan to exclude them from competition
+        # exclude any technologies having 0 expected sites in the expansion plan from competition
         for index, i in enumerate(self.technology_order, 1):
             if self.expansion_dict[i]["n_sites"] == 0:
-                self.nlc_mask[index, :, :] = np.ma.masked_array(self.nlc_mask[index, :, :],
-                                                                np.ones_like(self.nlc_mask[index, :, :]))
+                self.exclude_technology(index)
+
+        # create dictionary of {tech_id: flat_nlc_array, ...}; a snapshot taken before any siting so the NLC of a
+        #  chosen cell can still be reported after its neighbourhood has been excluded
+        self.nlc_flat_dict = {i: self._nlc_2d[ix + 1].copy() for ix, i in enumerate(self.technology_order)}
 
         # show cheapest option, add 1 to the index to represent the technology number
-        self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
-
-        # flatten cheapest array to be able to use random
-        self.cheapest_arr_1d = self.cheapest_arr.flatten()
+        self.update_cheapest()
 
         # prep array to hold outputs
         self.sited_arr_1d = np.zeros_like(self.cheapest_arr_1d)
-
-        # set initial value to for available grid cells
-        self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
-
-        # create dictionary of {tech_id: flat_nlc_array, ...}
-        self.nlc_flat_dict = {i: self.nlc_mask[ix+1, :, :].flatten() for ix, i in enumerate(self.technology_order)}
 
         # run competition and site
         self.sited_array, self.sited_df = self.compete()
 
         # evaluate sites to see if expansion plan was met
         self.log_outcome()
+
+    def exclude_technology(self, tech_index):
+        """Make every grid cell unavailable to the technology at layer ``tech_index``."""
+
+        self.nlc_mask[tech_index, :, :] = np.inf
+
+    def exclude_cells(self, flat_indices):
+        """Make the given flat grid cell indices unavailable to all technologies."""
+
+        self._nlc_2d[1:, flat_indices] = np.inf
+
+    def update_cheapest(self):
+        """Recompute the cheapest technology per grid cell (0 where no technology is available)."""
+
+        # unsuitable cells are +inf in every layer, so layer 0 (all +inf) wins the tie exactly as the masked argmin did
+        self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
+
+        # flatten cheapest array to be able to use random
+        self.cheapest_arr_1d = self.cheapest_arr.flatten()
+
+        # number of grid cells still available to some technology
+        self.avail_grids = int(np.count_nonzero(self.cheapest_arr_1d))
 
     def log_outcome(self):
         """Log a warning sites that were not able to be sited."""
@@ -195,6 +219,7 @@ class Competition:
                     # site with buffer and exclude buffered area from further siting
                     still_siting = True
                     sited_list = []
+                    excluded_lists = []
                     while still_siting:
 
                         # get the NLC values associated with each winner
@@ -250,6 +275,7 @@ class Competition:
 
                         # unpack values
                         self.cheapest_arr_1d, buffer_indices_list = result
+                        excluded_lists.append(buffer_indices_list)
 
                         # update the number of sites left to site
                         required_sites -= 1
@@ -274,31 +300,16 @@ class Competition:
                         logger.info('\nUpdate expansion plan to represent siting requirements:')
                         logger.info(self.expansion_dict)
 
-                    # apply the new exclusion from the current technology to all techs...
-                    #   invert sited elements to have a value of 1 so they can be used as a mask
-                    #   repeat the new sited array to create a mask for all techs and reshape to 2D
-                    #   update all technologies with the new mask
-                    self.nlc_mask[1:, :, :] = np.ma.masked_array(self.nlc_mask[1:, :, :],
-                                                                 np.tile(np.where(self.cheapest_arr_1d == 0, 1, 0),
-                                                                         self.nlc_mask_shape[0] - 1).reshape(
-                                                                     (self.nlc_mask_shape[0] - 1,
-                                                                      self.nlc_mask_shape[1],
-                                                                      self.nlc_mask_shape[2])))
+                    # apply the new exclusion (sited cells and their buffers from this batch) to all techs
+                    self.exclude_cells(np.concatenate(excluded_lists).astype(np.intp))
 
-                    # if the technology has achieved its full expansion, then mask the rest of its suitable area so
+                    # if the technology has achieved its full expansion, then exclude the rest of its suitable area so
                     #  other technologies can now compete for the grid cells it previously won but now no longer needs
                     if self.expansion_dict[tech_id]['n_sites'] == 0:
-                        self.nlc_mask[tech_index, :, :] = np.ma.masked_array(self.nlc_mask[tech_index, :, :],
-                                                                             np.ones_like(self.nlc_mask[tech_index, :, :]))
+                        self.exclude_technology(tech_index)
 
-                    # show cheapest option, add 1 to the index to represent the technology number
-                    self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
-
-                    # flatten cheapest array to be able to use random
-                    self.cheapest_arr_1d = self.cheapest_arr.flatten()
-
-                    # check for any available grids to site in
-                    self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
+                    # show cheapest option and count the grid cells still available
+                    self.update_cheapest()
 
                     # are there any sites left to site
                     left_to_site = sum([self.expansion_dict[i]['n_sites'] for i in self.expansion_dict.keys()])
@@ -317,19 +328,12 @@ class Competition:
                 # if there are available grids and a cheapest option available but no more required sites
                 elif self.avail_grids > 0 and tech.shape[0] > 0 and required_sites == 0:
 
-                    # if there are no required sites, then mask the rest of the techs suitable area so
+                    # if there are no required sites, then exclude the rest of the techs suitable area so
                     #  other technologies can now compete for the grid cells it previously won but now no longer needs
-                    self.nlc_mask[tech_index, :, :] = np.ma.masked_array(self.nlc_mask[tech_index, :, :],
-                                                                         np.ones_like(self.nlc_mask[tech_index, :, :]))
+                    self.exclude_technology(tech_index)
 
-                    # show cheapest option, add 1 to the index to represent the technology number
-                    self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
-
-                    # flatten cheapest array to be able to use random
-                    self.cheapest_arr_1d = self.cheapest_arr.flatten()
-
-                    # check for any available grids to site in
-                    self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
+                    # show cheapest option and count the grid cells still available
+                    self.update_cheapest()
 
                 # if there are suitable cells AND no winners and some or no sites left to site pass until next round
                 else:

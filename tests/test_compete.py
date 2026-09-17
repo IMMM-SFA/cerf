@@ -158,6 +158,76 @@ class TestCompete(unittest.TestCase):
         # check sited dict match
         self.assertEqual(TestCompete.COMP_SITED_DICT, comp.sited_dict)
 
+    def _run(self, nlc_mask, expansion_plan=None):
+        fake_dict, fake_flat_array = self.create_proxy_arrays()
+        return Competition(target_region_name='test',
+                           settings_dict=TestCompete.SETTINGS_DICT,
+                           technology_dict=TestCompete.TECH_DICT,
+                           technology_order=TestCompete.TECH_ORDER,
+                           expansion_dict=expansion_plan or TestCompete.EXPANSION_PLAN,
+                           lmp_dict=fake_dict, generation_dict=fake_dict, operating_cost_dict=fake_dict,
+                           nov_dict=fake_dict, ic_dict=fake_dict,
+                           nlc_mask=nlc_mask,
+                           zones_arr=fake_flat_array.astype(np.int32),
+                           xcoords=fake_flat_array, ycoords=fake_flat_array, indices_flat=fake_flat_array,
+                           randomize=False, seed_value=0, verbose=False)
+
+    def test_inf_array_input_matches_masked_input(self):
+        """A plain float array with +inf for unsuitable cells must give the same result as the masked array."""
+
+        masked = self.create_masked_nlc_array()
+        plain = masked.astype(np.float64).filled(np.inf)
+        self.assertFalse(np.ma.isMaskedArray(plain))
+
+        comp_masked = self._run(self.create_masked_nlc_array())
+        comp_plain = self._run(plain)
+
+        np.testing.assert_array_equal(comp_masked.sited_array, comp_plain.sited_array)
+        np.testing.assert_array_equal(TestCompete.COMP_SITED, comp_plain.sited_array)
+        self.assertEqual(comp_masked.sited_dict, comp_plain.sited_dict)
+
+        # the working array is always a plain, contiguous float64 array internally
+        self.assertFalse(np.ma.isMaskedArray(comp_masked.nlc_mask))
+        self.assertEqual(np.float64, comp_masked.nlc_mask.dtype)
+
+    def test_default_layer_wins_only_when_nothing_available(self):
+        """Layer 0 (all +inf) is the argmin only for cells where every technology is +inf."""
+
+        plain = self.create_masked_nlc_array().astype(np.float64).filled(np.inf)
+        comp = self._run(plain)
+
+        # after competition, every cell is either sited/buffered/unsuitable (0) or has a finite cheapest tech
+        finite_any = np.isfinite(comp.nlc_mask[1:]).any(axis=0)
+        np.testing.assert_array_equal(comp.cheapest_arr > 0, finite_any)
+
+    def test_exclusion_helpers(self):
+        """exclude_cells / exclude_technology set +inf and update_cheapest reflects it."""
+
+        plain = self.create_masked_nlc_array().astype(np.float64).filled(np.inf)
+        comp = self._run(plain, expansion_plan={1: {'n_sites': 0, 'tech_name': 'a'},
+                                                2: {'n_sites': 0, 'tech_name': 'b'},
+                                                3: {'n_sites': 0, 'tech_name': 'c'}})
+
+        # all techs had 0 sites -> every layer excluded before competition -> nothing available
+        self.assertTrue(np.isinf(comp.nlc_mask).all())
+        self.assertEqual(0, comp.avail_grids)
+        self.assertEqual(0, len(comp.sited_dict['tech_id']))
+
+        # fresh object: exclude two flat cells for all techs and check the 2D view aliases the 3D array
+        comp = self._run(self.create_masked_nlc_array().astype(np.float64).filled(np.inf))
+        comp.nlc_mask[1:] = 1.0
+        comp.nlc_mask[0] = np.inf
+        ncols = comp.nlc_mask.shape[2]
+        comp.exclude_cells(np.array([0, ncols]))                   # flat 0 -> (0, 0); flat ncols -> (1, 0)
+        self.assertTrue(np.isinf(comp.nlc_mask[1:, 0, 0]).all())
+        self.assertTrue(np.isinf(comp.nlc_mask[1:, 1, 0]).all())
+        self.assertEqual(1.0, comp.nlc_mask[1, 0, 1])
+        comp.exclude_technology(2)
+        self.assertTrue(np.isinf(comp.nlc_mask[2]).all())
+        comp.update_cheapest()
+        self.assertEqual(0, comp.cheapest_arr[0, 0])
+        self.assertEqual(1, comp.cheapest_arr[0, 1])
+
     def test_competition_does_not_mutate_expansion_plan(self):
         """The caller's expansion plan must be unchanged and a second run must site the same plants."""
 
