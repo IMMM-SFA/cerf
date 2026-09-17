@@ -21,6 +21,53 @@ from cerf.compete import Competition
 logger = logging.getLogger(__name__)
 
 
+def crop_to_region(region_id, region_bounds, suitability_arr, lmp_arr, generation_arr, operating_cost_arr, nov_arr,
+                   ic_arr, nlc_arr, zones_arr, xcoords, ycoords, indices_2d, regions_arr):
+    """Crop every staged full-grid array to a region's bounding box for dispatch to a worker process.
+
+    Returns a dictionary of `process_region` keyword arguments holding only the region's bounding box. The cropped
+    arrays are contiguous copies (so pickling does not drag along the full grid), and ``region_bounds`` is rewritten
+    so the region occupies the whole of each cropped array. Arrays that are constant over the grid (per-technology
+    broadcast views such as generation and operating cost) are collapsed to a 1D per-technology vector.
+
+    :param region_id:                   Region ID as in the region raster
+    :type region_id:                    int
+
+    :param region_bounds:               ``{region_id: (ymin, ymax, xmin, xmax)}`` from cerf.stage.Stage
+    :type region_bounds:                dict
+
+    :return:                            dict of keyword arguments for `process_region`
+
+    """
+
+    ymin, ymax, xmin, xmax = region_bounds[region_id]
+
+    def crop3d(arr):
+        if arr.ndim == 1:
+            return arr
+        if arr.ndim == 3 and arr.strides[1] == 0 and arr.strides[2] == 0:
+            # spatially constant per technology: send one value per technology
+            return np.ascontiguousarray(arr[:, 0, 0])
+        return np.ascontiguousarray(arr[:, ymin:ymax, xmin:xmax])
+
+    def crop2d(arr):
+        return np.ascontiguousarray(arr[ymin:ymax, xmin:xmax])
+
+    return dict(suitability_arr=crop3d(suitability_arr),
+                lmp_arr=crop3d(lmp_arr),
+                generation_arr=crop3d(generation_arr),
+                operating_cost_arr=crop3d(operating_cost_arr),
+                nov_arr=crop3d(nov_arr),
+                ic_arr=crop3d(ic_arr),
+                nlc_arr=crop3d(nlc_arr),
+                zones_arr=crop2d(zones_arr),
+                xcoords=crop2d(xcoords),
+                ycoords=crop2d(ycoords),
+                indices_2d=crop2d(indices_2d),
+                regions_arr=crop2d(regions_arr),
+                region_bounds={region_id: (0, ymax - ymin, 0, xmax - xmin)})
+
+
 class ProcessRegion:
 
     def __init__(self,
@@ -249,10 +296,16 @@ class ProcessRegion:
 
         The values are views into the staged full-grid arrays (no copies). `Competition` only reads these metrics at
         the handful of cells that are finally sited, so flattening five full technology stacks per region is avoided.
+        A metric supplied as a 1D per-technology vector (spatially constant, e.g. generation) is broadcast to the
+        region shape without allocating.
 
         """
 
+        region_shape = (self.ymax - self.ymin, self.xmax - self.xmin)
+
         def region_views(arr):
+            if arr.ndim == 1:
+                return {i: np.broadcast_to(arr[ix], region_shape) for ix, i in enumerate(self.technology_order)}
             region = arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
             return {i: region[ix] for ix, i in enumerate(self.technology_order)}
 

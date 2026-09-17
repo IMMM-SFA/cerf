@@ -8,7 +8,11 @@ import unittest
 
 import numpy as np
 
-from cerf.process_region import ProcessRegion
+import pandas as pd
+
+import cerf.utils as util
+from cerf.process import aggregate_results, region_tasks
+from cerf.process_region import ProcessRegion, crop_to_region, process_region
 
 
 class TestProcessRegion(unittest.TestCase):
@@ -116,6 +120,86 @@ class TestProcessRegion(unittest.TestCase):
             self.assertEqual(kwargs['generation_arr'][t, row, col], gen)
             self.assertEqual(kwargs['ic_arr'][t, row, col], ic)
             self.assertEqual(kwargs['nlc_arr'][t, row, col], nlc)
+
+
+    def test_crop_to_region_matches_full_grid_result(self):
+        """Dispatching a cropped bounding box gives exactly the same sited plants as the full grid."""
+
+        kwargs = self.build()
+        full = ProcessRegion(**kwargs)
+
+        region_bounds = {1: (0, self.NROWS, 0, self.NCOLS // 2), 2: (0, self.NROWS, self.NCOLS // 2, self.NCOLS)}
+        array_keys = ['suitability_arr', 'lmp_arr', 'generation_arr', 'operating_cost_arr', 'nov_arr', 'ic_arr',
+                      'nlc_arr', 'zones_arr', 'xcoords', 'ycoords', 'indices_2d', 'regions_arr']
+        cropped = crop_to_region(1, region_bounds, **{k: kwargs[k] for k in array_keys})
+
+        # arrays are cut to the bbox, contiguous, and broadcast (spatially constant) metrics collapse to 1D
+        self.assertEqual((2, self.NROWS, self.NCOLS // 2), cropped['nlc_arr'].shape)
+        self.assertTrue(cropped['nlc_arr'].flags.c_contiguous)
+        self.assertEqual((2,), cropped['generation_arr'].shape)
+        self.assertEqual((2,), cropped['operating_cost_arr'].shape)
+        self.assertEqual({1: (0, self.NROWS, 0, self.NCOLS // 2)}, cropped['region_bounds'])
+        self.assertEqual((self.NROWS, self.NCOLS // 2), cropped['indices_2d'].shape)
+
+        other = {k: v for k, v in kwargs.items() if k not in array_keys and k != 'region_bounds'}
+        part = ProcessRegion(**other, **cropped)
+
+        np.testing.assert_array_equal(full.run_data.sited_array, part.run_data.sited_array)
+        self.assertEqual(full.run_data.sited_dict, part.run_data.sited_dict)   # incl. full-grid index and coords
+
+    def test_region_tasks_crops_only_for_process_backends(self):
+        kwargs = self.build()
+
+        class Data:
+            pass
+
+        class ModelStub:
+            pass
+
+        data = Data()
+        for k in ['suitability_arr', 'lmp_arr', 'generation_arr', 'operating_cost_arr', 'nov_arr', 'ic_arr',
+                  'nlc_arr', 'zones_arr', 'xcoords', 'ycoords', 'indices_2d', 'regions_arr']:
+            setattr(data, k, kwargs[k])
+        data.region_bounds = {1: (0, self.NROWS, 0, self.NCOLS // 2), 2: (0, self.NROWS, self.NCOLS // 2, self.NCOLS)}
+        data.init_df = None
+
+        model = ModelStub()
+        model.settings_dict = kwargs['settings_dict']
+        model.technology_dict = kwargs['technology_dict']
+        model.technology_order = kwargs['technology_order']
+        model.expansion_dict = {'left': kwargs['expansion_dict']['left'],
+                                'right': {1: {'tech_name': 'a', 'n_sites': 0}, 2: {'tech_name': 'b', 'n_sites': 1}}}
+        model.regions_dict = {'left': 1, 'right': 2}
+        model.initialize_site_data = None
+
+        seq = list(region_tasks(model, data, 'sequential'))
+        lok = list(region_tasks(model, data, 'loky'))
+
+        self.assertEqual(['left', 'right'], [t['target_region_name'] for t in seq])
+        self.assertIs(data.nlc_arr, seq[0]['nlc_arr'])                       # shared by reference in-process
+        self.assertEqual((2, self.NROWS, self.NCOLS // 2), lok[0]['nlc_arr'].shape)   # cropped for processes
+        self.assertEqual((2, self.NROWS, self.NCOLS - self.NCOLS // 2), lok[1]['nlc_arr'].shape)
+
+        # both dispatch modes produce identical sited plants
+        for a, b in zip(seq, lok):
+            ra, rb = process_region(**a), process_region(**b)
+            self.assertEqual(ra.run_data.sited_dict, rb.run_data.sited_dict)
+
+    def test_aggregate_results_single_concat(self):
+        kwargs = self.build()
+        pr = ProcessRegion(**kwargs)
+
+        df = aggregate_results([pr, None, pr])
+        self.assertEqual(2 * len(pr.run_data.sited_df), len(df))
+        self.assertEqual(list(util.empty_sited_dict().keys()), list(df.columns))
+        self.assertTrue((df.index == np.arange(len(df))).all())
+
+        init = pd.DataFrame(util.empty_sited_dict()).astype(util.sited_dtypes())
+        self.assertEqual(0, len(aggregate_results([None], init_df=init)))
+        # dtypes survive the concat (string columns are pandas `object`)
+        expected = pd.DataFrame(util.empty_sited_dict()).astype(util.sited_dtypes()).dtypes
+        for col in util.sited_dtypes():
+            self.assertEqual(expected[col], df[col].dtype, col)
 
 
 if __name__ == '__main__':
