@@ -13,7 +13,7 @@ import numpy as np
 import rasterio
 from rasterio.crs import CRS
 from rasterio.transform import from_origin
-from shapely.geometry import LineString, Point
+from shapely.geometry import LineString, MultiLineString, Point, Polygon
 
 from cerf.interconnect import Interconnection
 
@@ -48,6 +48,47 @@ class TestInterconnectionResolution(unittest.TestCase):
     EXTENT_M = 20000.0
     TECH_DICT = {1: {'discount_rate': 0.05, 'lifetime_yrs': 20, 'require_pipelines': False}}
 
+    def test_geometries_to_shapes_matches_shapely_mapping(self):
+        """4.8: bulk conversion yields the same rasterized result as passing shapely objects, incl. multi-part."""
+
+        geoms = gpd.GeoSeries([Point(2500, 2500),
+                               LineString([(0, 1000), (5000, 1000)]),
+                               MultiLineString([[(0, 3000), (2000, 3000)], [(3000, 4000), (5000, 4000)]]),
+                               Polygon([(500, 500), (1500, 500), (1500, 1500), (500, 1500)]),
+                               LineString()], crs=self.CRS)                      # empty geometry is skipped
+        values = np.array([1.0, 2.0, 3.0, 4.0, 9.0])
+
+        shapes = list(Interconnection.geometries_to_shapes(geoms.values, values))
+        self.assertEqual(4, len(shapes))
+        self.assertEqual({'type': 'Point', 'coordinates': [2500.0, 2500.0]}, shapes[0][0])
+        self.assertEqual('LineString', shapes[1][0]['type'])
+        self.assertEqual('MultiLineString', shapes[2][0]['type'])
+        self.assertEqual('Polygon', shapes[3][0]['type'])
+
+        transform = from_origin(0.0, 5000.0, 100.0, 100.0)
+        expected = rasterio.features.rasterize(zip(geoms.values[:4], values[:4]), out_shape=(50, 50),
+                                               transform=transform, fill=0, dtype='float64')
+        got = rasterio.features.rasterize(shapes, out_shape=(50, 50), transform=transform, fill=0, dtype='float64')
+        np.testing.assert_array_equal(expected, got)
+        self.assertEqual({0.0, 1.0, 2.0, 3.0, 4.0}, set(np.unique(got)))
+
+    def test_only_requested_rasters_are_written(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            ic, n = self.build(tmpdir, 1000.0, output_dir=tmpdir, output_dist_file=True)
+            written = sorted(f for f in os.listdir(tmpdir) if f.startswith('cerf_transmission_'))
+            self.assertEqual(['cerf_transmission_distance_pipelines.tif',
+                              'cerf_transmission_distance_substations.tif'], written)
+
+            with rasterio.open(os.path.join(tmpdir, 'cerf_transmission_distance_substations.tif')) as src:
+                dist = src.read(1)
+                self.assertEqual('float64', src.dtypes[0])
+                self.assertTrue(np.isnan(src.nodata))
+            np.testing.assert_array_equal(dist, ic.substation_costs)      # '_rval_' is 1.0 so cost == distance
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            with self.assertRaises(NotADirectoryError):
+                self.build(tmpdir, 1000.0, output_dir=None, output_cost_file=True)
+
     @classmethod
     def write_region_raster(cls, path, pixel_m):
         n = int(cls.EXTENT_M / pixel_m)
@@ -58,7 +99,7 @@ class TestInterconnectionResolution(unittest.TestCase):
         return n
 
     @classmethod
-    def build(cls, tmpdir, pixel_m):
+    def build(cls, tmpdir, pixel_m, **kwargs):
         raster = os.path.join(tmpdir, f'regions_{int(pixel_m)}.tif')
         n = cls.write_region_raster(raster, pixel_m)
 
@@ -79,7 +120,8 @@ class TestInterconnectionResolution(unittest.TestCase):
                              region_name_to_id_file=None,
                              substation_file=substation,
                              pipeline_file=pipeline,
-                             pipeline_costs_dict={'gas_pipeline_cost': 1.0})
+                             pipeline_costs_dict={'gas_pipeline_cost': 1.0},
+                             **kwargs)
         return ic, n
 
     def test_cost_is_resolution_independent_in_km(self):
