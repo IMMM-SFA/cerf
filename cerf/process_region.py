@@ -44,7 +44,9 @@ class ProcessRegion:
                  randomize=True,
                  seed_value=0,
                  verbose=False,
-                 write_output=False):
+                 write_output=False,
+                 regions_arr=None,
+                 region_bounds=None):
 
         # dictionary containing project level settings
         self.settings_dict = settings_dict
@@ -107,6 +109,17 @@ class ProcessRegion:
         # set write outputs flag
         self.write_outputs = write_output
 
+        # region ID raster as an array and per-region bounding boxes; both are normally read once in `Stage` and
+        #  passed in, but fall back to reading the raster here so the class can still be used standalone
+        if regions_arr is None:
+            with rasterio.open(self.settings_dict.get('region_raster_file')) as src:
+                regions_arr = src.read(1)
+        self.regions_arr = regions_arr
+
+        if region_bounds is None:
+            region_bounds = {}
+        self.region_bounds = region_bounds
+
         logger.debug(f"Extracting suitable grids for {self.target_region_name}")
         self.suitability_array_region, self.ymin, self.ymax, self.xmin, self.xmax = self.extract_region_suitability()
 
@@ -145,27 +158,35 @@ class ProcessRegion:
 
             raise KeyError()
 
+    def get_region_bounds(self):
+        """Return the grid-space bounding box ``(ymin, ymax, xmin, xmax)`` of the target region.
+
+        Uses the precomputed bounds from `Stage` when available; otherwise derives them from the region array.
+
+        """
+
+        bounds = self.region_bounds.get(self.target_region_id)
+
+        if bounds is None:
+
+            region_indices = np.where(self.regions_arr == self.target_region_id)
+
+            if region_indices[0].size == 0:
+                raise ValueError(f"Region ID {self.target_region_id} (`{self.target_region_name}`) does not occur "
+                                 f"in the region raster.")
+
+            bounds = (int(np.min(region_indices[0])), int(np.max(region_indices[0])) + 1,
+                      int(np.min(region_indices[1])), int(np.max(region_indices[1])) + 1)
+
+        return bounds
+
     def extract_region_suitability(self):
         """Extract a single region from the suitability."""
 
-        # load the region raster as array
-        region_raster_file = self.settings_dict.get('region_raster_file')
-
-        with rasterio.open(region_raster_file) as src:
-            regions_arr = src.read(1)
-
-        # get target region indices in grid space
-        region_indices = np.where(regions_arr == self.target_region_id)
-
-        # get minimum and maximum bounds
-        ymin = np.min(region_indices[0])
-        ymax = np.max(region_indices[0]) + 1
-        xmin = np.min(region_indices[1])
-        xmax = np.max(region_indices[1]) + 1
+        ymin, ymax, xmin, xmax = self.get_region_bounds()
 
         # extract region and give binary designation
-        region_mask = regions_arr[ymin:ymax, xmin:xmax].copy()
-        region_mask = np.where(region_mask == self.target_region_id, 0, 1)
+        region_mask = np.where(self.regions_arr[ymin:ymax, xmin:xmax] == self.target_region_id, 0, 1)
 
         # extract region footprint from suitability data
         suitability_array_region = self.suitability_arr[:, ymin:ymax, xmin:xmax].copy()
@@ -294,7 +315,9 @@ def process_region(target_region_name,
                    randomize=True,
                    seed_value=0,
                    verbose=False,
-                   write_output=True):
+                   write_output=True,
+                   regions_arr=None,
+                   region_bounds=None):
     """Convenience wrapper to log time and site an expansion plan for a target region for the target year.
 
     :param target_region_name:                   Name of the target region as it is represented in the region raster.
@@ -340,6 +363,14 @@ def process_region(target_region_name,
     :param write_output:                        Choice to write output to a file
     :type write_output:                         bool
 
+    :param regions_arr:                         2D array of region IDs (from cerf.stage.Stage). Read from the region
+                                                raster if not provided.
+    :type regions_arr:                          ndarray
+
+    :param region_bounds:                       Precomputed ``{region_id: (ymin, ymax, xmin, xmax)}`` grid-space
+                                                bounding boxes (from cerf.stage.Stage). Derived if not provided.
+    :type region_bounds:                        dict
+
     :return:                                    2D NumPy array of sited technologies in the CONUS grid space where
                                                 grid cell values are in the technology number as provided by the
                                                 expansion plan
@@ -382,7 +413,9 @@ def process_region(target_region_name,
                                 randomize=randomize,
                                 seed_value=seed_value,
                                 verbose=verbose,
-                                write_output=write_output)
+                                write_output=write_output,
+                                regions_arr=regions_arr,
+                                region_bounds=region_bounds)
 
         logger.info(f'Processed `{target_region_name}` in {round(time.time() - region_t0, 7)} seconds')
 
