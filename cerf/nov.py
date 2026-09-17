@@ -77,45 +77,27 @@ class NetOperationalValue:
 
     """
 
-    # type hints
-    discount_rate: float
-    lifetime_yrs: int
-    unit_size_mw: int
-    capacity_factor_fraction: float
-    variable_om_esc_rate_fraction: float
-    fuel_price_esc_rate_fraction: float
-    carbon_tax_esc_rate_fraction: float
-    variable_om_usd_per_mwh: float
-    heat_rate_btu_per_kWh: float
-    fuel_price_usd_per_mmbtu: float
-    carbon_tax_usd_per_ton: float
-    carbon_capture_rate_fraction: float
-    fuel_co2_content_tons_per_btu: float
-    lmp_arr: np.ndarray
-    target_year: int
-    consider_leap_year: bool
-
     # constants for conversion
     HOURS_PER_YEAR_NONLEAP = 8760
     HOURS_PER_YEAR_LEAP = 8784
 
     def __init__(self,
-                 discount_rate,
-                 lifetime_yrs,
-                 unit_size_mw,
-                 capacity_factor_fraction,
-                 variable_om_esc_rate_fraction,
-                 fuel_price_esc_rate_fraction,
-                 carbon_tax_esc_rate_fraction,
-                 variable_om_usd_per_mwh,
-                 heat_rate_btu_per_kWh,
-                 fuel_price_usd_per_mmbtu,
-                 carbon_tax_usd_per_ton,
-                 carbon_capture_rate_fraction,
-                 fuel_co2_content_tons_per_btu,
-                 lmp_arr,
-                 target_year,
-                 consider_leap_year=False):
+                 discount_rate: float,
+                 lifetime_yrs: float,
+                 unit_size_mw: float,
+                 capacity_factor_fraction: float,
+                 variable_om_esc_rate_fraction: float,
+                 fuel_price_esc_rate_fraction: float,
+                 carbon_tax_esc_rate_fraction: float,
+                 variable_om_usd_per_mwh: float,
+                 heat_rate_btu_per_kWh: float,
+                 fuel_price_usd_per_mmbtu: float,
+                 carbon_tax_usd_per_ton: float,
+                 carbon_capture_rate_fraction: float,
+                 fuel_co2_content_tons_per_btu: float,
+                 lmp_arr: np.ndarray,
+                 target_year: int,
+                 consider_leap_year: bool = False):
 
         # assign class attributes
         self.discount_rate = discount_rate

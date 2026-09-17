@@ -22,15 +22,35 @@ logger = logging.getLogger(__name__)
 
 
 class Stage:
+    """Stage all spatial inputs (LMP, interconnection, NOV, NLC, suitability) for a CERF run.
 
-    # type hints
-    settings_dict: dict
-    lmp_zone_dict: dict
-    technology_dict: dict
-    technology_order: list
+    :param settings_dict:               Project level settings from `cerf.read_config.ReadConfig`
+    :type settings_dict:                dict
 
-    def __init__(self, settings_dict, lmp_zone_dict, technology_dict, technology_order, infrastructure_dict,
-                 initialize_site_data):
+    :param lmp_zone_dict:               LMP zone settings from `cerf.read_config.ReadConfig`
+    :type lmp_zone_dict:                dict
+
+    :param technology_dict:             Technology parameters keyed by technology ID
+    :type technology_dict:              dict
+
+    :param technology_order:            Technology IDs in the order used to index the 3D arrays
+    :type technology_order:             list
+
+    :param infrastructure_dict:         Infrastructure (substation / pipeline) settings
+    :type infrastructure_dict:          dict
+
+    :param initialize_site_data:        ``None``, or a CSV path / DataFrame of previously sited plants
+    :type initialize_site_data:         str, pandas.DataFrame, None
+
+    """
+
+    def __init__(self,
+                 settings_dict: dict,
+                 lmp_zone_dict: dict,
+                 technology_dict: dict,
+                 technology_order: list,
+                 infrastructure_dict: dict,
+                 initialize_site_data=None):
 
         # dictionary containing project level settings
         self.settings_dict = settings_dict
@@ -266,7 +286,7 @@ class Stage:
         """
 
         # fetch the default suitability dictionary
-        default_suitability_file_dict = util.default_suitabiity_files()
+        default_suitability_file_dict = util.default_suitability_files()
 
         # set up holder for suitability array; 0 = suitable, non-zero = unsuitable, so a byte per cell is sufficient
         suitability_array = np.ones(self.nlc_arr.shape, dtype=np.uint8)

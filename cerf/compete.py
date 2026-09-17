@@ -178,6 +178,59 @@ class Competition:
 
         return arr[row, col]
 
+    def sited_record(self, tech_id, target_ix, retirement_year):
+        """Build the output record for one sited plant as a dictionary keyed like `util.empty_sited_dict()`.
+
+        :param tech_id:                 Technology ID of the sited plant
+        :param target_ix:               Flat region cell index of the site
+        :param retirement_year:         Year the plant retires (``run_year + operational_life_yrs``)
+
+        """
+
+        tech = self.technology_dict[tech_id]
+
+        return {'region_name': self.target_region_name,
+                'tech_id': tech_id,
+                'tech_name': tech['tech_name'],
+                'unit_size_mw': tech['unit_size_mw'],
+                'xcoord': self.xcoords[target_ix],
+                'ycoord': self.ycoords[target_ix],
+                'index': self.indices_flat[target_ix],
+                'buffer_in_km': tech['buffer_in_km'],
+                'sited_year': self.settings_dict['run_year'],
+                'retirement_year': retirement_year,
+                'lmp_zone': self.zones_flat_arr[target_ix],
+                'locational_marginal_price_usd_per_mwh': self.metric_at(self.lmp_flat_dict[tech_id], target_ix),
+                'generation_mwh_per_year': self.metric_at(self.generation_flat_dict[tech_id], target_ix),
+                'operating_cost_usd_per_year': self.metric_at(self.operating_cost_flat_dict[tech_id], target_ix),
+                'net_operational_value_usd_per_year': self.metric_at(self.nov_flat_dict[tech_id], target_ix),
+                'interconnection_cost_usd_per_year': self.metric_at(self.ic_flat_dict[tech_id], target_ix),
+                'net_locational_cost_usd_per_year': self.nlc_flat_dict[tech_id][target_ix],
+                'capacity_factor_fraction': tech['capacity_factor_fraction'],
+                'carbon_capture_rate_fraction': tech['carbon_capture_rate_fraction'],
+                'fuel_co2_content_tons_per_btu': tech['fuel_co2_content_tons_per_btu'],
+                'fuel_price_usd_per_mmbtu': tech['fuel_price_usd_per_mmbtu'],
+                'fuel_price_esc_rate_fraction': tech['fuel_price_esc_rate_fraction'],
+                'heat_rate_btu_per_kWh': tech['heat_rate_btu_per_kWh'],
+                'lifetime_yrs': tech['lifetime_yrs'],
+                'operational_life_yrs': tech['operational_life_yrs'],
+                'variable_om_usd_per_mwh': tech['variable_om_usd_per_mwh'],
+                'variable_om_esc_rate_fraction': tech['variable_om_esc_rate_fraction'],
+                'carbon_tax_usd_per_ton': tech['carbon_tax_usd_per_ton'],
+                'carbon_tax_esc_rate_fraction': tech['carbon_tax_esc_rate_fraction']}
+
+    def add_sited_record(self, tech_id, target_ix, retirement_year):
+        """Append one sited plant to ``self.sited_dict`` (a dict of column lists aligned with `empty_sited_dict`)."""
+
+        record = self.sited_record(tech_id, target_ix, retirement_year)
+
+        if record.keys() != self.sited_dict.keys():
+            missing = set(self.sited_dict) ^ set(record)
+            raise KeyError(f"Sited record columns do not match `empty_sited_dict()`: {sorted(missing)}")
+
+        for key, value in record.items():
+            self.sited_dict[key].append(value)
+
     def exclude_technology(self, tech_index):
         """Make every grid cell unavailable to the technology at layer ``tech_index``."""
 
@@ -252,36 +305,8 @@ class Competition:
                         # select a random index that has a winning cell for the check where multiple low NLC may exists
                         target_ix = self.rng.choice(tech_nlc_cheap)
 
-                        # add selected index to sited dictionary
-                        self.sited_dict['region_name'].append(self.target_region_name)
-                        self.sited_dict['tech_id'].append(tech_id)
-                        self.sited_dict['tech_name'].append(self.technology_dict[tech_id]['tech_name'])
-                        self.sited_dict['unit_size_mw'].append(self.technology_dict[tech_id]['unit_size_mw'])
-                        self.sited_dict['xcoord'].append(self.xcoords[target_ix])
-                        self.sited_dict['ycoord'].append(self.ycoords[target_ix])
-                        self.sited_dict['index'].append(self.indices_flat[target_ix])
-                        self.sited_dict['buffer_in_km'].append(self.technology_dict[tech_id]['buffer_in_km'])
-                        self.sited_dict['sited_year'].append(self.settings_dict['run_year'])
-                        self.sited_dict['retirement_year'].append(retirement_year)
-                        self.sited_dict['lmp_zone'].append(self.zones_flat_arr[target_ix])
-                        self.sited_dict['locational_marginal_price_usd_per_mwh'].append(self.metric_at(self.lmp_flat_dict[tech_id], target_ix))
-                        self.sited_dict['generation_mwh_per_year'].append(self.metric_at(self.generation_flat_dict[tech_id], target_ix))
-                        self.sited_dict['operating_cost_usd_per_year'].append(self.metric_at(self.operating_cost_flat_dict[tech_id], target_ix))
-                        self.sited_dict['net_operational_value_usd_per_year'].append(self.metric_at(self.nov_flat_dict[tech_id], target_ix))
-                        self.sited_dict['interconnection_cost_usd_per_year'].append(self.metric_at(self.ic_flat_dict[tech_id], target_ix))
-                        self.sited_dict['net_locational_cost_usd_per_year'].append(self.nlc_flat_dict[tech_id][target_ix])
-                        self.sited_dict['capacity_factor_fraction'].append(self.technology_dict[tech_id]["capacity_factor_fraction"])
-                        self.sited_dict['carbon_capture_rate_fraction'].append(self.technology_dict[tech_id]["carbon_capture_rate_fraction"])
-                        self.sited_dict['fuel_co2_content_tons_per_btu'].append(self.technology_dict[tech_id]["fuel_co2_content_tons_per_btu"])
-                        self.sited_dict['fuel_price_usd_per_mmbtu'].append(self.technology_dict[tech_id]["fuel_price_usd_per_mmbtu"])
-                        self.sited_dict['fuel_price_esc_rate_fraction'].append(self.technology_dict[tech_id]["fuel_price_esc_rate_fraction"])
-                        self.sited_dict['heat_rate_btu_per_kWh'].append(self.technology_dict[tech_id]["heat_rate_btu_per_kWh"])
-                        self.sited_dict['lifetime_yrs'].append(self.technology_dict[tech_id]["lifetime_yrs"])
-                        self.sited_dict['operational_life_yrs'].append(self.technology_dict[tech_id]["operational_life_yrs"])
-                        self.sited_dict['variable_om_usd_per_mwh'].append(self.technology_dict[tech_id]["variable_om_usd_per_mwh"])
-                        self.sited_dict['variable_om_esc_rate_fraction'].append(self.technology_dict[tech_id]["variable_om_esc_rate_fraction"])
-                        self.sited_dict['carbon_tax_usd_per_ton'].append(self.technology_dict[tech_id]["carbon_tax_usd_per_ton"])
-                        self.sited_dict['carbon_tax_esc_rate_fraction'].append(self.technology_dict[tech_id]["carbon_tax_esc_rate_fraction"])
+                        # record the sited plant
+                        self.add_sited_record(tech_id, target_ix, retirement_year)
 
                         # add selected index to list
                         sited_list.append(target_ix)

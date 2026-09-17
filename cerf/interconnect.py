@@ -12,7 +12,6 @@ import yaml
 
 import cerf.package_data as pkg
 from cerf.nov import NetOperationalValue
-from cerf.utils import suppress_callback
 
 logger = logging.getLogger(__name__)
 
@@ -41,11 +40,13 @@ class Interconnection:
                                             assigns a region ID to each raster grid cell
     :type region_raster_file:               str
 
-    :param region_abbrev_to_name_file:      Full path with file name and extension to the region abbreviation to name
+    :param region_abbrev_to_name_file:      Deprecated and ignored; retained for backwards compatibility. Full path
+                                            with file name and extension to the region abbreviation to name
                                             YAML reference file
     :type region_abbrev_to_name_file:       str
 
-    :param region_name_to_id_file:          Full path with file name and extension to the region name to ID YAML
+    :param region_name_to_id_file:          Deprecated and ignored; retained for backwards compatibility. Full path
+                                            with file name and extension to the region name to ID YAML
                                             reference file
     :type region_name_to_id_file:           str
 
@@ -107,7 +108,7 @@ class Interconnection:
     """
 
     def __init__(self, template_array, technology_dict, technology_order, region_raster_file,
-                 region_abbrev_to_name_file, region_name_to_id_file, substation_file=None,
+                 region_abbrev_to_name_file=None, region_name_to_id_file=None, substation_file=None,
                  transmission_costs_dict=None, transmission_costs_file=None, pipeline_costs_dict=None,
                  pipeline_costs_file=None, pipeline_file=None, output_rasterized_file=False, output_dist_file=False,
                  output_alloc_file=False, output_cost_file=False, interconnection_cost_file=None, output_dir=None):
@@ -116,8 +117,6 @@ class Interconnection:
         self.technology_dict = technology_dict
         self.technology_order = technology_order
         self.region_raster_file = region_raster_file
-        self.region_abbrev_to_name_file = region_abbrev_to_name_file
-        self.region_name_to_id_file = region_name_to_id_file
         self.substation_file = substation_file
         self.transmission_costs_dict = transmission_costs_dict
         self.transmission_costs_file = transmission_costs_file
@@ -161,7 +160,7 @@ class Interconnection:
             logger.info(f"Using gas pipeline costs from default file:  {f}")
 
         with open(f, 'r') as yml:
-            yaml_dict = yaml.load(yml, Loader=yaml.FullLoader)
+            yaml_dict = yaml.safe_load(yml)
 
         return yaml_dict.get('gas_pipeline_cost')
 
@@ -180,7 +179,7 @@ class Interconnection:
             logger.info(f"Using substation costs from file: {self.transmission_costs_file}")
 
             with open(self.transmission_costs_file, 'r') as yml:
-                self.transmission_costs_dict = yaml.load(yml, Loader=yaml.FullLoader)
+                self.transmission_costs_dict = yaml.safe_load(yml)
 
         if self.substation_file is None:
             sub_file = pkg.get_substation_file()
@@ -565,7 +564,7 @@ def preprocess_eia_natural_gas_pipelines(pipeline_file, output_file=None):
     f = pkg.get_costs_gas_pipeline()
 
     with open(f, 'r') as yml:
-        yaml_dict = yaml.load(yml, Loader=yaml.FullLoader)
+        yaml_dict = yaml.safe_load(yml)
 
     # set field for rasterize
     gdf['_rval_'] = yaml_dict.get('gas_pipeline_cost')
