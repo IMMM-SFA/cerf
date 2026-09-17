@@ -33,7 +33,7 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 5.1 | LMP CF-bin discontinuity (decision required) | — | ⏸ Deferred by maintainer | will change results | — |
 | 5.2 | Pixel-size-aware interconnection distance (`Interconnection.pixel_size_km`, `sampling=` in EDT) | [#131](https://github.com/IMMM-SFA/cerf/pull/131) `7c33993` | ✅ Merged | identical (1 km pixels) | none; +6 tests |
 | 5.3 | Per-competition `RandomState` (legacy-stream compatible) instead of global seed; seedable `generate_random_lmp_dataframe` | [#132](https://github.com/IMMM-SFA/cerf/pull/132) `b09603e` | ✅ Merged | identical; `threading` backend now also identical (was nondeterministic) | `threading, n_jobs=4`: full CONUS competition **1.0 s**; +3 tests |
-| 3.8–3.11 | `-np.nan` nodata / redundant `astype`; `rioxarray` file-handle leak; `get_region_id` lookup; incomplete `sited_dtypes()` | — | 🟡 In progress | — | — |
+| 3.8–3.11 | `np.nan` nodata / redundant `astype` removed; `raster_to_coord_arrays` via rasterio transform (**`rioxarray` dependency dropped**); case-insensitive `get_region_id` with informative `KeyError`; `sited_dtypes()` covers all 29 columns | [#133](https://github.com/IMMM-SFA/cerf/pull/133) `76cc346` | ✅ Merged | identical | none; +3 tests; one fewer dependency |
 | 6.x / 7.x / 8.x | Code quality, tests, CI, packaging | — | ⬜ Not started | — | — |
 
 Cumulative full-run timing (2010 CONUS sample, sequential, single process):
@@ -179,19 +179,21 @@ Each `Model()` instantiation calls `console_handler()`, which adds a new `Stream
 
 `initialize_logger()` calls `self.console_handler()` with no `log_level` argument (required) and references `self.write_logfile` / `self.logfile`, which are never defined anywhere. `file_handler()` is also never called. Either implement file logging properly or delete these methods.
 
-### 3.8 `metadata.update({"nodata": -np.nan})`
+### 3.8 `metadata.update({"nodata": -np.nan})` — ✅ DONE in #133
 
 **Location:** [`cerf/interconnect.py:319`](../cerf/interconnect.py:319)
 
 `-np.nan` is just `nan`; harmless but misleading. More importantly the rasters are written with dtype `float64` even for the rasterized `_rval_` cost layer and the allocation layer, and `distance_array` is written as `float64` after being computed as `float64` already – the `.astype` calls are no-ops.
 
-### 3.9 `raster_to_coord_arrays` leaks a file handle
+### 3.9 `raster_to_coord_arrays` leaks a file handle — ✅ DONE in #133
+
+> **Resolved.** Coordinates are computed from the rasterio affine transform inside a `with` block (bitwise identical to the `rioxarray` result on the packaged raster). `rioxarray` removed from `pyproject.toml`.
 
 **Location:** [`cerf/utils.py:256`](../cerf/utils.py:256)
 
 `rioxarray.open_rasterio(template_raster)` is never closed. Should use a `with` block or `.close()`. This is also the only use of `rioxarray` in the package; the same coordinates can be computed from `rasterio` transform + `np.meshgrid` in a few lines, allowing the dependency (and its `xarray` transitive dependency) to be dropped.
 
-### 3.10 `get_region_id` inconsistent lookup
+### 3.10 `get_region_id` inconsistent lookup — ✅ DONE in #133
 
 **Location:** [`cerf/process_region.py:136-137`](../cerf/process_region.py:136)
 
@@ -202,7 +204,7 @@ if self.target_region_name in self.regions_dict:
 
 Membership is tested on the raw name but the lookup uses `.lower()`. A mixed-case name that happens to be in the dict fails the lookup and returns `None`; a lower-case-only dict rejects mixed-case at the membership test. Pick one (normalize on input) and raise a `KeyError` with the message rather than logging and raising an empty `KeyError()`.
 
-### 3.11 `sited_dtypes()` is incomplete vs. `empty_sited_dict()`
+### 3.11 `sited_dtypes()` is incomplete vs. `empty_sited_dict()` — ✅ DONE in #133
 
 **Location:** [`cerf/utils.py:88-105`](../cerf/utils.py:88)
 
