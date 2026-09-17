@@ -34,6 +34,7 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 5.2 | Pixel-size-aware interconnection distance (`Interconnection.pixel_size_km`, `sampling=` in EDT) | [#131](https://github.com/IMMM-SFA/cerf/pull/131) `7c33993` | ✅ Merged | identical (1 km pixels) | none; +6 tests |
 | 5.3 | Per-competition `RandomState` (legacy-stream compatible) instead of global seed; seedable `generate_random_lmp_dataframe` | [#132](https://github.com/IMMM-SFA/cerf/pull/132) `b09603e` | ✅ Merged | identical; `threading` backend now also identical (was nondeterministic) | `threading, n_jobs=4`: full CONUS competition **1.0 s**; +3 tests |
 | 3.8–3.11 | `np.nan` nodata / redundant `astype` removed; `raster_to_coord_arrays` via rasterio transform (**`rioxarray` dependency dropped**); case-insensitive `get_region_id` with informative `KeyError`; `sited_dtypes()` covers all 29 columns | [#133](https://github.com/IMMM-SFA/cerf/pull/133) `76cc346` | ✅ Merged | identical | none; +3 tests; one fewer dependency |
+| 4.7 + 4.8 | `buffer_window` / `buffer_flat_indices` index arrays (exact bounds); bulk shapely → GeoJSON conversion for `rasterize`; no temp-file round trip, outputs written only on request | [#134](https://github.com/IMMM-SFA/cerf/pull/134) `5d5b9ac` | ✅ Merged | identical | IC step **2.71 → 2.16 s**; total 5.5 → 5.2 s; +3 tests |
 | 6.x / 7.x / 8.x | Code quality, tests, CI, packaging | — | ⬜ Not started | — | — |
 
 Cumulative full-run timing (2010 CONUS sample, sequential, single process):
@@ -48,6 +49,8 @@ Cumulative full-run timing (2010 CONUS sample, sequential, single process):
 | #128 (4.6) | 3.30 s | 3.21 s | 6.80 s | −67% |
 | #129 (4.5) | 3.30 s | 2.18 s | 5.53 s | −73% |
 | #130 (4.9 + 4.10) | 3.22 s | 2.24 s | 5.47 s | −73% (sequential unchanged; `loky` now usable) |
+| #131–#133 (5.2, 5.3, 3.8–3.11) | 3.29 s | 2.22 s | 5.51 s | −73% (no perf change; `threading` deterministic at ~1.0 s) |
+| #134 (4.7 + 4.8) | 3.10 s | 2.08 s | 5.18 s | −75% |
 
 ---
 
@@ -290,13 +293,17 @@ Inside the technology loop, every zone column is re-sorted descending on each it
 - `np.ma.masked_array(nlc_mask[1:], np.tile(...).reshape(...))` (line 285) — builds a `(n_tech, rows, cols)` mask via `tile`+`reshape` every iteration. With `inf` semantics this becomes `nlc[1:, buffer_rows, buffer_cols] = np.inf` touching only buffer cells.
 - `np.argmin(self.nlc_mask, axis=0)` — full-grid recompute each time a technology finishes its batch; with the inf-array approach only the changed cells need recomputing, or the argmin can be maintained incrementally.
 
-### 4.7 `buffer_flat_array` returns Python lists
+### 4.7 `buffer_flat_array` returns Python lists — ✅ DONE in #134
+
+> **Resolved.** `utils.buffer_window()` / `utils.buffer_flat_indices()` compute the clipped neighbourhood with `divmod` + clipping and return slices / a sorted `intp` array; `Competition` uses them directly. `buffer_flat_array` delegates and now returns the array. Bounds are exact.
 
 **Location:** [`cerf/utils.py:132-226`](../cerf/utils.py:132)
 
 Builds `buffer_indices` via repeated `list.extend(range(...))` and is called once per site. Returning a NumPy index array (or a `(row_slice, col_slice)` tuple against the 2D view) would remove the list allocations and pair naturally with 4.1 / 4.6. The function also has an off-by-one in its bounds check (`min_below <= ngrids` should be `< ngrids`; harmless today because slicing past the end is silently truncated, but incorrect as written).
 
-### 4.8 Interconnection: shapely → `rasterize` overhead
+### 4.8 Interconnection: shapely → `rasterize` overhead — ✅ DONE in #134
+
+> **Resolved.** `Interconnection.geometries_to_shapes()` converts Points / LineStrings in bulk via shapely 2 `get_coordinates`; `transmission_to_cost_raster()` rasterizes to an array and writes only the requested outputs (no `tempfile`). IC step 2.71 s → 2.16 s; the remainder is the EDT kernel.
 
 **Location:** [`cerf/interconnect.py:295`](../cerf/interconnect.py:295)
 
