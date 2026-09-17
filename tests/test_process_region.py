@@ -1,4 +1,4 @@
-"""Tests for `cerf.process_region.ProcessRegion` on a small synthetic grid (no package data required).
+"""Tests for `cerf.process_region.ProcessRegion` and dispatch helpers on a small synthetic grid (no package data).
 
 License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 
@@ -9,6 +9,7 @@ import unittest
 import numpy as np
 
 import pandas as pd
+from joblib import Parallel, delayed
 
 import cerf.utils as util
 from cerf.process import aggregate_results, region_tasks
@@ -34,8 +35,13 @@ class TestProcessRegion(unittest.TestCase):
                      'carbon_tax_usd_per_ton': 0.0, 'carbon_tax_esc_rate_fraction': 0.0}}
 
     @classmethod
-    def build(cls, suitability_dtype=np.uint8):
-        """Two regions: id 1 on the left half, id 2 on the right half."""
+    def build(cls, suitability_dtype=np.uint8, tied_nlc=False):
+        """Two regions: id 1 on the left half, id 2 on the right half.
+
+        With ``tied_nlc`` every cell has the same NLC per technology so site choice is entirely down to the random
+        tie-break, which makes RNG behaviour observable.
+
+        """
 
         nrows, ncols = cls.NROWS, cls.NCOLS
         regions = np.ones((nrows, ncols), dtype=np.uint8)
@@ -53,6 +59,8 @@ class TestProcessRegion(unittest.TestCase):
         ic = rng.uniform(1e5, 5e5, shape)
         nov = rng.uniform(1e5, 9e5, shape)
         nlc = ic - nov
+        if tied_nlc:
+            nlc = np.broadcast_to(np.array([-1.0, -2.0])[:, None, None], shape).copy()
         gen = np.broadcast_to(np.array([1000.0, 2000.0])[:, None, None], shape)
         opc = np.broadcast_to(np.array([5.0, 6.0])[:, None, None], shape)
 
@@ -200,6 +208,54 @@ class TestProcessRegion(unittest.TestCase):
         expected = pd.DataFrame(util.empty_sited_dict()).astype(util.sited_dtypes()).dtypes
         for col in util.sited_dtypes():
             self.assertEqual(expected[col], df[col].dtype, col)
+
+
+    def _model_and_data(self, tied_nlc):
+        kwargs = self.build(tied_nlc=tied_nlc)
+
+        class Obj:
+            pass
+
+        data = Obj()
+        for k in ['suitability_arr', 'lmp_arr', 'generation_arr', 'operating_cost_arr', 'nov_arr', 'ic_arr',
+                  'nlc_arr', 'zones_arr', 'xcoords', 'ycoords', 'indices_2d', 'regions_arr']:
+            setattr(data, k, kwargs[k])
+        data.region_bounds = {1: (0, self.NROWS, 0, self.NCOLS // 2), 2: (0, self.NROWS, self.NCOLS // 2, self.NCOLS)}
+        data.init_df = None
+
+        model = Obj()
+        model.settings_dict = dict(kwargs['settings_dict'], randomize=False, seed_value=7)
+        model.technology_dict = kwargs['technology_dict']
+        model.technology_order = kwargs['technology_order']
+        model.expansion_dict = {'left': {1: {'tech_name': 'a', 'n_sites': 3}, 2: {'tech_name': 'b', 'n_sites': 2}},
+                                'right': {1: {'tech_name': 'a', 'n_sites': 2}, 2: {'tech_name': 'b', 'n_sites': 3}}}
+        model.regions_dict = {'left': 1, 'right': 2}
+        model.initialize_site_data = None
+        return model, data
+
+    def test_seeded_results_identical_across_backends_and_order(self):
+        """With a local per-competition RNG, seeded siting is independent of backend, thread scheduling and order."""
+
+        model, data = self._model_and_data(tied_nlc=True)
+
+        def run(method, n_jobs, reverse=False):
+            tasks = list(region_tasks(model, data, method))
+            if reverse:
+                tasks = tasks[::-1]
+            results = Parallel(n_jobs=n_jobs, backend=method)(delayed(process_region)(**t) for t in tasks)
+            df = aggregate_results(results)
+            return df.sort_values(['region_name', 'tech_id', 'index']).reset_index(drop=True)
+
+        seq = run('sequential', 1)
+        self.assertEqual(10, len(seq))
+
+        # perturb the global RNG between runs; it must have no effect
+        np.random.seed(3)
+        pd.testing.assert_frame_equal(seq, run('sequential', 1, reverse=True))
+
+        # repeated threaded runs are identical to the sequential run (previously nondeterministic via global seed)
+        for _ in range(3):
+            pd.testing.assert_frame_equal(seq, run('threading', 2))
 
 
 if __name__ == '__main__':
