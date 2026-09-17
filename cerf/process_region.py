@@ -7,6 +7,7 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 
 """
 
+import copy
 import logging
 import os
 import time
@@ -15,10 +16,35 @@ import numpy as np
 import pandas as pd
 import rasterio
 
-import cerf.package_data as pkg
+import cerf.utils as util
 from cerf.compete import Competition
 
 logger = logging.getLogger(__name__)
+
+
+class EmptyRegionResult:
+    """Result object for a region with no sites in its expansion plan.
+
+    Mirrors the attributes downstream code reads from a `ProcessRegion` result (``target_region_name``,
+    ``run_data.sited_df``, ``run_data.sited_dict``, ``run_data.sited_array``, ``run_data.expansion_dict``) so callers
+    never have to special-case ``None``.
+
+    """
+
+    class _RunData:
+
+        def __init__(self, expansion_dict):
+            self.sited_dict = util.empty_sited_dict()
+            self.sited_df = pd.DataFrame(self.sited_dict).astype(util.sited_dtypes())
+            self.sited_array = None
+            self.expansion_dict = copy.deepcopy(expansion_dict)
+
+    def __init__(self, target_region_name, expansion_dict):
+        self.target_region_name = target_region_name
+        self.run_data = self._RunData(expansion_dict)
+
+    def __repr__(self):
+        return f"EmptyRegionResult(target_region_name={self.target_region_name!r})"
 
 
 def crop_to_region(region_id, region_bounds, suitability_arr, lmp_arr, generation_arr, operating_cost_arr, nov_arr,
@@ -438,9 +464,10 @@ def process_region(target_region_name,
                                                 bounding boxes (from cerf.stage.Stage). Derived if not provided.
     :type region_bounds:                        dict
 
-    :return:                                    2D NumPy array of sited technologies in the CONUS grid space where
-                                                grid cell values are in the technology number as provided by the
-                                                expansion plan
+    :return:                                    `ProcessRegion` holding the competition result in ``run_data``
+                                                (``sited_df``, ``sited_dict``, ``sited_array``, ``expansion_dict``);
+                                                an `EmptyRegionResult` with the same attributes and an empty
+                                                ``sited_df`` if the region has no sites in its expansion plan
 
     """
 
@@ -450,12 +477,14 @@ def process_region(target_region_name,
     logger.debug(f'Processing region:  {target_region_name}')
 
     # check to see if region has any sites in the expansion
-    n_sites = sum([expansion_dict[target_region_name][k]['n_sites'] for k in expansion_dict[target_region_name].keys()])
+    region_plan = expansion_dict[target_region_name]
+    n_sites = sum(region_plan[k]['n_sites'] for k in region_plan)
 
-    # if there are no sites in the expansion, return an all NaN 2D array
+    # if there are no sites in the expansion, return an empty result rather than None so callers can treat every
+    #  region uniformly
     if n_sites <= 0:
         logger.warning(f"There were no sites expected for any technology in `{target_region_name}`")
-        return None
+        return EmptyRegionResult(target_region_name, region_plan)
 
     else:
 

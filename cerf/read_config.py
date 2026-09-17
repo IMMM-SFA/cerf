@@ -96,6 +96,9 @@ class ReadConfig(Logger):
         self.validate_technology_files()
         self.validate_infrastructure_files()
 
+        # validate and normalise technology parameters (lifetime semantics, see `validate_technology_parameters`)
+        self.validate_technology_parameters()
+
         # get the regions dictionary
         self.regions_dict = self.get_regions_dict()
 
@@ -153,6 +156,41 @@ class ReadConfig(Logger):
                 See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data"""
 
                 raise FileNotFoundError(msg)
+
+    def validate_technology_parameters(self):
+        """Validate the per-technology lifetime fields and fill defaults.
+
+        Two lifetime fields exist and are used for different purposes:
+
+        - ``lifetime_yrs`` is the **economic** (financing) life: the number of years over which capital costs are
+          annuitised. It drives the annuity and levelization factors in NOV and interconnection cost.
+        - ``operational_life_yrs`` is the **physical** life: how many years a sited plant stays in service. It sets
+          ``retirement_year = run_year + operational_life_yrs`` in the siting output and therefore controls when a
+          plant's footprint is released in subsequent runs that initialise from previous siting data.
+
+        The two are often equal but need not be (e.g. a 30-year financing period for a plant expected to operate
+        60 years). ``lifetime_yrs`` is required and must be positive. ``operational_life_yrs`` defaults to
+        ``lifetime_yrs`` when omitted (logged at INFO) and must be positive when given.
+
+        """
+
+        for tech_id, tech in self.technology_dict.items():
+
+            tech_name = tech.get('tech_name', tech_id)
+
+            lifetime = tech.get('lifetime_yrs')
+            if lifetime is None:
+                raise ValueError(f"Technology `{tech_name}` ({tech_id}) is missing the required `lifetime_yrs`.")
+            if not lifetime > 0:
+                raise ValueError(f"Technology `{tech_name}` ({tech_id}) `lifetime_yrs` must be positive; got {lifetime}.")
+
+            operational = tech.get('operational_life_yrs')
+            if operational is None:
+                logger.info(f"`operational_life_yrs` not set for `{tech_name}`; defaulting to `lifetime_yrs` ({lifetime}).")
+                tech['operational_life_yrs'] = lifetime
+            elif not operational > 0:
+                raise ValueError(f"Technology `{tech_name}` ({tech_id}) `operational_life_yrs` must be positive; "
+                                 f"got {operational}.")
 
     def validate_technology_files(self):
         """Ensure that files necessary files exists for technology."""
