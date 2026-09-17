@@ -107,7 +107,7 @@ class ReadConfig(Logger):
         """Read a YAML file."""
 
         with open(yaml_file, 'r') as yml:
-            return yaml.load(yml, Loader=yaml.FullLoader)
+            return yaml.safe_load(yml)
 
     def get_yaml(self):
         """Read the YAML config file.
@@ -196,7 +196,7 @@ class ReadConfig(Logger):
         """Ensure that files necessary files exists for technology."""
 
         # expected files from technology
-        suitability_file_dict = utils.default_suitabiity_files()
+        suitability_file_dict = utils.default_suitability_files()
 
         for i in self.technology_dict.keys():
 
@@ -246,12 +246,6 @@ class ReadConfig(Logger):
 
     def validate_infrastructure_files(self):
         """Ensure that files necessary files exists for infrastructure."""
-
-        # expected files from lmp_zones
-        infrastructure_files = [self.infrastructure_dict.get('substation_file', pkg.get_substation_file()),
-                                self.infrastructure_dict.get('pipeline_file', pkg.get_default_gas_pipelines()),
-                                self.infrastructure_dict.get('transmission_costs_file', pkg.get_costs_per_kv_substation_file()),
-                                self.infrastructure_dict.get('pipeline_costs_file', pkg.get_costs_gas_pipeline())]
 
         substation_file = self.infrastructure_dict.get('substation_file', None)
         pipeline_file = self.infrastructure_dict.get('pipeline_file', None)

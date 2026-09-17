@@ -228,6 +228,21 @@ class TestCompete(unittest.TestCase):
         self.assertEqual(0, comp.cheapest_arr[0, 0])
         self.assertEqual(1, comp.cheapest_arr[0, 1])
 
+    def test_sited_record_matches_empty_sited_dict_columns(self):
+        """6.3: one record per site, keyed exactly like empty_sited_dict, and appended without misalignment."""
+
+        import cerf.utils as util
+
+        comp = self._run(self.create_masked_nlc_array().astype(np.float64).filled(np.inf))
+        record = comp.sited_record(1, 0, 2040)
+        self.assertEqual(list(util.empty_sited_dict()), list(record))
+        self.assertEqual('test', record['region_name'])
+        self.assertEqual(2040, record['retirement_year'])
+
+        n = len(comp.sited_dict['tech_id'])
+        comp.add_sited_record(1, 0, 2040)
+        self.assertTrue(all(len(v) == n + 1 for v in comp.sited_dict.values()))
+
     def test_seeded_competition_does_not_touch_global_rng(self):
         """A seeded competition must neither read nor reset the process-wide NumPy RNG."""
 

@@ -12,14 +12,17 @@
 #
 import os
 import sys
+from importlib.metadata import PackageNotFoundError, version as _dist_version
 
 import sphinx_rtd_theme
 
-# import cerf
-version = "2.4.1" #str(cerf.__version__)
-
-
 sys.path.insert(0, os.path.abspath('../../'))
+
+# single source of truth for the version is the installed distribution (pyproject.toml)
+try:
+    version = _dist_version("cerf")
+except PackageNotFoundError:
+    version = "0.0.0+unknown"
 
 
 # -- Project information -----------------------------------------------------

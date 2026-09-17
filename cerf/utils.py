@@ -1,6 +1,7 @@
 import os
 import logging
 import tempfile
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -76,16 +77,6 @@ def kilometers_to_miles(input_km_value):
     return input_km_value * 0.621371
 
 
-def suppress_callback(value):
-    """Do not log callback output for whitebox functions.
-
-    :param value:                   Value of callback
-
-    """
-
-    pass
-
-
 def empty_sited_dict():
     """Initialize a sited dictionary."""
 
@@ -159,8 +150,8 @@ def sited_dtypes():
             'carbon_tax_esc_rate_fraction': np.float64}
 
 
-def default_suitabiity_files():
-    """Return a dictionary of default suitability file names."""
+def default_suitability_files():
+    """Return a dictionary of default suitability file names keyed by technology name."""
 
     return {'biomass_conv_wo_ccs': 'suitability_biomass.sdat',
             'biomass_conv_w_ccs': 'suitability_biomass.sdat',
@@ -181,6 +172,15 @@ def default_suitabiity_files():
             'solar_csp': 'suitability_solar.sdat',
             'solar_pv_non_dist': 'suitability_solar.sdat',
             'wind_onshore': 'suitability_wind.sdat'}
+
+
+def default_suitabiity_files():
+    """Deprecated misspelling of :func:`default_suitability_files`; kept for backwards compatibility."""
+
+    warnings.warn("`default_suitabiity_files` is deprecated; use `default_suitability_files`.",
+                  DeprecationWarning, stacklevel=2)
+
+    return default_suitability_files()
 
 
 def buffer_window(target_index, nrows, ncols, ncells):
