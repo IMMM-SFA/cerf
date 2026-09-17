@@ -203,19 +203,30 @@ class ProcessRegion:
         return suitability_array_region, ymin, ymax, xmin, xmax
 
     def mask_nlc(self):
-        """Extract NLC elements for the current region."""
+        """Extract NLC elements for the current region with suitability applied.
 
-        # extract region footprint from NLC data
-        nlc_arr_region = self.nlc_arr[:, self.ymin:self.ymax, self.xmin:self.xmax].copy()
+        Returns a plain float array where every unsuitable or NaN cell is ``+inf``, and layer 0 (the "no technology"
+        default) is entirely ``+inf`` so it is only chosen by ``argmin`` when no technology can site a cell.
 
-        # insert zero array, mask it as index [0, :, :] so the tech_id 0 will always be min if nothing is left to site
-        nlc_arr_region = np.insert(nlc_arr_region, 0, np.zeros_like(nlc_arr_region[0, :, :]), axis=0)
+        """
 
-        # make any nan grid cells the most expensive option to exclude
-        nlc_arr_region = np.nan_to_num(nlc_arr_region, nan=np.nanmax(nlc_arr_region) + 1)
+        n_tech, nrows, ncols = self.nlc_arr.shape[0], self.ymax - self.ymin, self.xmax - self.xmin
 
-        # apply the mask to NLC data
-        return np.ma.masked_array(nlc_arr_region, mask=self.suitability_array_region)
+        nlc_region = self.nlc_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
+
+        # any NaN cost becomes the most expensive option (still available if suitable); the fill value is one more
+        #  than the largest cost seen, floored at 0 to match the historical behaviour where an all-zero default
+        #  layer took part in the maximum
+        fill_value = max(float(np.nanmax(nlc_region)), 0.0) + 1.0
+
+        nlc_arr_region = np.empty((n_tech + 1, nrows, ncols), dtype=np.float64)
+        nlc_arr_region[0] = np.inf
+        nlc_arr_region[1:] = np.nan_to_num(nlc_region, nan=fill_value)
+
+        # unsuitable cells (1 in the suitability array) are unavailable
+        nlc_arr_region[self.suitability_array_region == 1] = np.inf
+
+        return nlc_arr_region
 
     def get_grid_indices(self):
         """Generate a 1D array of grid indices the target region to use as a way to map region level outcomes back to the
