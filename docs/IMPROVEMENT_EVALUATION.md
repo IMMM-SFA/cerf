@@ -38,7 +38,7 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 5.4 + 5.5 + 5.6 | Lifetime fields documented/validated (`validate_technology_parameters`); `EmptyRegionResult` instead of `None`; suitability honours raster `nodata`, shape check, non-0/1 warning | [#135](https://github.com/IMMM-SFA/cerf/pull/135) `c148e04` | ✅ Merged | identical | none; +3 tests |
 | 6.3–6.8 | Explicit `__all__` / no star imports; `__version__` from package metadata; unused deps (`seaborn`, `pyarrow`, `rtree`, `fiona`, `pyproj`) removed, `environment.yml` synced; dead code removed; `yaml.safe_load`; `__init__` annotations; `sited_record()` | [#136](https://github.com/IMMM-SFA/cerf/pull/136) `6070061` | ✅ Merged | identical | none; +5 tests; pyflakes clean |
 | 6.1 + 6.2 | `RegionData` dataclass (`from_stage` / `crop`) replaces 21-argument plumbing in `ProcessRegion`, `process_region`, `region_tasks`, `Model.run_single_region`; `auto_run=False` + idempotent `run()` on `ProcessRegion` and `Competition` (kwargs still accepted) | [#137](https://github.com/IMMM-SFA/cerf/pull/137) `0fbaa19` | ✅ Merged | identical (sequential and `loky`) | none; +2 tests |
-| 7.1–7.3 | End-to-end tests on the sample data (`Stage`, all backends, `cerf.run`, `run_single_region`, `ingest_sited_data`, `plot_siting`); golden CSV + `assertAlmostEqual`; `package_data` / `slow` markers with auto-skip; ruff lint job, 3.9–3.12 + macOS matrix, Codecov upload, regression check in CI | [#138](https://github.com/IMMM-SFA/cerf/pull/138) | 🟡 In review | identical (also asserted by the new tests) | none; +6 tests (104 total); coverage 82% → 94%; fast suite 71 tests in ~1 s |
+| 7.1–7.3 | End-to-end tests on the sample data (`Stage`, all backends, `cerf.run`, `run_single_region`, `ingest_sited_data`, `plot_siting`); golden CSV + `assertAlmostEqual`; `package_data` / `slow` markers with auto-skip; ruff lint job, 3.9–3.12 Ubuntu matrix, Codecov upload, regression check in CI | [#138](https://github.com/IMMM-SFA/cerf/pull/138) | 🟡 In review | identical (also asserted by the new tests) | none; +6 tests (104 total); coverage 82% → 94%; fast suite 71 tests in ~1 s |
 | 8.x | Docs and packaging | — | ⬜ Not started | — | — |
 
 Cumulative full-run timing (2010 CONUS sample, sequential, single process):
@@ -475,7 +475,7 @@ Tests exist for `compete`, `interconnect`, `lmp`, `nov`, `read_config`, `utils.b
 
 ### 7.3 CI configuration — ✅ DONE in #122 / #126 (caching) and #138 (matrix, lint, coverage)
 
-> **Resolved.** Workflow now has a `lint` job (`ruff check`, config in `pyproject.toml`: E/F/W, line length 120), a `unit` job running the fast suite on a fresh checkout without package data, and a `build` matrix (3.9–3.12 on Ubuntu + 3.12 on macOS) that runs the full suite with `--require-package-data`, the seeded regression check (`run_reference.py --compare`) and uploads `coverage.xml` to Codecov. Python 3.12 classifier added. Long lines and trailing whitespace fixed so the tree is ruff-clean.
+> **Resolved.** Workflow now has a `lint` job (`ruff check`, config in `pyproject.toml`: E/F/W, line length 120), a `unit` job running the fast suite on a fresh checkout without package data, and a `build` matrix (Python 3.9–3.12 on `ubuntu-latest`) that runs the full suite with `--require-package-data`, the seeded regression check (`run_reference.py --compare`) and uploads `coverage.xml` to Codecov. Python 3.12 classifier added. Long lines and trailing whitespace fixed so the tree is ruff-clean.
 
 **Location:** [`.github/workflows/build.yml`](../.github/workflows/build.yml)
 
