@@ -3,7 +3,7 @@ Publications
 
 **cerf v2:**
 
-    Vernon, C.R., Rice, J.S., Zuljevic, N., Mongird, K., Nelson, K., Iyer, G., Voisin, N., Binsted, M. (in review). cerf: A Python package to evaluate the feasibility and costs of power plant siting for alternate futures. Journal of Open Source Software, 6(63), 3549.
+    Vernon, C.R., Rice, J.S., Zuljevic, N., Mongird, K., Nelson, K., Iyer, G., Voisin, N., Binsted, M. (2021). cerf: A Python package to evaluate the feasibility and costs of power plant siting for alternative futures. Journal of Open Source Software, 6(65), 3601. https://doi.org/10.21105/joss.03601
 
 **cerf v1:**
 

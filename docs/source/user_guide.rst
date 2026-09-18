@@ -1,6 +1,9 @@
-===============
+==========
 User guide
-===============
+==========
+
+This guide covers what **cerf** needs as input, how to write a configuration file, the equations behind the siting
+decision, and what comes out. For a hands-on introduction start with the :doc:`quickstart`.
 
 Generalization
 --------------
@@ -25,7 +28,7 @@ Let us know if you are using **cerf** in your research in our `discussion thread
 Setting up a **cerf** run
 -------------------------
 
-The following with indroduce you to the input data required by **cerf** and how to set up a configuration file to run **cerf**.
+The following will introduce you to the input data required by **cerf** and how to set up a configuration file to run **cerf**.
 
 Configuration file setup
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,7 +41,7 @@ The **cerf** package utilizes a YAML configuration file customized by the user w
 
   sample_config = cerf.load_sample_config(yr=2010)
 
-The following are the required key, values if your wish to construct your own configuration files:
+The following are the required key, values if you wish to construct your own configuration files:
 
 ``settings``
 ^^^^^^^^^^^^
@@ -54,7 +57,7 @@ These are required values for project-level settings.
     +--------------------+-------------------------------------------------------+-------+-------+
     | output_directory   | Directory to write the output data to                 | NA    | str   |
     +--------------------+-------------------------------------------------------+-------+-------+
-    | randomize          | | Randomize selection of a site for a technology when | NA    | str   |
+    | randomize          | | Randomize selection of a site for a technology when | NA    | bool  |
     |                    | | NLC values are equal. The first pass is always      |       |       |
     |                    | | random but setting `randomize` to False and passing |       |       |
     |                    | | a seed value will ensure that runs are reproducible |       |       |
@@ -75,6 +78,10 @@ The following is an example implementation in the YAML configuration file:
       output_directory: <your output directory>
       randomize: False
       seed_value: 0
+
+Three optional keys let you replace the packaged CONUS regions with your own: ``region_raster_file`` (raster of
+region IDs), ``region_abbrev_to_name_file`` and ``region_name_to_id_file`` (YAML lookups). Leave them ``null`` to use
+the package data. Region names are matched case-insensitively.
 
 
 ``technology``
@@ -148,6 +155,12 @@ These are technology-specific settings.
     +---------------------------------+---------------------------------------------+----------+----------+
 
 
+.. note::
+
+   ``lifetime_yrs`` is the *economic* life used in the annuity and levelization factors and must be positive.
+   ``operational_life_yrs`` is the *physical* life that sets ``retirement_year = run_year + operational_life_yrs``;
+   if it is omitted it defaults to ``lifetime_yrs``.
+
 The following is an example implementation in the YAML configuration file:
 
 .. code-block:: yaml
@@ -162,7 +175,7 @@ The following is an example implementation in the YAML configuration file:
             variable_om_esc_rate_fraction: -0.00398993418629034
             fuel_price_esc_rate_fraction: 0.0
             unit_size_mw: 80
-            variable_om: 11.68495803744351
+            variable_om_usd_per_mwh: 11.68495803744351
             heat_rate_btu_per_kWh: 15117.64999999997
             fuel_price_usd_per_mmbtu: 0.0
             carbon_capture_rate_fraction: 0.0
@@ -212,7 +225,7 @@ The following is an example implementation in the YAML configuration file:
 ``lmp_zones``
 ^^^^^^^^^^^^^
 
-These are the lmp zones data representing the linkage between each grid and technology and their locational marginal price (LMP).
+These are the LMP zones data representing the linkage between each grid and technology and their locational marginal price (LMP).
 
 .. table::
 
@@ -220,9 +233,9 @@ These are the lmp zones data representing the linkage between each grid and tech
     | Name                             | Description                                 | Unit     | Type     |
     +==================================+=============================================+==========+==========+
     | lmp_zone_raster_file             | | Full path with file name and extension to | NA       | str      |
-    |                                  | | the lmp zoness raster file                |          |          |
+    |                                  | | the LMP zones raster file                 |          |          |
     +----------------------------------+---------------------------------------------+----------+----------+
-    | lmp_zone_raster_nodata_value     | No data value in the lmp zones raster       | NA       | float    |
+    | lmp_zone_raster_nodata_value     | No data value in the LMP zones raster       | NA       | float    |
     +----------------------------------+---------------------------------------------+----------+----------+
     | lmp_hourly_data_file             | | LMP CSV file containing 8760 LMP per zone | $/MWh    | str      |
     |                                  | | where columns are each zone with a numeric|          |          |
@@ -245,9 +258,9 @@ The following is an example implementation in the YAML configuration file:
         lmp_hourly_data_file: <path to data file>
 
 
-The `cerf` package comes equipped with a sample lmp zoness raster file and a sample hourly (8760) locational marginal price file for illustrative purposes only.
+The **cerf** package comes equipped with a sample LMP zones raster file and a sample hourly (8760) locational marginal price file for illustrative purposes only.
 
-You can take a look at the lmp zoness raster file by running:
+You can take a look at the LMP zones raster file by running:
 
 .. code-block:: python
 
@@ -276,19 +289,19 @@ These are the electricity transmission and gas pipeline infrastructure data.
     | Name                       | Description                                 | Unit     | Type     |
     +============================+=============================================+==========+==========+
     | substation_file            | | Full path with file name and extension to | NA       | str      |
-    |                            | | he input substations shapefile. If        |          |          |
+    |                            | | the input substations shapefile. If       |          |          |
     |                            | | ``null`` **cerf** will use the default    |          |          |
     |                            | | data stored in the package.               |          |          |
     +----------------------------+---------------------------------------------+----------+----------+
     | pipeline_file              | | Full path with file name and extension to | NA       | str      |
-    |                            | | he input pipelines shapefile. If ``null`` |          |          |
-    |                            | | CERF will use the default data stored in  |          |          |
-    |                            | | the package.                              |          |          |
+    |                            | | the input pipelines shapefile. If         |          |          |
+    |                            | | ``null`` **cerf** will use the default    |          |          |
+    |                            | | data stored in the package.               |          |          |
     +----------------------------+---------------------------------------------+----------+----------+
     | transmission_costs_file    | | A YAML file containing the costs of       | NA       | str      |
     |                            | | connection per km to a substation having  |          |          |
     |                            | | a certain minimum voltage range. Default  |          |          |
-    |                            | | is to load from the defualt               |          |          |
+    |                            | | is to load from the default               |          |          |
     |                            | | 'costs_per_kv_substation.yml' file        |          |          |
     |                            | | by specifying ``null``                    |          |          |
     +----------------------------+---------------------------------------------+----------+----------+
@@ -305,8 +318,6 @@ These are the electricity transmission and gas pipeline infrastructure data.
     | output_alloc_file          | Write allocation file                       | NA       | bool     |
     +----------------------------+---------------------------------------------+----------+----------+
     | output_cost_file           | Write cost file                             | NA       | bool     |
-    +----------------------------+---------------------------------------------+----------+----------+
-    | output_dir                 | If writing files, specify an out directory  | NA       | bool     |
     +----------------------------+---------------------------------------------+----------+----------+
     | interconnection_cost_file  | | Full path with the file name and extension| NA       | str      |
     |                            | | to a preprocessed interconnection cost    |          |          |
@@ -343,9 +354,9 @@ You can view the built-in costs per kV to connect to a substation using:
 Preparing suitability rasters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The **cerf** package comes equipped with sample suitability data but you can build your on as well.
+The **cerf** package comes equipped with sample suitability data but you can build your own as well.
 
-You can see which suitability rasters are available in the `cerf` package by running the following after installing the package data:
+You can see which suitability rasters are available in the **cerf** package by running the following after installing the package data:
 
 .. code-block:: python
 
@@ -400,7 +411,7 @@ The sample rasters for spatial suitability at a resolution of 1km over the CONUS
 Locational Marginal Price
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Locational Marginal Pricing (LMP) represents the cost of making and delivering electricity over an interconnected network of service nodes. LMPs are delivered on an hourly basis (8760 hours for the year) and help us to understand aspects of generation and congestion costs relative to the supply and demand of electricity when considering existing transmission infrastructure.  LMPs are a also driven by factors such as the cost of fuel which **cerf** also takes into account when calculating a power plants :ref:`Net Operating Value`.  When working with a scenario-driven grid operations model to evaluate the future evolution of the electricity system, **cerf** can ingest LMPs, return the sited generation per service area for the time step, and then continue this iteration through all future years to provide a harmonized view how the electricity system may respond to stressors in the future.
+Locational Marginal Pricing (LMP) represents the cost of making and delivering electricity over an interconnected network of service nodes. LMPs are delivered on an hourly basis (8760 hours for the year) and help us to understand aspects of generation and congestion costs relative to the supply and demand of electricity when considering existing transmission infrastructure.  LMPs are also driven by factors such as the cost of fuel which **cerf** also takes into account when calculating a power plants :ref:`Net Operating Value`.  When working with a scenario-driven grid operations model to evaluate the future evolution of the electricity system, **cerf** can ingest LMPs, return the sited generation per service area for the time step, and then continue this iteration through all future years to provide a harmonized view how the electricity system may respond to stressors in the future.
 
 **cerf** was designed to ingest a single CSV file of LMPs per service area for each of the 8760 hours in a year where LMPs are in units $/MWh.  Mean LMPs representing annual trends are then calculated over the time period corresponding to each technology's capacity factor using the following logic:
 
@@ -426,33 +437,15 @@ Locational Marginal Pricing (LMP) represents the cost of making and delivering e
 
 .. note::
 
-  **cerf** comes with an LMP dataset for illustrative purposes only which can be accessed using the ``get_sample_lmp_file()`` function.  The service areas in this file correspond with the sample lmp zoness raster file in the **cerf** package which defines the service area ID for each grid cell in the CONUS.  This raster file can also be accessed using ``sample_lmp_zones_raster_file()`` function.
+  **cerf** comes with an LMP dataset for illustrative purposes only which can be accessed using the ``get_sample_lmp_file()`` function.  The service areas in this file correspond with the sample LMP zones raster file in the **cerf** package which defines the service area ID for each grid cell in the CONUS.  This raster file can also be accessed using ``sample_lmp_zones_raster_file()`` function.
 
 
 Tutorials
 ---------
 
-**cerf** quickstarter
-~~~~~~~~~~~~~~~~~~~~~
-
-.. include:: quickstarter.rst
-
-
-Running the quickstarter locally
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-You can download the **cerf** quickstarter Jupyter notebook here: `cerf quickstarter <https://github.com/IMMM-SFA/cerf/blob/main/notebooks/quickstarter.ipynb>`_
-
-This will allow you to run the tutorial interactively on your local computer.  Installation instructions for installing Jupyter software can be found `here <https://jupyter.org/install>`_.
-
-Once you have Jupyter up-and-running, make sure you install **cerf** and its package data by running:
-
-.. code-block:: bash
-
-  python3 -m pip install cerf
-
-  python3 -c 'import cerf; cerf.install_package_data()'
-
-where, ``python3`` would be the instance of Python that you installed Jupyter on.  Now you are ready to explore **cerf**!
+The step-by-step tutorial - single-year and multi-year runs with retirement, reproducible seeds, parallel backends,
+single-region runs and plotting - lives on its own page: :doc:`quickstart`. It is also available as a Jupyter
+notebook: `cerf quickstarter <https://github.com/IMMM-SFA/cerf/blob/main/notebooks/quickstarter.ipynb>`_.
 
 
 Fundamental equations and concepts
@@ -474,6 +467,8 @@ Net operating value (NOV)
     NOV = G(LMP - OC)
 
 where, *NOV* is Net Operating Value in $/yr; *G* is electricity generation in MWh/yr; *LMP* is locational marginal price in $/MWh; *OC* are operating costs in $/MWh.
+
+.. _generation:
 
 Generation (G)
 ^^^^^^^^^^^^^^
@@ -507,14 +502,18 @@ Annuity factor (AF)
 where, *d* is the real annual discount rate as a fraction and *n* is the asset lifetime in years.
 
 
+.. _lmp-levelized:
+
 Locational marginal price (LMP)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. math::
 
     LMP_{lev} = LMP * LF_{fuel}
 
 where, *LMP* is the locational marginal price (*LMP*) in $/MWh and *LF*\ :subscript:`fuel` \ is the levelization factor of fuel.  *LMP* is also an input to **cerf** and is described in full in the :ref:`Locational Marginal Price` section.
+
+.. _operating-cost:
 
 Operating cost (OC)
 ^^^^^^^^^^^^^^^^^^^
@@ -535,7 +534,7 @@ Interconnection cost is the sum of the transmission interconnection cost and the
 
     IC = (D_{elec} * C_{elec} * AF) + (D_{gas} * C_{gas} * AF)
 
-where, *IC* is Interconnection Cost in $/yr; *D*\ :subscript:`elec` is the distance to the nearest suitable electricity transmission infrastructure (e.g., substation) in kilometers; *C*\ :subscript:`elec` is the electric grid interconnection captial cost in thous$/km; *D*\ :subscript:`gas` is the distance to the nearest suitable gas pipeline in kilometers; *C*\ :subscript:`gas` is the gas interconnection capital cost in thous$/km and *AF* is the annuity factor.
+where, *IC* is Interconnection Cost in $/yr; *D*\ :subscript:`elec` is the distance to the nearest suitable electricity transmission infrastructure (e.g., substation) in kilometers; *C*\ :subscript:`elec` is the electric grid interconnection capital cost in thous$/km; *D*\ :subscript:`gas` is the distance to the nearest suitable gas pipeline in kilometers; *C*\ :subscript:`gas` is the gas interconnection capital cost in thous$/km and *AF* is the annuity factor.
 
 The annuity factor (*AF*) is calculated as:
 
@@ -563,8 +562,6 @@ where, *NLC* is in $/yr; *IC* is interconnection cost in $/yr; and *NOV* is in $
 
 Competition algorithm
 ~~~~~~~~~~~~~~~~~~~~~
-
-Technology competition algorithm for CERF.
 
 Grid cell level net locational cost (NLC) per technology and an electricity technology capacity expansion plan are used to compete technologies against each other to see which will win the grid cell. The technology that wins the grid cell is then sited until no further winning cells exist. Once sited, the location of the winning technology’s grid cell, along with its buffer, are no longer available for siting. The competition array is recalculated after all technologies have passed through an iteration. This process is repeated until there are either no cells left to site or there are no more power plants left to satisfy the expansion plan for any technology. For technologies that have the same NLC value in multiple grid cells that win the competition, random selection is available by default. If the user wishes to have the outcomes be repeatable, the randomizer can be set to False and a random seed set.
 
@@ -599,7 +596,7 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
       - Y coordinate in the default `CRS <https://spatialreference.org/ref/esri/usa-contiguous-albers-equal-area-conic/>`_
       - meters
     * - index
-      - Index position in the flattend 2D array
+      - Index position in the flattened 2D array
       - NA
     * - buffer_in_km
       - Exclusion buffer around site
@@ -614,21 +611,21 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
       - LMP zone ID
       - NA
     * - locational_marginal_price_usd_per_mwh
-      - See :ref:`Locational marginal price (LMP)`
+      - See :ref:`Locational marginal price <lmp-levelized>`
       - $/MWh
     * - generation_mwh_per_year
-      - See :ref:`Generation (G)`
+      - See :ref:`Generation <generation>`
       - MWh/yr
     * - operating_cost_usd_per_year
-      - See :ref:`Operating cost (OC)`
+      - See :ref:`Operating cost <operating-cost>`
       - $/yr
-    * - net_operational_value
+    * - net_operational_value_usd_per_year
       - See :ref:`Net Operating Value`
       - $/yr
-    * - interconnection_cost
+    * - interconnection_cost_usd_per_year
       - See :ref:`Interconnection Cost`
       - $/yr
-    * - net_locational_cost
+    * - net_locational_cost_usd_per_year
       - See :ref:`Net Locational Cost`
       - $/yr
     * - capacity_factor_fraction
@@ -657,7 +654,7 @@ The following are the outputs and their descriptions from the Pandas DataFrame t
       - years
     * - variable_om_usd_per_mwh
       - Variable operation and maintenance costs of yearly capacity use
-      - $/mWh
+      - $/MWh
     * - variable_om_esc_rate_fraction
       - Variable operation and maintenance costs escalation rate
       - fraction

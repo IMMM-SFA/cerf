@@ -45,16 +45,11 @@ test = [
     "ruff>=0.4",
 ]
 docs = [
-    "setuptools>=57.0.0",
+    "sphinx>=7.2",
+    "furo>=2024.1.29",
+    "sphinx-design>=0.5.0",
+    "sphinx-copybutton>=0.5.2",
     "build>=0.5.1",
-    "ipykernel>=6.15.1",
-    "autodoc>=0.5.0",
-    "nbsphinx~=0.8.6",
-    "sphinx~=7.2.6",
-    "sphinx-design~=0.5.0",
-    "sphinx-rtd-theme~=2.0.0",
-    "sphinx-mathjax-offline~=0.0.2",
-    "sphinx-panels>=0.6.0",
 ]
 deploy = [
     "twine>=4.0.1",
