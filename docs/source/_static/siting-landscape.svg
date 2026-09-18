@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" fill="none">
+  <title>From regional plans to individual power plant sites</title>
+  <desc>An illustrative layered landscape with suitability cells, connected sites, and a transmission tower. This is a conceptual diagram, not model output.</desc>
+  <defs>
+    <linearGradient id="land" x1="130" y1="160" x2="470" y2="330" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d1e5bd"/><stop offset="1" stop-color="#7eaf97"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" stroke="#fff" stroke-opacity=".35"/>
+    </pattern>
+  </defs>
+  <circle cx="328" cy="227" r="188" stroke="#b9d1c4" stroke-dasharray="3 8"/>
+  <circle cx="328" cy="227" r="144" stroke="#b9d1c4" stroke-opacity=".5"/>
+  <path d="m78 280 240-136 248 143-240 140L78 280Z" fill="#103f3b" fill-opacity=".08"/>
+  <path d="m78 253 240-136 248 143-240 140L78 253Z" fill="#d5e2dc" stroke="#a2bbb0"/>
+  <path d="m78 253 248 143v13L78 266v-13Z" fill="#b5c9bf"/>
+  <path d="m326 396 240-136v13L326 409v-13Z" fill="#92afa1"/>
+  <path d="m78 218 240-136 248 143-240 140L78 218Z" fill="#e9eedc" stroke="#b1c5b4"/>
+  <path d="m78 218 248 147v11L78 229v-11Z" fill="#c7d5bd"/>
+  <path d="m326 365 240-140v11L326 376v-11Z" fill="#a5bfaa"/>
+  <g transform="matrix(.99 .577 -.99 .577 318 52)">
+    <rect width="250" height="242" rx="4" fill="url(#land)" stroke="#6c9d84"/>
+    <path d="M0 145c50-30 71 32 119-1s78-46 131-31v38c-66-29-88 36-131 26S46 143 0 179Z" fill="#71b5b4"/>
+    <path d="M10 14h68v64H10zM167 169h72v61h-72z" fill="#447f66" fill-opacity=".45"/>
+    <path d="M80 0h40v40H80zM160 40h40v40h-40zM40 80h40v40H40zM120 160h40v40h-40zM200 120h40v40h-40z" fill="#f1f3bb" fill-opacity=".85"/>
+    <rect width="250" height="242" fill="url(#grid)"/>
+    <path d="M38 203 101 103l81-43 49 37" stroke="#f9faf0" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M38 203 101 103l81-43 49 37" stroke="#35675b" stroke-width="1.5" stroke-dasharray="5 5"/>
+  </g>
+  <g stroke="#174e45" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m361 189 15-80 16 98M365 164h22m-19-18h16m-21-15h26m-28-3 15-19 16 37m-31 18 28 23m-3-26-22 21"/>
+    <path d="M355 131h43m-49 19h53"/>
+    <path d="M349 150q-53 22-96 6m145-25q35 25 70 22" stroke-width="1.5"/>
+  </g>
+  <g>
+    <ellipse cx="216" cy="227" rx="22" ry="12" fill="#14665b" fill-opacity=".15"/>
+    <path d="M216 228v-47" stroke="#174e45" stroke-width="2"/>
+    <circle cx="216" cy="177" r="11" fill="#14665b" stroke="#f5f8e9" stroke-width="4"/>
+    <ellipse cx="438" cy="219" rx="22" ry="12" fill="#14665b" fill-opacity=".15"/>
+    <path d="M438 220v-38" stroke="#174e45" stroke-width="2"/>
+    <circle cx="438" cy="178" r="11" fill="#14665b" stroke="#f5f8e9" stroke-width="4"/>
+    <ellipse cx="323" cy="291" rx="22" ry="12" fill="#14665b" fill-opacity=".15"/>
+    <path d="M323 292v-44" stroke="#174e45" stroke-width="2"/>
+    <circle cx="323" cy="244" r="11" fill="#14665b" stroke="#f5f8e9" stroke-width="4"/>
+  </g>
+  <g font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="1.5" fill="#285c50">
+    <path d="M122 172H62v-36" stroke="#8eafa0" fill="none"/>
+    <text x="34" y="121">SUITABILITY</text>
+    <path d="M496 265h73v34" stroke="#8eafa0" fill="none"/>
+    <text x="480" y="319">LOCAL COST</text>
+    <path d="M270 388v42h-89" stroke="#8eafa0" fill="none"/>
+    <text x="79" y="449">REGIONAL FEASIBILITY</text>
+  </g>
+</svg>
