@@ -156,8 +156,42 @@ class TestVersionLookup(unittest.TestCase):
         self.assertTrue(InstallSupplement.get_data_link("2.4.1").startswith("https://zenodo.org/records/6998151/"))
 
     def test_unknown_version_raises_key_error(self):
-        with self.assertRaises(KeyError):
-            InstallSupplement.get_data_link("0.0.0-nope")
+        """Versions older than every registered entry, or unparsable ones, still raise."""
+
+        for bad in ("0.0.0-nope", "1.9.9", "0.0.0+unknown", "garbage", ""):
+            with self.assertRaises(KeyError, msg=bad):
+                InstallSupplement.get_data_link(bad)
+
+    def test_newer_unregistered_version_falls_back_to_latest_registered(self):
+        """8.x: a patch/minor release without a new data supplement resolves to the newest registered <= version."""
+
+        newest_registered = max(InstallSupplement.DATA_VERSION_URLS, key=InstallSupplement._version_key)
+        expected = InstallSupplement.DATA_VERSION_URLS[newest_registered]
+
+        for v in ("2.5.1", "2.6.0", "2.5.0.dev3", "2.5.1rc1", "2.5.1+g1234abc", "3.0.0"):
+            with self.assertLogs("cerf.install_supplement", level="WARNING") as captured:
+                self.assertEqual(expected, InstallSupplement.get_data_link(v), msg=v)
+            self.assertIn(newest_registered, captured.output[0])
+
+        # an in-between version picks the nearest registered version at or below it, not the newest overall
+        self.assertEqual(InstallSupplement.DATA_VERSION_URLS["2.0.6"], InstallSupplement.get_data_link("2.0.6.post1"))
+        self.assertEqual(InstallSupplement.DATA_VERSION_URLS["2.1.1"], InstallSupplement.get_data_link("2.1.5"))
+
+    def test_exact_match_does_not_warn(self):
+        with self.assertNoLogs("cerf.install_supplement", level="WARNING"):
+            InstallSupplement.get_data_link("2.4.1")
+
+    def test_version_key(self):
+        key = InstallSupplement._version_key
+        self.assertEqual((2, 3), key("2.3"))
+        self.assertEqual((2, 4, 1), key("2.4.1"))
+        self.assertEqual((2, 5, 0), key("2.5.0rc1"))
+        self.assertEqual((2, 5, 0), key("2.5.0+g1234"))
+        self.assertEqual((2, 5), key("2.5.dev1"))
+        self.assertIsNone(key("garbage"))
+        self.assertIsNone(key(""))
+        self.assertLess(key("2.3"), key("2.3.1"))
+        self.assertLess(key("2.4.1"), key("2.10.0"))   # numeric, not lexicographic
 
     def test_urls_use_canonical_records_path(self):
         """Zenodo 301-redirects /record/ to /records/; use the canonical path to avoid the extra round trip."""

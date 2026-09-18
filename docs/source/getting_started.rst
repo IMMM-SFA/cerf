@@ -16,7 +16,7 @@ We introduce a metric named Net Locational Cost (NLC) that is used compete power
 Python version support
 ----------------------
 
-Officially Python 3.7, 3.8, and 3.9
+Officially Python 3.10, 3.11, and 3.12 (``requires-python >= 3.10``).
 
 
 Installation
@@ -55,23 +55,20 @@ This will automatically download and install the package data necessary to run t
 Dependencies
 ------------
 
+The authoritative list is the ``dependencies`` table in ``pyproject.toml``; the versions below mirror it.
+
 =============   ================
 Dependency      Minimum Version
 =============   ================
 numpy           1.19.4
+scipy           1.12
 pandas          1.1.4
 rasterio        1.2.3
-xarray          0.16.1
 PyYAML          5.4.1
 requests        2.25.1
 joblib          1.0.1
 matplotlib      3.3.3
-seaborn         0.11.1
-whitebox        1.5.1
-fiona           1.8.19
-pyproj          3.0.1
-rtree           0.9.7
-shapely         1.7.1
+shapely         2.0
 geopandas       0.9.0
 =============   ================
 
