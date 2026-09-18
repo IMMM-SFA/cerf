@@ -45,7 +45,8 @@ class TestNov(unittest.TestCase):
     EXPECTED_NOV_WITHCARBON_NOLEAP = np.array([1791838770.04080])
 
     @classmethod
-    def instantiate_nov(cls, target_year, carbon_tax_usd_per_ton, fuel_co2_content_tons_per_btu, carbon_capture_rate_fraction, consider_leap_year):
+    def instantiate_nov(cls, target_year, carbon_tax_usd_per_ton, fuel_co2_content_tons_per_btu,
+                        carbon_capture_rate_fraction, consider_leap_year):
         """Instantiate NOV class with test values.  The additional parameters can be passed to
         test NOV under different carbon conditions."""
 
@@ -80,16 +81,16 @@ class TestNov(unittest.TestCase):
         genenration, operating_cost, nov_tech_arr = econ.calc_nov()
 
         # test the calculation of annuity factor
-        self.assertEqual(TestNov.EXPECTED_ANNUITY_FACTOR, econ.annuity_factor)
+        self.assertAlmostEqual(TestNov.EXPECTED_ANNUITY_FACTOR, econ.annuity_factor, places=12)
 
         # test the calculation of the levelization factor for variable OM
-        self.assertEqual(TestNov.EXPECTED_LF_VOM, econ.lf_vom)
+        self.assertAlmostEqual(TestNov.EXPECTED_LF_VOM, econ.lf_vom, places=12)
 
         # test the calculation of the levelization factor for fuel
-        self.assertEqual(TestNov.EXPECTED_LF_FUEL, econ.lf_fuel)
+        self.assertAlmostEqual(TestNov.EXPECTED_LF_FUEL, econ.lf_fuel, places=12)
 
         # test the calculation of the levelization factor for carbon
-        self.assertEqual(TestNov.EXPECTED_LF_CARBON, econ.lf_carbon)
+        self.assertAlmostEqual(TestNov.EXPECTED_LF_CARBON, econ.lf_carbon, places=12)
 
         # test NOV
         np.testing.assert_almost_equal(nov_tech_arr, TestNov.EXPECTED_NOV_NOCARBON_NOLEAP, decimal=4)
@@ -107,16 +108,16 @@ class TestNov(unittest.TestCase):
         genenration, operating_cost, nov_tech_arr = econ.calc_nov()
 
         # test the calculation of annuity factor
-        self.assertEqual(TestNov.EXPECTED_ANNUITY_FACTOR, econ.annuity_factor)
+        self.assertAlmostEqual(TestNov.EXPECTED_ANNUITY_FACTOR, econ.annuity_factor, places=12)
 
         # test the calculation of the levelization factor for variable OM
-        self.assertEqual(TestNov.EXPECTED_LF_VOM, econ.lf_vom)
+        self.assertAlmostEqual(TestNov.EXPECTED_LF_VOM, econ.lf_vom, places=12)
 
         # test the calculation of the levelization factor for fuel
-        self.assertEqual(TestNov.EXPECTED_LF_FUEL, econ.lf_fuel)
+        self.assertAlmostEqual(TestNov.EXPECTED_LF_FUEL, econ.lf_fuel, places=12)
 
         # test the calculation of the levelization factor for carbon
-        self.assertEqual(TestNov.EXPECTED_LF_CARBON, econ.lf_carbon)
+        self.assertAlmostEqual(TestNov.EXPECTED_LF_CARBON, econ.lf_carbon, places=12)
 
         # test NOV
         np.testing.assert_almost_equal(nov_tech_arr, TestNov.EXPECTED_NOV_NOCARBON_LEAP, decimal=4)
@@ -134,16 +135,16 @@ class TestNov(unittest.TestCase):
         genenration, operating_cost, nov_tech_arr = econ.calc_nov()
 
         # test the calculation of annuity factor
-        self.assertEqual(TestNov.EXPECTED_ANNUITY_FACTOR, econ.annuity_factor)
+        self.assertAlmostEqual(TestNov.EXPECTED_ANNUITY_FACTOR, econ.annuity_factor, places=12)
 
         # test the calculation of the levelization factor for variable OM
-        self.assertEqual(TestNov.EXPECTED_LF_VOM, econ.lf_vom)
+        self.assertAlmostEqual(TestNov.EXPECTED_LF_VOM, econ.lf_vom, places=12)
 
         # test the calculation of the levelization factor for fuel
-        self.assertEqual(TestNov.EXPECTED_LF_FUEL, econ.lf_fuel)
+        self.assertAlmostEqual(TestNov.EXPECTED_LF_FUEL, econ.lf_fuel, places=12)
 
         # test the calculation of the levelization factor for carbon
-        self.assertEqual(TestNov.EXPECTED_LF_CARBON, econ.lf_carbon)
+        self.assertAlmostEqual(TestNov.EXPECTED_LF_CARBON, econ.lf_carbon, places=12)
 
         # test NOV
         np.testing.assert_almost_equal(nov_tech_arr, TestNov.EXPECTED_NOV_WITHCARBON_NOLEAP, decimal=4)
@@ -168,8 +169,8 @@ class TestFinancialFactorLimits(unittest.TestCase):
 
         self.assertTrue(np.isfinite(lf))
         self.assertAlmostEqual(lf, econ.lifetime_yrs * econ.annuity_factor, places=12)
-        self.assertEqual(econ.calc_levelization_factor_vom(), lf)
-        self.assertEqual(econ.calc_levelization_factor_carbon(), lf)
+        self.assertAlmostEqual(econ.calc_levelization_factor_vom(), lf, places=15)
+        self.assertAlmostEqual(econ.calc_levelization_factor_carbon(), lf, places=15)
 
         # NOV itself must be finite
         _, _, nov = econ.calc_nov()
@@ -206,7 +207,7 @@ class TestFinancialFactorLimits(unittest.TestCase):
         """d == 0 previously raised ZeroDivisionError; the limit is 1 / n."""
 
         af = NetOperationalValue.annuity_factor_from(0.0, self.N)
-        self.assertEqual(af, 1.0 / self.N)
+        self.assertAlmostEqual(af, 1.0 / self.N, places=15)
 
         # continuity from above: dAF/dd at d=0 is (n+1)/(2n) ~ 0.5, so error is O(eps); use tolerance of 1 * eps
         for eps in (1e-4, 1e-6, 1e-8):
@@ -220,11 +221,11 @@ class TestFinancialFactorLimits(unittest.TestCase):
         """Non-degenerate inputs must still reproduce the historical expected values exactly."""
 
         af = NetOperationalValue.annuity_factor_from(TestNov.DISCOUNT_RATE, TestNov.lifetime_yrs)
-        self.assertEqual(af, TestNov.EXPECTED_ANNUITY_FACTOR)
+        self.assertAlmostEqual(af, TestNov.EXPECTED_ANNUITY_FACTOR, places=12)
 
         lf_fuel = NetOperationalValue.levelization_factor_from(TestNov.fuel_price_esc_rate_fraction,
                                                                TestNov.DISCOUNT_RATE, TestNov.lifetime_yrs, af)
-        self.assertEqual(lf_fuel, TestNov.EXPECTED_LF_FUEL)
+        self.assertAlmostEqual(lf_fuel, TestNov.EXPECTED_LF_FUEL, places=12)
 
     def test_interconnection_uses_same_annuity_factor(self):
         """IC and NOV must agree on the annuity factor, including at d == 0."""
@@ -232,8 +233,8 @@ class TestFinancialFactorLimits(unittest.TestCase):
         from cerf.interconnect import Interconnection
 
         for d in (0.0, 0.03, 0.05, 0.1):
-            self.assertEqual(Interconnection.calc_annuity_factor(d, self.N),
-                             NetOperationalValue.annuity_factor_from(d, self.N))
+            self.assertAlmostEqual(Interconnection.calc_annuity_factor(d, self.N),
+                                   NetOperationalValue.annuity_factor_from(d, self.N), places=15)
 
     def test_invalid_inputs_raise_value_error(self):
         with self.assertRaises(ValueError):

@@ -1,12 +1,17 @@
 import os
 import unittest
+
+import pytest
 from importlib.resources import files
 
 import yaml
 import pandas as pd
 import geopandas as gpd
 
-from cerf.package_data import *
+from cerf.package_data import (cerf_boundary_shapefile, cerf_crs, cerf_regions_shapefile, config_file,
+                               costs_per_kv_substation, get_data_directory, get_region_abbrev_to_name,
+                               get_sample_lmp_data, list_available_suitability_files, load_sample_config,
+                               sample_lmp_zones_raster_file)
 
 
 def data_file(filename):
@@ -21,6 +26,7 @@ def data_directory():
     return str(files('cerf').joinpath('data'))
 
 
+@pytest.mark.package_data
 class TestPackageData(unittest.TestCase):
     """Tests for package data matching to confirm load function modification does not happen."""
 
@@ -64,7 +70,7 @@ class TestPackageData(unittest.TestCase):
         f = data_file('costs_per_kv_substation.yml')
 
         with open(f, 'r') as yml:
-            comp = yaml.load(yml, Loader=yaml.FullLoader)
+            comp = yaml.safe_load(yml)
 
         val = costs_per_kv_substation()
 
@@ -83,7 +89,7 @@ class TestPackageData(unittest.TestCase):
         f = data_file(f'config_{yr}.yml')
 
         with open(f, 'r') as yml:
-            comp =  yaml.load(yml, Loader=yaml.FullLoader)
+            comp = yaml.safe_load(yml)
 
         val = load_sample_config(yr)
 
@@ -124,7 +130,7 @@ class TestPackageData(unittest.TestCase):
         regions_file = data_file('region-abbrev_to_region-name.yml')
 
         with open(regions_file, 'r') as yml:
-            comp = yaml.load(yml, Loader=yaml.FullLoader)
+            comp = yaml.safe_load(yml)
 
         val = get_region_abbrev_to_name()
 

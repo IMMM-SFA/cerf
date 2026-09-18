@@ -301,7 +301,8 @@ class Stage:
                 default_raster = default_suitability_file_dict[self.tech_name_dict[i]]
                 tech_suitability_raster_file = pkg.get_suitability_raster(default_raster)
 
-            logger.info(f"Using suitability file for '{self.technology_dict[i]['tech_name']}':  {tech_suitability_raster_file}")
+            logger.info(f"Using suitability file for '{self.technology_dict[i]['tech_name']}':  "
+                        f"{tech_suitability_raster_file}")
 
             # load raster to array
             with rasterio.open(tech_suitability_raster_file) as src:

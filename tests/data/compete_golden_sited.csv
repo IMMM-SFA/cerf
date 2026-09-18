@@ -1,0 +1,4 @@
+region_name,tech_id,tech_name,unit_size_mw,xcoord,ycoord,index,buffer_in_km,sited_year,retirement_year,lmp_zone,locational_marginal_price_usd_per_mwh,generation_mwh_per_year,operating_cost_usd_per_year,net_operational_value_usd_per_year,interconnection_cost_usd_per_year,net_locational_cost_usd_per_year,capacity_factor_fraction,carbon_capture_rate_fraction,fuel_co2_content_tons_per_btu,fuel_price_usd_per_mmbtu,fuel_price_esc_rate_fraction,heat_rate_btu_per_kWh,lifetime_yrs,operational_life_yrs,variable_om_usd_per_mwh,variable_om_esc_rate_fraction,carbon_tax_usd_per_ton,carbon_tax_esc_rate_fraction
+test,1,test,80.0,2.4,2.4,2,1,2010,2070,2,2.4,2.4,2.4,2.4,2.4,2.4,0.1,0.0,0.1,1.0,1.0,1.0,60,60,1.0,1.0,0.0,1.0
+test,2,test,80.0,3.2,3.2,3,1,2010,2070,3,1.0,1.0,1.0,1.0,1.0,1.0,0.1,0.0,0.1,1.0,1.0,1.0,60,60,1.0,1.0,0.0,1.0
+test,3,test,80.0,3.2,3.2,3,1,2010,2070,3,3.2,3.2,3.2,3.2,3.2,3.2,0.1,0.0,0.1,1.0,1.0,1.0,60,60,1.0,1.0,0.0,1.0

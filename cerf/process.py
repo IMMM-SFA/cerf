@@ -154,7 +154,8 @@ def cerf_parallel(model, data, write_output=True, n_jobs=-1, method='sequential'
     if write_output:
 
         # write output CSV
-        out_csv = os.path.join(model.settings_dict.get('output_directory'), f"cerf_sited_{model.settings_dict.get('run_year')}_conus.csv")
+        out_csv = os.path.join(model.settings_dict.get('output_directory'),
+                               f"cerf_sited_{model.settings_dict.get('run_year')}_conus.csv")
         df.to_csv(out_csv, index=False)
 
     return df

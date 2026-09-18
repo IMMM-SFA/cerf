@@ -36,12 +36,14 @@ classifiers = [
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
 ]
 
 [project.optional-dependencies]
 test = [
     "pytest>=6.0",
     "pytest-cov>=2.12.1",
+    "ruff>=0.4",
 ]
 docs = [
     "setuptools>=57.0.0",
@@ -66,3 +68,23 @@ Documentation = "https://immm-sfa.github.io/cerf"
 [tool.hatch.build]
 packages = ["cerf"]  # set importable package name to "cerf"
 include = ["cerf"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "package_data: needs the Zenodo package-data supplement (auto-skipped when absent; see tests/conftest.py)",
+    "slow: takes more than ~1 s (full-CONUS interconnection); deselect with -m 'not slow'",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+extend-exclude = ["docs", "notebooks", "paper"]
+
+[tool.ruff.lint]
+# pyflakes + pycodestyle errors/warnings; matches the pyflakes-clean state reached in #136
+select = ["E", "F", "W"]
+
+[tool.coverage.run]
+source = ["cerf"]
+omit = ["cerf/data/*"]

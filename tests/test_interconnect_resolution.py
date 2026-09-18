@@ -120,6 +120,9 @@ class TestInterconnectionResolution(unittest.TestCase):
                              region_name_to_id_file=None,
                              substation_file=substation,
                              pipeline_file=pipeline,
+                             # explicit cost dicts so no packaged YAML is read (self-contained, no package data)
+                             transmission_costs_dict={0: {'min_voltage': -1, 'max_voltage': 9999,
+                                                          'thous_dollar_per_km': 1.0}},
                              pipeline_costs_dict={'gas_pipeline_cost': 1.0},
                              **kwargs)
         return ic, n

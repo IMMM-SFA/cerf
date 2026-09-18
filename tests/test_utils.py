@@ -54,10 +54,12 @@ class TestUtils(unittest.TestCase):
 
         self.assertEqual(set(util.empty_sited_dict()), set(util.sited_dtypes()))
 
-        # an empty frame typed with sited_dtypes has no `object` columns except the two string fields
+        # an empty frame typed with sited_dtypes is numeric everywhere except the two string fields
+        #  (`object` under pandas < 3, the dedicated string dtype under pandas >= 3)
         df = pd.DataFrame(util.empty_sited_dict()).astype(util.sited_dtypes())
-        object_cols = [c for c in df.columns if df[c].dtype == object]
-        self.assertEqual(['region_name', 'tech_name'], object_cols)
+        string_cols = [c for c in df.columns if not pd.api.types.is_numeric_dtype(df[c])]
+        self.assertEqual(['region_name', 'tech_name'], string_cols)
+        self.assertTrue(all(pd.api.types.is_string_dtype(df[c]) for c in string_cols))
 
     def test_raster_to_coord_arrays_cell_centres_and_no_open_handle(self):
         """3.9: coordinates are cell centres from the affine transform and the file is closed afterwards."""
@@ -161,7 +163,8 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(TestUtils.COMP_BUFF_FLAT_19_LIST, buff_19.tolist())
 
     def test_buffer_window_and_indices_match_reference(self):
-        """4.7: window slices / index arrays equal a brute-force neighbourhood for every cell and radius, incl. edges."""
+        """4.7: window slices / index arrays equal a brute-force neighbourhood for every cell and radius, incl.
+        edges."""
 
         nrows, ncols = 5, 7
         for ncells in (0, 1, 2, 4, 10):
