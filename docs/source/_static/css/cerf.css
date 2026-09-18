@@ -1,45 +1,122 @@
-/* Override some aspects of the pydata-sphinx-theme */
+/* cerf documentation - small refinements on top of the Furo theme */
 
 :root {
-  /* Use softer blue from bootstrap's default info color */
-  --pst-color-info: 23, 162, 184;
+  --cerf-radius: 10px;
+  --cerf-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 6px 18px rgba(15, 23, 42, 0.06);
+  --cerf-shadow-hover: 0 2px 4px rgba(15, 23, 42, 0.08), 0 12px 28px rgba(15, 23, 42, 0.12);
 }
 
-/* Main index page overview cards */
+/* Landing page ------------------------------------------------------------ */
 
-.intro-card {
-  background: #fff;
-  border-radius: 0;
-  padding: 30px 10px 20px 10px;
-  margin: 10px 0px;
+.lead {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--color-foreground-secondary);
+  max-width: 48rem;
+  margin: 0.5rem 0 1rem 0;
 }
 
-.intro-card p.card-text {
-  margin: 0px;
+.hero-meta {
+  color: var(--color-foreground-muted);
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
 }
 
-.intro-card .card-img-top {
-  margin: 10px;
-  height: 52px;
+/* sphinx-design cards ----------------------------------------------------- */
+
+.sd-card {
+  border: 1px solid var(--color-background-border);
+  border-radius: var(--cerf-radius);
+  box-shadow: var(--cerf-shadow);
+  background: var(--color-background-primary);
+  transition: box-shadow 160ms ease, transform 160ms ease, border-color 160ms ease;
 }
 
-.intro-card .card-header {
-  border: none;
-  background-color:white;
-  color: #150458 !important;
-  font-size: var(--pst-font-size-h5);
-  font-weight: bold;
-  padding: 2.5rem 0rem 0.5rem 0rem;
+.sd-card:hover {
+  box-shadow: var(--cerf-shadow-hover);
+  transform: translateY(-2px);
+  border-color: var(--color-brand-primary);
 }
 
-.intro-card .card-footer {
-  border: none;
-  background-color:white;
+.sd-card .sd-card-title {
+  font-weight: 600;
+  color: var(--color-brand-primary);
 }
 
-.intro-card .card-footer p.card-text{
-  max-width: 220px;
-  margin-left: auto;
-  margin-right: auto;
+.sd-card .sd-card-body {
+  color: var(--color-foreground-secondary);
+  font-size: 0.95rem;
 }
 
+.step-card {
+  border-top: 3px solid var(--color-brand-primary);
+}
+
+.step-card:hover {
+  transform: none;
+}
+
+/* Tabs ------------------------------------------------------------------- */
+
+.sd-tab-set > label {
+  font-weight: 600;
+}
+
+/* Content ---------------------------------------------------------------- */
+
+article .align-default,
+article img.figure-shadow {
+  border-radius: var(--cerf-radius);
+  box-shadow: var(--cerf-shadow);
+}
+
+article table.docutils {
+  border-radius: var(--cerf-radius);
+  overflow: hidden;
+  font-size: 0.92rem;
+}
+
+article table.docutils th {
+  background: var(--color-background-secondary);
+  font-weight: 600;
+}
+
+article table.docutils td,
+article table.docutils th {
+  padding: 0.5rem 0.75rem;
+  vertical-align: top;
+}
+
+/* keep the wide configuration tables readable */
+article table.docutils td .line-block {
+  margin-bottom: 0;
+}
+
+.highlight {
+  border-radius: var(--cerf-radius);
+}
+
+/* Math ------------------------------------------------------------------- */
+
+.math {
+  overflow-x: auto;
+}
+
+div.math {
+  padding: 0.6rem 0;
+}
+
+/* API pages -------------------------------------------------------------- */
+
+dl.py.class > dt,
+dl.py.function > dt,
+dl.py.method > dt {
+  border-radius: 6px;
+}
+
+/* Sidebar brand ---------------------------------------------------------- */
+
+.sidebar-brand-text {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
