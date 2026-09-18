@@ -16,7 +16,7 @@ from joblib import Parallel, delayed
 
 import cerf.utils as util
 from cerf.model import Model
-from cerf.process_region import process_region, crop_to_region
+from cerf.process_region import RegionData, process_region
 
 logger = logging.getLogger(__name__)
 
@@ -61,8 +61,12 @@ def region_tasks(model, data, method):
 
     With an in-process backend (``sequential``, ``threading``) the staged full-grid arrays are shared by reference.
     With a process backend (``loky``, ``multiprocessing``) every argument is pickled per task, so each region is
-    cropped to its bounding box in the parent first (see `crop_to_region`); a region's payload is then proportional
+    cropped to its bounding box in the parent first (see `RegionData.crop`); a region's payload is then proportional
     to its own area (Texas ~11% of the grid, Rhode Island <0.1%) instead of ~4 GB of full-grid arrays per task.
+
+    :param model:                       `cerf.model.Model` (configuration)
+    :param data:                        `cerf.stage.Stage` or `RegionData` (staged arrays)
+    :param method:                      joblib backend name
 
     """
 
@@ -76,29 +80,15 @@ def region_tasks(model, data, method):
                   verbose=model.settings_dict.get('verbose', False),
                   write_output=False)
 
-    full_grid = dict(suitability_arr=data.suitability_arr,
-                     lmp_arr=data.lmp_arr,
-                     generation_arr=data.generation_arr,
-                     operating_cost_arr=data.operating_cost_arr,
-                     nov_arr=data.nov_arr,
-                     ic_arr=data.ic_arr,
-                     nlc_arr=data.nlc_arr,
-                     zones_arr=data.zones_arr,
-                     xcoords=data.xcoords,
-                     ycoords=data.ycoords,
-                     indices_2d=data.indices_2d,
-                     regions_arr=data.regions_arr)
+    region_data = data if isinstance(data, RegionData) else RegionData.from_stage(data)
 
     crop = method in PROCESS_BACKENDS
 
     for region_name, region_id in model.regions_dict.items():
 
-        if crop:
-            arrays = crop_to_region(region_id, data.region_bounds, **full_grid)
-        else:
-            arrays = dict(full_grid, region_bounds=data.region_bounds)
-
-        yield dict(common, target_region_name=region_name, **arrays)
+        yield dict(common,
+                   target_region_name=region_name,
+                   data=region_data.crop(region_id) if crop else region_data)
 
 
 def aggregate_results(results, init_df=None):

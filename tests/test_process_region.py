@@ -13,7 +13,8 @@ from joblib import Parallel, delayed
 
 import cerf.utils as util
 from cerf.process import aggregate_results, region_tasks
-from cerf.process_region import EmptyRegionResult, ProcessRegion, crop_to_region, process_region
+from cerf.compete import Competition
+from cerf.process_region import EmptyRegionResult, ProcessRegion, RegionData, crop_to_region, process_region
 from cerf.stage import Stage
 
 
@@ -241,9 +242,11 @@ class TestProcessRegion(unittest.TestCase):
         lok = list(region_tasks(model, data, 'loky'))
 
         self.assertEqual(['left', 'right'], [t['target_region_name'] for t in seq])
-        self.assertIs(data.nlc_arr, seq[0]['nlc_arr'])                       # shared by reference in-process
-        self.assertEqual((2, self.NROWS, self.NCOLS // 2), lok[0]['nlc_arr'].shape)   # cropped for processes
-        self.assertEqual((2, self.NROWS, self.NCOLS - self.NCOLS // 2), lok[1]['nlc_arr'].shape)
+        self.assertIsInstance(seq[0]['data'], RegionData)
+        self.assertIs(data.nlc_arr, seq[0]['data'].nlc_arr)                        # shared by reference in-process
+        self.assertIs(seq[0]['data'], seq[1]['data'])                              # one RegionData for all regions
+        self.assertEqual((2, self.NROWS, self.NCOLS // 2), lok[0]['data'].nlc_arr.shape)   # cropped for processes
+        self.assertEqual((2, self.NROWS, self.NCOLS - self.NCOLS // 2), lok[1]['data'].nlc_arr.shape)
 
         # both dispatch modes produce identical sited plants
         for a, b in zip(seq, lok):
@@ -289,6 +292,70 @@ class TestProcessRegion(unittest.TestCase):
         model.regions_dict = {'left': 1, 'right': 2}
         model.initialize_site_data = None
         return model, data
+
+    def test_region_data_object_and_keyword_arrays_are_equivalent(self):
+        """6.2: passing a RegionData or the individual array keyword arguments gives the same result."""
+
+        kwargs = self.build()
+        via_kwargs = ProcessRegion(**kwargs)
+
+        data, rest = RegionData.from_kwargs(kwargs)
+        self.assertEqual(set(RegionData.field_names()), set(kwargs) - set(rest))
+        self.assertNotIn('nlc_arr', rest)
+        via_data = ProcessRegion(data=data, **rest)
+
+        self.assertEqual(via_kwargs.run_data.sited_dict, via_data.run_data.sited_dict)
+        self.assertIs(data, via_data.data)
+        self.assertIs(data.nlc_arr, via_data.nlc_arr)          # accessor properties delegate to the data object
+
+        # from_stage works on anything exposing the field names; crop() round-trips through crop_to_region
+        class StageStub:
+            pass
+        stub = StageStub()
+        for k, v in data.as_kwargs().items():
+            setattr(stub, k, v)
+        stub.region_bounds = {1: (0, self.NROWS, 0, self.NCOLS // 2), 2: (0, self.NROWS, self.NCOLS // 2, self.NCOLS)}
+        rd = RegionData.from_stage(stub)
+        cropped = rd.crop(1)
+        self.assertIsInstance(cropped, RegionData)
+        self.assertEqual((2, self.NROWS, self.NCOLS // 2), cropped.nlc_arr.shape)
+        self.assertEqual({1: (0, self.NROWS, 0, self.NCOLS // 2)}, cropped.region_bounds)
+
+        # unknown keyword arguments are rejected rather than silently ignored
+        with self.assertRaises(TypeError):
+            ProcessRegion(data=data, bogus=1, **rest)
+
+    def test_construction_is_separate_from_run(self):
+        """6.1: ProcessRegion and Competition can be built for inspection and run explicitly; run() is idempotent."""
+
+        pr = ProcessRegion(**self.build(), auto_run=False)
+        self.assertIsNone(pr.run_data)
+        self.assertEqual((3, self.NROWS, self.NCOLS // 2), pr.suitable_nlc_region.shape)   # prepared state visible
+
+        self.assertIs(pr, pr.run())
+        first = pr.run_data
+        self.assertIsNotNone(first)
+        self.assertIs(first, pr.run().run_data)                  # idempotent
+        self.assertEqual(ProcessRegion(**self.build()).run_data.sited_dict, first.sited_dict)
+
+        comp = Competition(target_region_name='left',
+                           settings_dict=pr.settings_dict,
+                           technology_dict=pr.technology_dict,
+                           technology_order=pr.technology_order,
+                           expansion_dict=pr.expansion_dict['left'],
+                           lmp_dict=pr.lmp_flat_dict, generation_dict=pr.generation_flat_dict,
+                           operating_cost_dict=pr.operating_cost_flat_dict, nov_dict=pr.nov_flat_dict,
+                           ic_dict=pr.ic_flat_dict, nlc_mask=pr.mask_nlc(), zones_arr=pr.zones_flat_arr,
+                           xcoords=pr.xcoords_region, ycoords=pr.ycoords_region, indices_flat=pr.indices_flat_region,
+                           randomize=False, seed_value=0, verbose=False, auto_run=False)
+        self.assertIsNone(comp.sited_df)
+        self.assertGreater(comp.avail_grids, 0)                  # cheapest map computed at construction
+        self.assertEqual(0, len(comp.sited_dict['tech_id']))
+        comp.run()
+        self.assertEqual(first.sited_dict, comp.sited_dict)
+        n = len(comp.sited_dict['tech_id'])
+        comp.run()
+        self.assertEqual(n, len(comp.sited_dict['tech_id']))    # no double siting
 
     def test_seeded_results_identical_across_backends_and_order(self):
         """With a local per-competition RNG, seeded siting is independent of backend, thread scheduling and order."""

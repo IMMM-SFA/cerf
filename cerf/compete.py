@@ -74,7 +74,8 @@ class Competition:
                  indices_flat,
                  randomize=True,
                  seed_value=0,
-                 verbose=False):
+                 verbose=False,
+                 auto_run=True):
 
         # target region
         self.target_region_name = target_region_name
@@ -157,11 +158,32 @@ class Competition:
         # prep array to hold outputs
         self.sited_arr_1d = np.zeros_like(self.cheapest_arr_1d)
 
-        # run competition and site
-        self.sited_array, self.sited_df = self.compete()
+        # results, populated by `run()`
+        self.sited_array = None
+        self.sited_df = None
+        self._has_run = False
 
-        # evaluate sites to see if expansion plan was met
-        self.log_outcome()
+        # construction leaves the object fully prepared but un-sited; `auto_run` preserves the historical behaviour
+        #  of siting on instantiation
+        if auto_run:
+            self.run()
+
+    def run(self):
+        """Run the competition once and populate ``sited_array`` / ``sited_df`` / ``sited_dict``.
+
+        The object is prepared for inspection at construction (``cheapest_arr``, ``nlc_mask``, ``avail_grids``, ...);
+        calling ``run()`` performs the siting. It is idempotent: a second call returns the existing result.
+
+        :return:                        self
+
+        """
+
+        if not self._has_run:
+            self.sited_array, self.sited_df = self.compete()
+            self.log_outcome()
+            self._has_run = True
+
+        return self
 
     def metric_at(self, arr, flat_index):
         """Return the value of a per-technology metric array at a flat region cell index.

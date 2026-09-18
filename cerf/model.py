@@ -11,7 +11,7 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 import logging
 import time
 
-from cerf.process_region import process_region
+from cerf.process_region import RegionData, process_region
 from cerf.read_config import ReadConfig
 from cerf.stage import Stage
 
@@ -99,23 +99,11 @@ class Model(ReadConfig):
                                  technology_order=self.technology_order,
                                  expansion_dict=self.expansion_dict,
                                  regions_dict=self.regions_dict,
-                                 suitability_arr=data.suitability_arr,
-                                 lmp_arr=data.lmp_arr,
-                                 generation_arr=data.generation_arr,
-                                 operating_cost_arr=data.operating_cost_arr,
-                                 nov_arr=data.nov_arr,
-                                 ic_arr=data.ic_arr,
-                                 nlc_arr=data.nlc_arr,
-                                 zones_arr=data.zones_arr,
-                                 xcoords=data.xcoords,
-                                 ycoords=data.ycoords,
-                                 indices_2d=data.indices_2d,
+                                 data=RegionData.from_stage(data),
                                  randomize=self.settings_dict.get('randomize', True),
                                  seed_value=self.settings_dict.get('seed_value', 0),
                                  verbose=self.settings_dict.get('verbose', False),
-                                 write_output=write_output,
-                                 regions_arr=data.regions_arr,
-                                 region_bounds=data.region_bounds)
+                                 write_output=write_output)
 
         logger.info(f"CERF model run completed in {round(time.time() - self.start_time, 7)} seconds")
 
