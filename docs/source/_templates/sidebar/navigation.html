@@ -1,0 +1,5 @@
+{# Furo's navigation tree omits the required level on its caption headings.
+   Normalize only the incomplete form; leave future upstream fixes intact. #}
+<div class="sidebar-tree">
+  {{ furo_navigation_tree | replace('class="caption" role="heading">', 'class="caption" role="heading" aria-level="2">') }}
+</div>

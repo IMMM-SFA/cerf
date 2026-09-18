@@ -105,6 +105,8 @@ html_theme_options = {
         'color-sidebar-item-background--hover': '#e5ece2',
         'color-sidebar-item-expander-background--hover': '#dbe5d8',
         'color-highlight-on-target': '#edf2d6',
+        'color-api-name': '#14665b',
+        'color-api-pre-name': '#14665b',
         'color-api-background': '#edf2eb',
         'color-api-background-hover': '#e2ebdf',
         'font-stack': ('-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", '
@@ -132,6 +134,8 @@ html_theme_options = {
         'color-sidebar-item-background--hover': '#2a3d32',
         'color-sidebar-item-expander-background--hover': '#34483d',
         'color-highlight-on-target': '#334b31',
+        'color-api-name': '#9ad8bc',
+        'color-api-pre-name': '#9ad8bc',
         'color-api-background': '#21332b',
         'color-api-background-hover': '#2a3d32',
         'cerf-surface': '#1b2b24',

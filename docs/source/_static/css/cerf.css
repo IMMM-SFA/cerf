@@ -15,7 +15,7 @@ body {
 }
 
 .main { min-width: 0; }
-.content { width: 54rem; }
+.content { width: 54rem; min-width: 0; }
 article { overflow-wrap: break-word; }
 
 h1, h2, h3, h4 {
@@ -125,6 +125,7 @@ article a:not(.sd-btn, .headerlink, .sd-stretched-link) {
 .mobile-header .brand { font-weight: 700; letter-spacing: -0.04em; }
 
 .cerf-page-header {
+  clear: both;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -235,12 +236,13 @@ article a:not(.sd-btn, .headerlink, .sd-stretched-link) {
 
 .cerf-actions .sd-btn-outline-secondary:hover,
 .cerf-actions .sd-btn-outline-secondary:focus { background: var(--cerf-tint) !important; }
+.cerf-actions .sd-btn-outline-secondary .doc { color: inherit; }
 .cerf-hero-art { min-width: 0; text-align: center; }
 .cerf-hero-art img {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 50%;
+  border-radius: 16px;
   background: #edf3e7;
 }
 .cerf-art-caption {
@@ -313,7 +315,7 @@ article a:not(.sd-btn, .headerlink, .sd-stretched-link) {
 .cerf-principles { padding-left: 1.5rem; }
 .cerf-principles li { padding: 0.4rem 0 0.6rem 0.6rem; color: var(--color-foreground-secondary); }
 .cerf-principles li::marker { color: var(--color-brand-primary); font-weight: 700; }
-.step-card { border-top: 3px solid var(--color-brand-primary); background: var(--color-background-secondary); }
+.cerf-home .step-card { border-top: 3px solid var(--color-brand-primary); background: var(--color-background-secondary); }
 .step-card .sd-card-body { padding: 1.3rem; font-size: 0.83rem; }
 .step-card .sd-card-title { color: var(--color-brand-primary); }
 [role="main"] .cerf-metric {
@@ -370,7 +372,7 @@ footer { color: var(--color-foreground-muted); }
 }
 
 @media (max-width: 67em) {
-  .content { width: auto; }
+  .content { width: 100%; }
   [role="main"] .cerf-hero { padding: 2rem 1.5rem; }
   .cerf-hero-title { font-size: 2.4rem; }
 }
