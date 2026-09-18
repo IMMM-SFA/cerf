@@ -39,7 +39,9 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 6.3–6.8 | Explicit `__all__` / no star imports; `__version__` from package metadata; unused deps (`seaborn`, `pyarrow`, `rtree`, `fiona`, `pyproj`) removed, `environment.yml` synced; dead code removed; `yaml.safe_load`; `__init__` annotations; `sited_record()` | [#136](https://github.com/IMMM-SFA/cerf/pull/136) `6070061` | ✅ Merged | identical | none; +5 tests; pyflakes clean |
 | 6.1 + 6.2 | `RegionData` dataclass (`from_stage` / `crop`) replaces 21-argument plumbing in `ProcessRegion`, `process_region`, `region_tasks`, `Model.run_single_region`; `auto_run=False` + idempotent `run()` on `ProcessRegion` and `Competition` (kwargs still accepted) | [#137](https://github.com/IMMM-SFA/cerf/pull/137) `0fbaa19` | ✅ Merged | identical (sequential and `loky`) | none; +2 tests |
 | 7.1–7.3 | End-to-end tests on the sample data (`Stage`, all backends, `cerf.run`, `run_single_region`, `ingest_sited_data`, `plot_siting`); golden CSV + `assertAlmostEqual`; `package_data` / `slow` markers with auto-skip; ruff lint job, 3.9–3.12 Ubuntu matrix, Codecov upload, regression check in CI | [#138](https://github.com/IMMM-SFA/cerf/pull/138) `02f7e4b` | ✅ Merged | identical (also asserted by the new tests) | none; +6 tests (104 total); coverage 82% → 94%; fast suite 71 tests in ~1 s |
-| 8.x | Data-URL fallback to newest registered version (+ `2.5.0` registered); `MANIFEST.in` removed (wheel verified); Dockerfile built from checkout with pre-installed data; docs dependency table synced; draft 2.5.0 release notes; **Python 3.9 dropped** (`requires-python>=3.10`) | [#139](https://github.com/IMMM-SFA/cerf/pull/139) | 🟡 In review | identical | none; +3 tests |
+| 8.x | Data-URL fallback to newest registered version (+ `2.5.0` registered); `MANIFEST.in` removed (wheel verified); Dockerfile built from checkout with pre-installed data; docs dependency table synced; draft 2.5.0 release notes; **Python 3.9 dropped** (`requires-python>=3.10`) | [#139](https://github.com/IMMM-SFA/cerf/pull/139) `a4fc77f` | ✅ Merged | identical | none; +3 tests |
+
+**Status (after #139):** every item in §3–§8 is merged into `release/2.5.0` except **5.1** (LMP capacity-factor binning), which is deferred by the maintainer because it changes results. Twenty-two PRs (#118–#139); the seeded reference has never changed. Remaining release steps: bump `version` in `pyproject.toml` to `2.5.0` and update `CITATION.cff`, review the draft 2.5.0 section in `docs/source/release_notes.rst`, tag.
 
 Cumulative full-run timing (2010 CONUS sample, sequential, single process):
 
@@ -55,6 +57,7 @@ Cumulative full-run timing (2010 CONUS sample, sequential, single process):
 | #130 (4.9 + 4.10) | 3.22 s | 2.24 s | 5.47 s | −73% (sequential unchanged; `loky` now usable) |
 | #131–#133 (5.2, 5.3, 3.8–3.11) | 3.29 s | 2.22 s | 5.51 s | −73% (no perf change; `threading` deterministic at ~1.0 s) |
 | #134 (4.7 + 4.8) | 3.10 s | 2.08 s | 5.18 s | −75% |
+| #135–#139 (modelling fixes, refactors, tests, packaging) | 3.1 s | 2.1 s | 5.2 s | −75% (no perf change; tests 9 → 107, coverage 94%) |
 
 ---
 
