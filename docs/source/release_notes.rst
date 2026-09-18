@@ -4,6 +4,47 @@ Release notes
 This is the list of changes to **cerf** between each release. For full details,
 see the `commit logs <https://github.com/IMMM-SFA/cerf/commits>`_.
 
+Version 2.5.0
+_____________
+
+Performance, correctness and maintainability release. Siting results for a seeded run are **identical** to 2.4.1
+(verified for every change against the 2010 CONUS sample with ``benchmark/run_reference.py --compare``); the full
+sample run is ~4× faster (20.4 s → ~5.2 s sequential) and stages in 4.2 GB instead of 7.4 GB. The evaluation that
+drove this release is in ``docs/IMPROVEMENT_EVALUATION.md``.
+
+Performance
+
+- Vectorised buffer removal in the competition loop https://github.com/IMMM-SFA/cerf/pull/118
+- Look-up-table zone assignment and single sort in LMP staging (18× faster) https://github.com/IMMM-SFA/cerf/pull/119
+- Region raster read once; bounding boxes precomputed https://github.com/IMMM-SFA/cerf/pull/127
+- ``+inf`` sentinels instead of masked arrays in the competition loop https://github.com/IMMM-SFA/cerf/pull/128
+- ``uint8`` suitability, broadcast views for spatially constant costs, deferred metric lookups https://github.com/IMMM-SFA/cerf/pull/129
+- Regions cropped before dispatch to process backends (``loky`` 294 s → 9 s); single output concat https://github.com/IMMM-SFA/cerf/pull/130
+- Index-array buffers; bulk shapely → ``rasterize`` conversion without a temp file https://github.com/IMMM-SFA/cerf/pull/134
+
+Bug fixes
+
+- ``preprocess_hifld_substations`` ``isin`` signature error https://github.com/IMMM-SFA/cerf/pull/120
+- ``ZeroDivisionError`` in NOV levelization when escalation equals the discount rate https://github.com/IMMM-SFA/cerf/pull/121
+- Model no longer mutates the caller's configuration dictionary https://github.com/IMMM-SFA/cerf/pull/123
+- ``config_dict=None`` with a file crashed; dead branch removed https://github.com/IMMM-SFA/cerf/pull/124
+- Named ``cerf`` logger with idempotent handlers; root logger untouched https://github.com/IMMM-SFA/cerf/pull/125
+- Interconnection distances honour the raster pixel size (``sampling=`` in the EDT) https://github.com/IMMM-SFA/cerf/pull/131
+- Per-competition random state; seeded runs identical across backends (``threading`` now deterministic) https://github.com/IMMM-SFA/cerf/pull/132
+- Nodata handling, coordinate arrays via rasterio transform, case-insensitive region lookup, complete ``sited_dtypes`` https://github.com/IMMM-SFA/cerf/pull/133
+- ``lifetime_yrs`` / ``operational_life_yrs`` validated and documented; ``EmptyRegionResult`` instead of ``None``; suitability honours raster nodata https://github.com/IMMM-SFA/cerf/pull/135
+- Robust Zenodo download with retries; data URL falls back to the newest registered version https://github.com/IMMM-SFA/cerf/pull/122 https://github.com/IMMM-SFA/cerf/pull/139
+
+API and packaging
+
+- Explicit ``__all__``; ``__version__`` from package metadata; ``yaml.safe_load`` https://github.com/IMMM-SFA/cerf/pull/136
+- ``RegionData`` bundle and explicit ``run()`` on ``ProcessRegion`` / ``Competition`` (``auto_run=False`` to construct without running) https://github.com/IMMM-SFA/cerf/pull/137
+- Dependencies dropped: ``rioxarray``, ``seaborn``, ``pyarrow``, ``rtree``, ``fiona``, ``pyproj`` (the last two remain transitive via geopandas); ``shapely>=2.0`` required https://github.com/IMMM-SFA/cerf/pull/133 https://github.com/IMMM-SFA/cerf/pull/136
+- Deprecated: ``default_suitabiity_files`` (misspelling) → ``default_suitability_files``; ``Interconnection`` ``region_abbrev_to_name_file`` / ``region_name_to_id_file`` are ignored.
+- Python 3.9–3.12 tested in CI; end-to-end tests, ``ruff`` lint, coverage upload https://github.com/IMMM-SFA/cerf/pull/138
+- ``MANIFEST.in`` removed (hatchling); Dockerfile builds from the checkout and pre-installs package data https://github.com/IMMM-SFA/cerf/pull/139
+
+
 Version 2.4.1
 _____________
 

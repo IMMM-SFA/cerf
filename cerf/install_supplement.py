@@ -63,6 +63,7 @@ class InstallSupplement:
         '2.3.3': 'https://zenodo.org/records/6998151/files/cerf_package_data.zip?download=1',
         '2.4.0': 'https://zenodo.org/records/6998151/files/cerf_package_data.zip?download=1',
         '2.4.1': 'https://zenodo.org/records/6998151/files/cerf_package_data.zip?download=1',
+        '2.5.0': 'https://zenodo.org/records/6998151/files/cerf_package_data.zip?download=1',
     }
 
     # HTTP status codes worth retrying: rate limited, and transient server-side failures
@@ -75,9 +76,41 @@ class InstallSupplement:
         self.timeout = timeout
         self.backoff_seconds = backoff_seconds
 
+    @staticmethod
+    def _version_key(version_string):
+        """Sortable tuple for a release version string such as ``'2.3'`` or ``'2.4.1'``.
+
+        Any local / dev suffix (``'2.5.0.dev3'``, ``'2.5.0+g1234'``, ``'2.5.0rc1'``) is dropped so development
+        builds of a release resolve like the release itself. Returns ``None`` when no leading numeric release
+        segment can be parsed (e.g., the ``'0.0.0+unknown'`` fallback is parsed as ``(0, 0, 0)``, a genuinely
+        malformed string is not).
+
+        """
+
+        parts = []
+        for piece in str(version_string).split('.'):
+            digits = ''
+            for ch in piece:
+                if ch.isdigit():
+                    digits += ch
+                else:
+                    break
+            if not digits:
+                break
+            parts.append(int(digits))
+            if len(digits) != len(piece):
+                break  # stop at the first non-numeric suffix, e.g. '0rc1' or '0+g1234'
+
+        return tuple(parts) if parts else None
+
     @classmethod
     def get_data_link(cls, current_version):
-        """Return the data URL registered for a cerf version.
+        """Return the data URL for a cerf version.
+
+        An exact entry in ``DATA_VERSION_URLS`` wins. Otherwise the URL registered for the **newest version not newer
+        than** the installed one is used, with a warning, so a patch or minor release that did not change the data
+        supplement keeps working without a code change here. Versions older than every registered entry, or
+        unparsable versions, raise ``KeyError`` as before.
 
         :param current_version:         Installed cerf version string
         :type current_version:          str
@@ -86,13 +119,26 @@ class InstallSupplement:
 
         """
 
-        try:
+        if current_version in cls.DATA_VERSION_URLS:
             return cls.DATA_VERSION_URLS[current_version]
 
-        except KeyError:
-            msg = f"Link to data missing for current version:  {current_version}.  Please contact admin."
+        wanted = cls._version_key(current_version)
 
-            raise KeyError(msg)
+        if wanted is not None:
+            candidates = [(cls._version_key(v), v) for v in cls.DATA_VERSION_URLS]
+            eligible = [(key, v) for key, v in candidates if key is not None and key <= wanted]
+
+            if eligible:
+                _, fallback_version = max(eligible)
+                logger.warning(f"No package data registered for cerf version {current_version}; using the data "
+                               f"released for version {fallback_version}. If a newer data supplement exists for "
+                               f"this release, please update `InstallSupplement.DATA_VERSION_URLS`.")
+                return cls.DATA_VERSION_URLS[fallback_version]
+
+        msg = (f"Link to data missing for current version:  {current_version}.  Registered versions: "
+               f"{', '.join(cls.DATA_VERSION_URLS)}.  Please contact admin.")
+
+        raise KeyError(msg)
 
     @staticmethod
     def _retry_delay(response, attempt, backoff_seconds):

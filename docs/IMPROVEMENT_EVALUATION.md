@@ -39,7 +39,7 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 6.3–6.8 | Explicit `__all__` / no star imports; `__version__` from package metadata; unused deps (`seaborn`, `pyarrow`, `rtree`, `fiona`, `pyproj`) removed, `environment.yml` synced; dead code removed; `yaml.safe_load`; `__init__` annotations; `sited_record()` | [#136](https://github.com/IMMM-SFA/cerf/pull/136) `6070061` | ✅ Merged | identical | none; +5 tests; pyflakes clean |
 | 6.1 + 6.2 | `RegionData` dataclass (`from_stage` / `crop`) replaces 21-argument plumbing in `ProcessRegion`, `process_region`, `region_tasks`, `Model.run_single_region`; `auto_run=False` + idempotent `run()` on `ProcessRegion` and `Competition` (kwargs still accepted) | [#137](https://github.com/IMMM-SFA/cerf/pull/137) `0fbaa19` | ✅ Merged | identical (sequential and `loky`) | none; +2 tests |
 | 7.1–7.3 | End-to-end tests on the sample data (`Stage`, all backends, `cerf.run`, `run_single_region`, `ingest_sited_data`, `plot_siting`); golden CSV + `assertAlmostEqual`; `package_data` / `slow` markers with auto-skip; ruff lint job, 3.9–3.12 Ubuntu matrix, Codecov upload, regression check in CI | [#138](https://github.com/IMMM-SFA/cerf/pull/138) `02f7e4b` | ✅ Merged | identical (also asserted by the new tests) | none; +6 tests (104 total); coverage 82% → 94%; fast suite 71 tests in ~1 s |
-| 8.x | Docs and packaging | — | 🟡 In progress | — | — |
+| 8.x | Data-URL fallback to newest registered version (+ `2.5.0` registered); `MANIFEST.in` removed (wheel verified); Dockerfile built from checkout with pre-installed data; docs dependency table synced; draft 2.5.0 release notes | [#139](https://github.com/IMMM-SFA/cerf/pull/139) | 🟡 In review | identical | none; +3 tests |
 
 Cumulative full-run timing (2010 CONUS sample, sequential, single process):
 
@@ -487,7 +487,9 @@ Tests exist for `compete`, `interconnect`, `lmp`, `nov`, `read_config`, `utils.b
 
 ---
 
-## 8. Documentation and Packaging
+## 8. Documentation and Packaging — ✅ DONE in #139
+
+> **Resolved.** `InstallSupplement.get_data_link` falls back to the newest registered version not newer than the installed one (with a warning; dev/rc/local suffixes tolerated; older-than-everything or unparsable versions still raise `KeyError`), and `2.5.0` is registered explicitly. `MANIFEST.in` removed — a `python -m build --wheel` check confirmed the wheel still ships `cerf/data/README.md` and none of the downloaded data. `Dockerfile` builds a wheel from the checkout (dependencies come from `pyproject.toml`, so it cannot drift), installs it in a clean runtime stage and pre-installs the package data (`--build-arg CERF_SKIP_DATA=1` to skip); the upstream base image only publishes moving tags, so a digest can be passed via `BASE_IMAGE`. The `n_jobs=-1` wording was already corrected in the docstrings in #130 and no "all but one" text remains in README/docs. `getting_started.rst` dependency table synced with `pyproject.toml` (dropped xarray/whitebox/seaborn/fiona/rtree, added scipy, shapely 2.0). Draft 2.5.0 release notes added.
 
 - `install_supplement.DATA_VERSION_URLS` must be manually extended on every release; a version-range or "latest" fallback (with a warning) would prevent `KeyError` on new patch versions.
 - `Dockerfile` and `environment.yml` were not evaluated in depth but should pin against the same dependency set as `pyproject.toml` (they currently can drift).
