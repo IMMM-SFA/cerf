@@ -77,45 +77,27 @@ class NetOperationalValue:
 
     """
 
-    # type hints
-    discount_rate: float
-    lifetime_yrs: int
-    unit_size_mw: int
-    capacity_factor_fraction: float
-    variable_om_esc_rate_fraction: float
-    fuel_price_esc_rate_fraction: float
-    carbon_tax_esc_rate_fraction: float
-    variable_om_usd_per_mwh: float
-    heat_rate_btu_per_kWh: float
-    fuel_price_usd_per_mmbtu: float
-    carbon_tax_usd_per_ton: float
-    carbon_capture_rate_fraction: float
-    fuel_co2_content_tons_per_btu: float
-    lmp_arr: np.ndarray
-    target_year: int
-    consider_leap_year: bool
-
     # constants for conversion
     HOURS_PER_YEAR_NONLEAP = 8760
     HOURS_PER_YEAR_LEAP = 8784
 
     def __init__(self,
-                 discount_rate,
-                 lifetime_yrs,
-                 unit_size_mw,
-                 capacity_factor_fraction,
-                 variable_om_esc_rate_fraction,
-                 fuel_price_esc_rate_fraction,
-                 carbon_tax_esc_rate_fraction,
-                 variable_om_usd_per_mwh,
-                 heat_rate_btu_per_kWh,
-                 fuel_price_usd_per_mmbtu,
-                 carbon_tax_usd_per_ton,
-                 carbon_capture_rate_fraction,
-                 fuel_co2_content_tons_per_btu,
-                 lmp_arr,
-                 target_year,
-                 consider_leap_year=False):
+                 discount_rate: float,
+                 lifetime_yrs: float,
+                 unit_size_mw: float,
+                 capacity_factor_fraction: float,
+                 variable_om_esc_rate_fraction: float,
+                 fuel_price_esc_rate_fraction: float,
+                 carbon_tax_esc_rate_fraction: float,
+                 variable_om_usd_per_mwh: float,
+                 heat_rate_btu_per_kWh: float,
+                 fuel_price_usd_per_mmbtu: float,
+                 carbon_tax_usd_per_ton: float,
+                 carbon_capture_rate_fraction: float,
+                 fuel_co2_content_tons_per_btu: float,
+                 lmp_arr: np.ndarray,
+                 target_year: int,
+                 consider_leap_year: bool = False):
 
         # assign class attributes
         self.discount_rate = discount_rate
@@ -157,29 +139,92 @@ class NetOperationalValue:
         else:
             return cls.HOURS_PER_YEAR_NONLEAP
 
+    @staticmethod
+    def annuity_factor_from(discount_rate, lifetime_yrs):
+        """Calculate the annuity factor  d(1 + d)^n / ((1 + d)^n - 1).
+
+        When the discount rate is zero the expression is 0/0; its limit is 1/n, which is the
+        undiscounted case of spreading a cost evenly over the lifetime.
+
+        :param discount_rate:               Real annual discount rate as a fraction
+        :type discount_rate:                float
+
+        :param lifetime_yrs:                Asset lifetime in years
+        :type lifetime_yrs:                 int, float
+
+        :return:                            Annuity factor
+
+        """
+
+        if lifetime_yrs <= 0:
+            raise ValueError(f"`lifetime_yrs` must be positive; got {lifetime_yrs}")
+
+        if discount_rate <= -1.0:
+            raise ValueError(f"`discount_rate` must be greater than -1.0; got {discount_rate}")
+
+        if discount_rate == 0.0:
+            return 1.0 / lifetime_yrs
+
+        fx = pow(1.0 + discount_rate, lifetime_yrs)
+
+        return discount_rate * fx / (fx - 1.0)
+
+    @staticmethod
+    def levelization_factor_from(escalation_rate, discount_rate, lifetime_yrs, annuity_factor):
+        """Calculate the levelization factor for a cost stream escalating at ``escalation_rate``.
+
+        With k = (1 + e) / (1 + d), the factor is  k(1 - k^n) AF / (1 - k), the present value of the
+        escalating stream annuitized over the lifetime. When e == d, k == 1 and the expression is 0/0;
+        its limit is n * AF (every year's cost has the same present value).
+
+        :param escalation_rate:             Annual escalation rate of the cost as a fraction
+        :type escalation_rate:              float
+
+        :param discount_rate:               Real annual discount rate as a fraction
+        :type discount_rate:                float
+
+        :param lifetime_yrs:                Asset lifetime in years
+        :type lifetime_yrs:                 int, float
+
+        :param annuity_factor:              Annuity factor for the same discount rate and lifetime
+        :type annuity_factor:               float
+
+        :return:                            Levelization factor
+
+        """
+
+        k = (1.0 + escalation_rate) / (1.0 + discount_rate)
+
+        if k == 1.0:
+            return lifetime_yrs * annuity_factor
+
+        return k * (1.0 - pow(k, lifetime_yrs)) * annuity_factor / (1.0 - k)
+
     def calc_annuity_factor(self):
         """Calculate annuity factor."""
 
-        fx = pow(1.0 + self.discount_rate, self.lifetime_yrs)
-        return self.discount_rate * fx / (fx - 1.0)
+        return self.annuity_factor_from(self.discount_rate, self.lifetime_yrs)
+
+    def _levelization_factor(self, escalation_rate):
+        """Calculate the levelization factor for a cost stream with the given escalation rate."""
+
+        return self.levelization_factor_from(escalation_rate, self.discount_rate, self.lifetime_yrs,
+                                             self.annuity_factor)
 
     def calc_levelization_factor_vom(self):
         """Calculate the levelizing factor for variable OM."""
 
-        k = (1.0 + self.variable_cost_esc) / (1.0 + self.discount_rate)
-        return k * (1.0 - pow(k, self.lifetime_yrs)) * self.annuity_factor / (1.0 - k)
+        return self._levelization_factor(self.variable_cost_esc)
 
     def calc_levelization_factor_fuel(self):
         """Calculate the levelizing factor for fuel."""
 
-        k = (1.0 + self.fuel_esc) / (1.0 + self.discount_rate)
-        return k * (1.0 - pow(k, self.lifetime_yrs)) * self.annuity_factor / (1.0 - k)
+        return self._levelization_factor(self.fuel_esc)
 
     def calc_levelization_factor_carbon(self):
         """Calculate the levelizing factor for carbon."""
 
-        k = (1.0 + self.carbon_esc) / (1.0 + self.discount_rate)
-        return k * (1.0 - pow(k, self.lifetime_yrs)) * self.annuity_factor / (1.0 - k)
+        return self._levelization_factor(self.carbon_esc)
 
     def calc_generation(self):
         """Calculate electricity generation."""
@@ -193,7 +238,8 @@ class NetOperationalValue:
         term2 = self.lmp_arr * self.lf_fuel
         term3 = self.variable_om_usd_per_mwh * self.lf_vom
         term4 = self.heat_rate_btu_per_kWh * (self.fuel_price_usd_per_mmbtu / 1000) * self.lf_fuel
-        term5 = (self.carbon_tax_usd_per_ton * self.fuel_co2_content_tons_per_btu * self.heat_rate_btu_per_kWh * self.lf_carbon / 1000000) * (1 - self.carbon_capture_rate_fraction)
+        term5 = (self.carbon_tax_usd_per_ton * self.fuel_co2_content_tons_per_btu * self.heat_rate_btu_per_kWh
+                 * self.lf_carbon / 1000000) * (1 - self.carbon_capture_rate_fraction)
         operating_cost = term3 + term4 + term5
         nov = generation * (term2 - operating_cost)
 

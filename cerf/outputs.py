@@ -65,7 +65,7 @@ def plot_siting(result_df, boundary_shp=None, regions_shp=None, column='tech_nam
     ax.set_axis_off()
 
     if save_figure is True and output_file is None:
-        raise ValueError(f"'output_file' must be set if 'save_figure' is True.")
+        raise ValueError("'output_file' must be set if 'save_figure' is True.")
 
     if save_figure:
         plt.savefig(output_file)

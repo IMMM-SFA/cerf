@@ -1,9 +1,12 @@
+import copy
 import logging
 
 import numpy as np
 import pandas as pd
 
 import cerf.utils as util
+
+logger = logging.getLogger(__name__)
 
 
 class Competition:
@@ -22,11 +25,14 @@ class Competition:
     :param expansion_plan:                          Dictionary of {tech_id: number_of_sites, ...}
     :type expansion_plan:                           dict
 
-    :param nlc_mask:                                3D masked array of [tech_id, x, y] for Net Locational Costs. Each
+    :param nlc_mask:                                3D array of [tech_id, x, y] for Net Locational Costs. Each
                                                     technology has been masked with its suitability data, so only
-                                                    grid cells that are suitable have an NLC per tech. The 0 index
-                                                    position is a default dimension which is chosen if no technologies
-                                                    are able to compete.
+                                                    grid cells that are suitable have a finite NLC per tech; unsuitable
+                                                    cells are ``+inf`` (a ``numpy.ma`` masked array is also accepted
+                                                    and converted). The 0 index position is a default dimension, all
+                                                    ``+inf``, which is chosen if no technologies are able to compete.
+                                                    A contiguous ``float64`` input is used as the working array and
+                                                    is modified in place as cells are sited and excluded.
     :type nlc_mask:                                 ndarray
 
     :param technology_dict:                         A technology dictionary containing at a minimum
@@ -39,7 +45,10 @@ class Competition:
                                                     Default:  True
     :type randomize:                                bool
 
-    :param seed_value:                              Value for the see if randomize is False.
+    :param seed_value:                              Seed for this competition's private random number generator when
+                                                    ``randomize`` is False. The generator is local to the instance
+                                                    (the global NumPy RNG is never touched), so seeded results are
+                                                    identical for every joblib backend and processing order.
     :type seed_value:                               int
 
     :param verbose:                                 Log out siting information. Default False.
@@ -65,7 +74,8 @@ class Competition:
                  indices_flat,
                  randomize=True,
                  seed_value=0,
-                 verbose=False):
+                 verbose=False,
+                 auto_run=True):
 
         # target region
         self.target_region_name = target_region_name
@@ -79,8 +89,9 @@ class Competition:
         # order of technologies to process
         self.technology_order = technology_order
 
-        # dictionary containing the expansion plan
-        self.expansion_dict = expansion_dict
+        # private copy of the region's expansion plan; `compete()` decrements `n_sites` as plants are sited and the
+        #  remaining counts are exposed via `self.expansion_dict`, so the caller's plan must never be touched
+        self.expansion_dict = copy.deepcopy(expansion_dict)
 
         # locational marginal pricing
         self.lmp_flat_dict = lmp_dict
@@ -103,16 +114,24 @@ class Competition:
         # flat array of full grid indices value for the target region
         self.indices_flat = indices_flat
 
-        # net locational costs with suitability mask for the target region
-        self.nlc_mask = nlc_mask
+        # net locational costs with suitability applied for the target region: unsuitable / excluded cells are +inf so a
+        #  plain float array with `argmin` reproduces the masked-array semantics (masked values fill with +inf) at a
+        #  fraction of the cost
+        if np.ma.isMaskedArray(nlc_mask):
+            nlc_mask = nlc_mask.astype(np.float64).filled(np.inf)
+        self.nlc_mask = np.ascontiguousarray(nlc_mask, dtype=np.float64)
         self.nlc_mask_shape = self.nlc_mask.shape
+
+        # 2D view [layer, flat_cell] of the same memory for cheap per-cell exclusion updates
+        self._nlc_2d = self.nlc_mask.reshape(self.nlc_mask_shape[0], -1)
 
         # log out additional info
         self.verbose = verbose
 
-        # use random seed to create reproducible outcomes
-        if randomize is False:
-            np.random.seed(seed_value)
+        # private random number generator; seeded for reproducible outcomes when requested. A local `RandomState`
+        #  yields exactly the same draws the legacy global `np.random.seed`/`np.random.choice` did, without mutating
+        #  process-wide state shared with other regions, threads, or user code
+        self.rng = np.random.RandomState(None if randomize else seed_value)
 
         # number of technologies
         self.n_techs = len(self.technology_order)
@@ -124,32 +143,137 @@ class Competition:
         self.xcoords = xcoords
         self.ycoords = ycoords
 
-        # mask any technologies having 0 expected sites in the expansion plan to exclude them from competition
+        # exclude any technologies having 0 expected sites in the expansion plan from competition
         for index, i in enumerate(self.technology_order, 1):
-            if expansion_dict[i]["n_sites"] == 0:
-                self.nlc_mask[index, :, :] = np.ma.masked_array(self.nlc_mask[index, :, :],
-                                                                np.ones_like(self.nlc_mask[index, :, :]))
+            if self.expansion_dict[i]["n_sites"] == 0:
+                self.exclude_technology(index)
+
+        # create dictionary of {tech_id: flat_nlc_array, ...}; a snapshot taken before any siting so the NLC of a
+        #  chosen cell can still be reported after its neighbourhood has been excluded
+        self.nlc_flat_dict = {i: self._nlc_2d[ix + 1].copy() for ix, i in enumerate(self.technology_order)}
 
         # show cheapest option, add 1 to the index to represent the technology number
+        self.update_cheapest()
+
+        # prep array to hold outputs
+        self.sited_arr_1d = np.zeros_like(self.cheapest_arr_1d)
+
+        # results, populated by `run()`
+        self.sited_array = None
+        self.sited_df = None
+        self._has_run = False
+
+        # construction leaves the object fully prepared but un-sited; `auto_run` preserves the historical behaviour
+        #  of siting on instantiation
+        if auto_run:
+            self.run()
+
+    def run(self):
+        """Run the competition once and populate ``sited_array`` / ``sited_df`` / ``sited_dict``.
+
+        The object is prepared for inspection at construction (``cheapest_arr``, ``nlc_mask``, ``avail_grids``, ...);
+        calling ``run()`` performs the siting. It is idempotent: a second call returns the existing result.
+
+        :return:                        self
+
+        """
+
+        if not self._has_run:
+            self.sited_array, self.sited_df = self.compete()
+            self.log_outcome()
+            self._has_run = True
+
+        return self
+
+    def metric_at(self, arr, flat_index):
+        """Return the value of a per-technology metric array at a flat region cell index.
+
+        Metric arrays may be either flat 1D arrays or 2D ``[row, col]`` views over the region's bounding box (the
+        latter avoids flattening full technology stacks per region); both are indexed without copying.
+
+        """
+
+        if arr.ndim == 1:
+            return arr[flat_index]
+
+        row, col = divmod(int(flat_index), self.nlc_mask_shape[2])
+
+        return arr[row, col]
+
+    def sited_record(self, tech_id, target_ix, retirement_year):
+        """Build the output record for one sited plant as a dictionary keyed like `util.empty_sited_dict()`.
+
+        :param tech_id:                 Technology ID of the sited plant
+        :param target_ix:               Flat region cell index of the site
+        :param retirement_year:         Year the plant retires (``run_year + operational_life_yrs``)
+
+        """
+
+        tech = self.technology_dict[tech_id]
+
+        return {'region_name': self.target_region_name,
+                'tech_id': tech_id,
+                'tech_name': tech['tech_name'],
+                'unit_size_mw': tech['unit_size_mw'],
+                'xcoord': self.xcoords[target_ix],
+                'ycoord': self.ycoords[target_ix],
+                'index': self.indices_flat[target_ix],
+                'buffer_in_km': tech['buffer_in_km'],
+                'sited_year': self.settings_dict['run_year'],
+                'retirement_year': retirement_year,
+                'lmp_zone': self.zones_flat_arr[target_ix],
+                'locational_marginal_price_usd_per_mwh': self.metric_at(self.lmp_flat_dict[tech_id], target_ix),
+                'generation_mwh_per_year': self.metric_at(self.generation_flat_dict[tech_id], target_ix),
+                'operating_cost_usd_per_year': self.metric_at(self.operating_cost_flat_dict[tech_id], target_ix),
+                'net_operational_value_usd_per_year': self.metric_at(self.nov_flat_dict[tech_id], target_ix),
+                'interconnection_cost_usd_per_year': self.metric_at(self.ic_flat_dict[tech_id], target_ix),
+                'net_locational_cost_usd_per_year': self.nlc_flat_dict[tech_id][target_ix],
+                'capacity_factor_fraction': tech['capacity_factor_fraction'],
+                'carbon_capture_rate_fraction': tech['carbon_capture_rate_fraction'],
+                'fuel_co2_content_tons_per_btu': tech['fuel_co2_content_tons_per_btu'],
+                'fuel_price_usd_per_mmbtu': tech['fuel_price_usd_per_mmbtu'],
+                'fuel_price_esc_rate_fraction': tech['fuel_price_esc_rate_fraction'],
+                'heat_rate_btu_per_kWh': tech['heat_rate_btu_per_kWh'],
+                'lifetime_yrs': tech['lifetime_yrs'],
+                'operational_life_yrs': tech['operational_life_yrs'],
+                'variable_om_usd_per_mwh': tech['variable_om_usd_per_mwh'],
+                'variable_om_esc_rate_fraction': tech['variable_om_esc_rate_fraction'],
+                'carbon_tax_usd_per_ton': tech['carbon_tax_usd_per_ton'],
+                'carbon_tax_esc_rate_fraction': tech['carbon_tax_esc_rate_fraction']}
+
+    def add_sited_record(self, tech_id, target_ix, retirement_year):
+        """Append one sited plant to ``self.sited_dict`` (a dict of column lists aligned with `empty_sited_dict`)."""
+
+        record = self.sited_record(tech_id, target_ix, retirement_year)
+
+        if record.keys() != self.sited_dict.keys():
+            missing = set(self.sited_dict) ^ set(record)
+            raise KeyError(f"Sited record columns do not match `empty_sited_dict()`: {sorted(missing)}")
+
+        for key, value in record.items():
+            self.sited_dict[key].append(value)
+
+    def exclude_technology(self, tech_index):
+        """Make every grid cell unavailable to the technology at layer ``tech_index``."""
+
+        self.nlc_mask[tech_index, :, :] = np.inf
+
+    def exclude_cells(self, flat_indices):
+        """Make the given flat grid cell indices unavailable to all technologies."""
+
+        self._nlc_2d[1:, flat_indices] = np.inf
+
+    def update_cheapest(self):
+        """Recompute the cheapest technology per grid cell (0 where no technology is available)."""
+
+        # unsuitable cells are +inf in every layer, so layer 0 (all +inf) wins the tie exactly as the masked argmin did
         self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
 
         # flatten cheapest array to be able to use random
         self.cheapest_arr_1d = self.cheapest_arr.flatten()
 
-        # prep array to hold outputs
-        self.sited_arr_1d = np.zeros_like(self.cheapest_arr_1d)
-
-        # set initial value to for available grid cells
-        self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
-
-        # create dictionary of {tech_id: flat_nlc_array, ...}
-        self.nlc_flat_dict = {i: self.nlc_mask[ix+1, :, :].flatten() for ix, i in enumerate(self.technology_order)}
-
-        # run competition and site
-        self.sited_array, self.sited_df = self.compete()
-
-        # evaluate sites to see if expansion plan was met
-        self.log_outcome()
+        # number of grid cells still available to some technology
+        self.avail_grids = int(np.count_nonzero(self.cheapest_arr_1d))
 
     def log_outcome(self):
         """Log a warning sites that were not able to be sited."""
@@ -160,7 +284,8 @@ class Competition:
             remaining_sites = self.expansion_dict[k]['n_sites']
 
             if remaining_sites > 0:
-                logging.warning(f"Unable to achieve full siting for `{tech_name}` in `{self.target_region_name}`:  {remaining_sites} unsited.")
+                logger.warning(f"Unable to achieve full siting for `{tech_name}` in `{self.target_region_name}`:  "
+                               f"{remaining_sites} unsited.")
 
     def compete(self):
 
@@ -183,7 +308,8 @@ class Competition:
                 required_sites = self.expansion_dict[tech_id]['n_sites']
 
                 # calculate the year of retirement
-                retirement_year = self.settings_dict['run_year'] + int(self.technology_dict[tech_id]['operational_life_yrs'])
+                operational_life_yrs = int(self.technology_dict[tech_id]['operational_life_yrs'])
+                retirement_year = self.settings_dict['run_year'] + operational_life_yrs
 
                 # if there are more power plants to site and there are grids available to site them...
                 if self.avail_grids > 0 and tech.shape[0] > 0 and required_sites > 0:
@@ -191,6 +317,7 @@ class Competition:
                     # site with buffer and exclude buffered area from further siting
                     still_siting = True
                     sited_list = []
+                    excluded_lists = []
                     while still_siting:
 
                         # get the NLC values associated with each winner
@@ -200,60 +327,29 @@ class Competition:
                         tech_nlc_cheap = tech[np.where(tech_nlc == np.nanmin(tech_nlc))]
 
                         # select a random index that has a winning cell for the check where multiple low NLC may exists
-                        target_ix = np.random.choice(tech_nlc_cheap)
+                        target_ix = self.rng.choice(tech_nlc_cheap)
 
-                        # add selected index to sited dictionary
-                        self.sited_dict['region_name'].append(self.target_region_name)
-                        self.sited_dict['tech_id'].append(tech_id)
-                        self.sited_dict['tech_name'].append(self.technology_dict[tech_id]['tech_name'])
-                        self.sited_dict['unit_size_mw'].append(self.technology_dict[tech_id]['unit_size_mw'])
-                        self.sited_dict['xcoord'].append(self.xcoords[target_ix])
-                        self.sited_dict['ycoord'].append(self.ycoords[target_ix])
-                        self.sited_dict['index'].append(self.indices_flat[target_ix])
-                        self.sited_dict['buffer_in_km'].append(self.technology_dict[tech_id]['buffer_in_km'])
-                        self.sited_dict['sited_year'].append(self.settings_dict['run_year'])
-                        self.sited_dict['retirement_year'].append(retirement_year)
-                        self.sited_dict['lmp_zone'].append(self.zones_flat_arr[target_ix])
-                        self.sited_dict['locational_marginal_price_usd_per_mwh'].append(self.lmp_flat_dict[tech_id][target_ix])
-                        self.sited_dict['generation_mwh_per_year'].append(self.generation_flat_dict[tech_id][target_ix])
-                        self.sited_dict['operating_cost_usd_per_year'].append(self.operating_cost_flat_dict[tech_id][target_ix])
-                        self.sited_dict['net_operational_value_usd_per_year'].append(self.nov_flat_dict[tech_id][target_ix])
-                        self.sited_dict['interconnection_cost_usd_per_year'].append(self.ic_flat_dict[tech_id][target_ix])
-                        self.sited_dict['net_locational_cost_usd_per_year'].append(self.nlc_flat_dict[tech_id][target_ix])
-                        self.sited_dict['capacity_factor_fraction'].append(self.technology_dict[tech_id]["capacity_factor_fraction"])
-                        self.sited_dict['carbon_capture_rate_fraction'].append(self.technology_dict[tech_id]["carbon_capture_rate_fraction"])
-                        self.sited_dict['fuel_co2_content_tons_per_btu'].append(self.technology_dict[tech_id]["fuel_co2_content_tons_per_btu"])
-                        self.sited_dict['fuel_price_usd_per_mmbtu'].append(self.technology_dict[tech_id]["fuel_price_usd_per_mmbtu"])
-                        self.sited_dict['fuel_price_esc_rate_fraction'].append(self.technology_dict[tech_id]["fuel_price_esc_rate_fraction"])
-                        self.sited_dict['heat_rate_btu_per_kWh'].append(self.technology_dict[tech_id]["heat_rate_btu_per_kWh"])
-                        self.sited_dict['lifetime_yrs'].append(self.technology_dict[tech_id]["lifetime_yrs"])
-                        self.sited_dict['operational_life_yrs'].append(self.technology_dict[tech_id]["operational_life_yrs"])
-                        self.sited_dict['variable_om_usd_per_mwh'].append(self.technology_dict[tech_id]["variable_om_usd_per_mwh"])
-                        self.sited_dict['variable_om_esc_rate_fraction'].append(self.technology_dict[tech_id]["variable_om_esc_rate_fraction"])
-                        self.sited_dict['carbon_tax_usd_per_ton'].append(self.technology_dict[tech_id]["carbon_tax_usd_per_ton"])
-                        self.sited_dict['carbon_tax_esc_rate_fraction'].append(self.technology_dict[tech_id]["carbon_tax_esc_rate_fraction"])
+                        # record the sited plant
+                        self.add_sited_record(tech_id, target_ix, retirement_year)
 
                         # add selected index to list
                         sited_list.append(target_ix)
 
-                        # apply buffer
-                        result = util.buffer_flat_array(target_index=target_ix,
-                                                        arr=self.cheapest_arr_1d,
-                                                        nrows=self.cheapest_arr.shape[0],
-                                                        ncols=self.cheapest_arr.shape[1],
-                                                        ncells=self.technology_dict[tech_id]['buffer_in_km'],
-                                                        set_value=0)
-
-                        # unpack values
-                        self.cheapest_arr_1d, buffer_indices_list = result
+                        # apply buffer: the site and its neighbourhood are no longer the cheapest option for anyone
+                        buffer_indices = util.buffer_flat_indices(target_index=target_ix,
+                                                                  nrows=self.nlc_mask_shape[1],
+                                                                  ncols=self.nlc_mask_shape[2],
+                                                                  ncells=self.technology_dict[tech_id]['buffer_in_km'])
+                        self.cheapest_arr_1d[buffer_indices] = 0
+                        excluded_lists.append(buffer_indices)
 
                         # update the number of sites left to site
                         required_sites -= 1
                         self.expansion_dict[tech_id].update(n_sites=required_sites)
 
-                        # remove any buffered elements as an option to site
-                        tech_indices_to_delete = [np.where(tech == i)[0][0] for i in buffer_indices_list if i in tech]
-                        tech = np.delete(tech, tech_indices_to_delete)
+                        # remove any buffered elements as an option to site; `tech` is a sorted unique index array
+                        #  from np.where, and boolean masking preserves its order so seeded outcomes are unchanged
+                        tech = tech[~np.isin(tech, buffer_indices, assume_unique=True)]
 
                         # exit siting for the target technology if all sites have been sited or if there are no more
                         #   winning cells
@@ -267,42 +363,19 @@ class Competition:
                     self.sited_arr_1d[rdx] = tech_id
 
                     if self.verbose:
-                        logging.info('\nUpdate expansion plan to represent siting requirements:')
-                        logging.info(self.expansion_dict)
+                        logger.info('\nUpdate expansion plan to represent siting requirements:')
+                        logger.info(self.expansion_dict)
 
-                    # update original array with excluded area where siting occurred
-                    # if target technology has no more sites to be sited
-                    if self.expansion_dict[tech_id] == 0:
+                    # apply the new exclusion (sited cells and their buffers from this batch) to all techs
+                    self.exclude_cells(np.concatenate(excluded_lists))
 
-                        # make all elements for the target tech in the NLC mask unsuitable so we can progress
-                        self.nlc_mask[tech_index, :, :] = np.ma.masked_array(self.nlc_mask[0, :, :],
-                                                                             np.ones_like(self.nlc_mask[0, :, :]))
-
-                    # apply the new exclusion from the current technology to all techs...
-                    #   invert sited elements to have a value of 1 so they can be used as a mask
-                    #   repeat the new sited array to create a mask for all techs and reshape to 2D
-                    #   update all technologies with the new mask
-                    self.nlc_mask[1:, :, :] = np.ma.masked_array(self.nlc_mask[1:, :, :],
-                                                                 np.tile(np.where(self.cheapest_arr_1d == 0, 1, 0),
-                                                                         self.nlc_mask_shape[0] - 1).reshape(
-                                                                     (self.nlc_mask_shape[0] - 1,
-                                                                      self.nlc_mask_shape[1],
-                                                                      self.nlc_mask_shape[2])))
-
-                    # if the technology has achieved its full expansion, then mask the rest of its suitable area so
+                    # if the technology has achieved its full expansion, then exclude the rest of its suitable area so
                     #  other technologies can now compete for the grid cells it previously won but now no longer needs
                     if self.expansion_dict[tech_id]['n_sites'] == 0:
-                        self.nlc_mask[tech_index, :, :] = np.ma.masked_array(self.nlc_mask[tech_index, :, :],
-                                                                             np.ones_like(self.nlc_mask[tech_index, :, :]))
+                        self.exclude_technology(tech_index)
 
-                    # show cheapest option, add 1 to the index to represent the technology number
-                    self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
-
-                    # flatten cheapest array to be able to use random
-                    self.cheapest_arr_1d = self.cheapest_arr.flatten()
-
-                    # check for any available grids to site in
-                    self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
+                    # show cheapest option and count the grid cells still available
+                    self.update_cheapest()
 
                     # are there any sites left to site
                     left_to_site = sum([self.expansion_dict[i]['n_sites'] for i in self.expansion_dict.keys()])
@@ -312,7 +385,7 @@ class Competition:
                         keep_siting = False
 
                     if self.verbose:
-                        logging.info(f'\nAvailable grid cells:  {self.avail_grids}')
+                        logger.info(f'\nAvailable grid cells:  {self.avail_grids}')
 
                 # there are no more suitable grid cells
                 elif self.avail_grids == 0:
@@ -321,19 +394,12 @@ class Competition:
                 # if there are available grids and a cheapest option available but no more required sites
                 elif self.avail_grids > 0 and tech.shape[0] > 0 and required_sites == 0:
 
-                    # if there are no required sites, then mask the rest of the techs suitable area so
+                    # if there are no required sites, then exclude the rest of the techs suitable area so
                     #  other technologies can now compete for the grid cells it previously won but now no longer needs
-                    self.nlc_mask[tech_index, :, :] = np.ma.masked_array(self.nlc_mask[tech_index, :, :],
-                                                                         np.ones_like(self.nlc_mask[tech_index, :, :]))
+                    self.exclude_technology(tech_index)
 
-                    # show cheapest option, add 1 to the index to represent the technology number
-                    self.cheapest_arr = np.argmin(self.nlc_mask, axis=0)
-
-                    # flatten cheapest array to be able to use random
-                    self.cheapest_arr_1d = self.cheapest_arr.flatten()
-
-                    # check for any available grids to site in
-                    self.avail_grids = np.where(self.cheapest_arr_1d > 0)[0].shape[0]
+                    # show cheapest option and count the grid cells still available
+                    self.update_cheapest()
 
                 # if there are suitable cells AND no winners and some or no sites left to site pass until next round
                 else:

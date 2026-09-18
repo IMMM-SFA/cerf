@@ -18,17 +18,39 @@ from cerf.lmp import LocationalMarginalPricing
 from cerf.nov import NetOperationalValue
 from cerf.interconnect import Interconnection
 
+logger = logging.getLogger(__name__)
+
 
 class Stage:
+    """Stage all spatial inputs (LMP, interconnection, NOV, NLC, suitability) for a CERF run.
 
-    # type hints
-    settings_dict: dict
-    lmp_zone_dict: dict
-    technology_dict: dict
-    technology_order: list
+    :param settings_dict:               Project level settings from `cerf.read_config.ReadConfig`
+    :type settings_dict:                dict
 
-    def __init__(self, settings_dict, lmp_zone_dict, technology_dict, technology_order, infrastructure_dict,
-                 initialize_site_data):
+    :param lmp_zone_dict:               LMP zone settings from `cerf.read_config.ReadConfig`
+    :type lmp_zone_dict:                dict
+
+    :param technology_dict:             Technology parameters keyed by technology ID
+    :type technology_dict:              dict
+
+    :param technology_order:            Technology IDs in the order used to index the 3D arrays
+    :type technology_order:             list
+
+    :param infrastructure_dict:         Infrastructure (substation / pipeline) settings
+    :type infrastructure_dict:          dict
+
+    :param initialize_site_data:        ``None``, or a CSV path / DataFrame of previously sited plants
+    :type initialize_site_data:         str, pandas.DataFrame, None
+
+    """
+
+    def __init__(self,
+                 settings_dict: dict,
+                 lmp_zone_dict: dict,
+                 technology_dict: dict,
+                 technology_order: list,
+                 infrastructure_dict: dict,
+                 initialize_site_data=None):
 
         # dictionary containing project level settings
         self.settings_dict = settings_dict
@@ -55,6 +77,11 @@ class Stage:
         self.cerf_regionid_raster_file = self.settings_dict.get('region_raster_file')
         self.xcoords, self.ycoords = util.raster_to_coord_arrays(self.cerf_regionid_raster_file)
 
+        # region ID per grid cell, read once here and shared with every region instead of re-reading the raster
+        #  per region; plus each region's bounding box in grid space
+        self.regions_arr = self.load_regions_raster()
+        self.region_bounds = util.region_bounding_boxes(self.regions_arr)
+
         # generate grid indices in a flat array
         self.indices_flat = np.array(np.arange(self.xcoords.flatten().shape[0]))
         self.indices_2d = self.indices_flat.reshape(self.xcoords.shape)
@@ -66,24 +93,30 @@ class Stage:
         self.zones_arr = self.load_lmp_zone_raster()
 
         # get LMP array per tech [tech_order, x, y]
-        logging.info('Processing locational marginal pricing (LMP)')
+        logger.info('Processing locational marginal pricing (LMP)')
         self.lmp_arr = self.calculate_lmp()
 
         # get interconnection cost per tech [tech_order, x, y]
-        logging.info('Calculating interconnection costs (IC)')
+        logger.info('Calculating interconnection costs (IC)')
         self.ic_arr = self.calculate_ic()
 
         # get NOV array per tech [tech_order, x, y]
-        logging.info('Calculating net operational cost (NOV)')
+        logger.info('Calculating net operational cost (NOV)')
         self.generation_arr, self.operating_cost_arr, self.nov_arr = self.calculate_nov()
 
         # get NLC array per tech [tech_order, x, y]
-        logging.info('Calculating net locational cost (NLC)')
+        logger.info('Calculating net locational cost (NLC)')
         self.nlc_arr = self.calculate_nlc()
 
         # combine all suitability rasters into an array
-        logging.info('Building suitability array')
+        logger.info('Building suitability array')
         self.suitability_arr = self.build_suitability_array()
+
+    def load_regions_raster(self):
+        """Load the region ID raster for the CONUS into a 2D array."""
+
+        with rasterio.open(self.cerf_regionid_raster_file) as src:
+            return src.read(1)
 
     def load_lmp_zone_raster(self):
         """Load the lmp zoness raster for the CONUS into a 2D array."""
@@ -95,7 +128,7 @@ class Stage:
         if zones_raster_file is None:
             zones_raster_file = pkg.sample_lmp_zones_raster_file()
 
-        logging.info(f"Using 'zones_raster_file':  {zones_raster_file}")
+        logger.info(f"Using 'zones_raster_file':  {zones_raster_file}")
 
         # read in lmp zoness raster as a 2D numpy array
         with rasterio.open(zones_raster_file) as src:
@@ -151,11 +184,17 @@ class Stage:
         return ic_arr
 
     def calculate_nov(self):
-        """Calculate Net Operational Value."""
+        """Calculate Net Operational Value.
+
+        Generation and operating cost do not vary spatially; they are per-technology scalars. They are returned as
+        read-only broadcast views with the same ``[tech_order, x, y]`` shape as ``nov_arr`` so callers can index them
+        like any other staged array without holding two extra full-grid copies in memory.
+
+        """
 
         nov_arr = np.zeros_like(self.lmp_arr)
-        generation_arr = np.zeros_like(self.lmp_arr)
-        operating_cost_arr = np.zeros_like(self.lmp_arr)
+        generation_per_tech = np.zeros(len(self.technology_order), dtype=np.float64)
+        operating_cost_per_tech = np.zeros(len(self.technology_order), dtype=np.float64)
 
         for index, i in enumerate(self.technology_order):
             econ = NetOperationalValue(discount_rate=self.technology_dict[i]['discount_rate'],
@@ -174,11 +213,14 @@ class Stage:
                                        lmp_arr=self.lmp_arr[index, :, :],
                                        target_year=self.settings_dict.get('run_year'))
 
-            generation_tech_arr, operating_cost_tech_arr, nov_tech_arr = econ.calc_nov()
+            generation_tech, operating_cost_tech, nov_tech_arr = econ.calc_nov()
 
             nov_arr[index, :, :] = nov_tech_arr
-            generation_arr[index, :, :] = generation_tech_arr
-            operating_cost_arr[index, :, :] = operating_cost_tech_arr
+            generation_per_tech[index] = generation_tech
+            operating_cost_per_tech[index] = operating_cost_tech
+
+        generation_arr = np.broadcast_to(generation_per_tech[:, None, None], self.lmp_arr.shape)
+        operating_cost_arr = np.broadcast_to(operating_cost_per_tech[:, None, None], self.lmp_arr.shape)
 
         return generation_arr, operating_cost_arr, nov_arr
 
@@ -199,7 +241,7 @@ class Stage:
         if self.initialize_site_data is not None:
 
             # load siting data into a 2D array for the full grid space
-            logging.info("Initializing previous siting data")
+            logger.info("Initializing previous siting data")
             init_arr, init_df = util.ingest_sited_data(run_year=self.settings_dict['run_year'],
                                                        x_array=self.xcoords,
                                                        siting_data=self.initialize_site_data,
@@ -209,14 +251,45 @@ class Stage:
         else:
             return None, None
 
+    @staticmethod
+    def unsuitable_from_raster(arr, nodata=None):
+        """Convert a suitability raster band to a boolean *unsuitable* mask.
+
+        The suitability convention is ``0`` = suitable and ``1`` = unsuitable. Any cell holding the raster's declared
+        ``nodata`` value is treated as unsuitable explicitly, so a raster whose nodata happens to be ``0`` cannot
+        make missing data look suitable. Any other non-zero value is also unsuitable (logged, since it indicates a
+        raster that is not 0/1 encoded).
+
+        :param arr:                             2D raster band
+        :param nodata:                          Declared nodata value of the band, or ``None``
+
+        :return:                                Boolean array, ``True`` where the cell is unsuitable
+
+        """
+
+        unsuitable = arr != 0
+
+        if nodata is not None and not (isinstance(nodata, float) and np.isnan(nodata)):
+            unsuitable |= arr == nodata
+
+        elif nodata is not None:
+            unsuitable |= np.isnan(arr)
+
+        return unsuitable
+
     def build_suitability_array(self):
-        """Build suitability array for all technologies."""
+        """Build suitability array for all technologies.
+
+        Cells are unsuitable (``1``) where the technology raster is non-zero **or** equals its declared nodata value,
+        and, when initial siting data is provided, where an existing plant or its buffer occupies the cell.
+
+        """
 
         # fetch the default suitability dictionary
-        default_suitability_file_dict = util.default_suitabiity_files()
+        default_suitability_file_dict = util.default_suitability_files()
 
-        # set up holder for suitability array
-        suitability_array = np.ones_like(self.nlc_arr)
+        # set up holder for suitability array; 0 = suitable, non-zero = unsuitable, so a byte per cell is sufficient
+        suitability_array = np.ones(self.nlc_arr.shape, dtype=np.uint8)
 
         # load tech specific rasters
         for index, i in enumerate(self.technology_order):
@@ -228,18 +301,36 @@ class Stage:
                 default_raster = default_suitability_file_dict[self.tech_name_dict[i]]
                 tech_suitability_raster_file = pkg.get_suitability_raster(default_raster)
 
-            logging.info(f"Using suitability file for '{self.technology_dict[i]['tech_name']}':  {tech_suitability_raster_file}")
+            logger.info(f"Using suitability file for '{self.technology_dict[i]['tech_name']}':  "
+                        f"{tech_suitability_raster_file}")
 
             # load raster to array
             with rasterio.open(tech_suitability_raster_file) as src:
 
-                # read to 2D array
+                if (src.height, src.width) != suitability_array.shape[1:]:
+                    raise ValueError(f"Suitability raster {tech_suitability_raster_file} has shape "
+                                     f"{(src.height, src.width)} but the region raster grid is "
+                                     f"{suitability_array.shape[1:]}.")
+
                 tech_arr = src.read(1)
+                nodata = src.nodata
 
-                if self.initialize_site_data is not None:
-                    tech_arr = np.maximum(tech_arr, self.init_arr)
+            unsuitable = self.unsuitable_from_raster(tech_arr, nodata)
 
-                # add to suitability array avoid overwriting the default dimension
-                suitability_array[index, :, :] = tech_arr
+            # values other than 0 / 1 / nodata indicate a raster that is not encoded as expected; they are treated
+            #  as unsuitable but flagged so the user can check the input
+            other = unsuitable & (tech_arr != 1)
+            if nodata is not None:
+                other &= tech_arr != nodata
+            if other.any():
+                logger.warning(f"Suitability raster {tech_suitability_raster_file} contains "
+                               f"{int(other.sum())} cells with values other than 0, 1 or nodata ({nodata}); "
+                               f"they are treated as unsuitable.")
+
+            # existing plants and their buffers from previous siting data are unsuitable for every technology
+            if self.initialize_site_data is not None:
+                unsuitable |= self.init_arr != 0
+
+            suitability_array[index, :, :] = unsuitable
 
         return suitability_array

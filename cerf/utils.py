@@ -1,13 +1,49 @@
 import os
 import logging
 import tempfile
+import warnings
 
 import numpy as np
 import pandas as pd
 import rasterio
-import rioxarray
 import geopandas as gpd
+from scipy.ndimage import find_objects
 from shapely.geometry import Point
+
+logger = logging.getLogger(__name__)
+
+
+def region_bounding_boxes(regions_arr):
+    """Compute the grid-space bounding box of every region ID present in a 2D region raster array.
+
+    The bounds follow Python slice conventions so that ``arr[ymin:ymax, xmin:xmax]`` is the smallest window
+    containing every cell of the region, matching the values previously derived per region with ``np.where``.
+
+    :param regions_arr:                     2D array of integer region IDs
+    :type regions_arr:                      ndarray
+
+    :return:                                Dictionary of ``{region_id: (ymin, ymax, xmin, xmax)}`` for every region
+                                            ID that occurs in the array (a nodata/background ID is included if present)
+
+    """
+
+    regions_arr = np.asarray(regions_arr)
+
+    if regions_arr.ndim != 2:
+        raise ValueError(f"`regions_arr` must be 2D; got shape {regions_arr.shape}")
+
+    if not np.issubdtype(regions_arr.dtype, np.integer):
+        raise TypeError(f"`regions_arr` must have an integer dtype; got {regions_arr.dtype}")
+
+    # find_objects treats 0 as background and needs labels >= 1 and small; remap the (arbitrary, possibly
+    #  negative or nodata) IDs to 1..n first
+    ids, labels = np.unique(regions_arr, return_inverse=True)
+    labels = labels.reshape(regions_arr.shape).astype(np.int32) + 1
+
+    slices = find_objects(labels)
+
+    return {int(region_id): (sl[0].start, sl[0].stop, sl[1].start, sl[1].stop)
+            for region_id, sl in zip(ids, slices) if sl is not None}
 
 
 def results_to_geodataframe(result_df, target_crs):
@@ -39,16 +75,6 @@ def kilometers_to_miles(input_km_value):
     """
 
     return input_km_value * 0.621371
-
-
-def suppress_callback(value):
-    """Do not log callback output for whitebox functions.
-
-    :param value:                   Value of callback
-
-    """
-
-    pass
 
 
 def empty_sited_dict():
@@ -86,7 +112,12 @@ def empty_sited_dict():
 
 
 def sited_dtypes():
-    """Return data type dictionary for the sited data frame."""
+    """Return the data type of every column produced by `empty_sited_dict()`.
+
+    Keeping this complete ensures an empty initial frame, per-region results, and a CSV round trip through
+    `ingest_sited_data` all carry identical dtypes rather than whatever pandas infers per column.
+
+    """
 
     return {'region_name': str,
             'tech_id': np.int64,
@@ -94,19 +125,33 @@ def sited_dtypes():
             'unit_size_mw': np.float64,
             'xcoord': np.float64,
             'ycoord': np.float64,
+            'index': np.int64,
+            'buffer_in_km': np.int64,
+            'sited_year': np.int64,
+            'retirement_year': np.int64,
             'lmp_zone': np.int64,
             'locational_marginal_price_usd_per_mwh': np.float64,
+            'generation_mwh_per_year': np.float64,
+            'operating_cost_usd_per_year': np.float64,
             'net_operational_value_usd_per_year': np.float64,
             'interconnection_cost_usd_per_year': np.float64,
             'net_locational_cost_usd_per_year': np.float64,
-            'index': np.int64,
-            'retirement_year': np.int64,
-            'sited_year': np.int64,
-            'buffer_in_km': np.int64}
+            'capacity_factor_fraction': np.float64,
+            'carbon_capture_rate_fraction': np.float64,
+            'fuel_co2_content_tons_per_btu': np.float64,
+            'fuel_price_usd_per_mmbtu': np.float64,
+            'fuel_price_esc_rate_fraction': np.float64,
+            'heat_rate_btu_per_kWh': np.float64,
+            'lifetime_yrs': np.int64,
+            'operational_life_yrs': np.int64,
+            'variable_om_usd_per_mwh': np.float64,
+            'variable_om_esc_rate_fraction': np.float64,
+            'carbon_tax_usd_per_ton': np.float64,
+            'carbon_tax_esc_rate_fraction': np.float64}
 
 
-def default_suitabiity_files():
-    """Return a dictionary of default suitability file names."""
+def default_suitability_files():
+    """Return a dictionary of default suitability file names keyed by technology name."""
 
     return {'biomass_conv_wo_ccs': 'suitability_biomass.sdat',
             'biomass_conv_w_ccs': 'suitability_biomass.sdat',
@@ -129,6 +174,62 @@ def default_suitabiity_files():
             'wind_onshore': 'suitability_wind.sdat'}
 
 
+def default_suitabiity_files():
+    """Deprecated misspelling of :func:`default_suitability_files`; kept for backwards compatibility."""
+
+    warnings.warn("`default_suitabiity_files` is deprecated; use `default_suitability_files`.",
+                  DeprecationWarning, stacklevel=2)
+
+    return default_suitability_files()
+
+
+def buffer_window(target_index, nrows, ncols, ncells):
+    """Return the ``(row_slice, col_slice)`` of the square window of ``ncells`` cells around a flat grid index,
+    clipped to the grid.
+
+    :param target_index:                Flat (row-major) index of the target cell
+    :type target_index:                 int
+
+    :param nrows:                       The number of rows in the parent 2D array
+    :type nrows:                        int
+
+    :param ncols:                       The number of columns in the parent 2D array
+    :type ncols:                        int
+
+    :param ncells:                      The number of cells for the buffer extending as a radius
+    :type ncells:                       int
+
+    :return:                            ``(slice(r0, r1), slice(c0, c1))`` usable directly on the 2D array
+
+    """
+
+    ngrids = nrows * ncols
+    target_index = int(target_index)
+
+    if not 0 <= target_index < ngrids:
+        raise IndexError(f"Index: '{target_index}' is not in the range of the grid space from 0 to {ngrids - 1}.")
+
+    ncells = int(ncells)
+    row, col = divmod(target_index, ncols)
+
+    return (slice(max(row - ncells, 0), min(row + ncells + 1, nrows)),
+            slice(max(col - ncells, 0), min(col + ncells + 1, ncols)))
+
+
+def buffer_flat_indices(target_index, nrows, ncols, ncells):
+    """Return the sorted flat indices of the square window of ``ncells`` cells around a flat grid index, clipped to
+    the grid, as an integer NumPy array.
+
+    Parameters are as for `buffer_window`.
+
+    """
+
+    rows, cols = buffer_window(target_index, nrows, ncols, ncells)
+
+    return (np.arange(rows.start, rows.stop, dtype=np.intp)[:, None] * ncols
+            + np.arange(cols.start, cols.stop, dtype=np.intp)).ravel()
+
+
 def buffer_flat_array(target_index, arr, nrows, ncols, ncells, set_value):
     """Assign a value to the neighboring elements of a 1D array as if they
     were in 2D space. The number of neighbors are based on the `ncells` argument
@@ -138,7 +239,8 @@ def buffer_flat_array(target_index, arr, nrows, ncols, ncells, set_value):
     :param target_index:                Index of the target element in the 1D array
     :type target_index:                 int
 
-    :param arr:                         A 1D array that has been flattened from a corresponding 2D array
+    :param arr:                         A 1D array that has been flattened from a corresponding 2D array; modified
+                                        in place
     :type arr:                          ndarray
 
     :param nrows:                       The number of rows in the parent 2D array
@@ -153,75 +255,14 @@ def buffer_flat_array(target_index, arr, nrows, ncols, ncells, set_value):
     :param set_value:                   The value to set for the selected buffer
     :type set_value:                    int; float
 
-    :return:                            [0] Modified 1D array
-                                        [1] list of buffered indices
+    :return:                            [0] Modified 1D array (the same object as ``arr``)
+                                        [1] Sorted integer array of buffered flat indices
 
     """
-    # list to hold buffer indices for the target grid cell
-    buffer_indices = []
 
-    # calculate the number of elements in the 2D grid space
-    ngrids = nrows * ncols
+    buffer_indices = buffer_flat_indices(target_index, nrows, ncols, ncells)
 
-    # ensure that the target index is in the grid space
-    if 0 <= target_index < ngrids:
-
-        # target cell index bounds for the row
-        min_idx = target_index - ncells
-        max_idx = target_index + ncells + 1
-
-        # create target row limits
-        end_row_idx = target_index + ncols - np.mod(target_index, ncols) - 1
-        start_row_idx = end_row_idx - (ncols - 1)
-
-        # do not let the index bleed past the row
-        if max_idx > end_row_idx:
-            max_idx = end_row_idx + 1
-
-        # do not let the index go negative
-        if min_idx < start_row_idx:
-            min_idx = start_row_idx
-
-        # initialize above
-        min_above = min_idx - ncols
-        max_above = max_idx - ncols
-
-        # initialize below
-        min_below = min_idx + ncols
-        max_below = max_idx + ncols
-
-        # target row assignment
-        arr[min_idx: max_idx] = set_value
-
-        # add indices to buffer list
-        buffer_indices.extend(list(range(min_idx, max_idx)))
-
-        for _ in range(ncells):
-
-            # above
-            if min_above >= 0 and max_above >= 0 and start_row_idx < ngrids:
-                arr[min_above: max_above] = set_value
-
-                # add indices to buffer list
-                buffer_indices.extend(list(range(min_above, max_above)))
-
-            # advance above to the next row
-            min_above -= ncols
-            max_above -= ncols
-
-            # below
-            if min_below <= ngrids and max_below <= ngrids:
-                arr[min_below: max_below] = set_value
-
-                # add indices to buffer list
-                buffer_indices.extend(list(range(min_below, max_below)))
-
-            # advance below to the next row
-            min_below += ncols
-            max_below += ncols
-
-    else:
-        raise IndexError(f"Index: '{target_index}' is not in the range of the grid space from 0 to {ngrids - 1}.")
+    arr[buffer_indices] = set_value
 
     return arr, buffer_indices
 
@@ -242,7 +283,8 @@ def array_to_raster(arr, template_raster_file, output_raster_file):
 
 
 def raster_to_coord_arrays(template_raster):
-    """Use the template raster to create two 2D arrays containing the X and Y coordinates of every grid cell.
+    """Use the template raster to create two 2D arrays containing the X and Y cell-centre coordinates of every grid
+    cell, computed from the raster's affine transform.
 
     :param template_raster:                 Full path with file name and extension to the input raster.
     :type template_raster:                  str
@@ -252,13 +294,18 @@ def raster_to_coord_arrays(template_raster):
 
     """
 
-    # Read the data
-    da = rioxarray.open_rasterio(template_raster)
+    with rasterio.open(template_raster) as src:
+        transform = src.transform
+        height, width = src.height, src.width
 
-    # Compute the lon/lat coordinates with rasterio.warp.transform
-    x, y = np.meshgrid(da['x'], da['y'])
+    if transform.b != 0 or transform.d != 0:
+        raise ValueError(f"Rotated or sheared rasters are not supported: {template_raster}")
 
-    return x, y
+    # cell centres: origin + (index + 0.5) * pixel size along each axis
+    xs = transform.c + (np.arange(width) + 0.5) * transform.a
+    ys = transform.f + (np.arange(height) + 0.5) * transform.e
+
+    return np.meshgrid(xs, ys)
 
 
 def ingest_sited_data(run_year,
@@ -303,7 +350,7 @@ def ingest_sited_data(run_year,
         df = pd.read_csv(siting_data, dtype=sited_dtypes())
     else:
         msg = "The user must pass either a CSV file path to 'sited_csv' or a Pandas DataFrame to 'sited_df'"
-        logging.error(msg)
+        logger.error(msg)
         raise TypeError()
 
     # only keep sites that are not retired

@@ -7,19 +7,173 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 
 """
 
+import copy
 import logging
 import os
 import time
+from dataclasses import dataclass, fields
 
 import numpy as np
 import pandas as pd
 import rasterio
 
-import cerf.package_data as pkg
+import cerf.utils as util
 from cerf.compete import Competition
+
+logger = logging.getLogger(__name__)
+
+
+@dataclass
+class RegionData:
+    """The staged grid arrays needed to site a region.
+
+    Bundles what `cerf.stage.Stage` produces so it can be handed around as one object instead of a dozen mirrored
+    positional arguments (evaluation item 6.2). All arrays are ``[tech, row, col]`` (3D) or ``[row, col]`` (2D) over
+    the same grid; ``generation_arr`` / ``operating_cost_arr`` may also be 1D per-technology vectors (spatially
+    constant, see `crop_to_region`).
+
+    """
+
+    suitability_arr: np.ndarray
+    lmp_arr: np.ndarray
+    generation_arr: np.ndarray
+    operating_cost_arr: np.ndarray
+    nov_arr: np.ndarray
+    ic_arr: np.ndarray
+    nlc_arr: np.ndarray
+    zones_arr: np.ndarray
+    xcoords: np.ndarray
+    ycoords: np.ndarray
+    indices_2d: np.ndarray
+    regions_arr: np.ndarray = None
+    region_bounds: dict = None
+
+    # names of the array attributes, in declaration order
+    ARRAY_FIELDS = ('suitability_arr', 'lmp_arr', 'generation_arr', 'operating_cost_arr', 'nov_arr', 'ic_arr',
+                    'nlc_arr', 'zones_arr', 'xcoords', 'ycoords', 'indices_2d', 'regions_arr')
+
+    @classmethod
+    def field_names(cls):
+        return tuple(f.name for f in fields(cls))
+
+    @classmethod
+    def from_stage(cls, stage):
+        """Build from a `cerf.stage.Stage` (or any object exposing the same attributes)."""
+
+        return cls(**{name: getattr(stage, name) for name in cls.field_names()})
+
+    @classmethod
+    def from_kwargs(cls, kwargs):
+        """Pop the data fields out of a keyword-argument dict and return ``(RegionData, remaining_kwargs)``."""
+
+        remaining = dict(kwargs)
+        data = cls(**{name: remaining.pop(name) for name in cls.field_names() if name in remaining})
+        return data, remaining
+
+    def as_kwargs(self):
+        return {name: getattr(self, name) for name in self.field_names()}
+
+    def crop(self, region_id):
+        """Return a new `RegionData` cropped to ``region_id``'s bounding box (see `crop_to_region`)."""
+
+        return RegionData(**crop_to_region(region_id, self.region_bounds,
+                                           **{k: getattr(self, k) for k in self.ARRAY_FIELDS}))
+
+
+class EmptyRegionResult:
+    """Result object for a region with no sites in its expansion plan.
+
+    Mirrors the attributes downstream code reads from a `ProcessRegion` result (``target_region_name``,
+    ``run_data.sited_df``, ``run_data.sited_dict``, ``run_data.sited_array``, ``run_data.expansion_dict``) so callers
+    never have to special-case ``None``.
+
+    """
+
+    class _RunData:
+
+        def __init__(self, expansion_dict):
+            self.sited_dict = util.empty_sited_dict()
+            self.sited_df = pd.DataFrame(self.sited_dict).astype(util.sited_dtypes())
+            self.sited_array = None
+            self.expansion_dict = copy.deepcopy(expansion_dict)
+
+    def __init__(self, target_region_name, expansion_dict):
+        self.target_region_name = target_region_name
+        self.run_data = self._RunData(expansion_dict)
+
+    def __repr__(self):
+        return f"EmptyRegionResult(target_region_name={self.target_region_name!r})"
+
+
+def crop_to_region(region_id, region_bounds, suitability_arr, lmp_arr, generation_arr, operating_cost_arr, nov_arr,
+                   ic_arr, nlc_arr, zones_arr, xcoords, ycoords, indices_2d, regions_arr):
+    """Crop every staged full-grid array to a region's bounding box for dispatch to a worker process.
+
+    Returns a dictionary of `RegionData` fields holding only the region's bounding box. The cropped arrays are
+    contiguous copies (so pickling does not drag along the full grid), and ``region_bounds`` is rewritten so the
+    region occupies the whole of each cropped array. Arrays that are constant over the grid (per-technology
+    broadcast views such as generation and operating cost) are collapsed to a 1D per-technology vector.
+
+    :param region_id:                   Region ID as in the region raster
+    :type region_id:                    int
+
+    :param region_bounds:               ``{region_id: (ymin, ymax, xmin, xmax)}`` from cerf.stage.Stage
+    :type region_bounds:                dict
+
+    :return:                            dict of `RegionData` fields
+
+    """
+
+    ymin, ymax, xmin, xmax = region_bounds[region_id]
+
+    def crop3d(arr):
+        if arr.ndim == 1:
+            return arr
+        if arr.ndim == 3 and arr.strides[1] == 0 and arr.strides[2] == 0:
+            # spatially constant per technology: send one value per technology
+            return np.ascontiguousarray(arr[:, 0, 0])
+        return np.ascontiguousarray(arr[:, ymin:ymax, xmin:xmax])
+
+    def crop2d(arr):
+        return np.ascontiguousarray(arr[ymin:ymax, xmin:xmax])
+
+    return dict(suitability_arr=crop3d(suitability_arr),
+                lmp_arr=crop3d(lmp_arr),
+                generation_arr=crop3d(generation_arr),
+                operating_cost_arr=crop3d(operating_cost_arr),
+                nov_arr=crop3d(nov_arr),
+                ic_arr=crop3d(ic_arr),
+                nlc_arr=crop3d(nlc_arr),
+                zones_arr=crop2d(zones_arr),
+                xcoords=crop2d(xcoords),
+                ycoords=crop2d(ycoords),
+                indices_2d=crop2d(indices_2d),
+                regions_arr=crop2d(regions_arr),
+                region_bounds={region_id: (0, ymax - ymin, 0, xmax - xmin)})
 
 
 class ProcessRegion:
+    """Prepare a single region's inputs and run the technology competition for it.
+
+    Construction extracts the region's bounding box, suitability, NLC stack and metric views (all inspectable);
+    `run()` performs the competition and populates ``run_data``. Pass ``auto_run=False`` to inspect the prepared
+    state without siting.
+
+    :param settings_dict:               Project level settings from `cerf.read_config.ReadConfig`
+    :param technology_dict:             Technology parameters keyed by technology ID
+    :param technology_order:            Technology IDs in array-index order
+    :param expansion_dict:              Expansion plan ``{region_name: {tech_id: {'n_sites': int, ...}}}``
+    :param regions_dict:                ``{region_name: region_id}``
+    :param data:                        `RegionData` with the staged arrays (or pass the arrays as keyword arguments
+                                        named as the `RegionData` fields; they are collected automatically)
+    :param target_region_name:          Region to process (case-insensitive)
+    :param randomize:                   Random tie-breaks (True) or seeded with ``seed_value`` (False)
+    :param seed_value:                  Seed used when ``randomize`` is False
+    :param verbose:                     Log verbose siting information
+    :param write_output:                Write the region's sited CSV to ``settings_dict['output_directory']``
+    :param auto_run:                    Run the competition on construction (default True)
+
+    """
 
     def __init__(self,
                  settings_dict,
@@ -27,22 +181,23 @@ class ProcessRegion:
                  technology_order,
                  expansion_dict,
                  regions_dict,
-                 suitability_arr,
-                 lmp_arr,
-                 generation_arr,
-                 operating_cost_arr,
-                 nov_arr,
-                 ic_arr,
-                 nlc_arr,
-                 zones_arr,
-                 xcoords,
-                 ycoords,
-                 indices_2d,
                  target_region_name,
+                 data=None,
                  randomize=True,
                  seed_value=0,
                  verbose=False,
-                 write_output=False):
+                 write_output=False,
+                 auto_run=True,
+                 **array_kwargs):
+
+        if data is None:
+            data, leftover = RegionData.from_kwargs(array_kwargs)
+        else:
+            leftover = array_kwargs
+        if leftover:
+            raise TypeError(f"Unexpected keyword arguments: {sorted(leftover)}")
+
+        self.data = data
 
         # dictionary containing project level settings
         self.settings_dict = settings_dict
@@ -59,39 +214,11 @@ class ProcessRegion:
         # regions dictionary with region name to region ID mapping
         self.regions_dict = regions_dict
 
-        # target region name
-        self.target_region_name = target_region_name
+        # target region name, normalised to the lower-case form used as the key in the regions and expansion dicts
+        self.target_region_name = str(target_region_name).lower()
 
         # the id of the target region as it is represented in the region raster
         self.target_region_id = self.get_region_id()
-
-        # suitability data for the CONUS
-        self.suitability_arr = suitability_arr
-
-        # LMP array for the CONUS
-        self.lmp_arr = lmp_arr
-
-        # generation array for the CONUS
-        self.generation_arr = generation_arr
-
-        # operating cost array for the CONUS
-        self.operating_cost_arr = operating_cost_arr
-
-        # NOV array for the CONUS
-        self.nov_arr = nov_arr
-
-        # IC array for the CONUS
-        self.ic_arr = ic_arr
-
-        # NLC data for the CONUS
-        self.nlc_arr = nlc_arr
-
-        # lmp zoness for the CONUS
-        self.zones_arr = zones_arr
-
-        # coordinates for each index
-        self.xcoords = xcoords
-        self.ycoords = ycoords
 
         # the choice to randomize when a technology has more than one NLC cheapest value
         self.randomize = randomize
@@ -105,98 +232,199 @@ class ProcessRegion:
         # set write outputs flag
         self.write_outputs = write_output
 
-        logging.debug(f"Extracting suitable grids for {self.target_region_name}")
+        # region ID raster as an array and per-region bounding boxes; both are normally read once in `Stage` and
+        #  passed in, but fall back to reading the raster here so the class can still be used standalone
+        if self.data.regions_arr is None:
+            with rasterio.open(self.settings_dict.get('region_raster_file')) as src:
+                self.data.regions_arr = src.read(1)
+
+        if self.data.region_bounds is None:
+            self.data.region_bounds = {}
+
+        logger.debug(f"Extracting suitable grids for {self.target_region_name}")
         self.suitability_array_region, self.ymin, self.ymax, self.xmin, self.xmax = self.extract_region_suitability()
 
-        logging.debug(f"Creating a NLC region level array for {self.target_region_name}")
+        logger.debug(f"Creating a NLC region level array for {self.target_region_name}")
         self.suitable_nlc_region = self.mask_nlc()
 
-        logging.debug(f"Generating grid indices for {self.target_region_name}")
-        # grid indices for the entire grid in a 2D array
-        self.indices_2d = indices_2d
+        logger.debug(f"Generating grid indices for {self.target_region_name}")
         self.indices_flat_region = self.get_grid_indices()
 
-        logging.debug(f"Get grid coordinates for {self.target_region_name}")
+        logger.debug(f"Get grid coordinates for {self.target_region_name}")
         self.xcoords_region, self.ycoords_region = self.get_grid_coordinates()
 
-        logging.debug(f"Extracting additional metrics for {self.target_region_name}")
-        self.lmp_flat_dict, self.generation_flat_dict, self.operating_cost_flat_dict, self.nov_flat_dict, self.ic_flat_dict = self.extract_region_metrics()
+        logger.debug(f"Extracting additional metrics for {self.target_region_name}")
+        (self.lmp_flat_dict, self.generation_flat_dict, self.operating_cost_flat_dict,
+         self.nov_flat_dict, self.ic_flat_dict) = self.extract_region_metrics()
         self.zones_flat_arr = self.extract_lmp_zones()
 
-        logging.debug(f"Competing technologies to site expansion for {self.target_region_name}")
-        self.run_data = self.competition()
+        # populated by `run()`
+        self.run_data = None
+
+        if auto_run:
+            self.run()
+
+    # array accessors kept for backwards compatibility with code that read them off the instance
+    @property
+    def suitability_arr(self):
+        return self.data.suitability_arr
+
+    @property
+    def lmp_arr(self):
+        return self.data.lmp_arr
+
+    @property
+    def generation_arr(self):
+        return self.data.generation_arr
+
+    @property
+    def operating_cost_arr(self):
+        return self.data.operating_cost_arr
+
+    @property
+    def nov_arr(self):
+        return self.data.nov_arr
+
+    @property
+    def ic_arr(self):
+        return self.data.ic_arr
+
+    @property
+    def nlc_arr(self):
+        return self.data.nlc_arr
+
+    @property
+    def zones_arr(self):
+        return self.data.zones_arr
+
+    @property
+    def xcoords(self):
+        return self.data.xcoords
+
+    @property
+    def ycoords(self):
+        return self.data.ycoords
+
+    @property
+    def indices_2d(self):
+        return self.data.indices_2d
+
+    @property
+    def regions_arr(self):
+        return self.data.regions_arr
+
+    @property
+    def region_bounds(self):
+        return self.data.region_bounds
+
+    def run(self):
+        """Run the competition for the region and populate ``run_data``. Idempotent.
+
+        :return:                        self
+
+        """
+
+        if self.run_data is None:
+            logger.debug(f"Competing technologies to site expansion for {self.target_region_name}")
+            self.run_data = self.competition()
+
+        return self
 
     def get_region_id(self):
-        """Load region name to region id YAML file to a dictionary.
+        """Look up the region ID for the target region name.
+
+        Names are matched case-insensitively (the registry keys are lower case), so ``'Rhode_Island'`` and
+        ``'rhode_island'`` resolve to the same ID.
 
         :return:                        Corresponding region ID for the user passed region name.
 
         """
 
-        if self.target_region_name in self.regions_dict:
-            return self.regions_dict.get(self.target_region_name.lower())
+        key = self.target_region_name
 
-        else:
+        if key in self.regions_dict:
+            return self.regions_dict[key]
 
-            logging.error(f"State name: `{self.target_region_name}` not in registry.")
-            logging.error(f"Please select a region name from the following:  {list(self.regions_dict.keys())}")
+        msg = (f"Region name `{self.target_region_name}` not in registry. Please select a region name from the "
+               f"following:  {sorted(self.regions_dict.keys())}")
+        logger.error(msg)
 
-            raise KeyError()
+        raise KeyError(msg)
+
+    def get_region_bounds(self):
+        """Return the grid-space bounding box ``(ymin, ymax, xmin, xmax)`` of the target region.
+
+        Uses the precomputed bounds from `Stage` when available; otherwise derives them from the region array.
+
+        """
+
+        bounds = self.region_bounds.get(self.target_region_id)
+
+        if bounds is None:
+
+            region_indices = np.where(self.regions_arr == self.target_region_id)
+
+            if region_indices[0].size == 0:
+                raise ValueError(f"Region ID {self.target_region_id} (`{self.target_region_name}`) does not occur "
+                                 f"in the region raster.")
+
+            bounds = (int(np.min(region_indices[0])), int(np.max(region_indices[0])) + 1,
+                      int(np.min(region_indices[1])), int(np.max(region_indices[1])) + 1)
+
+        return bounds
 
     def extract_region_suitability(self):
-        """Extract a single region from the suitability."""
+        """Extract a single region from the suitability.
 
-        # load the region raster as array
-        region_raster_file = self.settings_dict.get('region_raster_file')
+        Returns a boolean array ``[layer, row, col]`` over the region's bounding box where ``True`` marks an
+        unsuitable cell. Layer 0 is the "no technology" default and is entirely unsuitable; layers ``1..n_tech``
+        follow ``technology_order``. Cells outside the target region are unsuitable for every technology.
 
-        with rasterio.open(region_raster_file) as src:
-            regions_arr = src.read(1)
+        """
 
-        # get target region indices in grid space
-        region_indices = np.where(regions_arr == self.target_region_id)
+        ymin, ymax, xmin, xmax = self.get_region_bounds()
 
-        # get minimum and maximum bounds
-        ymin = np.min(region_indices[0])
-        ymax = np.max(region_indices[0]) + 1
-        xmin = np.min(region_indices[1])
-        xmax = np.max(region_indices[1]) + 1
+        # cells in the bounding box that do not belong to the target region
+        outside_region = self.regions_arr[ymin:ymax, xmin:xmax] != self.target_region_id
 
-        # extract region and give binary designation
-        region_mask = regions_arr[ymin:ymax, xmin:xmax].copy()
-        region_mask = np.where(region_mask == self.target_region_id, 0, 1)
+        # extract region footprint from suitability data; any non-zero value is unsuitable
+        n_tech = self.suitability_arr.shape[0]
+        unsuitable = np.empty((n_tech + 1, ymax - ymin, xmax - xmin), dtype=bool)
+        unsuitable[0] = True
+        np.not_equal(self.suitability_arr[:, ymin:ymax, xmin:xmax], 0, out=unsuitable[1:])
+        unsuitable[1:] |= outside_region
 
-        # extract region footprint from suitability data
-        suitability_array_region = self.suitability_arr[:, ymin:ymax, xmin:xmax].copy()
-
-        # add in suitability where unsuitable is the highest value of NLC
-        suitability_array_region += region_mask
-
-        # at this point, we have all suitable grid cells as 0 and all not as 1
-        suitability_array_region = np.where(suitability_array_region == 0, 0, 1)
-
-        # exclude all area for the default dimension
-        suitability_array_region = np.insert(suitability_array_region, 0, np.ones_like(suitability_array_region[0, :, :]), axis=0)
-
-        return suitability_array_region, ymin, ymax, xmin, xmax
+        return unsuitable, ymin, ymax, xmin, xmax
 
     def mask_nlc(self):
-        """Extract NLC elements for the current region."""
+        """Extract NLC elements for the current region with suitability applied.
 
-        # extract region footprint from NLC data
-        nlc_arr_region = self.nlc_arr[:, self.ymin:self.ymax, self.xmin:self.xmax].copy()
+        Returns a plain float array where every unsuitable or NaN cell is ``+inf``, and layer 0 (the "no technology"
+        default) is entirely ``+inf`` so it is only chosen by ``argmin`` when no technology can site a cell.
 
-        # insert zero array, mask it as index [0, :, :] so the tech_id 0 will always be min if nothing is left to site
-        nlc_arr_region = np.insert(nlc_arr_region, 0, np.zeros_like(nlc_arr_region[0, :, :]), axis=0)
+        """
 
-        # make any nan grid cells the most expensive option to exclude
-        nlc_arr_region = np.nan_to_num(nlc_arr_region, nan=np.nanmax(nlc_arr_region) + 1)
+        n_tech, nrows, ncols = self.nlc_arr.shape[0], self.ymax - self.ymin, self.xmax - self.xmin
 
-        # apply the mask to NLC data
-        return np.ma.masked_array(nlc_arr_region, mask=self.suitability_array_region)
+        nlc_region = self.nlc_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
+
+        # any NaN cost becomes the most expensive option (still available if suitable); the fill value is one more
+        #  than the largest cost seen, floored at 0 to match the historical behaviour where an all-zero default
+        #  layer took part in the maximum
+        fill_value = max(float(np.nanmax(nlc_region)), 0.0) + 1.0
+
+        nlc_arr_region = np.empty((n_tech + 1, nrows, ncols), dtype=np.float64)
+        nlc_arr_region[0] = np.inf
+        nlc_arr_region[1:] = np.nan_to_num(nlc_region, nan=fill_value)
+
+        # unsuitable cells are unavailable
+        nlc_arr_region[self.suitability_array_region] = np.inf
+
+        return nlc_arr_region
 
     def get_grid_indices(self):
-        """Generate a 1D array of grid indices the target region to use as a way to map region level outcomes back to the
-        full grid space."""
+        """Generate a 1D array of grid indices for the target region to use as a way to map region level outcomes
+        back to the full grid space."""
 
         return self.indices_2d[self.ymin:self.ymax, self.xmin:self.xmax].flatten()
 
@@ -209,26 +437,29 @@ class ProcessRegion:
         return xcoord_2d_region, ycoord_2d_region
 
     def extract_region_metrics(self):
-        """Extract the LMP, NOV, and IC arrays for the target region and return them as dictionaries where
-        {tech_id: flat_array, ...}.
+        """Extract the LMP, generation, operating cost, NOV, and IC arrays for the target region and return them as
+        dictionaries where {tech_id: 2D_region_view, ...}.
+
+        The values are views into the staged full-grid arrays (no copies). `Competition` only reads these metrics at
+        the handful of cells that are finally sited, so flattening five full technology stacks per region is avoided.
+        A metric supplied as a 1D per-technology vector (spatially constant, e.g. generation) is broadcast to the
+        region shape without allocating.
 
         """
 
-        # extract the target region
-        lmp_arr_region = self.lmp_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
-        generation_arr_region = self.generation_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
-        operating_cost_arr_region = self.operating_cost_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
-        nov_arr_region = self.nov_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
-        ic_arr_region = self.ic_arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
+        region_shape = (self.ymax - self.ymin, self.xmax - self.xmin)
 
-        # create a reference dictionary where {tech_id: flat_region_array, ...}
-        lmp_flat_dict = {i: lmp_arr_region[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
-        generation_flat_dict = {i: generation_arr_region[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
-        operating_cost_flat_dict = {i: operating_cost_arr_region[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
-        nov_flat_dict = {i: nov_arr_region[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
-        ic_flat_dict = {i: ic_arr_region[ix, :, :].flatten() for ix, i in enumerate(self.technology_order)}
+        def region_views(arr):
+            if arr.ndim == 1:
+                return {i: np.broadcast_to(arr[ix], region_shape) for ix, i in enumerate(self.technology_order)}
+            region = arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
+            return {i: region[ix] for ix, i in enumerate(self.technology_order)}
 
-        return lmp_flat_dict, generation_flat_dict, operating_cost_flat_dict, nov_flat_dict, ic_flat_dict
+        return (region_views(self.lmp_arr),
+                region_views(self.generation_arr),
+                region_views(self.operating_cost_arr),
+                region_views(self.nov_arr),
+                region_views(self.ic_arr))
 
     def extract_lmp_zones(self):
         """Extract the lmp zones elements for the target region and return as a flat array."""
@@ -257,9 +488,6 @@ class ProcessRegion:
                            seed_value=self.seed_value,
                            verbose=self.verbose)
 
-        # create data frame of sited data
-        df = pd.DataFrame(comp.sited_dict)
-
         # write outputs if so desired
         if self.write_outputs:
 
@@ -267,7 +495,7 @@ class ProcessRegion:
             csv_file_name = f"cerf_sited_{self.settings_dict['run_year']}_{self.target_region_name}.csv"
             csv_out_file = os.path.join(self.settings_dict.get('output_directory'), csv_file_name)
 
-            df.to_csv(csv_out_file, index=False)
+            comp.sited_df.to_csv(csv_out_file, index=False)
 
         return comp
 
@@ -278,25 +506,16 @@ def process_region(target_region_name,
                    technology_order,
                    expansion_dict,
                    regions_dict,
-                   suitability_arr,
-                   lmp_arr,
-                   generation_arr,
-                   operating_cost_arr,
-                   nov_arr,
-                   ic_arr,
-                   nlc_arr,
-                   zones_arr,
-                   xcoords,
-                   ycoords,
-                   indices_2d,
+                   data=None,
                    randomize=True,
                    seed_value=0,
                    verbose=False,
-                   write_output=True):
+                   write_output=True,
+                   **array_kwargs):
     """Convenience wrapper to log time and site an expansion plan for a target region for the target year.
 
-    :param target_region_name:                   Name of the target region as it is represented in the region raster.
-                                                Must be all lower case with spacing separated by an underscore.
+    :param target_region_name:                   Name of the target region as it is represented in the region raster
+                                                (matched case-insensitively).
     :type target_region_name:                    str
 
     :param settings_dict:                       Project level setting dictionary from cerf.read_config.ReadConfig
@@ -314,15 +533,12 @@ def process_region(target_region_name,
     :param regions_dict:                         Mapping from region name to region ID from cerf.read_config.ReadConfig
     :type regions_dict:                          dict
 
-    :param suitability_arr:                     3D array where {tech_id, x, y} for suitability data
-    :type suitability_arr:                      ndarray
-
-    :param nlc_arr:                             3D array where {tech_id, x, y} for NLC data
-    :type nlc_arr:                              ndarray
-
-    :param data:                                Object containing all data (NLC, etc.) to run the expansion. This
-                                                data is generated from the cerf.stage.Stage class.
-    :type data:                                 class
+    :param data:                                Staged grid arrays as a `RegionData` (build one with
+                                                ``RegionData.from_stage(stage)``). Alternatively the individual
+                                                arrays may still be passed as keyword arguments named as the
+                                                `RegionData` fields (``suitability_arr``, ``lmp_arr``, ...,
+                                                ``regions_arr``, ``region_bounds``).
+    :type data:                                 RegionData
 
     :param randomize:                           Choice to randomize when a technology has more than one NLC
                                                 cheapest value
@@ -338,50 +554,45 @@ def process_region(target_region_name,
     :param write_output:                        Choice to write output to a file
     :type write_output:                         bool
 
-    :return:                                    2D NumPy array of sited technologies in the CONUS grid space where
-                                                grid cell values are in the technology number as provided by the
-                                                expansion plan
+    :return:                                    `ProcessRegion` holding the competition result in ``run_data``
+                                                (``sited_df``, ``sited_dict``, ``sited_array``, ``expansion_dict``);
+                                                an `EmptyRegionResult` with the same attributes and an empty
+                                                ``sited_df`` if the region has no sites in its expansion plan
 
     """
 
-    logging.debug(f'Processing region:  {target_region_name}')
+    # region names are keyed in lower case throughout the configuration
+    target_region_name = str(target_region_name).lower()
+
+    logger.debug(f'Processing region:  {target_region_name}')
 
     # check to see if region has any sites in the expansion
-    n_sites = sum([expansion_dict[target_region_name][k]['n_sites'] for k in expansion_dict[target_region_name].keys()])
+    region_plan = expansion_dict[target_region_name]
+    n_sites = sum(region_plan[k]['n_sites'] for k in region_plan)
 
-    # if there are no sites in the expansion, return an all NaN 2D array
+    # if there are no sites in the expansion, return an empty result rather than None so callers can treat every
+    #  region uniformly
     if n_sites <= 0:
-        logging.warning(f"There were no sites expected for any technology in `{target_region_name}`")
-        return None
+        logger.warning(f"There were no sites expected for any technology in `{target_region_name}`")
+        return EmptyRegionResult(target_region_name, region_plan)
 
-    else:
+    # initial time for processing region
+    region_t0 = time.time()
 
-        # initial time for processing region
-        region_t0 = time.time()
+    # process expansion plan and competition for a single region for the target year
+    process = ProcessRegion(settings_dict=settings_dict,
+                            technology_dict=technology_dict,
+                            technology_order=technology_order,
+                            expansion_dict=expansion_dict,
+                            regions_dict=regions_dict,
+                            target_region_name=target_region_name,
+                            data=data,
+                            randomize=randomize,
+                            seed_value=seed_value,
+                            verbose=verbose,
+                            write_output=write_output,
+                            **array_kwargs)
 
-        # process expansion plan and competition for a single region for the target year
-        process = ProcessRegion(settings_dict=settings_dict,
-                                technology_dict=technology_dict,
-                                technology_order=technology_order,
-                                expansion_dict=expansion_dict,
-                                regions_dict=regions_dict,
-                                suitability_arr=suitability_arr,
-                                lmp_arr=lmp_arr,
-                                generation_arr=generation_arr,
-                                operating_cost_arr=operating_cost_arr,
-                                nov_arr=nov_arr,
-                                ic_arr=ic_arr,
-                                nlc_arr=nlc_arr,
-                                zones_arr=zones_arr,
-                                xcoords=xcoords,
-                                ycoords=ycoords,
-                                indices_2d=indices_2d,
-                                target_region_name=target_region_name,
-                                randomize=randomize,
-                                seed_value=seed_value,
-                                verbose=verbose,
-                                write_output=write_output)
+    logger.info(f'Processed `{target_region_name}` in {round(time.time() - region_t0, 7)} seconds')
 
-        logging.info(f'Processed `{target_region_name}` in {round(time.time() - region_t0, 7)} seconds')
-
-        return process
+    return process

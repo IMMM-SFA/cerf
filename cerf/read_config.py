@@ -1,3 +1,4 @@
+import copy
 import logging
 import os
 
@@ -6,6 +7,8 @@ import yaml
 import cerf.utils as utils
 import cerf.package_data as pkg
 from cerf.logger import Logger
+
+logger = logging.getLogger(__name__)
 
 
 class ReadConfig(Logger):
@@ -23,12 +26,24 @@ class ReadConfig(Logger):
     # type hints
     config_file: str
 
-    def __init__(self, config_file=None, config_dict={}):
+    def __init__(self, config_file=None, config_dict=None):
 
         # inherit logger class attributes
         super(ReadConfig, self).__init__()
 
-        if config_file is None and config_dict is not None:
+        # `None` and `{}` both mean "no overrides"; work on a private copy so the model never mutates the caller's
+        #  dictionary (the expansion plan and settings are modified during a run and a shared reference would corrupt
+        #  subsequent runs)
+        config_dict = copy.deepcopy(config_dict) if config_dict else {}
+
+        if config_file is None:
+
+            if not config_dict:
+                msg = ("A configuration must be provided either as `config_file='<path to config.yml>'` "
+                       "or as a non-empty `config_dict`.")
+                logger.error(msg)
+                raise ValueError(msg)
+
             self.config = config_dict
 
         else:
@@ -81,6 +96,9 @@ class ReadConfig(Logger):
         self.validate_technology_files()
         self.validate_infrastructure_files()
 
+        # validate and normalise technology parameters (lifetime semantics, see `validate_technology_parameters`)
+        self.validate_technology_parameters()
+
         # get the regions dictionary
         self.regions_dict = self.get_regions_dict()
 
@@ -89,7 +107,7 @@ class ReadConfig(Logger):
         """Read a YAML file."""
 
         with open(yaml_file, 'r') as yml:
-            return yaml.load(yml, Loader=yaml.FullLoader)
+            return yaml.safe_load(yml)
 
     def get_yaml(self):
         """Read the YAML config file.
@@ -101,7 +119,7 @@ class ReadConfig(Logger):
         # if config file not passed
         if self.config_file is None:
             msg = "Config file must be passed as an argument using:  config_file='<path to config.yml'>"
-            logging.error(msg)
+            logger.error(msg)
             raise AttributeError(msg)
 
         # check for path exists
@@ -110,10 +128,10 @@ class ReadConfig(Logger):
             return self.read_yaml(self.config_file)
 
         else:
-            msg = f"""Config file not found for path:  {self.config_file}. If using defaults, please download the package data. 
-            See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data"""
+            msg = (f"Config file not found for path:  {self.config_file}. If using defaults, please download the "
+                   f"package data. See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data")
 
-            logging.error(msg)
+            logger.error(msg)
             raise FileNotFoundError(msg)
 
     def get_regions_dict(self):
@@ -134,16 +152,53 @@ class ReadConfig(Logger):
 
         for i in settings_files:
             if not os.path.isfile(i):
-                msg = f"""Cannot find the settings file for: {i}.  If using defaults, please download the package data. 
-                See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data"""
+                msg = (f"Cannot find the settings file for: {i}.  If using defaults, please download the package data. "
+                       f"See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data")
 
                 raise FileNotFoundError(msg)
+
+    def validate_technology_parameters(self):
+        """Validate the per-technology lifetime fields and fill defaults.
+
+        Two lifetime fields exist and are used for different purposes:
+
+        - ``lifetime_yrs`` is the **economic** (financing) life: the number of years over which capital costs are
+          annuitised. It drives the annuity and levelization factors in NOV and interconnection cost.
+        - ``operational_life_yrs`` is the **physical** life: how many years a sited plant stays in service. It sets
+          ``retirement_year = run_year + operational_life_yrs`` in the siting output and therefore controls when a
+          plant's footprint is released in subsequent runs that initialise from previous siting data.
+
+        The two are often equal but need not be (e.g. a 30-year financing period for a plant expected to operate
+        60 years). ``lifetime_yrs`` is required and must be positive. ``operational_life_yrs`` defaults to
+        ``lifetime_yrs`` when omitted (logged at INFO) and must be positive when given.
+
+        """
+
+        for tech_id, tech in self.technology_dict.items():
+
+            tech_name = tech.get('tech_name', tech_id)
+
+            lifetime = tech.get('lifetime_yrs')
+            if lifetime is None:
+                raise ValueError(f"Technology `{tech_name}` ({tech_id}) is missing the required `lifetime_yrs`.")
+            if not lifetime > 0:
+                raise ValueError(f"Technology `{tech_name}` ({tech_id}) `lifetime_yrs` must be positive; "
+                                 f"got {lifetime}.")
+
+            operational = tech.get('operational_life_yrs')
+            if operational is None:
+                logger.info(f"`operational_life_yrs` not set for `{tech_name}`; "
+                            f"defaulting to `lifetime_yrs` ({lifetime}).")
+                tech['operational_life_yrs'] = lifetime
+            elif not operational > 0:
+                raise ValueError(f"Technology `{tech_name}` ({tech_id}) `operational_life_yrs` must be positive; "
+                                 f"got {operational}.")
 
     def validate_technology_files(self):
         """Ensure that files necessary files exists for technology."""
 
         # expected files from technology
-        suitability_file_dict = utils.default_suitabiity_files()
+        suitability_file_dict = utils.default_suitability_files()
 
         for i in self.technology_dict.keys():
 
@@ -156,8 +211,8 @@ class ReadConfig(Logger):
                 suit_path = os.path.join(pkg.get_data_directory(), suitability_file_dict[tech_name])
 
                 if not os.path.isfile(suit_path):
-                    msg = f"""Cannot find the default suitability raster: {suit_path}.  Please download the package data. 
-                    See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data"""
+                    msg = (f"Cannot find the default suitability raster: {suit_path}.  Please download the package "
+                           f"data. See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data")
 
                     raise FileNotFoundError(msg)
 
@@ -186,19 +241,13 @@ class ReadConfig(Logger):
         for i in lmp_files:
 
             if not os.path.isfile(i):
-                msg = f"""Cannot find the LMP file for: {i}.  If using defaults, please download the package data. 
-                See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data"""
+                msg = (f"Cannot find the LMP file for: {i}.  If using defaults, please download the package data. "
+                       f"See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data")
 
                 raise FileNotFoundError(msg)
 
     def validate_infrastructure_files(self):
         """Ensure that files necessary files exists for infrastructure."""
-
-        # expected files from lmp_zones
-        infrastructure_files = [self.infrastructure_dict.get('substation_file', pkg.get_substation_file()),
-                                self.infrastructure_dict.get('pipeline_file', pkg.get_default_gas_pipelines()),
-                                self.infrastructure_dict.get('transmission_costs_file', pkg.get_costs_per_kv_substation_file()),
-                                self.infrastructure_dict.get('pipeline_costs_file', pkg.get_costs_gas_pipeline())]
 
         substation_file = self.infrastructure_dict.get('substation_file', None)
         pipeline_file = self.infrastructure_dict.get('pipeline_file', None)
@@ -222,7 +271,7 @@ class ReadConfig(Logger):
         for i in infrastructure_files:
 
             if not os.path.isfile(i):
-                msg = f"""Cannot find the infrastructure file for: {i}.  If using defaults, please download the package data. 
-                See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data"""
+                msg = (f"Cannot find the infrastructure file for: {i}.  If using defaults, please download the package "
+                       f"data. See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data")
 
                 raise FileNotFoundError(msg)

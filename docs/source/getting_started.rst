@@ -1,94 +1,212 @@
+===============
 Getting started
 ===============
 
 About
 -----
 
-The Capacity Expansion Regional Feasibility model (**cerf**) helps us evaluate the feasibility and structure of future electricity capacity expansion plans by siting power plants in areas that have been deemed the least cost option. We can use **cerf** to gain an understanding of topics such as: 1) whether or not future projected electricity expansion plans from models such as GCAM are possible to achieve, 2) where and which on-the-ground barriers to siting (e.g., protected areas, cooling water availability) may influence our ability to achieve certain expansions, and 3) how power plant infrastructure build outs and value may evolve into the future when considering locational marginal pricing (LMP) based on the supply and demand of electricity from a grid operations model.
+The Capacity Expansion Regional Feasibility model (**cerf**) helps us evaluate the feasibility and structure of future
+electricity capacity expansion plans by siting power plants in areas that have been deemed the least cost option. We
+can use **cerf** to gain an understanding of topics such as: 1) whether or not future projected electricity expansion
+plans from models such as GCAM are possible to achieve, 2) where and which on-the-ground barriers to siting (e.g.,
+protected areas, cooling water availability) may influence our ability to achieve certain expansions, and 3) how power
+plant infrastructure build outs and value may evolve into the future when considering locational marginal pricing
+(LMP) based on the supply and demand of electricity from a grid operations model.
 
-Each grid cell in **cerf** is given an initial value of suitable (0) or unsuitable (1) based on a collection of suitability criteria gleaned from the literature. **cerf**'s default suitability layers include both those that are common to all thermal technologies as well as technology-specific suitability criteria. Common suitability layers represent categories such as protected lands, critical habitat areas, and much more. Technology-specific suitability layers are those that satisfy requirements that may not be applicable to all technologies. An example would be minimum mean annual flow requirements for cooling water availability for individual thermal technologies.
+Each grid cell in **cerf** is given an initial value of suitable (0) or unsuitable (1) based on a collection of
+suitability criteria gleaned from the literature. **cerf**'s default suitability layers include both those that are
+common to all thermal technologies as well as technology-specific suitability criteria. Common suitability layers
+represent categories such as protected lands, critical habitat areas, and much more. Technology-specific suitability
+layers are those that satisfy requirements that may not be applicable to all technologies. An example would be minimum
+mean annual flow requirements for cooling water availability for individual thermal technologies.
 
-Though **cerf** provides sample data to run the conterminous United States (CONUS), it could be extended to function for any country or set of regions that had the following prerequisite data sources:  a spatial representation of substations or electricity transmission infrastructure, a spatial representation of gas pipeline infrastructure if applicable, any regionally applicable spatial data to construct suitability rasters from, access to hourly zonal LMP, and access to technology-specific information and each technologies accompanying electricity capacity expansion plan per region.  The Global Change Analysis Model (`GCAM <https://github.com/JGCRI/gcam-core>`_) is used to build our expansion plans and establish our technology-specific requirements through the end of the century. We derive our LMP from a grid operations model that also is harmonized with GCAM to provide consistent projections of energy system evolution.  See more about how to generalize **cerf** for your research `here <user_guide.rst#generalization>`_.
+Though **cerf** provides sample data to run the conterminous United States (CONUS), it could be extended to function
+for any country or set of regions that had the following prerequisite data sources: a spatial representation of
+substations or electricity transmission infrastructure, a spatial representation of gas pipeline infrastructure if
+applicable, any regionally applicable spatial data to construct suitability rasters from, access to hourly zonal LMP,
+and access to technology-specific information and each technology's accompanying electricity capacity expansion plan
+per region. The Global Change Analysis Model (`GCAM <https://github.com/JGCRI/gcam-core>`_) is used to build our
+expansion plans and establish our technology-specific requirements through the end of the century. We derive our LMP
+from a grid operations model that also is harmonized with GCAM to provide consistent projections of energy system
+evolution. See more about how to generalize **cerf** for your research in :ref:`Generalization`.
 
-We introduce a metric named Net Locational Cost (NLC) that is used compete power plant technologies for each grid cell based on the least cost option to site. NLC is calculated by subtracting the Net Operating Value (NOV) of a proposed power plant from the cost of its interconnection to the grid to represent the potential deployment value. Both the NOV parameter which incorporates many technology-specific values such as variable operations and maintenance costs, carbon price, heat rate, etc. and the interconnection cost parameter used for both electricity transmission and gas pipelines are configurable per time step.  All equations used in **cerf** are described in detail in the `documentation <user_guide.rst#fundamental-equations-and-concepts>`_.
+We introduce a metric named Net Locational Cost (NLC) that is used to compete power plant technologies for each grid
+cell based on the least cost option to site. NLC is calculated by subtracting the Net Operating Value (NOV) of a
+proposed power plant from the cost of its interconnection to the grid to represent the potential deployment value.
+Both the NOV parameter, which incorporates many technology-specific values such as variable operations and maintenance
+costs, carbon price, heat rate, etc., and the interconnection cost parameter used for both electricity transmission and
+gas pipelines are configurable per time step. All equations used in **cerf** are described in detail in
+:ref:`Fundamental equations and concepts`.
 
 
 Python version support
 ----------------------
 
-Officially Python 3.7, 3.8, and 3.9
+Officially Python 3.10, 3.11, and 3.12 (``requires-python >= 3.10``). Linux is exercised in continuous integration;
+macOS and Windows are expected to work.
 
 
 Installation
 ------------
 
-.. note::
+.. tab-set::
 
-  **cerf** is not officially supported for Ubuntu 18 users due to a system dependency (``GLIBC_2.29``) required by the ``whitebox`` package which **cerf** uses to conduct spatial analysis. Ubuntu 18 natively includes ``GLIBC_2.27``.  It may be possible for Ubuntu 18 users to upgrade to ``GLIBC_2.29`` but this should be done with careful consideration.  Instead, we officially support **cerf** use for Ubuntu users for versions 20.04.2 LTS and greater.
+   .. tab-item:: pip
 
-**cerf** can be installed via pip by running the following from a terminal window::
+      .. code-block:: bash
 
-    pip install cerf
+         pip install cerf
 
-Conda/Miniconda users can utilize the ``environment.yml`` stored in the root of this repository by executing the following from a terminal window::
+   .. tab-item:: conda
 
-    conda env create --file environment.yml
+      Conda/Miniconda users can create an environment from the ``environment.yml`` stored in the root of the
+      repository:
 
-It may be favorable to the user to create a virtual environment for the **cerf** package to minimize package version conflicts.  See `creating virtual environments <https://docs.python.org/3/library/venv.html>`_ to learn how these function and can be setup.
+      .. code-block:: bash
+
+         conda env create --file environment.yml
+         conda activate cerf
+
+   .. tab-item:: from source
+
+      For development, clone the repository and install in editable mode with the test extras:
+
+      .. code-block:: bash
+
+         git clone https://github.com/IMMM-SFA/cerf.git
+         cd cerf
+         pip install -e ".[test]"
+
+.. tip::
+
+   It may be favorable to create a virtual environment for the **cerf** package to minimize package version conflicts.
+   See `creating virtual environments <https://docs.python.org/3/library/venv.html>`_ to learn how these function and
+   can be set up.
+
 
 Installing package data
 -----------------------
 
-**cerf** requires package data to be installed from Zenodo to keep the package lightweight.  After **cerf** has been installed, run the following from a Python prompt:
-
-**NOTE**:  The package data will require approximately 195 MB of storage.
+**cerf** requires package data to be installed from Zenodo to keep the package lightweight. After **cerf** has been
+installed, run the following from a Python prompt:
 
 .. code-block:: python
 
-    import cerf
+   import cerf
 
-    cerf.install_package_data()
+   cerf.install_package_data()
 
-This will automatically download and install the package data necessary to run the examples in accordance with the version of **cerf** you are running.  You can pass an alternative directory to install the data into (default is to install it in the package data directory) using ``data_dir``.  When doing so, you must modify the configuration file to point to your custom paths. 
+.. note::
+
+   The package data will require approximately 195 MB of storage.
+
+This will automatically download and install the package data necessary to run the examples in accordance with the
+version of **cerf** you are running. You can pass an alternative directory to install the data into (default is to
+install it in the package data directory) using ``data_dir``. When doing so, you must modify the configuration file to
+point to your custom paths.
+
+The download is retried automatically when Zenodo rate-limits the request or returns a transient error. If your
+installed version has no data registered for it (for example a development build), the data for the newest earlier
+release is used and a warning is logged.
+
+The supplement contains:
+
+- the CONUS region-ID raster and LMP-zone raster at 1 km resolution, with the matching region-name lookup files;
+- a technology suitability raster for each sample technology;
+- HIFLD substations and EIA natural gas pipelines for the CONUS, already projected to the **cerf** CRS, with the
+  default cost-per-kV and pipeline cost YAML files;
+- an illustrative hourly (8760) locational marginal price file per zone;
+- sample configuration files for 2010, 2030 and 2050.
 
 
 Dependencies
 ------------
 
-=============   ================
-Dependency      Minimum Version
-=============   ================
-numpy           1.19.4
-pandas          1.1.4
-rasterio        1.2.3
-xarray          0.16.1
-PyYAML          5.4.1
-requests        2.25.1
-joblib          1.0.1
-matplotlib      3.3.3
-seaborn         0.11.1
-whitebox        1.5.1
-fiona           1.8.19
-pyproj          3.0.1
-rtree           0.9.7
-shapely         1.7.1
-geopandas       0.9.0
-=============   ================
+The authoritative list is the ``dependencies`` table in ``pyproject.toml``; the versions below mirror it.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 40 30
+
+   * - Dependency
+     - Minimum version
+   * - numpy
+     - 1.19.4
+   * - scipy
+     - 1.12
+   * - pandas
+     - 1.1.4
+   * - rasterio
+     - 1.2.3
+   * - PyYAML
+     - 5.4.1
+   * - requests
+     - 2.25.1
+   * - joblib
+     - 1.0.1
+   * - matplotlib
+     - 3.3.3
+   * - shapely
+     - 2.0
+   * - geopandas
+     - 0.9.0
 
 
 Optional dependencies
 ---------------------
 
-==================    ================
-Dependency            Minimum Version
-==================    ================
-build                 0.5.1
-nbsphinx              0.8.6
-setuptools            57.0.0
-sphinx                4.0.2
-sphinx-panels         0.6.0
-sphinx-rtd-theme      0.5.2
-twine                 3.4.1
-pytest                6.2.4
-pytest-cov            2.12.1
-==================    ================
+Installed with ``pip install "cerf[test]"`` and ``pip install "cerf[docs]"`` respectively.
+
+.. list-table::
+   :header-rows: 1
+   :widths: 40 30 30
+
+   * - Dependency
+     - Minimum version
+     - Extra
+   * - pytest
+     - 6.0
+     - test
+   * - pytest-cov
+     - 2.12.1
+     - test
+   * - ruff
+     - 0.4
+     - test
+   * - sphinx
+     - 7.2
+     - docs
+   * - furo
+     - 2024.1
+     - docs
+   * - sphinx-design
+     - 0.5
+     - docs
+   * - sphinx-copybutton
+     - 0.5
+     - docs
+   * - build
+     - 0.5.1
+     - docs
+   * - twine
+     - 4.0.1
+     - deploy
+
+
+Next steps
+----------
+
+.. grid:: 1 2 2 2
+   :gutter: 3
+
+   .. grid-item-card:: Quickstart
+      :link: quickstart
+      :link-type: doc
+
+      Run the sample CONUS expansion plan and plot the sited plants.
+
+   .. grid-item-card:: User guide
+      :link: user_guide
+      :link-type: doc
+
+      Configuration reference, input data and the underlying equations.

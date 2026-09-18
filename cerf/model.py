@@ -11,9 +11,11 @@ License:  BSD 2-Clause, see LICENSE and DISCLAIMER files
 import logging
 import time
 
-from cerf.process_region import process_region
+from cerf.process_region import RegionData, process_region
 from cerf.read_config import ReadConfig
 from cerf.stage import Stage
+
+logger = logging.getLogger(__name__)
 
 
 class Model(ReadConfig):
@@ -42,17 +44,21 @@ class Model(ReadConfig):
     :param log_level:                   Log level.  Options are 'info' and 'debug'.  Default 'info'
     :type log_level:                    str
 
+    :param log_file:                    Optional path to a log file to write to in addition to stdout.
+    :type log_file:                     str
+
     """
 
-    def __init__(self, config_file=None, config_dict={}, initialize_site_data=None, log_level='info'):
+    def __init__(self, config_file=None, config_dict=None, initialize_site_data=None, log_level='info',
+                 log_file=None):
 
         # start time for model run
         self.start_time = time.time()
 
-        # initialize console handler for logger
-        self.console_handler(log_level)
+        # attach CERF's handlers to the `cerf` logger (idempotent; never touches the root logger)
+        self.initialize_logger(log_level=log_level, log_file=log_file)
 
-        logging.info("Starting CERF model")
+        logger.info("Starting CERF model")
 
         # inherit the configuration reader class attributes
         super(Model, self).__init__(config_file, config_dict)
@@ -64,7 +70,7 @@ class Model(ReadConfig):
         """run model."""
 
         # prepare data for use in siting an expansion per region for a target year
-        logging.info('Staging data...')
+        logger.info('Staging data...')
 
         # initial time for staging data
         staging_t0 = time.time()
@@ -77,7 +83,7 @@ class Model(ReadConfig):
                      self.infrastructure_dict,
                      self.initialize_site_data)
 
-        logging.info(f'Staged data in {round((time.time() - staging_t0), 7)} seconds')
+        logger.info(f'Staged data in {round((time.time() - staging_t0), 7)} seconds')
 
         return data
 
@@ -93,23 +99,13 @@ class Model(ReadConfig):
                                  technology_order=self.technology_order,
                                  expansion_dict=self.expansion_dict,
                                  regions_dict=self.regions_dict,
-                                 suitability_arr=data.suitability_arr,
-                                 lmp_arr=data.lmp_arr,
-                                 generation_arr=data.generation_arr,
-                                 operating_cost_arr=data.operating_cost_arr,
-                                 nov_arr=data.nov_arr,
-                                 ic_arr=data.ic_arr,
-                                 nlc_arr=data.nlc_arr,
-                                 zones_arr=data.zones_arr,
-                                 xcoords=data.xcoords,
-                                 ycoords=data.ycoords,
-                                 indices_2d=data.indices_2d,
+                                 data=RegionData.from_stage(data),
                                  randomize=self.settings_dict.get('randomize', True),
                                  seed_value=self.settings_dict.get('seed_value', 0),
                                  verbose=self.settings_dict.get('verbose', False),
                                  write_output=write_output)
 
-        logging.info(f"CERF model run completed in {round(time.time() - self.start_time, 7)} seconds")
+        logger.info(f"CERF model run completed in {round(time.time() - self.start_time, 7)} seconds")
 
         self.close_logger()
 

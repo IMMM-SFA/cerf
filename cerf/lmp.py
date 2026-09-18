@@ -5,8 +5,10 @@ import logging
 
 import cerf.package_data as pkg
 
+logger = logging.getLogger(__name__)
 
-def generate_random_lmp_dataframe(n_zones=57, low_value=10, mid_value=300, high_value=500, n_samples=5000):
+
+def generate_random_lmp_dataframe(n_zones=57, low_value=10, mid_value=300, high_value=500, n_samples=5000, seed=None):
     """Generate a random dataframe of hourly 8760 LMP values per lmp zone.  Let high value LMPs only be used
     for 15 percent of the data.
     :param n_zones:                     Number of zones to process
@@ -14,11 +16,11 @@ def generate_random_lmp_dataframe(n_zones=57, low_value=10, mid_value=300, high_
     :param mid_value:                   Desired mid value of MWh to split the 85-15 split to
     :param high_value:                  Desired max value of MWh
     :param n_samples:                   Number of intervals to split the min, max choices by
+    :param seed:                        Optional seed for a local random generator; the global NumPy RNG is not used
     :return:                            Data frame of LMPs per zone
     """
 
-    # initialize a dictionary with the hour count for the number of hours in a year
-    d = {'hour': list(range(1, 8761, 1))}
+    rng = np.random.default_rng(seed)
 
     # create an array with n_samples covering an equal space from low to mid values
     array_1 = np.linspace(low_value, mid_value, n_samples)
@@ -27,26 +29,17 @@ def generate_random_lmp_dataframe(n_zones=57, low_value=10, mid_value=300, high_
     array_2 = np.linspace(mid_value, high_value, n_samples)
 
     # let only 15 percent of values come from high cost values
-    threshold = 8760 - (8760 * 0.15)
+    n_low = int(8760 - (8760 * 0.15))
+    n_high = 8760 - n_low
 
-    # create an LMP array for each zone
+    # initialize a dictionary with the hour count for the number of hours in a year
+    d = {'hour': np.arange(1, 8761)}
+
+    # create an LMP array for each zone: 85% drawn from the low range, 15% from the high range, then shuffled
     for i in range(n_zones):
-
-        # construct a list of random LMP values
-        l = []
-        for j in range(8760):
-
-            if j < threshold:
-                l.append(np.random.choice(array_1))
-
-            else:
-                l.append(np.random.choice(array_2))
-
-        # shuffle the list
-        np.random.shuffle(l)
-
-        # assign to dict
-        d[i] = l
+        values = np.concatenate((rng.choice(array_1, size=n_low), rng.choice(array_2, size=n_high)))
+        rng.shuffle(values)
+        d[i] = values
 
     # convert to data frame
     return pd.DataFrame(d)
@@ -116,6 +109,40 @@ class LocationalMarginalPricing:
 
         return start_index, through_index
 
+    @staticmethod
+    def zone_lookup(zones_arr, lmp_dict):
+        """Map a zone ID array to LMP values using a vectorized lookup table.
+
+        Reproduces the semantics of ``np.vectorize(lmp_dict.get)(zones_arr)``: any zone ID present in
+        ``lmp_dict`` receives its value and any zone ID absent from ``lmp_dict`` (including the nodata
+        value) receives ``NaN``. Uses a dense integer lookup table spanning the observed zone ID range,
+        which is a single fancy-index operation instead of a Python-level call per grid cell.
+
+        :param zones_arr:           Integer array of LMP zone IDs per grid cell
+        :type zones_arr:            ndarray
+
+        :param lmp_dict:            Dictionary of {zone_id: lmp_value, ...}
+        :type lmp_dict:             dict
+
+        :return:                    Float64 array of LMP values with the same shape as ``zones_arr``
+
+        """
+
+        if not np.issubdtype(zones_arr.dtype, np.integer):
+            raise TypeError(f"LMP zones array must have an integer dtype; got {zones_arr.dtype}")
+
+        # offset so the table can also cover negative zone or nodata IDs
+        zone_min = int(zones_arr.min())
+        zone_max = int(zones_arr.max())
+
+        lut = np.full(zone_max - zone_min + 1, np.nan, dtype=np.float64)
+
+        for zone_id, value in lmp_dict.items():
+            if zone_min <= zone_id <= zone_max:
+                lut[zone_id - zone_min] = value
+
+        return lut[zones_arr.astype(np.int64) - zone_min]
+
     def get_lmp(self):
         """Create LMP array for the current technology.
 
@@ -136,24 +163,24 @@ class LocationalMarginalPricing:
 
             # default illustrative LMP file
             lmp_file = pkg.get_sample_lmp_file()
-            logging.info(f"Using LMP from default illustrative package data:  {lmp_file}")
+            logger.info(f"Using LMP from default illustrative package data:  {lmp_file}")
 
         else:
-            logging.info(f"Using LMP file:  {lmp_file}")
+            logger.info(f"Using LMP file:  {lmp_file}")
 
         lmp_df = pd.read_csv(lmp_file)
 
         # drop the hour field
         lmp_df.drop('hour', axis=1, inplace=True)
 
+        # sort by descending lmp for each zone; the sort is independent of technology so it is done once
+        for j in lmp_df.columns:
+            lmp_df[j] = lmp_df[j].sort_values(ascending=False).values
+
         for index, i in enumerate(self.technology_order):
 
             # assign the correct LMP based on the capacity factor of the technology
             start_index, through_index = self.get_cf_bin(self.technology_dict[i]['capacity_factor_fraction'])
-
-            # sort by descending lmp for each zone
-            for j in lmp_df.columns:
-                lmp_df[j] = lmp_df[j].sort_values(ascending=False).values
 
             # create a dictionary of LMP values for each power zone based on tech capacity factor
             lmp_dict = lmp_df.iloc[start_index:through_index].mean(axis=0).to_dict()
@@ -163,6 +190,6 @@ class LocationalMarginalPricing:
             lmp_dict[self.lmp_zone_dict['lmp_zone_raster_nodata_value']] = np.nan
 
             # create LMP array for the current technology
-            lmp_arr[index, :, :] = np.vectorize(lmp_dict.get)(self.zones_arr)
+            lmp_arr[index, :, :] = self.zone_lookup(self.zones_arr, lmp_dict)
 
         return lmp_arr

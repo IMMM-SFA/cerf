@@ -1,9 +1,13 @@
+import copy
 import os
 import unittest
+
+import pytest
 
 from cerf.read_config import ReadConfig
 
 
+@pytest.mark.package_data
 class TestReadConfig(unittest.TestCase):
     """Test configuration reader."""
 
@@ -27,6 +31,102 @@ class TestReadConfig(unittest.TestCase):
         cfg = ReadConfig(self.TEST_CONFIG)
 
         self.assertEqual(TestReadConfig.EXPECTED_REGDICT, cfg.regions_dict)
+
+    def test_config_dict_is_not_mutated(self):
+        """The caller's configuration dictionary must be left untouched by ReadConfig."""
+
+        user_config = ReadConfig.read_yaml(self.TEST_CONFIG)
+        snapshot = copy.deepcopy(user_config)
+
+        cfg = ReadConfig(config_dict=user_config)
+
+        # ReadConfig injects package-default paths into settings; that must happen on its private copy only
+        self.assertEqual(snapshot, user_config)
+        self.assertIsNotNone(cfg.settings_dict['region_raster_file'])
+        self.assertIsNone(user_config['settings']['region_raster_file'])
+
+        # the model's sub-dictionaries must not alias the caller's
+        for key, attr in (('settings', 'settings_dict'),
+                          ('technology', 'technology_dict'),
+                          ('expansion_plan', 'expansion_dict'),
+                          ('lmp_zones', 'lmp_zone_dict')):
+            self.assertIsNot(user_config[key], getattr(cfg, attr))
+
+        # mutating the model's expansion plan must not leak back to the caller
+        region = next(iter(cfg.expansion_dict))
+        tech = next(iter(cfg.expansion_dict[region]))
+        cfg.expansion_dict[region][tech]['n_sites'] = -999
+        self.assertEqual(snapshot, user_config)
+
+    def test_config_dict_none_with_file(self):
+        """`config_dict=None` alongside a config file must behave exactly like no overrides."""
+
+        cfg_none = ReadConfig(config_file=self.TEST_CONFIG, config_dict=None)
+        cfg_default = ReadConfig(config_file=self.TEST_CONFIG)
+        cfg_empty = ReadConfig(config_file=self.TEST_CONFIG, config_dict={})
+
+        self.assertEqual(cfg_default.settings_dict, cfg_none.settings_dict)
+        self.assertEqual(cfg_default.expansion_dict, cfg_none.expansion_dict)
+        self.assertEqual(cfg_empty.settings_dict, cfg_none.settings_dict)
+
+    def test_no_config_raises_value_error(self):
+        """Neither a file nor a dictionary is an error, not an obscure AttributeError."""
+
+        for empty in (None, {}):
+            with self.assertRaises(ValueError):
+                ReadConfig(config_dict=empty)
+
+    def test_default_config_dict_is_not_shared(self):
+        """The default argument must not be a mutable object shared across instances."""
+
+        first = ReadConfig(config_file=self.TEST_CONFIG)
+        first.settings_dict['run_year'] = 1900
+        second = ReadConfig(config_file=self.TEST_CONFIG)
+
+        self.assertNotEqual(1900, second.settings_dict['run_year'])
+
+    def test_lifetime_fields_validated_and_defaulted(self):
+        """5.4: `lifetime_yrs` required and positive; `operational_life_yrs` defaults to it and must be positive."""
+
+        base = ReadConfig(config_file=TestReadConfig.TEST_CONFIG)
+        cfg = copy.deepcopy(base.config)
+        tech_id = next(iter(cfg['technology']))
+
+        # default: missing operational life falls back to the economic life
+        c = copy.deepcopy(cfg)
+        del c['technology'][tech_id]['operational_life_yrs']
+        rc = ReadConfig(config_dict=c)
+        self.assertEqual(rc.technology_dict[tech_id]['lifetime_yrs'],
+                         rc.technology_dict[tech_id]['operational_life_yrs'])
+
+        # the two may legitimately differ
+        c = copy.deepcopy(cfg)
+        c['technology'][tech_id]['lifetime_yrs'] = 30
+        c['technology'][tech_id]['operational_life_yrs'] = 60
+        rc = ReadConfig(config_dict=c)
+        self.assertEqual(30, rc.technology_dict[tech_id]['lifetime_yrs'])
+        self.assertEqual(60, rc.technology_dict[tech_id]['operational_life_yrs'])
+
+        for field, value in (('lifetime_yrs', None), ('lifetime_yrs', 0), ('lifetime_yrs', -5),
+                             ('operational_life_yrs', 0), ('operational_life_yrs', -1)):
+            c = copy.deepcopy(cfg)
+            if value is None:
+                del c['technology'][tech_id][field]
+            else:
+                c['technology'][tech_id][field] = value
+            with self.assertRaises(ValueError, msg=(field, value)):
+                ReadConfig(config_dict=c)
+
+    def test_config_dict_overrides_do_not_mutate_caller(self):
+        """Overrides passed alongside a config file must not be written back to the caller's dictionary."""
+
+        overrides = {'settings': {'run_year': 2010}}
+        snapshot = copy.deepcopy(overrides)
+
+        cfg = ReadConfig(config_file=self.TEST_CONFIG, config_dict=overrides)
+
+        self.assertEqual(2010, cfg.settings_dict['run_year'])
+        self.assertEqual(snapshot, overrides)
 
 
 if __name__ == '__main__':

@@ -113,7 +113,7 @@ def costs_per_kv_substation():
     f = get_costs_per_kv_substation_file()
 
     with open(f, 'r') as yml:
-        return yaml.load(yml, Loader=yaml.FullLoader)
+        return yaml.safe_load(yml)
 
 
 def load_sample_config(yr):
@@ -134,7 +134,7 @@ def load_sample_config(yr):
     f = _data_file(f'config_{yr}.yml')
 
     with open(f, 'r') as yml:
-        return yaml.load(yml, Loader=yaml.FullLoader)
+        return yaml.safe_load(yml)
 
 
 def list_available_suitability_files():
@@ -188,7 +188,7 @@ def get_region_abbrev_to_name():
 
     # get region abbreviations to search for in HIFLD data
     with open(regions_file, 'r') as yml:
-        return yaml.load(yml, Loader=yaml.FullLoader)
+        return yaml.safe_load(yml)
 
 
 def get_region_name_to_id():
