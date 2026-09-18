@@ -1,12 +1,16 @@
 import os
 import unittest
 
+import pytest
+
 import numpy as np
 
 from cerf.read_config import ReadConfig
 from cerf.interconnect import Interconnection
 
 
+@pytest.mark.package_data
+@pytest.mark.slow
 class TestInterconnection(unittest.TestCase):
 
     # supporting data

@@ -284,7 +284,8 @@ class Competition:
             remaining_sites = self.expansion_dict[k]['n_sites']
 
             if remaining_sites > 0:
-                logger.warning(f"Unable to achieve full siting for `{tech_name}` in `{self.target_region_name}`:  {remaining_sites} unsited.")
+                logger.warning(f"Unable to achieve full siting for `{tech_name}` in `{self.target_region_name}`:  "
+                               f"{remaining_sites} unsited.")
 
     def compete(self):
 
@@ -307,7 +308,8 @@ class Competition:
                 required_sites = self.expansion_dict[tech_id]['n_sites']
 
                 # calculate the year of retirement
-                retirement_year = self.settings_dict['run_year'] + int(self.technology_dict[tech_id]['operational_life_yrs'])
+                operational_life_yrs = int(self.technology_dict[tech_id]['operational_life_yrs'])
+                retirement_year = self.settings_dict['run_year'] + operational_life_yrs
 
                 # if there are more power plants to site and there are grids available to site them...
                 if self.avail_grids > 0 and tech.shape[0] > 0 and required_sites > 0:

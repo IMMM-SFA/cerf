@@ -1,6 +1,8 @@
 import os
 import unittest
 
+import pytest
+
 import numpy as np
 import pandas as pd
 import rasterio
@@ -10,6 +12,7 @@ from cerf.lmp import LocationalMarginalPricing, generate_random_lmp_dataframe
 from cerf.read_config import ReadConfig
 
 
+@pytest.mark.package_data
 class TestLmp(unittest.TestCase):
 
     # supporting data

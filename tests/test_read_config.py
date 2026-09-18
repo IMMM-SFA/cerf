@@ -2,9 +2,12 @@ import copy
 import os
 import unittest
 
+import pytest
+
 from cerf.read_config import ReadConfig
 
 
+@pytest.mark.package_data
 class TestReadConfig(unittest.TestCase):
     """Test configuration reader."""
 
@@ -93,7 +96,8 @@ class TestReadConfig(unittest.TestCase):
         c = copy.deepcopy(cfg)
         del c['technology'][tech_id]['operational_life_yrs']
         rc = ReadConfig(config_dict=c)
-        self.assertEqual(rc.technology_dict[tech_id]['lifetime_yrs'], rc.technology_dict[tech_id]['operational_life_yrs'])
+        self.assertEqual(rc.technology_dict[tech_id]['lifetime_yrs'],
+                         rc.technology_dict[tech_id]['operational_life_yrs'])
 
         # the two may legitimately differ
         c = copy.deepcopy(cfg)

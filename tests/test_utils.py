@@ -161,7 +161,8 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(TestUtils.COMP_BUFF_FLAT_19_LIST, buff_19.tolist())
 
     def test_buffer_window_and_indices_match_reference(self):
-        """4.7: window slices / index arrays equal a brute-force neighbourhood for every cell and radius, incl. edges."""
+        """4.7: window slices / index arrays equal a brute-force neighbourhood for every cell and radius, incl.
+        edges."""
 
         nrows, ncols = 5, 7
         for ncells in (0, 1, 2, 4, 10):

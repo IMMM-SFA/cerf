@@ -9,6 +9,8 @@ import os
 import tempfile
 import unittest
 
+import pytest
+
 import geopandas as gpd
 import numpy as np
 from shapely.geometry import LineString, Point
@@ -47,6 +49,7 @@ class TestAssignSubstationCosts(unittest.TestCase):
             assign_substation_costs(gdf, self.COSTS)
 
 
+@pytest.mark.package_data
 class TestPreprocessHifldSubstations(unittest.TestCase):
 
     @staticmethod
@@ -99,6 +102,7 @@ class TestPreprocessHifldSubstations(unittest.TestCase):
         self.assertNotIn('MIN_VOLT', gdf.columns)
 
 
+@pytest.mark.package_data
 class TestPreprocessEiaPipelines(unittest.TestCase):
 
     def test_filters_operating_nonzero_length(self):

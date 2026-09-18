@@ -38,7 +38,7 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 5.4 + 5.5 + 5.6 | Lifetime fields documented/validated (`validate_technology_parameters`); `EmptyRegionResult` instead of `None`; suitability honours raster `nodata`, shape check, non-0/1 warning | [#135](https://github.com/IMMM-SFA/cerf/pull/135) `c148e04` | ✅ Merged | identical | none; +3 tests |
 | 6.3–6.8 | Explicit `__all__` / no star imports; `__version__` from package metadata; unused deps (`seaborn`, `pyarrow`, `rtree`, `fiona`, `pyproj`) removed, `environment.yml` synced; dead code removed; `yaml.safe_load`; `__init__` annotations; `sited_record()` | [#136](https://github.com/IMMM-SFA/cerf/pull/136) `6070061` | ✅ Merged | identical | none; +5 tests; pyflakes clean |
 | 6.1 + 6.2 | `RegionData` dataclass (`from_stage` / `crop`) replaces 21-argument plumbing in `ProcessRegion`, `process_region`, `region_tasks`, `Model.run_single_region`; `auto_run=False` + idempotent `run()` on `ProcessRegion` and `Competition` (kwargs still accepted) | [#137](https://github.com/IMMM-SFA/cerf/pull/137) `0fbaa19` | ✅ Merged | identical (sequential and `loky`) | none; +2 tests |
-| 7.x | Tests: remove placeholder test, float comparisons, golden data, slow/integration markers; CI matrix, pinned actions, coverage, lint | — | 🟡 In progress | — | — |
+| 7.1–7.3 | End-to-end tests on the sample data (`Stage`, all backends, `cerf.run`, `run_single_region`, `ingest_sited_data`, `plot_siting`); golden CSV + `assertAlmostEqual`; `package_data` / `slow` markers with auto-skip; ruff lint job, 3.9–3.12 + macOS matrix, Codecov upload, regression check in CI | [#138](https://github.com/IMMM-SFA/cerf/pull/138) | 🟡 In review | identical (also asserted by the new tests) | none; +6 tests (104 total); coverage 82% → 94%; fast suite 71 tests in ~1 s |
 | 8.x | Docs and packaging | — | ⬜ Not started | — | — |
 
 Cumulative full-run timing (2010 CONUS sample, sequential, single process):
@@ -448,7 +448,9 @@ Class-level "type hints" (e.g., `settings_dict: dict` at class scope in `Stage`,
 
 ## 7. Testing and CI
 
-### 7.1 Coverage gaps
+### 7.1 Coverage gaps — ✅ DONE in #138 (see also #129–#137 for the unit tests added alongside each fix)
+
+> **Resolved.** `tests/test_end_to_end.py` (marked `package_data` + `slow`) stages the 2010 CONUS sample once and covers `Stage`, `cerf_parallel` (sequential and `threading`, checked against the seeded reference), `cerf.run()` with CSV output, `Model.run_single_region`, `utils.ingest_sited_data` / `aggregate_results(init_df=...)` and `outputs.plot_siting`. Coverage 82% → **94%** (`model.py`, `process.py` 100%; `stage.py` 95%). `test_spatial_reader.py` removed; `_test_package_data.py` re-enabled as `test_package_data.py`. NOV edge cases were covered in #121; `ProcessRegion`/parallel dispatch in #129/#130.
 
 Tests exist for `compete`, `interconnect`, `lmp`, `nov`, `read_config`, `utils.buffer_flat_array`. There is **no** test for:
 
@@ -463,13 +465,17 @@ Tests exist for `compete`, `interconnect`, `lmp`, `nov`, `read_config`, `utils.b
 
 `tests/test_spatial_reader.py` is a placeholder (`assertEqual(2, 2)`) referencing a module that no longer exists and should be removed. `tests/_test_package_data.py` is disabled by its underscore prefix.
 
-### 7.2 Test fragility
+### 7.2 Test fragility — ✅ DONE in #138
+
+> **Resolved.** `COMP_SITED_DICT` replaced by `tests/data/compete_golden_sited.csv` compared via `assert_frame_equal` with `sited_dtypes()`; float factors in `test_nov` use `assertAlmostEqual`; `tests/conftest.py` registers `package_data` (auto-skip when the supplement is absent, `--require-package-data` to fail instead) and `slow` markers, applied to every data-dependent test. The fast suite (`pytest -m "not package_data"`) is 71 tests in ~1 s with no download; the resolution tests now pass explicit cost dicts so they are fully self-contained.
 
 - `test_compete.COMP_SITED_DICT` hard-codes a full 29-key dictionary; any column addition breaks it. Compare the resulting DataFrame against a small golden CSV instead.
 - `test_nov` uses `assertEqual` on floating-point values (`0.05282818452724236`); use `assertAlmostEqual`/`np.testing.assert_allclose`.
 - `test_interconnect`/`test_lmp` require the ~1 GB Zenodo package data and take ~10 s; they should be marked (e.g., `@pytest.mark.slow`/`integration`) so a fast unit suite can run without downloads.
 
-### 7.3 CI configuration
+### 7.3 CI configuration — ✅ DONE in #122 / #126 (caching) and #138 (matrix, lint, coverage)
+
+> **Resolved.** Workflow now has a `lint` job (`ruff check`, config in `pyproject.toml`: E/F/W, line length 120), a `unit` job running the fast suite on a fresh checkout without package data, and a `build` matrix (3.9–3.12 on Ubuntu + 3.12 on macOS) that runs the full suite with `--require-package-data`, the seeded regression check (`run_reference.py --compare`) and uploads `coverage.xml` to Codecov. Python 3.12 classifier added. Long lines and trailing whitespace fixed so the tree is ruff-clean.
 
 **Location:** [`.github/workflows/build.yml`](../.github/workflows/build.yml)
 

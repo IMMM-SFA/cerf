@@ -128,8 +128,8 @@ class ReadConfig(Logger):
             return self.read_yaml(self.config_file)
 
         else:
-            msg = f"""Config file not found for path:  {self.config_file}. If using defaults, please download the package data. 
-            See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data"""
+            msg = (f"Config file not found for path:  {self.config_file}. If using defaults, please download the "
+                   f"package data. See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data")
 
             logger.error(msg)
             raise FileNotFoundError(msg)
@@ -152,8 +152,8 @@ class ReadConfig(Logger):
 
         for i in settings_files:
             if not os.path.isfile(i):
-                msg = f"""Cannot find the settings file for: {i}.  If using defaults, please download the package data. 
-                See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data"""
+                msg = (f"Cannot find the settings file for: {i}.  If using defaults, please download the package data. "
+                       f"See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data")
 
                 raise FileNotFoundError(msg)
 
@@ -182,11 +182,13 @@ class ReadConfig(Logger):
             if lifetime is None:
                 raise ValueError(f"Technology `{tech_name}` ({tech_id}) is missing the required `lifetime_yrs`.")
             if not lifetime > 0:
-                raise ValueError(f"Technology `{tech_name}` ({tech_id}) `lifetime_yrs` must be positive; got {lifetime}.")
+                raise ValueError(f"Technology `{tech_name}` ({tech_id}) `lifetime_yrs` must be positive; "
+                                 f"got {lifetime}.")
 
             operational = tech.get('operational_life_yrs')
             if operational is None:
-                logger.info(f"`operational_life_yrs` not set for `{tech_name}`; defaulting to `lifetime_yrs` ({lifetime}).")
+                logger.info(f"`operational_life_yrs` not set for `{tech_name}`; "
+                            f"defaulting to `lifetime_yrs` ({lifetime}).")
                 tech['operational_life_yrs'] = lifetime
             elif not operational > 0:
                 raise ValueError(f"Technology `{tech_name}` ({tech_id}) `operational_life_yrs` must be positive; "
@@ -209,8 +211,8 @@ class ReadConfig(Logger):
                 suit_path = os.path.join(pkg.get_data_directory(), suitability_file_dict[tech_name])
 
                 if not os.path.isfile(suit_path):
-                    msg = f"""Cannot find the default suitability raster: {suit_path}.  Please download the package data. 
-                    See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data"""
+                    msg = (f"Cannot find the default suitability raster: {suit_path}.  Please download the package "
+                           f"data. See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data")
 
                     raise FileNotFoundError(msg)
 
@@ -239,8 +241,8 @@ class ReadConfig(Logger):
         for i in lmp_files:
 
             if not os.path.isfile(i):
-                msg = f"""Cannot find the LMP file for: {i}.  If using defaults, please download the package data. 
-                See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data"""
+                msg = (f"Cannot find the LMP file for: {i}.  If using defaults, please download the package data. "
+                       f"See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data")
 
                 raise FileNotFoundError(msg)
 
@@ -269,7 +271,7 @@ class ReadConfig(Logger):
         for i in infrastructure_files:
 
             if not os.path.isfile(i):
-                msg = f"""Cannot find the infrastructure file for: {i}.  If using defaults, please download the package data. 
-                See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data"""
+                msg = (f"Cannot find the infrastructure file for: {i}.  If using defaults, please download the package "
+                       f"data. See https://immm-sfa.github.io/cerf/getting_started.html#install-package-data")
 
                 raise FileNotFoundError(msg)

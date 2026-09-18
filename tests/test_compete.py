@@ -1,8 +1,11 @@
 import copy
+import os
 import unittest
 
 import numpy as np
+import pandas as pd
 
+import cerf.utils as util
 from cerf.compete import Competition
 
 
@@ -66,41 +69,15 @@ class TestCompete(unittest.TestCase):
                      2: {'n_sites': 0, 'tech_name': 'test2'},
                      3: {'n_sites': 0, 'tech_name': 'test3'}}
 
-    COMP_SITED_DICT = {'region_name': ['test', 'test', 'test'],
-                       'index': [2.4, 3.2, 3.2],
-                       'capacity_factor_fraction': [0.1, 0.1, 0.1],
-                       'carbon_capture_rate_fraction': [0.0, 0.0, 0.0],
-                       'carbon_tax_esc_rate_fraction': [1.0, 1.0, 1.0],
-                       'carbon_tax_usd_per_ton': [0.0, 0.0, 0.0],
-                       'fuel_co2_content_tons_per_btu': [0.1, 0.1, 0.1],
-                       'fuel_price_esc_rate_fraction': [1.0, 1.0, 1.0],
-                       'fuel_price_usd_per_mmbtu': [1.0, 1.0, 1.0],
-                       'generation_mwh_per_year': [2.4, 1.0, 3.2],
-                       'lifetime_yrs': [60, 60, 60],
-                       'operational_life_yrs': [60, 60, 60],
-                       'heat_rate_btu_per_kWh': [1.0, 1.0, 1.0],
-                       'tech_id': [1, 2, 3],
-                       'tech_name': ['test', 'test', 'test'],
-                       'unit_size_mw': [80, 80, 80],
-                       'xcoord': [2.4, 3.2, 3.2],
-                       'ycoord': [2.4, 3.2, 3.2],
-                       'buffer_in_km': [1, 1, 1],
-                       'sited_year': [2010, 2010, 2010],
-                       'retirement_year': [2070, 2070, 2070],
-                       'lmp_zone': [2, 3, 3],
-                       'variable_om_esc_rate_fraction': [1.0, 1.0, 1.0],
-                       'variable_om_usd_per_mwh': [1.0, 1.0, 1.0],
-                       'operating_cost_usd_per_year': [2.4, 1.0, 3.2],
-                       'locational_marginal_price_usd_per_mwh': [2.4, 1.0, 3.2],
-                       'net_operational_value_usd_per_year': [2.4, 1.0, 3.2],
-                       'interconnection_cost_usd_per_year': [2.4, 1.0, 3.2],
-                       'net_locational_cost_usd_per_year': [2.4, 1.0, 3.2]}
+    # golden sited data frame for the competition above; regenerate with `comp.sited_df.to_csv(..., index=False)`
+    GOLDEN_SITED_CSV = os.path.join(os.path.dirname(__file__), 'data/compete_golden_sited.csv')
 
     @classmethod
     def create_masked_nlc_array(cls):
         """Create a masked NLC array by suitability to use in testing."""
 
-        # insert zero array and mask it as index [0, :, :] so the tech_id 0 will always be min if nothing is left to site
+        # insert zero array and mask it as index [0, :, :] so the tech_id 0 will always be min if nothing is left
+        #  to site
         arr = np.insert(cls.NLC_ARR, 0, np.zeros_like(cls.NLC_ARR[0, :, :]), axis=0)
 
         # exclude all area for the proxy dimension
@@ -155,8 +132,10 @@ class TestCompete(unittest.TestCase):
         # ensure the remaining-site counts are exposed on the competition object
         self.assertEqual(TestCompete.COMP_EXP_PLAN, comp.expansion_dict)
 
-        # check sited dict match
-        self.assertEqual(TestCompete.COMP_SITED_DICT, comp.sited_dict)
+        # check the sited data frame against the golden CSV (all 29 columns, typed via `sited_dtypes()`)
+        golden = pd.read_csv(TestCompete.GOLDEN_SITED_CSV, dtype=util.sited_dtypes())
+        pd.testing.assert_frame_equal(golden, comp.sited_df)
+        self.assertEqual(list(golden.columns), list(util.empty_sited_dict().keys()))
 
     def _run(self, nlc_mask, expansion_plan=None):
         fake_dict, fake_flat_array = self.create_proxy_arrays()
@@ -273,7 +252,10 @@ class TestCompete(unittest.TestCase):
         # distinct per-metric values so a wrong lookup would be visible
         lmp_2d = {i: TestCompete.NLC_ARR[i - 1] * 10.0 for i in fake_dict}
         gen_2d = {i: np.full(TestCompete.NLC_ARR[0].shape, 100.0 * i) for i in fake_dict}   # scalar-like per tech
-        flat = lambda d: {i: a.flatten() for i, a in d.items()}
+
+        def flat(d):
+            return {i: a.flatten() for i, a in d.items()}
+
         grid_index = np.arange(fake_flat_array.size)
 
         comp_2d = Competition(target_region_name='test',

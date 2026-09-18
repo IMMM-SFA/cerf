@@ -254,7 +254,8 @@ class ProcessRegion:
         self.xcoords_region, self.ycoords_region = self.get_grid_coordinates()
 
         logger.debug(f"Extracting additional metrics for {self.target_region_name}")
-        self.lmp_flat_dict, self.generation_flat_dict, self.operating_cost_flat_dict, self.nov_flat_dict, self.ic_flat_dict = self.extract_region_metrics()
+        (self.lmp_flat_dict, self.generation_flat_dict, self.operating_cost_flat_dict,
+         self.nov_flat_dict, self.ic_flat_dict) = self.extract_region_metrics()
         self.zones_flat_arr = self.extract_lmp_zones()
 
         # populated by `run()`
@@ -422,8 +423,8 @@ class ProcessRegion:
         return nlc_arr_region
 
     def get_grid_indices(self):
-        """Generate a 1D array of grid indices the target region to use as a way to map region level outcomes back to the
-        full grid space."""
+        """Generate a 1D array of grid indices for the target region to use as a way to map region level outcomes
+        back to the full grid space."""
 
         return self.indices_2d[self.ymin:self.ymax, self.xmin:self.xmax].flatten()
 

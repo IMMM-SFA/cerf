@@ -10,6 +10,8 @@ import os
 import tempfile
 import unittest
 
+import pytest
+
 from cerf.logger import Logger
 from cerf.model import Model
 
@@ -48,6 +50,7 @@ class TestLogger(unittest.TestCase):
         self.assertEqual(self.root_handlers_before, self.root.handlers)
         self.assertEqual(self.root_level_before, self.root.level)
 
+    @pytest.mark.package_data
     def test_multiple_models_do_not_duplicate_handlers(self):
         """Instantiating several models in one session yields a single console handler."""
 
