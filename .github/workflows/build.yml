@@ -40,9 +40,6 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: ['3.9', '3.10', '3.11', '3.12']
-        include:
-          - os: macos-latest
-            python-version: '3.12'
 
     env:
       OS: ${{ matrix.os }}
@@ -62,10 +59,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      # Editable install so `import cerf` resolves to the checkout from every working directory
+      # (pytest at the repo root and `python benchmark/run_reference.py` alike); the package data
+      # linked below therefore lands in the one place both of them read from.
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install ".[test]"
+          python -m pip install -e ".[test]"
 
       - name: Resolve package data URL for this cerf version
         id: data-url

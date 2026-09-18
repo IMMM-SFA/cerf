@@ -23,7 +23,6 @@ import os
 import sys
 import time
 
-import numpy as np
 import pandas as pd
 
 import cerf
@@ -108,7 +107,9 @@ def compare(df, reference_file=REFERENCE_FILE):
         raise AssertionError(f"Row count mismatch: result={len(result)} reference={len(ref)}")
 
     # exact match for integer / string columns, tight float tolerance for float columns
-    float_cols = [c for c in result.columns if np.issubdtype(result[c].dtype, np.floating)]
+    #  (pandas.api.types handles pandas extension dtypes such as the pandas >= 3 string dtype, which
+    #  np.issubdtype cannot interpret)
+    float_cols = [c for c in result.columns if pd.api.types.is_float_dtype(result[c])]
     other_cols = [c for c in result.columns if c not in float_cols]
 
     pd.testing.assert_frame_equal(result[other_cols], ref[other_cols], check_exact=True)
