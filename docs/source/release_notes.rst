@@ -41,7 +41,7 @@ API and packaging
 - ``RegionData`` bundle and explicit ``run()`` on ``ProcessRegion`` / ``Competition`` (``auto_run=False`` to construct without running) https://github.com/IMMM-SFA/cerf/pull/137
 - Dependencies dropped: ``rioxarray``, ``seaborn``, ``pyarrow``, ``rtree``, ``fiona``, ``pyproj`` (the last two remain transitive via geopandas); ``shapely>=2.0`` required https://github.com/IMMM-SFA/cerf/pull/133 https://github.com/IMMM-SFA/cerf/pull/136
 - Deprecated: ``default_suitabiity_files`` (misspelling) → ``default_suitability_files``; ``Interconnection`` ``region_abbrev_to_name_file`` / ``region_name_to_id_file`` are ignored.
-- Python 3.9–3.12 tested in CI; end-to-end tests, ``ruff`` lint, coverage upload https://github.com/IMMM-SFA/cerf/pull/138
+- **Python 3.10 or newer is now required** (3.9 reached end of life in October 2025); 3.10–3.12 tested in CI; end-to-end tests, ``ruff`` lint, coverage upload https://github.com/IMMM-SFA/cerf/pull/138 https://github.com/IMMM-SFA/cerf/pull/139
 - ``MANIFEST.in`` removed (hatchling); Dockerfile builds from the checkout and pre-installs package data https://github.com/IMMM-SFA/cerf/pull/139
 
 

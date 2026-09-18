@@ -7,7 +7,7 @@ name = "cerf"
 description = "An open-source geospatial Python package for assessing and analyzing future electricity technology capacity expansion feasibility."
 readme = "README.md"
 version = "2.4.1"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = {file = "LICENSE"}
 authors = [
     {name = "Chris Vernon", email = "chris.vernon@pnnl.gov"},
@@ -33,7 +33,6 @@ dependencies = [
 ]
 
 classifiers = [
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -78,7 +77,7 @@ markers = [
 
 [tool.ruff]
 line-length = 120
-target-version = "py39"
+target-version = "py310"
 extend-exclude = ["docs", "notebooks", "paper"]
 
 [tool.ruff.lint]

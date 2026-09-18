@@ -2,7 +2,7 @@ name: cerf
 channels:
     - conda-forge
 dependencies:
-    - python>=3.9
+    - python>=3.10
     - pip
     - pip:
         # runtime dependencies mirror [project.dependencies] in pyproject.toml; keep the two in sync
