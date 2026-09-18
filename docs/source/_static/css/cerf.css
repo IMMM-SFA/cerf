@@ -1,122 +1,401 @@
-/* cerf documentation - small refinements on top of the Furo theme */
+/* Research atlas: a lightweight visual layer over Furo's navigation and controls.
+ * Theme-aware color tokens live in conf.py so manual and automatic modes agree.
+ * No external fonts, runtime dependencies, or custom JavaScript are required.
+ */
 
 :root {
-  --cerf-radius: 10px;
-  --cerf-shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 6px 18px rgba(15, 23, 42, 0.06);
-  --cerf-shadow-hover: 0 2px 4px rgba(15, 23, 42, 0.08), 0 12px 28px rgba(15, 23, 42, 0.12);
+  --cerf-radius: 16px;
+  --cerf-shadow: 0 6px 24px rgb(20 55 39 / 5%);
 }
+
+body {
+  font-size: 1rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.main { min-width: 0; }
+.content { width: 54rem; min-width: 0; }
+article { overflow-wrap: break-word; }
+
+h1, h2, h3, h4 {
+  color: var(--color-foreground-primary);
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: -0.035em;
+}
+
+h1 { font-size: clamp(2rem, 4vw, 2.8rem); }
+h2 { margin-top: 2.6rem; font-size: 1.65rem; }
+h3 { margin-top: 2rem; font-size: 1.25rem; }
+
+article a:not(.sd-btn, .headerlink, .sd-stretched-link) {
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-brand-primary);
+  outline-offset: 4px;
+  border-radius: 3px;
+}
+
+/* Navigation -------------------------------------------------------------- */
+.sidebar-drawer { border-right: 1px solid var(--color-background-border); }
+.sidebar-brand.cerf-brand {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 2rem 1.5rem 0.75rem;
+  text-decoration: none;
+}
+
+.cerf-brand img { flex: 0 0 40px; }
+.cerf-brand-name {
+  color: var(--color-foreground-primary);
+  font-size: 2rem;
+  font-weight: 750;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.cerf-brand-tagline {
+  display: block;
+  margin-top: 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  color: var(--color-foreground-secondary);
+}
+
+.cerf-sidebar-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 1.5rem 1.3rem;
+  font-size: 0.69rem;
+  color: var(--color-foreground-muted);
+}
+
+.cerf-version {
+  background: var(--cerf-tint);
+  border: 1px solid var(--color-background-border);
+  border-radius: 5px;
+  padding: 0.1rem 0.4rem;
+  color: var(--color-brand-primary);
+  font-weight: 650;
+}
+
+.sidebar-search-container {
+  margin: 0 1rem 1.5rem;
+  padding: 0.2rem 0.7rem;
+  background: var(--cerf-surface);
+  border: 1px solid var(--color-background-border);
+  border-radius: 9px;
+}
+
+.sidebar-search-container:focus-within {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+.sidebar-search { font-size: 0.85rem; }
+.sidebar-tree { font-size: 0.85rem; }
+.sidebar-tree .caption {
+  margin-top: 1.5rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--color-foreground-muted);
+}
+
+.sidebar-tree .reference { border-radius: 6px; }
+.sidebar-tree .current-page > .reference {
+  background: var(--cerf-tint);
+  color: var(--color-brand-primary);
+  font-weight: 650;
+  box-shadow: inset 3px 0 var(--color-brand-primary);
+}
+
+.toc-tree { font-size: 0.78rem; line-height: 1.65; }
+.toc-title { font-size: 0.72rem; letter-spacing: 0.06em; }
+.mobile-header { border-bottom: 1px solid var(--color-background-border); }
+.mobile-header .brand { font-weight: 700; letter-spacing: -0.04em; }
+
+.cerf-page-header {
+  clear: both;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding: 0.2rem 0 1.3rem;
+  margin: 0 0 1.7rem;
+  border-bottom: 1px solid var(--color-background-border);
+  font-size: 0.7rem;
+}
+
+.cerf-section-label {
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--color-foreground-secondary);
+}
+
+.cerf-section-label span { margin: 0 0.55rem; color: var(--color-foreground-muted); }
+.cerf-repository { color: var(--color-foreground-secondary); }
+.cerf-page-header a { text-decoration: none; }
+.cerf-page-header a:hover { color: var(--color-brand-primary); text-decoration: underline; }
 
 /* Landing page ------------------------------------------------------------ */
+/* Keep the original page title and anchor available to assistive technology. */
+.cerf-home > section > h1 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+[role="main"] .cerf-hero {
+  display: grid;
+  grid-template-columns: 1.12fr 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2.5rem 2rem;
+  border: 1px solid var(--color-background-border);
+  border-radius: 22px;
+  background: var(--cerf-hero-background);
+}
+
+.cerf-hero-copy { min-width: 0; }
+.cerf-eyebrow {
+  margin: 0 0 1rem;
+  color: var(--color-brand-primary);
+  font-size: 0.65rem;
+  font-weight: 750;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+}
+
+.cerf-hero-title {
+  margin: 0 0 1.25rem;
+  color: var(--cerf-hero-text);
+  font-size: clamp(2.25rem, 3.3vw, 3.15rem);
+  font-weight: 750;
+  letter-spacing: -0.065em;
+  line-height: 1.08;
+}
 
 .lead {
-  font-size: 1.2rem;
-  line-height: 1.6;
+  margin: 0 0 1.5rem;
   color: var(--color-foreground-secondary);
-  max-width: 48rem;
-  margin: 0.5rem 0 1rem 0;
+  font-size: 0.94rem;
+  line-height: 1.75;
 }
 
-.hero-meta {
-  color: var(--color-foreground-muted);
-  font-size: 0.95rem;
-  margin-bottom: 1.25rem;
+.lead strong { color: var(--cerf-hero-text); font-weight: 600; }
+.cerf-actions {
+  --sd-color-primary: #14665b;
+  --sd-color-primary-highlight: #0d5148;
+  --sd-color-primary-text: #fff;
+  --sd-color-secondary: var(--cerf-hero-text);
+  --sd-color-secondary-text: var(--color-background-primary);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
 }
+.cerf-actions p { margin: 0; }
+.cerf-actions .sd-btn {
+  border-radius: 7px;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.cerf-actions .cerf-button-primary {
+  background: #14665b;
+  border-color: #14665b;
+  color: #fff;
+}
+
+.cerf-actions .cerf-button-primary:hover { background: #0d5148; border-color: #0d5148; }
+/* sphinx-design declares its button colors !important. Match that here to
+ * keep the secondary action legible in both explicit and automatic themes. */
+.cerf-actions .sd-btn-outline-secondary {
+  color: var(--cerf-hero-text) !important;
+  border-color: var(--color-brand-primary) !important;
+  background: transparent !important;
+}
+
+.cerf-actions .sd-btn-outline-secondary:hover,
+.cerf-actions .sd-btn-outline-secondary:focus { background: var(--cerf-tint) !important; }
+.cerf-actions .sd-btn-outline-secondary .doc { color: inherit; }
+.cerf-hero-art { min-width: 0; text-align: center; }
+.cerf-hero-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  background: #edf3e7;
+}
+.cerf-art-caption {
+  margin: 0.5rem 0 0;
+  color: var(--color-foreground-muted);
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+}
+
+[role="main"] .cerf-install-strip {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.2rem 1.5rem;
+  margin-top: 1rem;
+  border: 1px solid var(--color-background-border);
+  border-radius: 12px;
+  background: var(--cerf-surface);
+}
+
+.cerf-install-label { flex: 1; }
+.cerf-install-label p { margin: 0; font-size: 0.86rem; font-weight: 600; }
+.cerf-install-label .cerf-eyebrow { font-size: 0.6rem; margin-bottom: 0.3rem; }
+.cerf-install-strip > div[class*="highlight"] { flex: 1; min-width: 0; margin: 0; }
+.cerf-install-strip .highlight pre { padding: 0.8rem 2.7rem 0.8rem 1rem; font-size: 0.85rem; }
+.hero-meta { margin: 1rem 0 2.8rem; color: var(--color-foreground-muted); font-size: 0.73rem; }
+.cerf-home h2 { margin-top: 3rem; }
+.cerf-home h2 + p { color: var(--color-foreground-secondary); font-size: 0.94rem; }
 
 /* sphinx-design cards ----------------------------------------------------- */
-
-.sd-card {
+.cerf-home .sd-card {
   border: 1px solid var(--color-background-border);
   border-radius: var(--cerf-radius);
-  box-shadow: var(--cerf-shadow);
-  background: var(--color-background-primary);
-  transition: box-shadow 160ms ease, transform 160ms ease, border-color 160ms ease;
+  background: var(--cerf-surface);
+  box-shadow: none;
 }
 
-.sd-card:hover {
-  box-shadow: var(--cerf-shadow-hover);
-  transform: translateY(-2px);
+.index-card { transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease; }
+.index-card:hover, .index-card:focus-within {
   border-color: var(--color-brand-primary);
-}
-
-.sd-card .sd-card-title {
-  font-weight: 600;
-  color: var(--color-brand-primary);
-}
-
-.sd-card .sd-card-body {
-  color: var(--color-foreground-secondary);
-  font-size: 0.95rem;
-}
-
-.step-card {
-  border-top: 3px solid var(--color-brand-primary);
-}
-
-.step-card:hover {
-  transform: none;
-}
-
-/* Tabs ------------------------------------------------------------------- */
-
-.sd-tab-set > label {
-  font-weight: 600;
-}
-
-/* Content ---------------------------------------------------------------- */
-
-article .align-default,
-article img.figure-shadow {
-  border-radius: var(--cerf-radius);
   box-shadow: var(--cerf-shadow);
+  transform: translateY(-3px);
 }
+
+.sd-card .sd-card-body { padding: 1.5rem 1.5rem 1rem; color: var(--color-foreground-secondary); font-size: 0.9rem; }
+.sd-card .sd-card-title { color: var(--color-foreground-primary); font-size: 1.1rem; font-weight: 650; letter-spacing: -0.02em; }
+.index-card .sd-card-title::before {
+  content: "↗";
+  display: inline-grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin-right: 0.75rem;
+  border: 1px solid var(--color-background-border);
+  border-radius: 7px;
+  background: var(--cerf-tint);
+  color: var(--color-brand-primary);
+  font-size: 1rem;
+}
+
+.index-card .sd-card-footer {
+  border: 0;
+  background: transparent;
+  padding: 0 1.5rem 1.3rem;
+  color: var(--color-brand-primary);
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+.cerf-principles { padding-left: 1.5rem; }
+.cerf-principles li { padding: 0.4rem 0 0.6rem 0.6rem; color: var(--color-foreground-secondary); }
+.cerf-principles li::marker { color: var(--color-brand-primary); font-weight: 700; }
+.cerf-home .step-card { border-top: 3px solid var(--color-brand-primary); background: var(--color-background-secondary); }
+.step-card .sd-card-body { padding: 1.3rem; font-size: 0.83rem; }
+.step-card .sd-card-title { color: var(--color-brand-primary); }
+[role="main"] .cerf-metric {
+  border-left: 3px solid var(--color-brand-primary);
+  margin: 1.5rem 0;
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  color: var(--color-foreground-secondary);
+  font-size: 0.9rem;
+}
+.cerf-metric p:last-child { margin-bottom: 0; }
+[role="main"] .cerf-community {
+  margin: 3rem 0 1rem;
+  padding: 2rem;
+  border-radius: var(--cerf-radius);
+  background: var(--cerf-tint);
+}
+.cerf-community p:nth-child(2) { font-size: 1.5rem; font-weight: 650; letter-spacing: -0.035em; margin: 0 0 0.7rem; }
+.cerf-community p:last-child { color: var(--color-foreground-secondary); font-size: 0.9rem; margin-bottom: 0; }
+
+/* Technical content ------------------------------------------------------- */
+article .highlight {
+  border: 1px solid var(--color-background-border);
+  border-radius: 10px;
+  background: var(--cerf-code-background);
+}
+.highlight pre { padding: 1.2rem; font-size: 0.82rem; line-height: 1.7; }
+article :not(pre) > code { border-radius: 4px; padding: 0.12em 0.3em; }
+a.copybtn { border-radius: 5px; }
+.sd-tab-set > label { font-weight: 600; font-size: 0.85rem; }
+article img { max-width: 100%; height: auto; }
+article img.figure-shadow { border-radius: var(--cerf-radius); box-shadow: var(--cerf-shadow); }
 
 article table.docutils {
-  border-radius: var(--cerf-radius);
-  overflow: hidden;
-  font-size: 0.92rem;
+  border: 1px solid var(--color-background-border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+article table.docutils th { background: var(--cerf-tint); font-weight: 650; }
+article table.docutils td, article table.docutils th { padding: 0.7rem 0.9rem; vertical-align: top; }
+article table.docutils td .line-block { margin-bottom: 0; }
+article table.docutils tbody tr:nth-child(even) { background: var(--color-background-secondary); }
+.admonition { border-radius: 10px; box-shadow: none; }
+.admonition > .admonition-title { border-radius: 10px 10px 0 0; }
+.math { overflow-x: auto; }
+div.math { padding: 0.6rem 0; }
+dl.py.class > dt, dl.py.function > dt, dl.py.method > dt { border-radius: 7px; }
+.related-pages { border-top: 1px solid var(--color-background-border); padding-top: 1.5rem; }
+footer { color: var(--color-foreground-muted); }
+
+/* Match Furo's drawer breakpoints; retain its native keyboard/mobile UX. */
+@media (min-width: 82em) {
+  .sidebar-container { width: 16rem; }
+  .sidebar-drawer { width: calc((100% - 86rem) / 2 + 16rem); min-width: 16rem; }
 }
 
-article table.docutils th {
-  background: var(--color-background-secondary);
-  font-weight: 600;
+@media (max-width: 67em) {
+  .content { width: 100%; }
+  [role="main"] .cerf-hero { padding: 2rem 1.5rem; }
+  .cerf-hero-title { font-size: 2.4rem; }
 }
 
-article table.docutils td,
-article table.docutils th {
-  padding: 0.5rem 0.75rem;
-  vertical-align: top;
+@media (max-width: 47em) {
+  [role="main"] .cerf-hero { grid-template-columns: 1fr; padding: 1.7rem; }
+  .cerf-hero-title { max-width: 25rem; font-size: clamp(2.3rem, 8vw, 3rem); }
+  .cerf-hero-art { max-width: 24rem; margin: 0 auto; }
+  .cerf-hero-art img { max-height: 15rem; }
+  [role="main"] .cerf-install-strip { flex-direction: column; align-items: stretch; gap: 0.8rem; padding: 1rem; }
+  .cerf-page-header { margin-bottom: 1.2rem; font-size: 0.62rem; }
+  .cerf-section-label span { margin: 0 0.3rem; }
+  [role="main"] .cerf-community { padding: 1.5rem; }
+  .hero-meta { line-height: 2; }
 }
 
-/* keep the wide configuration tables readable */
-article table.docutils td .line-block {
-  margin-bottom: 0;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
 }
 
-.highlight {
-  border-radius: var(--cerf-radius);
-}
-
-/* Math ------------------------------------------------------------------- */
-
-.math {
-  overflow-x: auto;
-}
-
-div.math {
-  padding: 0.6rem 0;
-}
-
-/* API pages -------------------------------------------------------------- */
-
-dl.py.class > dt,
-dl.py.function > dt,
-dl.py.method > dt {
-  border-radius: 6px;
-}
-
-/* Sidebar brand ---------------------------------------------------------- */
-
-.sidebar-brand-text {
-  font-weight: 700;
-  letter-spacing: 0.02em;
+@media print {
+  .cerf-page-header, .cerf-actions, .cerf-hero-art { display: none; }
+  [role="main"] .cerf-hero { display: block; border: 0; padding: 0; }
+  .cerf-home > section > h1 { position: static; width: auto; height: auto; margin: 1rem 0; clip-path: none; }
+  .sd-card, .cerf-community, .cerf-install-strip { break-inside: avoid; box-shadow: none; }
 }

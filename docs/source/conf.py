@@ -79,6 +79,7 @@ html_title = f'cerf {release}'
 html_short_title = 'cerf'
 html_static_path = ['_static']
 html_css_files = ['css/cerf.css']
+html_favicon = '_static/cerf-mark.svg'
 html_last_updated_fmt = '%Y-%m-%d'
 html_show_sphinx = False
 html_copy_source = False
@@ -90,21 +91,58 @@ html_theme_options = {
     'navigation_with_keys': True,
     'top_of_page_buttons': ['view', 'edit'],
     'light_css_variables': {
-        'color-brand-primary': '#0b5d8a',
-        'color-brand-content': '#0b5d8a',
-        'color-brand-visited': '#0b5d8a',
-        'color-api-background': '#f5f8fa',
-        'color-sidebar-background': '#f7f9fb',
-        'font-stack': ('"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", '
+        'color-brand-primary': '#14665b',
+        'color-brand-content': '#14665b',
+        'color-brand-visited': '#14665b',
+        'color-foreground-primary': '#203832',
+        'color-foreground-secondary': '#4c625c',
+        'color-foreground-muted': '#596c65',
+        'color-background-primary': '#fcfcf9',
+        'color-background-secondary': '#f0f3ec',
+        'color-background-border': '#dbe3da',
+        'color-sidebar-background': '#f3f5ef',
+        'color-sidebar-link-text--top-level': '#203832',
+        'color-sidebar-item-background--hover': '#e5ece2',
+        'color-sidebar-item-expander-background--hover': '#dbe5d8',
+        'color-highlight-on-target': '#edf2d6',
+        'color-api-name': '#14665b',
+        'color-api-pre-name': '#14665b',
+        'color-api-background': '#edf2eb',
+        'color-api-background-hover': '#e2ebdf',
+        'font-stack': ('-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", '
                        'Arial, sans-serif'),
-        'font-stack--monospace': ('"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, '
+        'font-stack--monospace': ('ui-monospace, SFMono-Regular, Menlo, Consolas, '
                                   '"Liberation Mono", monospace'),
+        'cerf-surface': '#ffffff',
+        'cerf-tint': '#e9f0e3',
+        'cerf-hero-background': '#edf3e7',
+        'cerf-hero-text': '#173f35',
+        'cerf-code-background': '#f1f4ee',
     },
     'dark_css_variables': {
-        'color-brand-primary': '#6cc3ee',
-        'color-brand-content': '#6cc3ee',
-        'color-brand-visited': '#6cc3ee',
-        'color-api-background': '#1c2229',
+        'color-brand-primary': '#9ad8bc',
+        'color-brand-content': '#9ad8bc',
+        'color-brand-visited': '#9ad8bc',
+        'color-foreground-primary': '#e1eae3',
+        'color-foreground-secondary': '#bccbc3',
+        'color-foreground-muted': '#a6b8ad',
+        'color-background-primary': '#14201d',
+        'color-background-secondary': '#1d2d27',
+        'color-background-border': '#34483d',
+        'color-sidebar-background': '#182620',
+        'color-sidebar-link-text--top-level': '#e1eae3',
+        'color-sidebar-item-background--hover': '#2a3d32',
+        'color-sidebar-item-expander-background--hover': '#34483d',
+        'color-highlight-on-target': '#334b31',
+        'color-api-name': '#9ad8bc',
+        'color-api-pre-name': '#9ad8bc',
+        'color-api-background': '#21332b',
+        'color-api-background-hover': '#2a3d32',
+        'cerf-surface': '#1b2b24',
+        'cerf-tint': '#263c2f',
+        'cerf-hero-background': '#233d30',
+        'cerf-hero-text': '#e0efda',
+        'cerf-code-background': '#1a2a23',
     },
     'footer_icons': [
         {

@@ -1,0 +1,15 @@
+{% extends "!page.html" %}
+
+{% block content %}
+<div class="cerf-page-header">
+  <a class="cerf-section-label" href="{{ pathto(master_doc) }}">CERF <span>/</span> Documentation</a>
+  <a class="cerf-repository" href="https://github.com/IMMM-SFA/cerf">View on GitHub <span aria-hidden="true">↗</span></a>
+</div>
+{% if pagename == master_doc %}
+<div class="cerf-home">
+  {{ body }}
+</div>
+{% else %}
+{{ body }}
+{% endif %}
+{% endblock %}
