@@ -37,8 +37,9 @@ Work is landing on `release/2.5.0` via one PR per item. Every PR must pass the u
 | 4.7 + 4.8 | `buffer_window` / `buffer_flat_indices` index arrays (exact bounds); bulk shapely → GeoJSON conversion for `rasterize`; no temp-file round trip, outputs written only on request | [#134](https://github.com/IMMM-SFA/cerf/pull/134) `5d5b9ac` | ✅ Merged | identical | IC step **2.71 → 2.16 s**; total 5.5 → 5.2 s; +3 tests |
 | 5.4 + 5.5 + 5.6 | Lifetime fields documented/validated (`validate_technology_parameters`); `EmptyRegionResult` instead of `None`; suitability honours raster `nodata`, shape check, non-0/1 warning | [#135](https://github.com/IMMM-SFA/cerf/pull/135) `c148e04` | ✅ Merged | identical | none; +3 tests |
 | 6.3–6.8 | Explicit `__all__` / no star imports; `__version__` from package metadata; unused deps (`seaborn`, `pyarrow`, `rtree`, `fiona`, `pyproj`) removed, `environment.yml` synced; dead code removed; `yaml.safe_load`; `__init__` annotations; `sited_record()` | [#136](https://github.com/IMMM-SFA/cerf/pull/136) `6070061` | ✅ Merged | identical | none; +5 tests; pyflakes clean |
-| 6.1 + 6.2 | Split construction from execution; pass a data object instead of 21 arguments | — | ⬜ Not started | — | — |
-| 7.x / 8.x | Tests, CI, packaging | — | ⬜ Not started | — | — |
+| 6.1 + 6.2 | `RegionData` dataclass (`from_stage` / `crop`) replaces 21-argument plumbing in `ProcessRegion`, `process_region`, `region_tasks`, `Model.run_single_region`; `auto_run=False` + idempotent `run()` on `ProcessRegion` and `Competition` (kwargs still accepted) | [#137](https://github.com/IMMM-SFA/cerf/pull/137) `0fbaa19` | ✅ Merged | identical (sequential and `loky`) | none; +2 tests |
+| 7.x | Tests: remove placeholder test, float comparisons, golden data, slow/integration markers; CI matrix, pinned actions, coverage, lint | — | 🟡 In progress | — | — |
+| 8.x | Docs and packaging | — | ⬜ Not started | — | — |
 
 Cumulative full-run timing (2010 CONUS sample, sequential, single process):
 
@@ -394,13 +395,17 @@ Regions with zero planned sites return `None`, which the aggregator handles, but
 
 ## 6. Code Quality and Maintainability
 
-### 6.1 `ProcessRegion` and `Competition` do all work in `__init__`
+### 6.1 `ProcessRegion` and `Competition` do all work in `__init__` — ✅ DONE in #137
 
 Both classes run the full algorithm during construction, making them impossible to instantiate for inspection or unit-test partially. Split construction from `run()`.
 
-### 6.2 Argument explosion
+> **Resolved.** Both classes take `auto_run=True` (default preserves the old behaviour). With `auto_run=False` the object is fully constructed (region slicing, masks, indices) without competing; `run()` executes once and returns `self`, and repeated calls are no-ops.
+
+### 6.2 Argument explosion — ✅ DONE in #137
 
 `process_region()` takes 21 positional/keyword arguments, mirrored in `ProcessRegion.__init__`, `Model.run_single_region`, and `cerf_parallel`. Passing the `Stage` object (or a small dataclass of arrays) would remove ~60 lines of duplicated plumbing and make it impossible to mis-order arguments.
+
+> **Resolved.** `RegionData` (dataclass) bundles the 13 staged arrays; `RegionData.from_stage(stage)` builds it, `.crop(region_id)` replaces the loose `crop_to_region` call in `region_tasks`. `ProcessRegion` / `process_region` take `data=` and expose read-only properties for each array; the legacy per-array keyword arguments are still accepted (and unknown ones raise `TypeError`).
 
 ### 6.3 `Competition` sited-record construction — ✅ DONE in #136
 
