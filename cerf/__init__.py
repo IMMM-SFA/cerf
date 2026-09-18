@@ -39,6 +39,7 @@ from .package_data import (
     sample_lmp_zones_raster_file,
 )
 from .process import cerf_parallel, generate_model, run
+from .process_region import EmptyRegionResult, ProcessRegion, RegionData, process_region
 from .utils import (
     array_to_raster,
     buffer_flat_array,
@@ -68,6 +69,10 @@ __all__ = [
     "run",
     "generate_model",
     "cerf_parallel",
+    "process_region",
+    "ProcessRegion",
+    "RegionData",
+    "EmptyRegionResult",
     # components
     "Interconnection",
     "LocationalMarginalPricing",
