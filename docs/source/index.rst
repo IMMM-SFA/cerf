@@ -13,16 +13,15 @@ cerf
 
       .. rst-class:: cerf-eyebrow
 
-         GEOSPATIAL ENERGY MODELING
+         GEOSPATIAL CAPACITY EXPANSION MODELING
 
       .. rst-class:: cerf-hero-title
 
-         Energy expansion.
-         Grounded in geography.
+         Spatially aware energy expansion.
 
       .. rst-class:: lead
 
-         **Capacity Expansion Regional Feasibility model.** An open-source geospatial Python package for evaluating and
+         **Capacity Expansion Regional Feasibility (CERF) model.** An open-source geospatial Python package for evaluating and
          analyzing the feasibility of future electricity technology capacity expansion plans by siting power plants where
          they are the least-cost option.
 
