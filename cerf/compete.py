@@ -75,7 +75,8 @@ class Competition:
                  randomize=True,
                  seed_value=0,
                  verbose=False,
-                 auto_run=True):
+                 auto_run=True,
+                 capacity_factor_dict=None):
 
         # target region
         self.target_region_name = target_region_name
@@ -101,6 +102,9 @@ class Competition:
 
         # operating cost
         self.operating_cost_flat_dict = operating_cost_dict
+
+        # local capacity factor, when supplied by spatial staging
+        self.capacity_factor_flat_dict = capacity_factor_dict
 
         # net operational value
         self.nov_flat_dict = nov_dict
@@ -228,7 +232,9 @@ class Competition:
                 'net_operational_value_usd_per_year': self.metric_at(self.nov_flat_dict[tech_id], target_ix),
                 'interconnection_cost_usd_per_year': self.metric_at(self.ic_flat_dict[tech_id], target_ix),
                 'net_locational_cost_usd_per_year': self.nlc_flat_dict[tech_id][target_ix],
-                'capacity_factor_fraction': tech['capacity_factor_fraction'],
+                'capacity_factor_fraction': (
+                    tech['capacity_factor_fraction'] if self.capacity_factor_flat_dict is None else
+                    self.metric_at(self.capacity_factor_flat_dict[tech_id], target_ix)),
                 'carbon_capture_rate_fraction': tech['carbon_capture_rate_fraction'],
                 'fuel_co2_content_tons_per_btu': tech['fuel_co2_content_tons_per_btu'],
                 'fuel_price_usd_per_mmbtu': tech['fuel_price_usd_per_mmbtu'],

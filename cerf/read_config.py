@@ -224,6 +224,13 @@ class ReadConfig(Logger):
 
                     raise FileNotFoundError(msg)
 
+            capacity_factor_raster = self.technology_dict[i].get('capacity_factor_raster_file')
+            if capacity_factor_raster is not None and not os.path.isfile(capacity_factor_raster):
+                msg = (f"Cannot find the capacity factor raster: {capacity_factor_raster}.  "
+                       "Confirm existence and retry.")
+
+                raise FileNotFoundError(msg)
+
     def validate_lmp_files(self):
         """Ensure that files necessary files exists for LMP zones."""
 

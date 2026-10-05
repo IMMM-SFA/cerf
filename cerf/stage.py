@@ -100,6 +100,10 @@ class Stage:
         logger.info('Calculating interconnection costs (IC)')
         self.ic_arr = self.calculate_ic()
 
+        # get capacity factor array per tech [tech_order, x, y]
+        logging.info('Building capacity factor array')
+        self.capacity_factor_arr = self.build_capacity_factor_array()
+
         # get NOV array per tech [tech_order, x, y]
         logger.info('Calculating net operational cost (NOV)')
         self.generation_arr, self.operating_cost_arr, self.nov_arr = self.calculate_nov()
@@ -183,24 +187,78 @@ class Stage:
 
         return ic_arr
 
+    def build_capacity_factor_array(self):
+        """Build capacity factor array for all technologies.
+
+        If `capacity_factor_raster_file` is provided for a technology, values from that raster are used.
+        Otherwise, the scalar `capacity_factor_fraction` value is used for all cells. Capacity-factor nodata and
+        non-finite pixels are returned in `self.capacity_factor_unsuitable_arr` for exclusion from siting.
+
+        """
+
+        capacity_factor_array = np.zeros_like(self.lmp_arr, dtype=np.float64)
+        self.capacity_factor_unsuitable_arr = np.zeros_like(self.lmp_arr, dtype=bool)
+
+        with rasterio.open(self.cerf_regionid_raster_file) as grid:
+            grid_shape = (grid.height, grid.width)
+            grid_crs = grid.crs
+            grid_transform = grid.transform
+
+        for index, tech_id in enumerate(self.technology_order):
+
+            capacity_factor_raster_file = self.technology_dict[tech_id].get('capacity_factor_raster_file', None)
+
+            # If no capacity factor raster is provided, use the scalar capacity factor fraction.
+            if capacity_factor_raster_file is None:
+                capacity_factor_array[index, :, :] = self.technology_dict[tech_id]['capacity_factor_fraction']
+
+            else:
+                tech_name = self.technology_dict[tech_id]['tech_name']
+                logging.info(f"Using capacity factor raster for '{tech_name}':  {capacity_factor_raster_file}")
+
+                with rasterio.open(capacity_factor_raster_file) as src:
+                    raster_shape = (src.height, src.width)
+                    if raster_shape != grid_shape:
+                        raise ValueError(f"Capacity factor raster shape {raster_shape} does not match model "
+                                         f"grid shape {grid_shape} for technology '{tech_name}'.")
+                    if src.crs != grid_crs:
+                        raise ValueError(f"Capacity factor raster CRS does not match the region grid for "
+                                         f"technology '{tech_name}'.")
+                    if src.transform != grid_transform:
+                        raise ValueError(f"Capacity factor raster transform does not match the region grid for "
+                                         f"technology '{tech_name}'.")
+
+                    masked_cf_arr = src.read(1, masked=True)
+
+                cf_arr = np.asarray(masked_cf_arr.data, dtype=np.float64)
+                unsuitable = np.ma.getmaskarray(masked_cf_arr) | ~np.isfinite(cf_arr)
+                valid_cf = cf_arr[~unsuitable]
+                if np.any((valid_cf < 0.0) | (valid_cf > 1.0)):
+                    raise ValueError(f"Capacity factor raster for technology '{tech_name}' must contain values "
+                                     "between 0 and 1, excluding nodata.")
+
+                capacity_factor_array[index, :, :] = np.where(unsuitable, 0.0, cf_arr)
+                self.capacity_factor_unsuitable_arr[index, :, :] = unsuitable
+
+        return capacity_factor_array
+
     def calculate_nov(self):
         """Calculate Net Operational Value.
 
-        Generation and operating cost do not vary spatially; they are per-technology scalars. They are returned as
-        read-only broadcast views with the same ``[tech_order, x, y]`` shape as ``nov_arr`` so callers can index them
-        like any other staged array without holding two extra full-grid copies in memory.
+        Generation may vary spatially with capacity factor. Operating cost remains a per-technology scalar, returned
+        as a read-only broadcast view with the same ``[tech_order, x, y]`` shape as ``nov_arr``.
 
         """
 
         nov_arr = np.zeros_like(self.lmp_arr)
-        generation_per_tech = np.zeros(len(self.technology_order), dtype=np.float64)
+        generation_arr = np.zeros_like(self.lmp_arr)
         operating_cost_per_tech = np.zeros(len(self.technology_order), dtype=np.float64)
 
         for index, i in enumerate(self.technology_order):
             econ = NetOperationalValue(discount_rate=self.technology_dict[i]['discount_rate'],
                                        lifetime_yrs=self.technology_dict[i]['lifetime_yrs'],
                                        unit_size_mw=self.technology_dict[i]['unit_size_mw'],
-                                       capacity_factor_fraction=self.technology_dict[i]['capacity_factor_fraction'],
+                                       capacity_factor_fraction=self.capacity_factor_arr[index, :, :],
                                        variable_om_esc_rate_fraction=self.technology_dict[i]['variable_om_esc_rate_fraction'],
                                        fuel_price_esc_rate_fraction=self.technology_dict[i]['fuel_price_esc_rate_fraction'],
                                        carbon_tax_esc_rate_fraction=self.technology_dict[i]['carbon_tax_esc_rate_fraction'],
@@ -215,11 +273,10 @@ class Stage:
 
             generation_tech, operating_cost_tech, nov_tech_arr = econ.calc_nov()
 
+            generation_arr[index, :, :] = generation_tech
             nov_arr[index, :, :] = nov_tech_arr
-            generation_per_tech[index] = generation_tech
             operating_cost_per_tech[index] = operating_cost_tech
 
-        generation_arr = np.broadcast_to(generation_per_tech[:, None, None], self.lmp_arr.shape)
         operating_cost_arr = np.broadcast_to(operating_cost_per_tech[:, None, None], self.lmp_arr.shape)
 
         return generation_arr, operating_cost_arr, nov_arr
@@ -326,6 +383,8 @@ class Stage:
                 logger.warning(f"Suitability raster {tech_suitability_raster_file} contains "
                                f"{int(other.sum())} cells with values other than 0, 1 or nodata ({nodata}); "
                                f"they are treated as unsuitable.")
+
+            unsuitable |= self.capacity_factor_unsuitable_arr[index]
 
             # existing plants and their buffers from previous siting data are unsuitable for every technology
             if self.initialize_site_data is not None:

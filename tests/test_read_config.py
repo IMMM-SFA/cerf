@@ -129,5 +129,34 @@ class TestReadConfig(unittest.TestCase):
         self.assertEqual(snapshot, overrides)
 
 
+def test_capacity_factor_raster_path_is_optional_and_validated(tmp_path):
+    suitability_path = tmp_path / 'suitability.tif'
+    suitability_path.touch()
+    capacity_factor_path = tmp_path / 'capacity_factor.tif'
+    capacity_factor_path.touch()
+
+    for raster_file in (None, str(capacity_factor_path)):
+        config = ReadConfig.__new__(ReadConfig)
+        config.technology_dict = {
+            1: {
+                'tech_name': 'test',
+                'suitability_raster_file': str(suitability_path),
+                'capacity_factor_raster_file': raster_file,
+            },
+        }
+        config.validate_technology_files()
+
+    config = ReadConfig.__new__(ReadConfig)
+    config.technology_dict = {
+        1: {
+            'tech_name': 'test',
+            'suitability_raster_file': str(suitability_path),
+            'capacity_factor_raster_file': str(tmp_path / 'missing.tif'),
+        },
+    }
+    with pytest.raises(FileNotFoundError, match='capacity factor raster'):
+        config.validate_technology_files()
+
+
 if __name__ == '__main__':
     unittest.main()

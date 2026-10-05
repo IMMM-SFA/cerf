@@ -47,10 +47,11 @@ class RegionData:
     indices_2d: np.ndarray
     regions_arr: np.ndarray = None
     region_bounds: dict = None
+    capacity_factor_arr: np.ndarray = None
 
     # names of the array attributes, in declaration order
     ARRAY_FIELDS = ('suitability_arr', 'lmp_arr', 'generation_arr', 'operating_cost_arr', 'nov_arr', 'ic_arr',
-                    'nlc_arr', 'zones_arr', 'xcoords', 'ycoords', 'indices_2d', 'regions_arr')
+                    'nlc_arr', 'zones_arr', 'xcoords', 'ycoords', 'indices_2d', 'capacity_factor_arr', 'regions_arr')
 
     @classmethod
     def field_names(cls):
@@ -60,7 +61,7 @@ class RegionData:
     def from_stage(cls, stage):
         """Build from a `cerf.stage.Stage` (or any object exposing the same attributes)."""
 
-        return cls(**{name: getattr(stage, name) for name in cls.field_names()})
+        return cls(**{name: getattr(stage, name) for name in cls.field_names() if hasattr(stage, name)})
 
     @classmethod
     def from_kwargs(cls, kwargs):
@@ -106,7 +107,7 @@ class EmptyRegionResult:
 
 
 def crop_to_region(region_id, region_bounds, suitability_arr, lmp_arr, generation_arr, operating_cost_arr, nov_arr,
-                   ic_arr, nlc_arr, zones_arr, xcoords, ycoords, indices_2d, regions_arr):
+                   ic_arr, nlc_arr, zones_arr, xcoords, ycoords, indices_2d, regions_arr, capacity_factor_arr=None):
     """Crop every staged full-grid array to a region's bounding box for dispatch to a worker process.
 
     Returns a dictionary of `RegionData` fields holding only the region's bounding box. The cropped arrays are
@@ -148,6 +149,7 @@ def crop_to_region(region_id, region_bounds, suitability_arr, lmp_arr, generatio
                 xcoords=crop2d(xcoords),
                 ycoords=crop2d(ycoords),
                 indices_2d=crop2d(indices_2d),
+                capacity_factor_arr=None if capacity_factor_arr is None else crop3d(capacity_factor_arr),
                 regions_arr=crop2d(regions_arr),
                 region_bounds={region_id: (0, ymax - ymin, 0, xmax - xmin)})
 
@@ -255,7 +257,7 @@ class ProcessRegion:
 
         logger.debug(f"Extracting additional metrics for {self.target_region_name}")
         (self.lmp_flat_dict, self.generation_flat_dict, self.operating_cost_flat_dict,
-         self.nov_flat_dict, self.ic_flat_dict) = self.extract_region_metrics()
+         self.nov_flat_dict, self.ic_flat_dict, self.capacity_factor_flat_dict) = self.extract_region_metrics()
         self.zones_flat_arr = self.extract_lmp_zones()
 
         # populated by `run()`
@@ -280,6 +282,10 @@ class ProcessRegion:
     @property
     def operating_cost_arr(self):
         return self.data.operating_cost_arr
+
+    @property
+    def capacity_factor_arr(self):
+        return self.data.capacity_factor_arr
 
     @property
     def nov_arr(self):
@@ -455,11 +461,15 @@ class ProcessRegion:
             region = arr[:, self.ymin:self.ymax, self.xmin:self.xmax]
             return {i: region[ix] for ix, i in enumerate(self.technology_order)}
 
+        capacity_factor_views = (None if self.capacity_factor_arr is None
+                     else region_views(self.capacity_factor_arr))
+
         return (region_views(self.lmp_arr),
-                region_views(self.generation_arr),
-                region_views(self.operating_cost_arr),
-                region_views(self.nov_arr),
-                region_views(self.ic_arr))
+            region_views(self.generation_arr),
+            region_views(self.operating_cost_arr),
+            region_views(self.nov_arr),
+            region_views(self.ic_arr),
+            capacity_factor_views)
 
     def extract_lmp_zones(self):
         """Extract the lmp zones elements for the target region and return as a flat array."""
@@ -477,6 +487,7 @@ class ProcessRegion:
                            lmp_dict=self.lmp_flat_dict,
                            generation_dict=self.generation_flat_dict,
                            operating_cost_dict=self.operating_cost_flat_dict,
+                           capacity_factor_dict=self.capacity_factor_flat_dict,
                            nov_dict=self.nov_flat_dict,
                            ic_dict=self.ic_flat_dict,
                            nlc_mask=self.suitable_nlc_region,

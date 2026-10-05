@@ -300,7 +300,8 @@ class TestProcessRegion(unittest.TestCase):
         via_kwargs = ProcessRegion(**kwargs)
 
         data, rest = RegionData.from_kwargs(kwargs)
-        self.assertEqual(set(RegionData.field_names()), set(kwargs) - set(rest))
+        self.assertEqual(set(RegionData.field_names()) - {'capacity_factor_arr'}, set(kwargs) - set(rest))
+        self.assertIsNone(data.capacity_factor_arr)
         self.assertNotIn('nlc_arr', rest)
         via_data = ProcessRegion(data=data, **rest)
 
@@ -324,6 +325,23 @@ class TestProcessRegion(unittest.TestCase):
         # unknown keyword arguments are rejected rather than silently ignored
         with self.assertRaises(TypeError):
             ProcessRegion(data=data, bogus=1, **rest)
+
+    def test_capacity_factor_raster_reaches_sited_output(self):
+        kwargs = self.build()
+        capacity_factors = np.tile(np.linspace(0.1, 0.8, self.NCOLS), (2, self.NROWS, 1))
+        kwargs['capacity_factor_arr'] = capacity_factors
+
+        data, rest = RegionData.from_kwargs(kwargs)
+        data.region_bounds = {1: (0, self.NROWS, 0, self.NCOLS // 2),
+                              2: (0, self.NROWS, self.NCOLS // 2, self.NCOLS)}
+        cropped = data.crop(1)
+        np.testing.assert_array_equal(cropped.capacity_factor_arr, capacity_factors[:, :, :self.NCOLS // 2])
+
+        result = ProcessRegion(data=data, **rest).run_data.sited_df
+        for _, site in result.iterrows():
+            tech_index = self.TECH_ORDER.index(int(site['tech_id']))
+            expected = capacity_factors[tech_index].ravel()[int(site['index'])]
+            self.assertAlmostEqual(expected, site['capacity_factor_fraction'])
 
     def test_construction_is_separate_from_run(self):
         """6.1: ProcessRegion and Competition can be built for inspection and run explicitly; run() is idempotent."""

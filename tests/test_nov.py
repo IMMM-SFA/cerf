@@ -12,6 +12,7 @@ import unittest
 import numpy as np
 
 from cerf.nov import NetOperationalValue
+from cerf.stage import Stage
 
 
 class TestNov(unittest.TestCase):
@@ -175,6 +176,37 @@ class TestFinancialFactorLimits(unittest.TestCase):
         # NOV itself must be finite
         _, _, nov = econ.calc_nov()
         self.assertTrue(np.all(np.isfinite(nov)))
+
+
+def test_stage_nov_preserves_spatial_generation_from_capacity_factor():
+    stage = Stage.__new__(Stage)
+    stage.technology_order = [1]
+    stage.technology_dict = {
+        1: {
+            'discount_rate': 0.05,
+            'lifetime_yrs': 20,
+            'unit_size_mw': 100,
+            'variable_om_esc_rate_fraction': 0,
+            'fuel_price_esc_rate_fraction': 0,
+            'carbon_tax_esc_rate_fraction': 0,
+            'variable_om_usd_per_mwh': 0,
+            'heat_rate_btu_per_kWh': 0,
+            'fuel_price_usd_per_mmbtu': 0,
+            'carbon_tax_usd_per_ton': 0,
+            'carbon_capture_rate_fraction': 0,
+            'fuel_co2_content_tons_per_btu': 0,
+        },
+    }
+    stage.capacity_factor_arr = np.array([[[0.1, 0.2]]])
+    stage.lmp_arr = np.full((1, 1, 2), 50.0)
+    stage.settings_dict = {'run_year': 2020}
+
+    generation_arr, operating_cost_arr, nov_arr = stage.calculate_nov()
+
+    np.testing.assert_allclose(generation_arr, [[[87600.0, 175200.0]]])
+    np.testing.assert_allclose(operating_cost_arr, np.zeros((1, 1, 2)))
+    self_check = np.isfinite(nov_arr).all()
+    assert self_check
 
     def test_levelization_factor_is_continuous_at_the_limit(self):
         """The k == 1 branch must agree with the general formula as esc -> discount from both sides.

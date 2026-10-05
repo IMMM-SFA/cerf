@@ -116,6 +116,9 @@ These are technology-specific settings.
     |                                 | | plant operated at its rated capacity for a|          |          |
     |                                 | | year                                      |          |          |
     +---------------------------------+---------------------------------------------+----------+----------+
+    | capacity_factor_raster_file     | | Optional single-band raster of local     | NA       | str      |
+    |                                 | | capacity-factor fractions                 |          |          |
+    +---------------------------------+---------------------------------------------+----------+----------+
     | variable_om_esc_rate_fraction   | Escalation rate of variable cost            | fraction | float    |
     +---------------------------------+---------------------------------------------+----------+----------+
     | fuel_price_esc_rate_fraction    | Escalation rate of fuel                     | fraction | float    |
@@ -161,6 +164,12 @@ These are technology-specific settings.
    ``operational_life_yrs`` is the *physical* life that sets ``retirement_year = run_year + operational_life_yrs``;
    if it is omitted it defaults to ``lifetime_yrs``.
 
+  ``capacity_factor_raster_file`` is optional. When provided, each cell's raster value is used as its capacity factor
+  for generation, NOV, and the reported ``capacity_factor_fraction`` at a selected site. The raster must have the same
+  dimensions, CRS, and transform as the region grid, with finite non-nodata values from 0 through 1. Nodata and
+  non-finite cells are unsuitable. If the raster is omitted, ``capacity_factor_fraction`` is used for all cells. This
+  scalar is still required and continues to determine LMP price-bin selection; the raster does not change that step.
+
 The following is an example implementation in the YAML configuration file:
 
 .. code-block:: yaml
@@ -186,6 +195,7 @@ The following is an example implementation in the YAML configuration file:
             buffer_in_km: 5
             require_pipelines: False
             suitability_raster_file: <path to file>
+            capacity_factor_raster_file: <path to aligned capacity-factor raster>
 
 
 ``expansion_plan``
