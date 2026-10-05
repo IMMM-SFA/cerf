@@ -59,6 +59,40 @@ def test_capacity_factor_array_uses_scalar_when_raster_is_omitted(tmp_path):
     assert not stage.capacity_factor_unsuitable_arr.any()
 
 
+def test_capacity_factor_raster_drives_spatial_generation_and_nov(tmp_path):
+    grid_path = tmp_path / 'grid.tif'
+    raster_path = tmp_path / 'capacity_factor.tif'
+    write_raster(grid_path, np.zeros(GRID_SHAPE))
+    write_raster(raster_path, [[0.2, 0.4], [0.1, 0.5]])
+    stage = build_stage(grid_path, str(raster_path))
+    stage.lmp_arr = np.array([[[100.0, 50.0], [25.0, 10.0]]])
+    stage.settings_dict = {'run_year': 2020}
+    stage.technology_dict[1].update({
+        'discount_rate': 0.0,
+        'lifetime_yrs': 20,
+        'unit_size_mw': 100,
+        'variable_om_esc_rate_fraction': 0.0,
+        'fuel_price_esc_rate_fraction': 0.0,
+        'carbon_tax_esc_rate_fraction': 0.0,
+        'variable_om_usd_per_mwh': 0.0,
+        'heat_rate_btu_per_kWh': 0.0,
+        'fuel_price_usd_per_mmbtu': 0.0,
+        'carbon_tax_usd_per_ton': 0.0,
+        'carbon_capture_rate_fraction': 0.0,
+        'fuel_co2_content_tons_per_btu': 0.0,
+    })
+
+    stage.capacity_factor_arr = stage.build_capacity_factor_array()
+    generation_arr, operating_cost_arr, nov_arr = stage.calculate_nov()
+
+    expected_generation = np.array([[[175200.0, 350400.0], [87600.0, 438000.0]]])
+    expected_nov = np.array([[[17520000.0, 17520000.0], [2190000.0, 4380000.0]]])
+    np.testing.assert_array_equal(stage.capacity_factor_arr, [[[0.2, 0.4], [0.1, 0.5]]])
+    np.testing.assert_allclose(generation_arr, expected_generation)
+    np.testing.assert_array_equal(operating_cost_arr, np.zeros((1, *GRID_SHAPE)))
+    np.testing.assert_allclose(nov_arr, expected_nov)
+
+
 def test_capacity_factor_nodata_cells_are_unsuitable(tmp_path):
     grid_path = tmp_path / 'grid.tif'
     raster_path = tmp_path / 'capacity_factor.tif'
