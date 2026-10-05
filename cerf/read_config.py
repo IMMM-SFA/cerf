@@ -224,6 +224,13 @@ class ReadConfig(Logger):
 
                     raise FileNotFoundError(msg)
 
+            operational_schedule_file = self.technology_dict[i].get('operational_schedule_file')
+            if operational_schedule_file is not None and not os.path.isfile(operational_schedule_file):
+                msg = (f"Cannot find the operational schedule file: {operational_schedule_file}.  "
+                       "Confirm existence and retry.")
+
+                raise FileNotFoundError(msg)
+
     def validate_lmp_files(self):
         """Ensure that files necessary files exists for LMP zones."""
 

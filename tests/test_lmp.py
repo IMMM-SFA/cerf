@@ -127,3 +127,100 @@ class TestLmp(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+def test_operational_schedule_uses_chronological_lmp_hours(tmp_path):
+    lmp_path = tmp_path / 'lmp.csv'
+    schedule_path = tmp_path / 'schedule.csv'
+    pd.DataFrame({'hour': np.arange(1, 8761), 1: np.arange(8760)}).to_csv(lmp_path, index=False)
+
+    operational = np.zeros(8760, dtype=int)
+    operational[[2, 7]] = 1
+    schedule = pd.DataFrame({'hour': np.arange(8760), 'operational': operational})
+    schedule.sample(frac=1, random_state=42).to_csv(schedule_path, index=False)
+
+    pricing = LocationalMarginalPricing(
+        {'lmp_hourly_data_file': str(lmp_path), 'lmp_zone_raster_nodata_value': 255},
+        {1: {'tech_name': 'test', 'capacity_factor_fraction': 0.4,
+             'operational_schedule_file': str(schedule_path)}},
+        [1],
+        np.array([[1]], dtype=np.int16),
+    )
+
+    result = pricing.get_lmp()
+
+    assert result[0, 0, 0] == 4.5
+
+
+@pytest.mark.parametrize('row_count', [8759, 8761])
+def test_operational_schedule_requires_8760_rows(tmp_path, row_count):
+    schedule_path = tmp_path / 'schedule.csv'
+    schedule = pd.DataFrame({'hour': np.arange(row_count), 'operational': np.ones(row_count, dtype=int)})
+    schedule.to_csv(schedule_path, index=False)
+
+    with pytest.raises(ValueError, match='exactly 8760 rows'):
+        LocationalMarginalPricing.get_operational_hours(schedule_path, 'test')
+
+
+@pytest.mark.parametrize('invalid_hour', ['duplicate', 'out_of_range', 'fractional'])
+def test_operational_schedule_requires_each_zero_based_hour_once(tmp_path, invalid_hour):
+    schedule_path = tmp_path / 'schedule.csv'
+    schedule = pd.DataFrame({'hour': np.arange(8760, dtype=float), 'operational': np.ones(8760, dtype=int)})
+    if invalid_hour == 'duplicate':
+        schedule.loc[0, 'hour'] = 1
+    elif invalid_hour == 'out_of_range':
+        schedule.loc[0, 'hour'] = 8760
+    else:
+        schedule.loc[0, 'hour'] = 0.5
+    schedule.to_csv(schedule_path, index=False)
+
+    with pytest.raises(ValueError, match='each integer from 0 through 8759 exactly once'):
+        LocationalMarginalPricing.get_operational_hours(schedule_path, 'test')
+
+
+@pytest.mark.parametrize('invalid_value', [None, 2, 'invalid'])
+def test_operational_schedule_requires_binary_values(tmp_path, invalid_value):
+    schedule_path = tmp_path / 'schedule.csv'
+    schedule = pd.DataFrame({'hour': np.arange(8760), 'operational': np.ones(8760, dtype=object)})
+    schedule.loc[0, 'operational'] = invalid_value
+    schedule.to_csv(schedule_path, index=False)
+
+    with pytest.raises(ValueError, match='must be binary 0 or 1'):
+        LocationalMarginalPricing.get_operational_hours(schedule_path, 'test')
+
+
+def test_operational_schedule_requires_both_columns(tmp_path):
+    schedule_path = tmp_path / 'schedule.csv'
+    pd.DataFrame({'hour': np.arange(8760)}).to_csv(schedule_path, index=False)
+
+    with pytest.raises(ValueError, match='must contain `hour` and `operational` columns'):
+        LocationalMarginalPricing.get_operational_hours(schedule_path, 'test')
+
+
+def test_operational_schedule_with_no_active_hours_raises(tmp_path):
+    schedule_path = tmp_path / 'schedule.csv'
+    pd.DataFrame({'hour': np.arange(8760), 'operational': np.zeros(8760, dtype=int)}).to_csv(
+        schedule_path, index=False)
+
+    with pytest.raises(ValueError, match='No operational hours are set'):
+        LocationalMarginalPricing.get_operational_hours(schedule_path, 'test')
+
+
+@pytest.mark.parametrize('capacity_factor', [0.499, 0.5, 0.501])
+def test_missing_operational_schedule_preserves_capacity_factor_selection(tmp_path, capacity_factor):
+    lmp_path = tmp_path / 'lmp.csv'
+    lmp_values = np.arange(8760)
+    pd.DataFrame({'hour': np.arange(1, 8761), 1: lmp_values}).to_csv(lmp_path, index=False)
+    pricing = LocationalMarginalPricing(
+        {'lmp_hourly_data_file': str(lmp_path), 'lmp_zone_raster_nodata_value': 255},
+        {1: {'tech_name': 'test', 'capacity_factor_fraction': capacity_factor}},
+        [1],
+        np.array([[1]], dtype=np.int16),
+    )
+
+    result = pricing.get_lmp()
+
+    start_index, through_index = LocationalMarginalPricing.get_cf_bin(capacity_factor)
+    ranked_values = np.sort(lmp_values)[::-1]
+    expected = ranked_values[start_index:through_index].mean()
+    assert result[0, 0, 0] == expected

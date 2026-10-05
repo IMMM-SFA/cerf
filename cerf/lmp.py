@@ -110,6 +110,35 @@ class LocationalMarginalPricing:
         return start_index, through_index
 
     @staticmethod
+    def get_operational_hours(operational_schedule_file, tech_name):
+        """Validate an operational schedule and return its active zero-based hours."""
+
+        operational_hours_df = pd.read_csv(operational_schedule_file)
+        required_columns = {'hour', 'operational'}
+        if not required_columns.issubset(operational_hours_df.columns):
+            raise ValueError(f"Operational schedule for technology `{tech_name}` must contain `hour` and `operational` columns.")
+
+        if len(operational_hours_df) != 8760:
+            raise ValueError(f"Operational schedule for technology `{tech_name}` must contain exactly 8760 rows.")
+
+        hour_values = pd.to_numeric(operational_hours_df['hour'], errors='coerce').to_numpy(dtype=np.float64)
+        if (not np.isfinite(hour_values).all()
+                or not np.equal(hour_values, np.floor(hour_values)).all()
+                or not np.array_equal(np.sort(hour_values), np.arange(8760))):
+            raise ValueError(f"Operational schedule `hour` values for technology `{tech_name}` must contain each integer "
+                             "from 0 through 8759 exactly once.")
+
+        operational_values = pd.to_numeric(operational_hours_df['operational'], errors='coerce').to_numpy()
+        if pd.isna(operational_values).any() or not np.isin(operational_values, [0, 1]).all():
+            raise ValueError(f"Operational schedule `operational` values for technology `{tech_name}` must be binary 0 or 1.")
+
+        active_hours = hour_values[operational_values == 1].astype(np.int64)
+        if active_hours.size == 0:
+            raise ValueError(f"No operational hours are set in the schedule for technology `{tech_name}`.")
+
+        return active_hours
+
+    @staticmethod
     def zone_lookup(zones_arr, lmp_dict):
         """Map a zone ID array to LMP values using a vectorized lookup table.
 
@@ -173,17 +202,35 @@ class LocationalMarginalPricing:
         # drop the hour field
         lmp_df.drop('hour', axis=1, inplace=True)
 
-        # sort by descending lmp for each zone; the sort is independent of technology so it is done once
-        for j in lmp_df.columns:
-            lmp_df[j] = lmp_df[j].sort_values(ascending=False).values
+        # retain chronological values for schedules and rank a separate frame for capacity-factor selection
+        ranked_lmp_df = lmp_df.copy()
+        for j in ranked_lmp_df.columns:
+            ranked_lmp_df[j] = ranked_lmp_df[j].sort_values(ascending=False).values
 
         for index, i in enumerate(self.technology_order):
 
-            # assign the correct LMP based on the capacity factor of the technology
-            start_index, through_index = self.get_cf_bin(self.technology_dict[i]['capacity_factor_fraction'])
+            operational_schedule_file = self.technology_dict[i].get('operational_schedule_file', None)
 
-            # create a dictionary of LMP values for each power zone based on tech capacity factor
-            lmp_dict = lmp_df.iloc[start_index:through_index].mean(axis=0).to_dict()
+            # if no operational schedule file has been provided, use the original capacity factor bin method
+            if operational_schedule_file is None:
+
+                # assign the correct LMP based on the capacity factor of the technology
+                start_index, through_index = self.get_cf_bin(self.technology_dict[i]['capacity_factor_fraction'])
+
+                # create a dictionary of LMP values for each power zone based on tech capacity factor
+                lmp_dict = ranked_lmp_df.iloc[start_index:through_index].mean(axis=0).to_dict()
+
+            # if an operational schedule file has been provided, use the specific hours indicated to calculate the mean lmp
+            else:
+
+                tech_name = self.technology_dict[i].get('tech_name', i)
+                logging.info(f"Using operational schedule file for {tech_name}: {operational_schedule_file}")
+                operational_hours = self.get_operational_hours(operational_schedule_file, tech_name)
+
+                # create a dictionary of LMP values for each power zone based on tech operational hours
+                lmp_dict = lmp_df.iloc[operational_hours].mean(axis=0).to_dict()
+
+            # convert to int from str
             lmp_dict = {int(k): lmp_dict[k] for k in lmp_dict.keys()}
 
             # add in no data

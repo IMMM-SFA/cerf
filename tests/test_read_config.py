@@ -129,5 +129,34 @@ class TestReadConfig(unittest.TestCase):
         self.assertEqual(snapshot, overrides)
 
 
+def test_operational_schedule_file_path_is_optional_and_validated(tmp_path):
+    suitability_path = tmp_path / 'suitability.tif'
+    suitability_path.touch()
+    schedule_path = tmp_path / 'schedule.csv'
+    schedule_path.touch()
+
+    for schedule_file in (None, str(schedule_path)):
+        config = ReadConfig.__new__(ReadConfig)
+        config.technology_dict = {
+            1: {
+                'tech_name': 'test',
+                'suitability_raster_file': str(suitability_path),
+                'operational_schedule_file': schedule_file,
+            },
+        }
+        config.validate_technology_files()
+
+    config = ReadConfig.__new__(ReadConfig)
+    config.technology_dict = {
+        1: {
+            'tech_name': 'test',
+            'suitability_raster_file': str(suitability_path),
+            'operational_schedule_file': str(tmp_path / 'missing.csv'),
+        },
+    }
+    with pytest.raises(FileNotFoundError, match='operational schedule file'):
+        config.validate_technology_files()
+
+
 if __name__ == '__main__':
     unittest.main()

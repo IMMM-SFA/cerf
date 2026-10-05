@@ -153,6 +153,9 @@ These are technology-specific settings.
     | suitability_raster_file         | | Full path with file name and extension to | NA       | str      |
     |                                 | | the accompanying suitability raster file  |          |          |
     +---------------------------------+---------------------------------------------+----------+----------+
+    | operational_schedule_file       | | Optional CSV with 8760 rows and ``hour``  | NA       | str      |
+    |                                 | | and binary ``operational`` columns        |          |          |
+    +---------------------------------+---------------------------------------------+----------+----------+
 
 
 .. note::
@@ -186,6 +189,13 @@ The following is an example implementation in the YAML configuration file:
             buffer_in_km: 5
             require_pipelines: False
             suitability_raster_file: <path to file>
+            operational_schedule_file: <path to hourly schedule CSV>
+
+The optional ``operational_schedule_file`` must contain one row for each hour, with ``hour`` values from 0 through
+8759 and ``operational`` values of 0 or 1. A value of 1 marks an hour when the technology is operating. Schedule rows
+may be in any order; hour values identify the corresponding chronological LMP records. If the file is omitted, CERF
+continues to select LMPs using the technology's ``capacity_factor_fraction``. A schedule with no operating hours raises
+a ``ValueError``.
 
 
 ``expansion_plan``
@@ -413,7 +423,7 @@ Locational Marginal Price
 
 Locational Marginal Pricing (LMP) represents the cost of making and delivering electricity over an interconnected network of service nodes. LMPs are delivered on an hourly basis (8760 hours for the year) and help us to understand aspects of generation and congestion costs relative to the supply and demand of electricity when considering existing transmission infrastructure.  LMPs are also driven by factors such as the cost of fuel which **cerf** also takes into account when calculating a power plants :ref:`Net Operating Value`.  When working with a scenario-driven grid operations model to evaluate the future evolution of the electricity system, **cerf** can ingest LMPs, return the sited generation per service area for the time step, and then continue this iteration through all future years to provide a harmonized view how the electricity system may respond to stressors in the future.
 
-**cerf** was designed to ingest a single CSV file of LMPs per service area for each of the 8760 hours in a year where LMPs are in units $/MWh.  Mean LMPs representing annual trends are then calculated over the time period corresponding to each technology's capacity factor using the following logic:
+**cerf** was designed to ingest a single CSV file of LMPs per service area for each of the 8760 hours in a year where LMPs are in units $/MWh. If a technology provides an ``operational_schedule_file``, its mean LMP is calculated from the chronological hours marked ``operational: 1``. Otherwise, mean LMPs representing annual trends are calculated over the time period corresponding to each technology's capacity factor using the following logic:
 
 .. code:: sh
 
