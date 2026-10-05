@@ -224,3 +224,22 @@ def test_missing_operational_schedule_preserves_capacity_factor_selection(tmp_pa
     ranked_values = np.sort(lmp_values)[::-1]
     expected = ranked_values[start_index:through_index].mean()
     assert result[0, 0, 0] == expected
+
+
+def test_nonexistent_operational_schedule_raises_file_not_found(tmp_path):
+    lmp_path = tmp_path / 'lmp.csv'
+    lmp_values = np.arange(8760)
+    pd.DataFrame({'hour': np.arange(1, 8761), 1: lmp_values}).to_csv(lmp_path, index=False)
+    pricing = LocationalMarginalPricing(
+        {'lmp_hourly_data_file': str(lmp_path), 'lmp_zone_raster_nodata_value': 255},
+        {1: {
+            'tech_name': 'test',
+            'capacity_factor_fraction': 0.4,
+            'operational_schedule_file': str(tmp_path / 'missing.csv'),
+        }},
+        [1],
+        np.array([[1]], dtype=np.int16),
+    )
+
+    with pytest.raises(FileNotFoundError, match='operational schedule file'):
+        pricing.get_lmp()

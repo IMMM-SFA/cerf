@@ -194,8 +194,8 @@ The following is an example implementation in the YAML configuration file:
 The optional ``operational_schedule_file`` must contain one row for each hour, with ``hour`` values from 0 through
 8759 and ``operational`` values of 0 or 1. A value of 1 marks an hour when the technology is operating. Schedule rows
 may be in any order; hour values identify the corresponding chronological LMP records. If the file is omitted, CERF
-continues to select LMPs using the technology's ``capacity_factor_fraction``. A schedule with no operating hours raises
-a ``ValueError``.
+selects LMPs using the technology's ``capacity_factor_fraction``. If a configured schedule path does not exist, CERF
+raises a ``FileNotFoundError``. A schedule with no operating hours raises a ``ValueError``.
 
 
 ``expansion_plan``
